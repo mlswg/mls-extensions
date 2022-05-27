@@ -101,8 +101,7 @@ This document requests the creation of the following new IANA registries:
 * MLS Proposal Types ({{extended-mls-proposal-types}})
 
 All of these registries should be under a heading of "Messaging Layer Security",
-and assignments are made via the Specification Required policy {{!RFC8126}}. See
-{{de}} for additional information about the MLS Designated Experts (DEs).
+and assignments are made via the Specification Required policy {{!RFC8126}}.
 
 RFC EDITOR: Please replace XXXX throughout with the RFC number assigned to
 this document
@@ -141,7 +140,7 @@ Initial contents:
 
 | Value            | Name                     | Message(s) | Recommended | Reference |
 |:-----------------|:-------------------------|:-----------|:------------|:----------|
-| -                |                          | N/A        | N/A         | RFC XXXX  |
+| N/A              | N/A                      | N/A        | N/A         | RFC XXXX  |
 
 ## Extended MLS Proposal types
 
@@ -160,7 +159,7 @@ Template:
   "Recommended" value of "Y" requires Standards Action [RFC8126].  IESG Approval
   is REQUIRED for a Y->N transition.
 * Path Required: Whether a Commit covering a proposal of this type is required
-  to have its `path` field populated (see {{commit}}).
+  to have its `path` field populated.
 * Reference: The document where this extension is defined
 
 Initial contents:
