@@ -92,7 +92,57 @@ to recognize which messages contain AppAcks.  The application can also have
 clients enforce an AppAck schedule, reporting loss if an AppAck is not received
 at the expected time.
 
-# Extended MLS Proposal types
+# IANA Considerations
+
+This document requests the creation of the following new IANA registries:
+
+* MLS Extension Types ({{extended-mls-extension-types}})
+* MLS Proposal Types ({{extended-mls-proposal-types}})
+
+All of these registries should be under a heading of "Messaging Layer Security",
+and assignments are made via the Specification Required policy {{!RFC8126}}. See
+{{de}} for additional information about the MLS Designated Experts (DEs).
+
+RFC EDITOR: Please replace XXXX throughout with the RFC number assigned to
+this document
+
+## Extended MLS Extension types
+
+This registry lists identifiers for extensions to the MLS protocol.  The
+extension type field is two bytes wide, so valid extension type values are in
+the range 0x0000 to 0xffff.
+
+Template:
+
+* Value: The numeric value of the extension type. Extended MLS extension types
+  start with the value 0x0100.
+
+* Name: The name of the extension type
+
+* Message(s): The messages in which the extension may appear, drawn from the following
+  list:
+
+  * KP: KeyPackage objects
+  * LN: LeafNode objects
+  * GC: GroupContext objects (and the `group_context_extensions` field of
+    GroupInfo objects)
+  * GI: The `other_extensions` field of GroupInfo objects
+
+* Recommended: Whether support for this extension is recommended by the IETF MLS
+  WG.  Valid values are "Y" and "N".  The "Recommended" column is assigned a
+  value of "N" unless explicitly requested, and adding a value with a
+  "Recommended" value of "Y" requires Standards Action [RFC8126].  IESG Approval
+  is REQUIRED for a Y->N transition.
+
+* Reference: The document where this extension is defined
+
+Initial contents:
+
+| Value            | Name                     | Message(s) | Recommended | Reference |
+|:-----------------|:-------------------------|:-----------|:------------|:----------|
+| -                |                          | N/A        | N/A         | RFC XXXX  |
+
+## Extended MLS Proposal types
 
 This registry lists identifiers for types of proposals that can be made for
 changes to an MLS group.  The extension type field is two bytes wide, so valid
@@ -100,7 +150,7 @@ extension type values are in the range 0x0000 to 0xffff.
 
 Template:
 
-* Value: The numeric value of the proposal type. Extended proposal types start
+* Value: The numeric value of the proposal type. Extended MLS proposal types start
   with the value 0x0100.
 * Name: The name of the proposal type
 * Recommended: Whether support for this extension is recommended by the IETF MLS
