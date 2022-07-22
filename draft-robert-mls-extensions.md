@@ -165,7 +165,6 @@ struct {
   TargetedMessageAuthScheme authentication_scheme;
   select (authentication_scheme) {
     case HPKEAuth:
-      opaque mac<V>;
     case Signature:
       opaque signature<V>;
   }
