@@ -21,7 +21,7 @@ informative:
   mls-protocol:
     target: https://datatracker.ietf.org/doc/draft-ietf-mls-protocol/](https://datatracker.ietf.org/doc/draft-ietf-mls-protocol/
     title: The Messaging Layer Security (MLS) Protocol
-  
+
   hpke-security-considerations:
     target: https://www.rfc-editor.org/rfc/rfc9180.html#name-key-compromise-impersonatio](https://www.rfc-editor.org/rfc/rfc9180.html#name-key-compromise-impersonatio
     title: HPKE Security Considerations
@@ -221,7 +221,7 @@ targeted_message_psk = MLS-Exporter("targeted message psk", "", KDF.Nh)
 #### Authentication with HPKE
 
 The sender MUST set the authentication scheme to
-`TargetedMessageAuthScheme.HPKEAuth`. 
+`TargetedMessageAuthScheme.HPKEAuth`.
 
 The sender then computes the following:
 
@@ -238,7 +238,7 @@ message = OpenAuthPSK(hpke_ciphertext.enc, receiver_node_private_key, group_cont
 #### Authentication with signatures
 
 The sender MUST set the authentication scheme to
-`TargetedMessageAuthScheme.Signature`. 
+`TargetedMessageAuthScheme.Signature`.
 
 The sender then computes the following:
 
