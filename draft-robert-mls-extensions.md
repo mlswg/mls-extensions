@@ -34,10 +34,11 @@ This document describes extensions to the Messaging Layer Security (MLS) protoco
 
 # Introduction
 
-This document describes extensions to {{mls-protocol}} that are not part of the main protocol specification. The protocol
-specification includes a set of core extensions that are likely to be useful to
-many applications. The extensions described in this document are intended to be
-used by applications that need to extend the MLS protocol.
+This document describes extensions to {{mls-protocol}} that are not part of the
+main protocol specification. The protocol specification includes a set of core
+extensions that are likely to be useful to many applications. The extensions
+described in this document are intended to be used by applications that need to
+extend the MLS protocol.
 
 # Extensions
 
@@ -105,21 +106,30 @@ at the expected time.
 
 ### Description
 
-MLS application messages make sending encrypted messages to all group members easy and efficient. Sometimes application protocols mandate that messages are only sent to specific group members, either for privacy or for efficiency reasons.
+MLS application messages make sending encrypted messages to all group members
+easy and efficient. Sometimes application protocols mandate that messages are
+only sent to specific group members, either for privacy or for efficiency
+reasons.
 
-Targeted messages are a way to achieve this without having to create a new group with the sender and the specific recipients – which might not be possible or desired. Instead, targeted messages define the format and encryption of a message that is sent from a member of an existing group to another member of that group.
+Targeted messages are a way to achieve this without having to create a new group
+with the sender and the specific recipients – which might not be possible or
+desired. Instead, targeted messages define the format and encryption of a
+message that is sent from a member of an existing group to another member of
+that group.
 
-The goal is to provide a one-shot messaging mechanism that provides confidentiality and authentication.
+The goal is to provide a one-shot messaging mechanism that provides
+confidentiality and authentication.
 
 ### Format
 
-This extensions extens the MLS protocol to include a new message type, `TargetedMessage` in `WireFormat` and `MLSMessage`:
+This extensions extens the MLS protocol to include a new message type,
+`TargetedMessage` in `WireFormat` and `MLSMessage`:
 
-```
+~~~ tls
 enum {
-	...
-	mls_targeted_message(6),
-	...
+  ...
+  mls_targeted_message(6),
+  ...
   (255)
 } WireFormat;
 
@@ -132,66 +142,75 @@ struct {
             TargetedMessage targeted_message;
     }
 } MLSMessage;
-```
+~~~
 
 The `TargetedMessage` message type is defined as follows:
 
-```
+~~~ tls
 struct {
-	opaque group_id<V>;
-	uint64 epoch;
-	uint32 recipient_leaf_index;
-	opaque authenticated_data<V>;
-	opaque encrypted_sender_data<V>;
-	opaque encrypted_targeted_message_content<V>;
+  opaque group_id<V>;
+  uint64 epoch;
+  uint32 recipient_leaf_index;
+  opaque authenticated_data<V>;
+  opaque encrypted_sender_data<V>;
+  opaque encrypted_targeted_message_content<V>;
 } TargetedMessage;
 
 enum {
-	HPKEAuth,
-	Signature,
+  HPKEAuth,
+  Signature,
 } TargetedMessageAuthScheme;
 
 struct {
-	TargetedMessageAuthScheme authentication_scheme;
-	select (authentication_scheme) {
-		case HPKEAuth:
-			opaque mac<V>;
-		case Signature:
-			opaque signature<V>;
-	}
-	HPKECiphertext ciphertext;
+  TargetedMessageAuthScheme authentication_scheme;
+  select (authentication_scheme) {
+    case HPKEAuth:
+      opaque mac<V>;
+    case Signature:
+      opaque signature<V>;
+  }
+  HPKECiphertext ciphertext;
 } TargetedMessageContent;
 
 struct {
-	opaque group_id<V>;
-	uint64 epoch;
-	uint32 recipient_leaf_index;
-	opaque authenticated_data<V>;
-	opaque encrypted_sender_data<V>;
-	TargetedMessageAuthScheme authentication_scheme;
+  opaque group_id<V>;
+  uint64 epoch;
+  uint32 recipient_leaf_index;
+  opaque authenticated_data<V>;
+  opaque encrypted_sender_data<V>;
+  TargetedMessageAuthScheme authentication_scheme;
 } TargetedMessageTBM;
 
 struct {
-	TargetedMessageTBM targeted_message_tbm;
-	HPKECiphertext hpke_ciphertext;
+  TargetedMessageTBM targeted_message_tbm;
+  HPKECiphertext hpke_ciphertext;
 } TargetedMessageTBS;
 
 struct {
-	opaque group_id<V>;
-	uint64 epoch;
-	opaque label<V> = "MLS 1.0 targeted message psk";
+  opaque group_id<V>;
+  uint64 epoch;
+  opaque label<V> = "MLS 1.0 targeted message psk";
 } PSKId;
-```
+~~~
 
 ### Encryption
 
-Targeted messages use HPKE to encrypt the message content between two leaves. The HPKE keys of the `LeafNode` are used to that effect, namely the `encryption_key` field.
+Targeted messages use HPKE to encrypt the message content between two leaves.
+The HPKE keys of the `LeafNode` are used to that effect, namely the
+`encryption_key` field.
 
-In addition, the sender data encryption from section 7.3.2 {{mls-protocol}} is used to encrypt `MLSSenderData`. `MLSSenderData.leaf_index` is the leaf index of the sender. The `MLSSenderData.generation` field is not used and MUST be set to 0.
+In addition, the sender data encryption from section 7.3.2 {{mls-protocol}} is
+used to encrypt `MLSSenderData`. `MLSSenderData.leaf_index` is the leaf index of
+the sender. The `MLSSenderData.generation` field is not used and MUST be set to
+0.
 
 ### Authentication
 
-For ciphersuites that support it, HPKE `mode_auth_psk` is used for authentication. For other ciphersuites, HPKE `mode_psk` is used along with a signature. The authentication scheme is indicated by the `authentication_scheme` field in `TargetedMessageContent`. See {{guidance-on-authentication-schemes}} for more information.
+For ciphersuites that support it, HPKE `mode_auth_psk` is used for
+authentication. For other ciphersuites, HPKE `mode_psk` is used along with a
+signature. The authentication scheme is indicated by the `authentication_scheme`
+field in `TargetedMessageContent`. See {{guidance-on-authentication-schemes}}
+for more information.
 
 For the PSK part of the authentication, clients export a dedicated secret:
 
@@ -201,7 +220,8 @@ targeted_message_psk = MLS-Exporter("targeted message psk", "", KDF.Nh)
 
 #### Authentication with HPKE
 
-The sender MUST set the authentication scheme to `TargetedMessageAuthScheme.HPKEAuth`. 
+The sender MUST set the authentication scheme to
+`TargetedMessageAuthScheme.HPKEAuth`. 
 
 The sender then computes the following:
 
@@ -217,7 +237,8 @@ message = OpenAuthPSK(hpke_ciphertext.enc, receiver_node_private_key, group_cont
 
 #### Authentication with signatures
 
-The sender MUST set the authentication scheme to `TargetedMessageAuthScheme.Signature`. 
+The sender MUST set the authentication scheme to
+`TargetedMessageAuthScheme.Signature`. 
 
 The sender then computes the following:
 
@@ -241,9 +262,13 @@ VerifyWithLabel.verify(sender_leaf_node.signature_key, "targeted message", targe
 
 ### Guidance on authentication schemes
 
-If the group’s ciphersuite does not support HPKE `mode_auth_psk`, implementations MUST choose `TargetedMessageAuthScheme.Signature`.
+If the group’s ciphersuite does not support HPKE `mode_auth_psk`,
+implementations MUST choose `TargetedMessageAuthScheme.Signature`.
 
-If the group’s ciphersuite does support HPKE `mode_auth_psk`, implementations CAN choose `TargetedMessageAuthScheme.HPKEAuth` if better efficiency and/or repudiability is desired. Implementations SHOULD consult {{hpke-security-considerations}} beforehand.
+If the group’s ciphersuite does support HPKE `mode_auth_psk`, implementations
+CAN choose `TargetedMessageAuthScheme.HPKEAuth` if better efficiency and/or
+repudiability is desired. Implementations SHOULD consult
+{{hpke-security-considerations}} beforehand.
 
 # IANA Considerations
 
