@@ -122,7 +122,7 @@ confidentiality and authentication.
 
 ### Format
 
-This extensions extens the MLS protocol to include a new message type,
+This extensions introduces a new message type to the MLS protocol,
 `TargetedMessage` in `WireFormat` and `MLSMessage`:
 
 ~~~ tls
