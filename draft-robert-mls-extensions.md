@@ -128,7 +128,7 @@ Targeted Messages reuse mechanisms from {{mls-protocol}}, in particular {{hpke}}
 
 ### Format
 
-This extensions extens the MLS protocol to include a new message type,
+This extensions introduces a new message type to the MLS protocol,
 `TargetedMessage` in `WireFormat` and `MLSMessage`:
 
 ~~~ tls
