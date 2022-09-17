@@ -22,6 +22,10 @@ informative:
     target: https://datatracker.ietf.org/doc/draft-ietf-mls-protocol/](https://datatracker.ietf.org/doc/draft-ietf-mls-protocol/
     title: The Messaging Layer Security (MLS) Protocol
 
+  hpke:
+    target: https://www.rfc-editor.org/rfc/rfc9180.html](https://www.rfc-editor.org/rfc/rfc9180.html
+    title: Hybrid Public Key Encryption
+
   hpke-security-considerations:
     target: https://www.rfc-editor.org/rfc/rfc9180.html#name-key-compromise-impersonatio](https://www.rfc-editor.org/rfc/rfc9180.html#name-key-compromise-impersonatio
     title: HPKE Security Considerations
@@ -120,6 +124,8 @@ that group.
 The goal is to provide a one-shot messaging mechanism that provides
 confidentiality and authentication.
 
+Targeted Messages reuse mechanisms from {{mls-protocol}}, in particular {{hpke}}.
+
 ### Format
 
 This extensions extens the MLS protocol to include a new message type,
@@ -157,15 +163,15 @@ struct {
 } TargetedMessage;
 
 enum {
-  HPKEAuth,
-  Signature,
+  HPKEAuthPsk,
+  SignatureHPKEPsk,
 } TargetedMessageAuthScheme;
 
 struct {
   TargetedMessageAuthScheme authentication_scheme;
   select (authentication_scheme) {
-    case HPKEAuth:
-    case Signature:
+    case HPKEAuthPsk:
+    case SignatureHPKEPsk:
       opaque signature<V>;
   }
   HPKECiphertext ciphertext;
@@ -192,6 +198,9 @@ struct {
 } PSKId;
 ~~~
 
+Note that `TargetedMessageTBS` is only used with the
+`TargetedMessageAuthScheme.SignatureHPKEPsk` authentication mode.
+
 ### Encryption
 
 Targeted messages use HPKE to encrypt the message content between two leaves.
@@ -217,10 +226,13 @@ For the PSK part of the authentication, clients export a dedicated secret:
 targeted_message_psk = MLS-Exporter("targeted message psk", "", KDF.Nh)
 ```
 
+Th functions `SealAuth` and `OpenAuth` are defined in {{hpke}}. Other functions
+are defined in {{mls-protocol}}.
+
 #### Authentication with HPKE
 
 The sender MUST set the authentication scheme to
-`TargetedMessageAuthScheme.HPKEAuth`.
+`TargetedMessageAuthScheme.HPKEAuthPsk`.
 
 The sender then computes the following:
 
@@ -237,7 +249,9 @@ message = OpenAuthPSK(hpke_ciphertext.enc, receiver_node_private_key, group_cont
 #### Authentication with signatures
 
 The sender MUST set the authentication scheme to
-`TargetedMessageAuthScheme.Signature`.
+`TargetedMessageAuthScheme.SignatureHPKEPsk`. The signature is done using the
+`signature_key` of the sender's `LeafNode` and the corresponding signature
+scheme used in the group.
 
 The sender then computes the following:
 
@@ -262,12 +276,24 @@ VerifyWithLabel.verify(sender_leaf_node.signature_key, "targeted message", targe
 ### Guidance on authentication schemes
 
 If the group’s ciphersuite does not support HPKE `mode_auth_psk`,
-implementations MUST choose `TargetedMessageAuthScheme.Signature`.
+implementations MUST choose `TargetedMessageAuthScheme.SignatureHPKEPsk`.
 
 If the group’s ciphersuite does support HPKE `mode_auth_psk`, implementations
-CAN choose `TargetedMessageAuthScheme.HPKEAuth` if better efficiency and/or
+CAN choose `TargetedMessageAuthScheme.HPKEAuthPsk` if better efficiency and/or
 repudiability is desired. Implementations SHOULD consult
 {{hpke-security-considerations}} beforehand.
+
+### Security considerations
+
+In addition to the sender authentication, Targeted Messages are authenticated by
+using a preshared key (PSK) between the sender and the recipient. The PSK is
+exported from the group key schedule using the label "targeted message psk".
+This ensures that the PSK is only valid for a specific group and epoch, and the
+Forward Secrecy and Post-Compromise Security guarantees of the group key
+schedule apply to the targeted messages as well. The PSK also ensures that an
+attacker needs access to the private group state in addition to the
+HPKE/signature's private keys. This improves confidentiality guarantees against
+passive attackers and authentication guarantees against active attackers.
 
 # IANA Considerations
 
