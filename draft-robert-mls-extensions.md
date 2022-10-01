@@ -258,7 +258,7 @@ The sender then computes the following:
 ```
 hpke_ciphertext = SealPSK(receiver_node_public_key, group_context, targeted_message_tbm, message, targeted_message_psk, epoch)
 
-signature = SignWithLabel(., "targeted message", targeted_message_tbs)
+signature = SignWithLabel(., "TargetedMessageTBS", targeted_message_tbs)
 ```
 
 The recipient computes the following:
