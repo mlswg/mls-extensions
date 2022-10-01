@@ -270,7 +270,7 @@ message = OpenPSK(hpke_ciphertext.enc, receiver_node_private_key, group_context,
 The recipient MUST verify the message authentication:
 
 ```
-VerifyWithLabel.verify(sender_leaf_node.signature_key, "targeted message", targeted_message_tbs, signature)
+VerifyWithLabel.verify(sender_leaf_node.signature_key, "TargetedMessageTBS", targeted_message_tbs, signature)
 ```
 
 ### Guidance on authentication schemes
