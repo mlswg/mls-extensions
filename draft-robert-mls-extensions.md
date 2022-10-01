@@ -158,37 +158,43 @@ struct {
   uint64 epoch;
   uint32 recipient_leaf_index;
   opaque authenticated_data<V>;
-  opaque encrypted_sender_data<V>;
-  opaque encrypted_targeted_message_content<V>;
+  opaque encrypted_sender_auth_data<V>;
+  opaque hpke_ciphertext<V>;
 } TargetedMessage;
 
 enum {
-  HPKEAuthPsk,
-  SignatureHPKEPsk,
+  hpke_auth_psk(0),
+  signature_hpke_psk(1),
 } TargetedMessageAuthScheme;
 
 struct {
+  uint32 sender_leaf_index;
   TargetedMessageAuthScheme authentication_scheme;
   select (authentication_scheme) {
     case HPKEAuthPsk:
     case SignatureHPKEPsk:
       opaque signature<V>;
   }
-  HPKECiphertext ciphertext;
-} TargetedMessageContent;
+  opaque kem_output<V>;
+} TargetedMessageSenderAuthData;
 
 struct {
   opaque group_id<V>;
   uint64 epoch;
   uint32 recipient_leaf_index;
   opaque authenticated_data<V>;
-  opaque encrypted_sender_data<V>;
-  TargetedMessageAuthScheme authentication_scheme;
+  TargetedMessageSenderAuthData sender_auth_data;
 } TargetedMessageTBM;
 
 struct {
-  TargetedMessageTBM targeted_message_tbm;
-  HPKECiphertext hpke_ciphertext;
+  opaque group_id<V>;
+  uint64 epoch;
+  uint32 recipient_leaf_index;
+  opaque authenticated_data<V>;
+  uint32 sender_leaf_index;
+  TargetedMessageAuthScheme authentication_scheme;
+  opaque kem_output<V>;
+  opaque hpke_ciphertext<V>;
 } TargetedMessageTBS;
 
 struct {
@@ -207,10 +213,45 @@ Targeted messages use HPKE to encrypt the message content between two leaves.
 The HPKE keys of the `LeafNode` are used to that effect, namely the
 `encryption_key` field.
 
-In addition, the sender data encryption from section 7.3.2 {{mls-protocol}} is
-used to encrypt `MLSSenderData`. `MLSSenderData.leaf_index` is the leaf index of
-the sender. The `MLSSenderData.generation` field is not used and MUST be set to
-0.
+In addition, `TargetedMessageSenderAuthData` is encrypted in a similar way to
+`MLSSenderData` as described in section 7.3.2 in {{mls-protocol}}. The
+`TargetedMessageSenderAuthData.sender_leaf_index` field is the leaf index of the
+sender. The `TargetedMessageSenderAuthData.authentication_scheme` field is the
+authentication scheme used to authenticate the sender. The
+`TargetedMessageSenderAuthData.signature` field is the signature of the
+`TargetedMessageTBM` structure. The `TargetedMessageSenderAuthData.kem_output`
+field is the KEM output of the HPKE encryption.
+
+The key and nonce provided to the AEAD are computed as the KDF of the first
+KDF.Nh bytes of the `hpke_ciphertext` generated in the following section. If the
+length of the hpke_ciphertext is less than KDF.Nh, the whole hpke_ciphertext is
+used. In pseudocode, the key and nonce are derived as:
+
+```
+sender_auth_data_secret = MLS-Exporter("targeted message sender auth data", "", KDF.Nh)
+
+ciphertext_sample = hpke_ciphertext[0..KDF.Nh-1]
+
+sender_data_key = ExpandWithLabel(sender_auth_data_secret, "key",
+                      ciphertext_sample, AEAD.Nk)
+sender_data_nonce = ExpandWithLabel(sender_auth_data_secret, "nonce",
+                      ciphertext_sample, AEAD.Nn)
+```
+
+The Additional Authenticated Data (AAD) for the `SenderAuthData` ciphertext is
+the first three fields of `TargetedMessage`:
+
+struct {
+  opaque group_id<V>;
+  uint64 epoch;
+  uint32 recipient_leaf_index;
+} SenderAuthDataAAD;
+
+#### Padding
+
+The `TargetedMessage` structure does not include a padding field. It is the
+responsibility of the sender to add padding to the `message` as used in the next
+section.
 
 ### Authentication
 
@@ -237,13 +278,13 @@ The sender MUST set the authentication scheme to
 The sender then computes the following:
 
 ```
-hpke_ciphertext = SealAuthPSK(receiver_node_public_key, group_context, targeted_message_tbm, message, targeted_message_psk, psk_id, sender_node_private_key)
+(kem_output, hpke_ciphertext) = SealAuthPSK(receiver_node_public_key, group_context, targeted_message_tbm, message, targeted_message_psk, psk_id, sender_node_private_key)
 ```
 
 The recipient computes the following:
 
 ```
-message = OpenAuthPSK(hpke_ciphertext.enc, receiver_node_private_key, group_context, targeted_message_tbm, hpke_ciphertext.ct, targeted_message_psk, psk_id, sender_node_public_key)
+message = OpenAuthPSK(kem_output, receiver_node_private_key, group_context, targeted_message_tbm, hpke_ciphertext, targeted_message_psk, psk_id, sender_node_public_key)
 ```
 
 #### Authentication with signatures
@@ -256,7 +297,7 @@ scheme used in the group.
 The sender then computes the following:
 
 ```
-hpke_ciphertext = SealPSK(receiver_node_public_key, group_context, targeted_message_tbm, message, targeted_message_psk, epoch)
+(kem_output, hpke_ciphertext) = SealPSK(receiver_node_public_key, group_context, targeted_message_tbm, message, targeted_message_psk, epoch)
 
 signature = SignWithLabel(., "TargetedMessageTBS", targeted_message_tbs)
 ```
@@ -264,7 +305,7 @@ signature = SignWithLabel(., "TargetedMessageTBS", targeted_message_tbs)
 The recipient computes the following:
 
 ```
-message = OpenPSK(hpke_ciphertext.enc, receiver_node_private_key, group_context, targeted_message_tbm, hpke_ciphertext.ct, targeted_message_psk, epoch)
+message = OpenPSK(kem_output, receiver_node_private_key, group_context, targeted_message_tbm, hpke_ciphertext, targeted_message_psk, epoch)
 ```
 
 The recipient MUST verify the message authentication:
