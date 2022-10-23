@@ -219,7 +219,7 @@ In addition, `TargetedMessageSenderAuthData` is encrypted in a similar way to
 sender. The `TargetedMessageSenderAuthData.authentication_scheme` field is the
 authentication scheme used to authenticate the sender. The
 `TargetedMessageSenderAuthData.signature` field is the signature of the
-`TargetedMessageTBM` structure. The `TargetedMessageSenderAuthData.kem_output`
+`TargetedMessageTBS` structure. The `TargetedMessageSenderAuthData.kem_output`
 field is the KEM output of the HPKE encryption.
 
 The key and nonce provided to the AEAD are computed as the KDF of the first
@@ -241,11 +241,13 @@ sender_data_nonce = ExpandWithLabel(sender_auth_data_secret, "nonce",
 The Additional Authenticated Data (AAD) for the `SenderAuthData` ciphertext is
 the first three fields of `TargetedMessage`:
 
+~~~
 struct {
   opaque group_id<V>;
   uint64 epoch;
   uint32 recipient_leaf_index;
 } SenderAuthDataAAD;
+~~~
 
 #### Padding
 
