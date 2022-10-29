@@ -212,112 +212,55 @@ The `media_type` MAY be zero length, in which case, the media type of the
 
 # IANA Considerations
 
-This document requests the creation of the following new IANA registries:
-
-* MLS Extension Types ({{extended-mls-extension-types}})
-* MLS Proposal Types ({{extended-mls-proposal-types}})
-
-All of these registries should be under a heading of "Messaging Layer Security",
-and assignments are made via the Specification Required policy {{!RFC8126}}.
+This document requests the addition of various new values under the heading
+of "Messaging Layer Security".  Each registration is organized under the
+relevant registry Type.
 
 RFC EDITOR: Please replace XXXX throughout with the RFC number assigned to
 this document
 
-## MLS Extension Type
+## MLS Extension Types
 
-## accepted_media_types MLS Extension Type
+### accepted_media_types MLS Extension
 
 The `accepted_media_types` MLS Extension Type is used inside LeafNode objects. It
 contains a MediaTypeList representing all the media types supported by the
 MLS client referred to by the LeafNode.
 
-~~~~~~~~
-  Template:
-  Value: 0x0005
-  Name: accepted_media_types
-  Message(s): This extension may appear in LeafNode objects
-  Recommended: Y
-  Reference: RFC XXXX
-~~~~~~~~
+Template:
 
+* Value: 0x0005
+* Name: accepted_media_types
+* Message(s): LN: This extension may appear in LeafNode objects
+* Recommended: Y
+* Reference: RFC XXXX
 
-## required_media_types MLS Extension Type
+### required_media_types MLS Extension
 
 The required_media_types MLS Extension Type is used inside GroupContext objects. It
 contains a MediaTypeList representing the media types which are mandatory for all
 MLS members of the group to support.
 
-~~~~~~~~
-  Template:
-  Value: 0x0006
-  Name: required_media_types
-  Message(s): This extension may appear in GroupContext objects
-  Recommended: Y
-  Reference: RFC XXXX
-~~~~~~~~
+Template:
 
+* Value: 0x0006
+* Name: required_media_types
+* Message(s): GC: This extension may appear in GroupContext objects
+* Recommended: Y
+* Reference: RFC XXXX
 
-## Extended MLS Extension types
+## MLS Proposal Types
 
-This registry lists identifiers for extensions to the MLS protocol.  The
-extension type field is two bytes wide, so valid extension type values are in
-the range 0x0000 to 0xffff.
+### app_ack Proposal
 
 Template:
 
-* Value: The numeric value of the extension type. Extended MLS extension types
-  start with the value 0x0100.
+* Value: 0x0008
+* Name: app_ack
+* Recommended: Y
+* Path Required: Y
+* Reference: [RFC XXXX]
 
-* Name: The name of the extension type
-
-* Message(s): The messages in which the extension may appear, drawn from the following
-  list:
-
-  * KP: KeyPackage objects
-  * LN: LeafNode objects
-  * GC: GroupContext objects (and the `group_context_extensions` field of
-    GroupInfo objects)
-  * GI: The `other_extensions` field of GroupInfo objects
-
-* Recommended: Whether support for this extension is recommended by the IETF MLS
-  WG.  Valid values are "Y" and "N".  The "Recommended" column is assigned a
-  value of "N" unless explicitly requested, and adding a value with a
-  "Recommended" value of "Y" requires Standards Action [RFC8126].  IESG Approval
-  is REQUIRED for a Y->N transition.
-
-* Reference: The document where this extension is defined
-
-Initial contents:
-
-| Value            | Name                     | Message(s) | Recommended | Reference |
-|:-----------------|:-------------------------|:-----------|:------------|:----------|
-| N/A              | N/A                      | N/A        | N/A         | RFC XXXX  |
-
-## Extended MLS Proposal types
-
-This registry lists identifiers for types of proposals that can be made for
-changes to an MLS group.  The extension type field is two bytes wide, so valid
-extension type values are in the range 0x0000 to 0xffff.
-
-Template:
-
-* Value: The numeric value of the proposal type. Extended MLS proposal types start
-  with the value 0x0100.
-* Name: The name of the proposal type
-* Recommended: Whether support for this extension is recommended by the IETF MLS
-  WG.  Valid values are "Y" and "N".  The "Recommended" column is assigned a
-  value of "N" unless explicitly requested, and adding a value with a
-  "Recommended" value of "Y" requires Standards Action [RFC8126].  IESG Approval
-  is REQUIRED for a Y->N transition.
-* Path Required: Whether a Commit covering a proposal of this type is required
-  to have its `path` field populated.
-* Reference: The document where this extension is defined
-
-Initial contents:
-
-| Value            | Name                     | Recommended | Path Required | Reference |
-|:-----------------|:-------------------------|:------------|:--------------|:----------|
-| 0x0100           | app_ack                  | Y           | Y             | RFC XXXX  |
 
 # Security Consideration
 
