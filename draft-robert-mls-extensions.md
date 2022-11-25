@@ -44,6 +44,18 @@ extensions that are likely to be useful to many applications. The extensions
 described in this document are intended to be used by applications that need to
 extend the MLS protocol.
 
+## Change Log
+
+RFC EDITOR PLEASE DELETE THIS SECTION.
+
+draft-01
+
+ - Add Targeted Messages extension (\*)
+
+draft-00
+
+- Initial adoption of draft-robert-mls-protocol-00 as a WG item.
+
 # Extensions
 
 ## AppAck
@@ -347,7 +359,36 @@ relevant registry Type.
 RFC EDITOR: Please replace XXXX throughout with the RFC number assigned to
 this document
 
-## New MLS Proposal Types
+## MLS Extension Types
+
+### targeted_messages_capability MLS Extension
+
+The `targeted_messages_capability` MLS Extension Type is used in the
+capabilities field of LeafNodes to indicate the support for the Targeted
+Messages Extension. The extension does not carry any payload. 
+
+Template:
+
+* Value: 0x0006
+* Name: targeted_messages_capability
+* Message(s): LN: This extension may appear in LeafNode objects
+* Recommended: Y
+* Reference: RFC XXXX
+
+### targeted_messages MLS Extension
+
+The `targeted_messages` MLS Extension Type is used inside GroupContext objects. It
+indicates that the group supports the Targeted Messages Extension.
+
+Template:
+
+* Value: 0x0007
+* Name: targeted_messages
+* Message(s): GC: This extension may appear in GroupContext objects
+* Recommended: Y
+* Reference: RFC XXXX
+
+## MLS Proposal Types
 
 ### AppAck Proposal
 
