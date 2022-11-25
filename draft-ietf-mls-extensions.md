@@ -1,7 +1,7 @@
 ---
 title: The Messaging Layer Security (MLS) Extensions
 abbrev: MLS
-docname: draft-robert-mls-extensions-latest
+docname: draft-ietf-mls-extensions-latest
 category: info
 
 ipr: trust200902
@@ -14,7 +14,7 @@ pi: [toc, sortrefs, symrefs]
 author:
  -  ins: R. Robert
     name: Raphael Robert
-    organization:
+    organization: Phoenix R&D
     email: ietf@raphaelrobert.com
 
 informative:
@@ -365,7 +365,7 @@ this document
 
 The `targeted_messages_capability` MLS Extension Type is used in the
 capabilities field of LeafNodes to indicate the support for the Targeted
-Messages Extension. The extension does not carry any payload. 
+Messages Extension. The extension does not carry any payload.
 
 Template:
 
