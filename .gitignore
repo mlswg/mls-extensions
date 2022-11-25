@@ -5,6 +5,7 @@
 *.txt
 *.upload
 *~
+.DS_Store
 .refcache
 .tags
 .targets.mk
