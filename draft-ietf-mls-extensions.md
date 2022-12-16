@@ -236,8 +236,9 @@ KDF.Nh bytes of the `hpke_ciphertext` generated in the following section. If the
 length of the hpke_ciphertext is less than KDF.Nh, the whole hpke_ciphertext is
 used. In pseudocode, the key and nonce are derived as:
 
-```
-sender_auth_data_secret = MLS-Exporter("targeted message sender auth data", "", KDF.Nh)
+~~~
+sender_auth_data_secret
+  = MLS-Exporter("targeted message sender auth data", "", KDF.Nh)
 
 ciphertext_sample = hpke_ciphertext[0..KDF.Nh-1]
 
@@ -245,7 +246,7 @@ sender_data_key = ExpandWithLabel(sender_auth_data_secret, "key",
                       ciphertext_sample, AEAD.Nk)
 sender_data_nonce = ExpandWithLabel(sender_auth_data_secret, "nonce",
                       ciphertext_sample, AEAD.Nn)
-```
+~~~
 
 The Additional Authenticated Data (AAD) for the `SenderAuthData` ciphertext is
 the first three fields of `TargetedMessage`:
@@ -274,9 +275,9 @@ for more information.
 
 For the PSK part of the authentication, clients export a dedicated secret:
 
-```
+~~~
 targeted_message_psk = MLS-Exporter("targeted message psk", "", KDF.Nh)
-```
+~~~
 
 Th functions `SealAuth` and `OpenAuth` are defined in {{hpke}}. Other functions
 are defined in {{mls-protocol}}.
@@ -288,15 +289,28 @@ The sender MUST set the authentication scheme to
 
 The sender then computes the following:
 
-```
-(kem_output, hpke_ciphertext) = SealAuthPSK(receiver_node_public_key, group_context, targeted_message_tbm, message, targeted_message_psk, psk_id, sender_node_private_key)
-```
+~~~
+(kem_output, hpke_ciphertext) = SealAuthPSK(receiver_node_public_key,
+                                            group_context,
+                                            targeted_message_tbm,
+                                            message,
+                                            targeted_message_psk,
+                                            psk_id,
+                                            sender_node_private_key)
+~~~
 
 The recipient computes the following:
 
-```
-message = OpenAuthPSK(kem_output, receiver_node_private_key, group_context, targeted_message_tbm, hpke_ciphertext, targeted_message_psk, psk_id, sender_node_public_key)
-```
+~~~
+message = OpenAuthPSK(kem_output,
+                      receiver_node_private_key,
+                      group_context,
+                      targeted_message_tbm,
+                      hpke_ciphertext,
+                      targeted_message_psk,
+                      psk_id,
+                      sender_node_public_key)
+~~~
 
 #### Authentication with signatures
 
@@ -307,23 +321,37 @@ scheme used in the group.
 
 The sender then computes the following:
 
-```
-(kem_output, hpke_ciphertext) = SealPSK(receiver_node_public_key, group_context, targeted_message_tbm, message, targeted_message_psk, epoch)
+~~~
+(kem_output, hpke_ciphertext) = SealPSK(receiver_node_public_key,
+                                        group_context,
+                                        targeted_message_tbm,
+                                        message,
+                                        targeted_message_psk,
+                                        epoch)
 
 signature = SignWithLabel(., "TargetedMessageTBS", targeted_message_tbs)
-```
+~~~
 
 The recipient computes the following:
 
-```
-message = OpenPSK(kem_output, receiver_node_private_key, group_context, targeted_message_tbm, hpke_ciphertext, targeted_message_psk, epoch)
-```
+~~~
+message = OpenPSK(kem_output,
+                  receiver_node_private_key,
+                  group_context,
+                  targeted_message_tbm,
+                  hpke_ciphertext,
+                  targeted_message_psk,
+                  epoch)
+~~~
 
 The recipient MUST verify the message authentication:
 
-```
-VerifyWithLabel.verify(sender_leaf_node.signature_key, "TargetedMessageTBS", targeted_message_tbs, signature)
-```
+~~~
+VerifyWithLabel.verify(sender_leaf_node.signature_key,
+                        "TargetedMessageTBS",
+                        targeted_message_tbs,
+                        signature)
+~~~
 
 ### Guidance on authentication schemes
 
