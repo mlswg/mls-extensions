@@ -335,18 +335,6 @@ CAN choose `TargetedMessageAuthScheme.HPKEAuthPsk` if better efficiency and/or
 repudiability is desired. Implementations SHOULD consult
 {{hpke-security-considerations}} beforehand.
 
-### Security considerations
-
-In addition to the sender authentication, Targeted Messages are authenticated by
-using a preshared key (PSK) between the sender and the recipient. The PSK is
-exported from the group key schedule using the label "targeted message psk".
-This ensures that the PSK is only valid for a specific group and epoch, and the
-Forward Secrecy and Post-Compromise Security guarantees of the group key
-schedule apply to the targeted messages as well. The PSK also ensures that an
-attacker needs access to the private group state in addition to the
-HPKE/signature's private keys. This improves confidentiality guarantees against
-passive attackers and authentication guarantees against active attackers.
-
 # IANA Considerations
 
 This document requests the addition of various new values under the heading
@@ -396,3 +384,21 @@ Template:
 * Recommended: Y
 * Path Required: Y
 * Reference: [RFC XXXX]
+
+# Security considerations
+
+## AppAck
+
+TBC
+
+## Targeted Messages
+
+In addition to the sender authentication, Targeted Messages are authenticated by
+using a preshared key (PSK) between the sender and the recipient. The PSK is
+exported from the group key schedule using the label "targeted message psk".
+This ensures that the PSK is only valid for a specific group and epoch, and the
+Forward Secrecy and Post-Compromise Security guarantees of the group key
+schedule apply to the targeted messages as well. The PSK also ensures that an
+attacker needs access to the private group state in addition to the
+HPKE/signature's private keys. This improves confidentiality guarantees against
+passive attackers and authentication guarantees against active attackers.
