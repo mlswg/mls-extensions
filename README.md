@@ -2,9 +2,9 @@
 
 This is the working area for the IETF [MLS Working Group](https://datatracker.ietf.org/wg/mls/documents/) Internet-Draft, "The Messaging Layer Security (MLS) Extensions".
 
-* [Editor's Copy](https://mlswg.github.io/mls-federation/#go.draft-ietf-mls-federation.html)
-* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-mls-federation)
-* [Compare Editor's Copy to Working Group Draft](https://mlswg.github.io/mls-federation/#go.draft-ietf-mls-federation.diff)
+* [Editor's Copy](https://mlswg.github.io/mls-extensions/#go.draft-ietf-mls-extensions.html)
+* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-mls-extensions)
+* [Compare Editor's Copy to Working Group Draft](https://mlswg.github.io/mls-extensions/#go.draft-ietf-mls-extensions.diff)
 
 ## Building the Draft
 
@@ -21,4 +21,4 @@ This requires that you have the necessary software installed.  See
 ## Contributing
 
 See the
-[guidelines for contributions](https://github.com/mlswg/mls-federation/blob/federation-import/CONTRIBUTING.md).
+[guidelines for contributions](https://github.com/mlswg/mls-extensions/blob/extensions-import/CONTRIBUTING.md).
