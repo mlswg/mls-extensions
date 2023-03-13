@@ -494,7 +494,7 @@ this document
 
  * Value: 0x0006
  * Name: * Name: mls_targeted_message
- * Recommended: Y 
+ * Recommended: Y
  * Reference: RFC XXXX
 
 ## MLS Extension Types
