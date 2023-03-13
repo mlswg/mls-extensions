@@ -488,6 +488,15 @@ relevant registry Type.
 RFC EDITOR: Please replace XXXX throughout with the RFC number assigned to
 this document
 
+## MLS Wire Formats
+
+### Targeted Messages wire format
+
+ * Value: 0x0006
+ * Name: * Name: mls_targeted_message
+ * Recommended: Y
+ * Reference: RFC XXXX
+
 ## MLS Extension Types
 
 ### targeted_messages_capability MLS Extension
@@ -495,8 +504,6 @@ this document
 The `targeted_messages_capability` MLS Extension Type is used in the
 capabilities field of LeafNodes to indicate the support for the Targeted
 Messages Extension. The extension does not carry any payload.
-
-Template:
 
 * Value: 0x0006
 * Name: targeted_messages_capability
@@ -508,8 +515,6 @@ Template:
 
 The `targeted_messages` MLS Extension Type is used inside GroupContext objects. It
 indicates that the group supports the Targeted Messages Extension.
-
-Template:
 
 * Value: 0x0007
 * Name: targeted_messages
@@ -523,8 +528,6 @@ The `accepted_media_types` MLS Extension Type is used inside LeafNode objects. I
 contains a MediaTypeList representing all the media types supported by the
 MLS client referred to by the LeafNode.
 
-Template:
-
 * Value: 0x0008
 * Name: accepted_media_types
 * Message(s): LN: This extension may appear in LeafNode objects
@@ -537,8 +540,6 @@ The required_media_types MLS Extension Type is used inside GroupContext objects.
 contains a MediaTypeList representing the media types which are mandatory for all
 MLS members of the group to support.
 
-Template:
-
 * Value: 0x0009
 * Name: required_media_types
 * Message(s): GC: This extension may appear in GroupContext objects
@@ -549,13 +550,11 @@ Template:
 
 ### AppAck Proposal
 
-Template:
-
 * Value: 0x0008
 * Name: app_ack
 * Recommended: Y
 * Path Required: Y
-* Reference: [RFC XXXX]
+* Reference: RFC XXXX
 
 # Security considerations
 
