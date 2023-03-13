@@ -48,6 +48,10 @@ extend the MLS protocol.
 
 RFC EDITOR PLEASE DELETE THIS SECTION.
 
+draft-01
+
+ - Add Content Advertisement extensions
+
 draft-00
 
 - Initial adoption of draft-robert-mls-protocol-00 as a WG item.
