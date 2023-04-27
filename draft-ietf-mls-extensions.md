@@ -234,10 +234,10 @@ separate different payload types on the protocol level.
 
 ~~~
 struct {
-		select (TargetedMessage.content_type) {
-				case application:
-						opaque application_data<V>;
-		}
+	select (TargetedMessage.content_type) {
+			case application:
+					opaque application_data<V>;
+	}
 } TargetedMessageTBE;
 ~~~
 
