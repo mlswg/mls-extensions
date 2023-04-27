@@ -169,11 +169,18 @@ The `TargetedMessage` message type is defined as follows:
 struct {
   opaque group_id<V>;
   uint64 epoch;
+  TargetedMessageContentType content_type;
   uint32 recipient_leaf_index;
   opaque authenticated_data<V>;
   opaque encrypted_sender_auth_data<V>;
   opaque hpke_ciphertext<V>;
 } TargetedMessage;
+
+enum {
+  reserved(0),
+  application(1),
+  (255)
+} TargetedMessageContentType
 
 enum {
   hpke_auth_psk(0),
@@ -220,9 +227,21 @@ struct {
 Note that `TargetedMessageTBS` is only used with the
 `TargetedMessageAuthScheme.SignatureHPKEPsk` authentication mode.
 
+Other MLS extensions can use the `content_type` field in `TargetedMessage` to
+separate different payload types on the protocol level.
+
 ### Encryption
 
-Targeted messages use HPKE to encrypt the message content between two leaves.
+~~~
+struct {
+		select (TargetedMessage.content_type) {
+				case application:
+						opaque application_data<V>;
+		}
+} TargetedMessageTBE;
+~~~
+
+Targeted messages use HPKE to encrypt `TargetedMessageTBE` between two leaves.
 The HPKE keys of the `LeafNode` are used to that effect, namely the
 `encryption_key` field.
 
