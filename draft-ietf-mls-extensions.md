@@ -499,17 +499,17 @@ more KeyPackages.
 
 The last_resort_key_package KeyPackage extension defined in this document allows
 clients to specifically mark KeyPackages as KeyPackages of last resort that MAY
-be used more than once iff no other KeyPackages are available.
+be used more than once in scenarios where all other KeyPackages have already
+been used.
 
-Marking such KeyPackages specifically has a number of advantages:
+Marking such KeyPackages allows clients to make policy decisions based on the
+fact that a KeyPackage is a last-resort KeyPackage. For example, they can
+disallow adding a new group member with such a KeyPackage due to the risk incurred by the re-use of key material.
 
-* Clients can make policy decisions based on the fact that a KeyPackage is a
-  last-resort KeyPackage. For example, they can disallow adding a new group
-  member with such a KeyPackage.
-* Clients that pre-publish KeyPackages can signal to the Delivery Service which
-  KeyPackage(s) are meant to be used as last resort KeyPackages. Such
-  KeyPackages could support specific ciphersuites or contain additional
-  extensions.
+The extension also allows clients that pre-publish KeyPackages to signal to the
+Delivery Service which KeyPackage(s) are meant to be used as last resort
+KeyPackages. Such KeyPackages could, for example, support specific ciphersuites
+or contain additional extensions.
 
 ### Format
 
