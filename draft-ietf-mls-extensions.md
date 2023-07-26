@@ -497,16 +497,16 @@ can lead to a situation, where the Delivery Service runs out of KeyPackages,
 upon which it can either deny requests for KeyPackages, or start re-using one or
 more KeyPackages.
 
-The LastResort KeyPackage extension defined in this document allows clients to
-specifically mark KeyPackages as KeyPackages of last resort that MAY be used
-multiple times.
+The last_resort_key_package KeyPackage extension defined in this document allows
+clients to specifically mark KeyPackages as KeyPackages of last resort that MAY
+be used more than once iff no other KeyPackages are available.
 
 Marking such KeyPackages specifically has a number of advantages:
 
 * Clients can make policy decisions based on the fact that a KeyPackage is a
   last-resort KeyPackage. For example, they can disallow adding a new group
   member with such a KeyPackage.
-* Clients that pre-publish KeyPackages can signal to the server which
+* Clients that pre-publish KeyPackages can signal to the Delivery Service which
   KeyPackage(s) are meant to be used as last resort KeyPackages. Such
   KeyPackages could support specific ciphersuites or contain additional
   extensions.
@@ -514,9 +514,9 @@ Marking such KeyPackages specifically has a number of advantages:
 ### Format
 
 The purpose of the extension is simply to mark a given KeyPackage, which means
-it has to carry no additional data.
+it carries no additional data.
 
-As a result, a LastResort Extension only carries the ExtensionType with an empty
+As a result, a LastResort Extension contains the ExtensionType with an empty
 `extension_data` field.
 
 
