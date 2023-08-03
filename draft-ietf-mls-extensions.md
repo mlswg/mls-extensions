@@ -489,27 +489,27 @@ Type: KeyPackage extension
 
 ### Description
 
-MLS requires that clients pre-publish KeyPackages s.t. other clients can add
-them to groups asynchronously. Since KeyPackages SHOULD NOT be re-used, the
-Delivery Service that provides KeyPackages to other clients will likely delete
-(or mark as used) KeyPackages after they were retrieved by other clients. This
-can lead to a situation, where the Delivery Service runs out of KeyPackages,
-upon which it can either deny requests for KeyPackages, or start re-using one or
-more KeyPackages.
+Section 10 of {{!RFC9420}} details that are required to pre-publish KeyPackages
+s.t. other clients can add them to groups asynchronously. The specification
+states that KeyPackages generally SHOULD NOT be re-used with the exception of
+"last resort" KeyPackages. Section 16.8 of {{!RFC9420}} further describes
+last-resort KeyPackages as KeyPackages that are meant to be used if all other
+KeyPackages have been exhausted. The specification, however, leaves it to the
+application to distinguish between regular and last-resort KeyPackages.
 
-The last_resort_key_package KeyPackage extension defined in this document allows
-clients to specifically mark KeyPackages as KeyPackages of last resort that MAY
-be used more than once in scenarios where all other KeyPackages have already
-been used.
+The last_resort_key_package KeyPackage extension defined in this document fills
+this gap and allows clients to specifically mark KeyPackages as KeyPackages of
+last resort that MAY be used more than once in scenarios where all other
+KeyPackages have already been used.
 
-Marking such KeyPackages allows clients to make policy decisions based on the
-fact that a KeyPackage is a last-resort KeyPackage. For example, they can
-disallow adding a new group member with such a KeyPackage due to the risk incurred by the re-use of key material.
-
-The extension also allows clients that pre-publish KeyPackages to signal to the
+The extension allows clients that pre-publish KeyPackages to signal to the
 Delivery Service which KeyPackage(s) are meant to be used as last resort
 KeyPackages. Such KeyPackages could, for example, support specific ciphersuites
 or contain additional extensions.
+
+In addition, as the extension is still present in an Add proposal, clients
+processing such Add proposals MAY make policy decisions based on the fact that a
+KeyPackage is a last-resort KeyPackage.
 
 ### Format
 
