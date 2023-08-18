@@ -491,7 +491,7 @@ By default, for each leaf node, [MLS defines](https://www.rfc-editor.org/rfc/rfc
 
 Some applications may require more than one application message ratchet. For example, an application may want to send messages with different delivery semantics or different policies. This section describes an extension to MLS which allows MLS clients to send multiple types of messages. Each message type has it's own independent key ratchet.
 
-**Note: ** Applications which do not require different delivery semantics or policies for different messages SHOULD NOT use this extension. Instead, applicatons MAY simply specify different message types within the standard MLS application messages. // TODO word this better
+**Note: ** Applications which do not require different delivery semantics or policies for different messages SHOULD NOT use this extension. Instead, applicatons MAY simply specify different message types within the standard MLS application messages. // TODO improve wording
 
 ### Format
 
@@ -509,9 +509,9 @@ struct {
     ProtocolVersion version = mls10;
     WireFormat wire_format;
     select (MLSMessage.wire_format) {
-    ...
-    case mls_ms_application_message:
-    MSApplicationMessage application_message;
+        ...
+        case mls_ms_application_message:
+            MSApplicationMessage application_message;
     }
 } MLSMessage;
 ~~~
@@ -545,6 +545,7 @@ MSApplicationMessage and MSPrivateMessageContent are identical to the standard M
 
 - MSApplicationMessage does not have a `content_type` field. The content type is always `application` as only application messages are supported by this extension.
 - MSApplicationMessage has a `stream_id` field. This field is a 16-bit unsigned integer which identifies the message stream to which this message belongs. When decrypting the `ciphertext`, the MLS client MUST use the key ratchet associated with the message stream identified by `stream_id`.
+- When decoding a `MSApplicationMessage`, the MLS client MUST verify that the `stream_id` is valid for the group. If the `stream_id` is not valid, the MLS client MUST discard the message.
 
 ### Key Schedule
 
@@ -558,7 +559,7 @@ A secret tree is computed as seen in [Figure 25](https://www.rfc-editor.org/rfc/
 
 The secret in the leaf of the secret tree is used to initiate `num_streams` symmetric hash ratchets, from which a sequence of single-use keys and nonces are derived, as described in Section 9.1. The root of each ratchet is computed as:
 
-~~~ aasvg
+~~~
 tree_node_[N]_secret
 |
 |
@@ -596,7 +597,14 @@ this document
 ### Targeted Messages wire format
 
  * Value: 0x0006
- * Name: * Name: mls_targeted_message
+ * Name: mls_targeted_message
+ * Recommended: Y
+ * Reference: RFC XXXX
+
+### Message Streams wire format
+
+ * Value: 0x0007
+ * Name: mls_ms_application_message
  * Recommended: Y
  * Reference: RFC XXXX
 
@@ -649,6 +657,16 @@ MLS members of the group to support.
 * Recommended: Y
 * Reference: RFC XXXX
 
+### message_streams MLS Extension
+
+The `message_streams` MLS Extension Type is used inside GroupContext objects. It contains a MessageStreamExtension object representing the number of message streams.
+
+* Value: 0x0010
+* Name: message_streams
+* Message(s): GC: This extension may appear in GroupContext objects
+* Recommended: Y
+* Reference: RFC XXXX
+
 ## MLS Proposal Types
 
 ### AppAck Proposal
@@ -689,3 +707,5 @@ making a list of acceptable media types available.
 
 The `accepted_media_types` and `rejected_media_types` extensions were written
 by Rohan Mahy.
+
+The `message_streams` extension was written by Josh Brown.
