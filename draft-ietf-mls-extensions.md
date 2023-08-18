@@ -483,6 +483,105 @@ The `media_type` MAY be zero length, in which case, the media type of the
 `application_content` is interpreted as the first MediaType specified in
 `required_media_types`.
 
+## Message Streams
+
+### Description
+
+By default, for each leaf node, [MLS defines](https://www.rfc-editor.org/rfc/rfc9420.html#section-9-5.1.1) two symmetric hash ratchets. One is used for handshake messages, and the other is used for application messages.
+
+Some applications may require more than one application message ratchet. For example, an application may want to send messages with different delivery semantics or different policies. This section describes an extension to MLS which allows MLS clients to send multiple types of messages. Each message type has it's own independent key ratchet.
+
+**Note: ** Applications which do not require different delivery semantics or policies for different messages SHOULD NOT use this extension. Instead, applicatons MAY simply specify different message types within the standard MLS application messages. // TODO word this better
+
+### Format
+
+This extension introduces a new message type to the MLS protocol, `MSApplicationMessage` in `WireFormat` and `MLSMessage`:
+
+~~~ tls
+enum {
+    ...
+    mls_ms_application_message(7),
+    ...
+    (255)
+} WireFormat;
+
+struct {
+    ProtocolVersion version = mls10;
+    WireFormat wire_format;
+    select (MLSMessage.wire_format) {
+    ...
+    case mls_ms_application_message:
+    MSApplicationMessage application_message;
+    }
+} MLSMessage;
+~~~
+
+The `MSApplicationMessage` struct is defined as follows:
+
+~~~ tls
+struct {
+    opaque group_id<V>;
+    uint64 epoch;
+    uint16 stream_id;
+    opaque authenticated_data<V>;
+    opaque encrypted_sender_data<V>;
+    opaque ciphertext<V>;
+} MSApplicationMessage;
+~~~
+
+`encrypted_sender_data` and `ciphertext` are encrypted using the AEAD function specified by the cipher suite in use, using the SenderData and MSPrivateMessageContent structures as input.
+
+The `MSPrivateMessageContent` struct is defined as follows:
+
+~~~ tls
+struct {
+    opaque application_data<V>;
+    FramedContentAuthData auth;
+    opaque padding[length_of_padding];
+} MSPrivateMessageContent;
+~~~
+
+MSApplicationMessage and MSPrivateMessageContent are identical to the standard MLS PrivateMessage and PrivateMessageContent and should be treated as such with the following exceptions:
+
+- MSApplicationMessage does not have a `content_type` field. The content type is always `application` as only application messages are supported by this extension.
+- MSApplicationMessage has a `stream_id` field. This field is a 16-bit unsigned integer which identifies the message stream to which this message belongs. When decrypting the `ciphertext`, the MLS client MUST use the key ratchet associated with the message stream identified by `stream_id`.
+
+### Key Schedule
+
+This extension introduces a new secret.
+
+| Label | Secret | Purpose |
+|:------|:-------|:--------|
+| "ms encryption" | `ms_encryption_secret` | Derived message stream message encryption keys (via the secret tree) |
+
+A secret tree is computed as seen in [Figure 25](https://www.rfc-editor.org/rfc/rfc9420.html#section-9-3.1.1), however the root secret is `ms_encryption_secret` instead of `encryption_secret`.
+
+The secret in the leaf of the secret tree is used to initiate `num_streams` symmetric hash ratchets, from which a sequence of single-use keys and nonces are derived, as described in Section 9.1. The root of each ratchet is computed as:
+
+~~~ aasvg
+tree_node_[N]_secret
+|
+|
++--> ExpandWithLabel(., "message_stream_[I]", "", KDF.Nh)
+|    = ms_ratchet_secret_[I]_[N]_[0]
+~~~
+
+where `I` is the message stream index.
+
+#### GroupContext & LeafNode Extension
+
+This extension defines a new GroupContext extension type, `message_streams`. The `extension_data` field of this extension is a `MessageStreamExtension` object.
+
+~~~ tls
+struct {
+    uint16 num_streams;
+} MessageStreamExtension;
+~~~
+
+The `num_streams` field is a 16-bit unsigned integer indicating the number of message streams in the group.
+
+
+
 # IANA Considerations
 
 This document requests the addition of various new values under the heading
