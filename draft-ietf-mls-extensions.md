@@ -481,33 +481,13 @@ that group.
 The goal is to provide a one-shot messaging mechanism that provides
 confidentiality and authentication.
 
-Targeted Messages reuse mechanisms from {{mls-protocol}}, in particular {{hpke}}.
+Targeted Messages makes use the Safe Extension API as defined in {{safe-extension-api}}.
+reuse mechanisms from {{mls-protocol}}, in particular {{hpke}}.
 
 ### Format
 
-This extensions introduces a new message type to the MLS protocol,
-`TargetedMessage` in `WireFormat` and `MLSMessage`:
-
-~~~ tls
-enum {
-  ...
-  mls_targeted_message(6),
-  ...
-  (255)
-} WireFormat;
-
-struct {
-    ProtocolVersion version = mls10;
-    WireFormat wire_format;
-    select (MLSMessage.wire_format) {
-        ...
-        case mls_targeted_message:
-            TargetedMessage targeted_message;
-    }
-} MLSMessage;
-~~~
-
-The `TargetedMessage` message type is defined as follows:
+This extension uses the `mls_extension_message` WireFormat as defined in Section
+{{wire-formats}}, where the content is a `TargetedMessage`.
 
 ~~~ tls
 struct {
@@ -566,12 +546,12 @@ Note that `TargetedMessageTBS` is only used with the
 
 ### Encryption
 
-Targeted messages use HPKE to encrypt the message content between two leaves.
-The HPKE keys of the `LeafNode` are used to that effect, namely the
-`encryption_key` field.
+Targeted messages uses the SafeEncryptWithContext function provided by the Safe
+Extension API to encrypt the message content between two leaves. The HPKE keys
+of the `LeafNode` are used to that effect, namely the `encryption_key` field.
 
 In addition, `TargetedMessageSenderAuthData` is encrypted in a similar way to
-`MLSSenderData` as described in section 7.3.2 in {{mls-protocol}}. The
+`MLSSenderData` as described in section 6.3.2 in {{mls-protocol}}. The
 `TargetedMessageSenderAuthData.sender_leaf_index` field is the leaf index of the
 sender. The `TargetedMessageSenderAuthData.authentication_scheme` field is the
 authentication scheme used to authenticate the sender. The
@@ -584,7 +564,9 @@ KDF.Nh bytes of the `hpke_ciphertext` generated in the following section. If the
 length of the hpke_ciphertext is less than KDF.Nh, the whole hpke_ciphertext is
 used. In pseudocode, the key and nonce are derived as:
 
-~~~
+TODO: We need to use the extension-specific exporter here.
+
+~~~ tls
 sender_auth_data_secret
   = MLS-Exporter("targeted message sender auth data", "", KDF.Nh)
 
@@ -599,7 +581,7 @@ sender_data_nonce = ExpandWithLabel(sender_auth_data_secret, "nonce",
 The Additional Authenticated Data (AAD) for the `SenderAuthData` ciphertext is
 the first three fields of `TargetedMessage`:
 
-~~~
+~~~ tls
 struct {
   opaque group_id<V>;
   uint64 epoch;
@@ -623,7 +605,9 @@ for more information.
 
 For the PSK part of the authentication, clients export a dedicated secret:
 
-~~~
+TODO: We need to use the extension-specific exporter here.
+
+~~~ tls
 targeted_message_psk = MLS-Exporter("targeted message psk", "", KDF.Nh)
 ~~~
 
@@ -637,7 +621,7 @@ The sender MUST set the authentication scheme to
 
 The sender then computes the following:
 
-~~~
+~~~ tls
 (kem_output, hpke_ciphertext) = SealAuthPSK(receiver_node_public_key,
                                             group_context,
                                             targeted_message_tbm,
@@ -649,7 +633,7 @@ The sender then computes the following:
 
 The recipient computes the following:
 
-~~~
+~~~ tls
 message = OpenAuthPSK(kem_output,
                       receiver_node_private_key,
                       group_context,
@@ -669,7 +653,9 @@ scheme used in the group.
 
 The sender then computes the following:
 
-~~~
+TODO: We need to use the extension-specific exporter here.
+
+~~~ tls
 (kem_output, hpke_ciphertext) = SealPSK(receiver_node_public_key,
                                         group_context,
                                         targeted_message_tbm,
@@ -682,7 +668,7 @@ signature = SignWithLabel(., "TargetedMessageTBS", targeted_message_tbs)
 
 The recipient computes the following:
 
-~~~
+~~~ tls
 message = OpenPSK(kem_output,
                   receiver_node_private_key,
                   group_context,
@@ -694,7 +680,7 @@ message = OpenPSK(kem_output,
 
 The recipient MUST verify the message authentication:
 
-~~~
+~~~ tls
 VerifyWithLabel.verify(sender_leaf_node.signature_key,
                         "TargetedMessageTBS",
                         targeted_message_tbs,
