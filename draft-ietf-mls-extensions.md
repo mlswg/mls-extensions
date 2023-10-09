@@ -124,7 +124,6 @@ provides domain separation by `extension_type` of various `extension_data`.
 
 ~~~ tls
 struct {
-  label;
   ExtensionType extension_type;
   opaque extension_data<V>;
 } ExtensionContent;
@@ -132,6 +131,15 @@ struct {
 
 Where `extension_type` is set to the type of the extension to which the
 `extension_data` belongs.
+
+If in addition a label is required, the following data structure is used.
+
+~~~ tls
+struct {
+  opaque label;
+  ExtensionContent extension_content;
+} LabeledExtensionContent;
+~~~
 
 ### Hybrid Public Key Encryption (HPKE)
 
@@ -147,13 +155,13 @@ data as follows:
 
 ~~~ tls
 SafeEncryptWithContext(ExtensionType, PublicKey, Context, Plaintext) =
-    SealBase(PublicKey, ExtensionContent, “”, Plaintext)
+    SealBase(PublicKey, LabeledExtensionContent, “”, Plaintext)
 
 SafeDecryptWithContext(ExtensionType, PrivateKey, Context, KEMOutput, Ciphertext) =
-    OpenBase(KEMOutput, PrivateKey, ExtensionContent, “”, Ciphertext)
+    OpenBase(KEMOutput, PrivateKey, LabeledExtensionContent, “”, Ciphertext)
 ~~~
 
-Where the fields of ExtensionContent are set to
+Where the fields of LabeledExtensionContent are set to
 
 ~~~ tls
 label = "MLS 1.0 ExtensionData"
@@ -197,13 +205,13 @@ In more detail, an extension identified by ExtensionType should sign and verify 
 
 ~~~ tls
 SafeSignWithLabel(ExtensionType, SignatureKey, Label, Content) =
-    SignWithLabel(SignatureKey, “ExtensionsDataTBS”, ExtensionContent)
+    SignWithLabel(SignatureKey, “ExtensionsDataTBS”, LabeledExtensionContent)
 
 SafeVerifyWithLabel(ExtensionType, VerificationKey, Label, Content, SignatureValue) =
-    VerifyWithLabel(VerificationKey, “ExtensionDataTBS”, ExtensionContent, SignatureValue)
+    VerifyWithLabel(VerificationKey, “ExtensionDataTBS”, LabeledExtensionContent, SignatureValue)
 ~~~
 
-Where the fields of ExtensionContent are set to
+Where the fields of LabeledExtensionContent are set to
 
 ~~~ tls
 label = Label
@@ -304,7 +312,7 @@ case mls_extension_message:
 ~~~
 
 The extension_type in `extension_content` MUST be set to the type of the
-extension in question and label MUST be set to "MLS 1.0 ExtensionWireFormat".
+extension in question.
 Processing of self-defined wire formats has to be defined by the extension.
 
 #### Proposals
