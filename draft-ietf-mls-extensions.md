@@ -234,12 +234,12 @@ deleted after use, allowing the derived key material to be deleted later even
 during the same MLS epoch to achieve forward secrecy. The following protocol
 secrets can be used to derive key from for use by extensions:
 
-* epoch_secret at the beginning of an epoch
-* extension_secret during an epoch
+- epoch_secret at the beginning of an epoch
+- extension_secret during an epoch
 
 The extension_secret is an additional secret derived from the epoch_secret at
 the beginning of the epoch in the same way as the other secrets listed in Table
-4 of {{!RFC9420}}) using the label "extension".
+4 of {{!RFC9420}} using the label "extension".
 
 Any derivation performed by an extension either from the epoch_secret or the
 extension_secret has to use the following function:
@@ -249,7 +249,7 @@ DeriveExtensionSecret(Secret, Label) =
   ExpandWithLabel(Secret, “ExtensionExport ” + ExtensionType + ” “ + Label)
 ~~~
 
-Where ExpandWithLabel is defined in Section 8 of {{!RFC9420}}) and where ExtensionType
+Where ExpandWithLabel is defined in Section 8 of {{!RFC9420}} and where ExtensionType
 MUST be set to the ExtensionType of the implemented extension.
 
 ### Pre-Shared Keys (PSKs)
@@ -460,15 +460,15 @@ they are suppressed then the group cannot advance at all.
 The schedule on which sending AppAck proposals are sent is up to the application,
 and determines which cases of loss/suppression are detected.  For example:
 
-* The application might have the committer include an AppAck proposal whenever a
+- The application might have the committer include an AppAck proposal whenever a
   Commit is sent, so that other members could know when one of their messages
   did not reach the committer.
 
-* The application could have a client send an AppAck whenever an application
+- The application could have a client send an AppAck whenever an application
   message is sent, covering all messages received since its last AppAck.  This
   would provide a complete view of any losses experienced by active members.
 
-* The application could simply have clients send AppAck proposals on a timer, so
+- The application could simply have clients send AppAck proposals on a timer, so
   that all participants' state would be known.
 
 An application using AppAck proposals to guard against loss/suppression of
@@ -580,11 +580,9 @@ KDF.Nh bytes of the `hpke_ciphertext` generated in the following section. If the
 length of the hpke_ciphertext is less than KDF.Nh, the whole hpke_ciphertext is
 used. In pseudocode, the key and nonce are derived as:
 
-TODO: We need to use the extension-specific exporter here.
-
 ~~~ tls
 sender_auth_data_secret
-  = MLS-Exporter("targeted message sender auth data", "", KDF.Nh)
+  = DeriveExtensionSecret(extension_secret, "targeted message sender auth data")
 
 ciphertext_sample = hpke_ciphertext[0..KDF.Nh-1]
 
@@ -621,10 +619,9 @@ for more information.
 
 For the PSK part of the authentication, clients export a dedicated secret:
 
-TODO: We need to use the extension-specific exporter here.
-
 ~~~ tls
-targeted_message_psk = MLS-Exporter("targeted message psk", "", KDF.Nh)
+targeted_message_psk
+  = DeriveExtensionSecret(extension_secret, "targeted message psk")
 ~~~
 
 Th functions `SealAuth` and `OpenAuth` are defined in {{hpke}}. Other functions
@@ -668,8 +665,6 @@ The sender MUST set the authentication scheme to
 scheme used in the group.
 
 The sender then computes the following:
-
-TODO: We need to use the extension-specific exporter here.
 
 ~~~ tls
 (kem_output, hpke_ciphertext) = SealPSK(receiver_node_public_key,
