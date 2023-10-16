@@ -881,7 +881,7 @@ listed as a moderator in the first epoch. To modify the state S between epochs
 the extension uses a custom custom proposal of the type `extension_proposal`
 where `extension_data` field in the `ExtensionContent` struct is an instance of
 the following `RBACOperation` struct which specifies which role to change,
-whether clients are being added to or removed from the role and a list of the
+whether clients are being appended to or removed from the role and a list of the
 leaf indicies of the clients being added/removed.
 
 ~~~ tls
