@@ -828,8 +828,8 @@ The `media_type` MAY be zero length, in which case, the media type of the
 
 Role-based access control is a method of expressing an access control policy for
 an MLS session. The RBAC system defines different roles and specifies their
-capabilities. For example, a “moderator” role may have the capability to issue
-new Add Client and Remove Client proposals while an “observer” role is only
+capabilities. For example, a "moderator" role may have the capability to issue
+new Add Client and Remove Client proposals while an "observer" role is only
 permitted to receive (but not send) application messages. Clients in an MLS
 session with RBAC can be assigned to particular roles dynamically during run
 time.
@@ -868,8 +868,8 @@ For each commit, the new epoch’s RBAC state is injected as a PSK proposal with
 the `psk` field populated as follows.
 
 ~~~ tls
-psk.PSKType = 3; \\ extension (3)
-psk.extension_id = 0XFFFFF; \\ IANA registered Extension ID
+psk.PSKType = 3;            // extension(3)
+psk.extension_id = 0XFFFFF; // IANA registered Extension ID
 psk.psk_id = “RBAC State”;
 ~~~
 
