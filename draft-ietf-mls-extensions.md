@@ -850,8 +850,8 @@ The `media_type` MAY be zero length, in which case, the media type of the
 
 Role-based access control is a method of expressing an access control policy for
 an MLS session. The RBAC system defines different roles and specifies their
-capabilities. For example, a “moderator” role may have the capability to issue
-new Add Client and Remove Client proposals while an “observer” role is only
+capabilities. For example, a "moderator" role may have the capability to issue
+new Add Client and Remove Client proposals while an "observer" role is only
 permitted to receive (but not send) application messages. Clients in an MLS
 session with RBAC can be assigned to particular roles dynamically during run
 time.
@@ -890,8 +890,8 @@ For each commit, the new epoch’s RBAC state is injected as a PSK proposal with
 the `psk` field populated as follows.
 
 ~~~ tls
-psk.PSKType = 3; \\ extension (3)
-psk.extension_id = 0XFFFFF; \\ IANA registered Extension ID
+psk.PSKType = 3;            // extension(3)
+psk.extension_id = 0XFFFFF; // IANA registered Extension ID
 psk.psk_id = “RBAC State”;
 ~~~
 
@@ -927,10 +927,11 @@ struct {
 ~~~
 
 RBAC extension proposals can only be sent in epoch E by clients listed as
-moderators in the RBAC state for E. A proposal is invalid if the `clients` list
-contains the leaf index a leaf not in the ratchet tree. RBAC proposals are
-applied in the order they appear in the commit. A commit that results in either
-an empty moderator list or a blank leaf being listed in any role is invalid.
+moderators in the RBAC state for E. RBAC proposals are applied in the order they
+appear in the commit. A commit that includes an invalid proposal or that results
+in either an empty moderator list or a blank leaf being listed in any role is
+invalid. A proposal is invalid if the `clients` list contains the leaf index of
+a leaf not in the ratchet tree.
 
 # IANA Considerations
 
