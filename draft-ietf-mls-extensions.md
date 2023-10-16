@@ -905,10 +905,11 @@ struct {
 ~~~
 
 RBAC extension proposals can only be sent in epoch E by clients listed as
-moderators in the RBAC state for E. A proposal is invalid if the `clients` list
-contains the leaf index a leaf not in the ratchet tree. RBAC proposals are
-applied in the order they appear in the commit. A commit that results in either
-an empty moderator list or a blank leaf being listed in any role is invalid.
+moderators in the RBAC state for E. RBAC proposals are applied in the order they
+appear in the commit. A commit that includes an invalid proposal or that results
+in either an empty moderator list or a blank leaf being listed in any role is
+invalid. A proposal is invalid if the `clients` list contains the leaf index of
+a leaf not in the ratchet tree.
 
 # IANA Considerations
 
