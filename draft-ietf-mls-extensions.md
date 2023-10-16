@@ -155,10 +155,10 @@ data as follows:
 
 ~~~ tls
 SafeEncryptWithContext(ExtensionType, PublicKey, Context, Plaintext) =
-    SealBase(PublicKey, LabeledExtensionContent, “”, Plaintext)
+    SealBase(PublicKey, LabeledExtensionContent, "", Plaintext)
 
 SafeDecryptWithContext(ExtensionType, PrivateKey, Context, KEMOutput, Ciphertext) =
-    OpenBase(KEMOutput, PrivateKey, LabeledExtensionContent, “”, Ciphertext)
+    OpenBase(KEMOutput, PrivateKey, LabeledExtensionContent, "", Ciphertext)
 ~~~
 
 Where the fields of LabeledExtensionContent are set to
@@ -206,10 +206,10 @@ In more detail, an extension identified by ExtensionType should sign and verify 
 
 ~~~ tls
 SafeSignWithLabel(ExtensionType, SignatureKey, Label, Content) =
-    SignWithLabel(SignatureKey, “ExtensionsDataTBS”, LabeledExtensionContent)
+    SignWithLabel(SignatureKey, "ExtensionsDataTBS", LabeledExtensionContent)
 
 SafeVerifyWithLabel(ExtensionType, VerificationKey, Label, Content, SignatureValue) =
-    VerifyWithLabel(VerificationKey, “ExtensionDataTBS”, LabeledExtensionContent, SignatureValue)
+    VerifyWithLabel(VerificationKey, "ExtensionDataTBS", LabeledExtensionContent, SignatureValue)
 ~~~
 
 Where the fields of LabeledExtensionContent are set to
@@ -249,7 +249,7 @@ extension_secret has to use the following function:
 
 ~~~ tls
 DeriveExtensionSecret(Secret, Label) =
-  ExpandWithLabel(Secret, “ExtensionExport ” + ExtensionType + ” “ + Label)
+  ExpandWithLabel(Secret, "ExtensionExport " + ExtensionType + " " + Label)
 ~~~
 
 Where ExpandWithLabel is defined in Section 8 of {{!RFC9420}} and where ExtensionType
@@ -417,8 +417,8 @@ This document extends the IANA registries defined in the MLS specification as fo
   - extension_path_proposal (requires a path and may not be sent by external senders)
   - extension_external_proposal (requires no path and may be sent by external senders)
 - MLS Credential Types (Section 17.5): extension_credential
-- MLS Signature Labels (Section 17.6): “ExtensionDataTBS”
-- MLS Public Key Encryption Labels (17.7): “ExtensionData”
+- MLS Signature Labels (Section 17.6): "ExtensionDataTBS"
+- MLS Public Key Encryption Labels (17.7): "ExtensionData"
 
 # Extensions
 
