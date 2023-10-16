@@ -169,14 +169,15 @@ extension_type = ExtensionType
 extension_data = Context
 ~~~
 
-Where ExtensionType MUST be set to the ExtensionType of the implemented
-extension, and not to the type of any other extension. In particular,
-this means that an extension cannot encrypt data to another extension.
+For operations involving the secret key, ExtensionType MUST be set to the
+ExtensionType of the implemented extension, and not to the type of any other
+extension. In particular, this means that an extension cannot decrypt data meant
+for another extension, while extensions can encrypt data to other extensions.
 
-In general, a ciphertext encrypted with PublicKey can be decrypted by any entity
-who has the corresponding PrivateKey at a given point in time according to the
-MLS protocol (or extension). For convenience, the following list summarizes
-lifetimes of MLS key pairs.
+In general, a ciphertext encrypted with a PublicKey can be decrypted by any
+entity who has the corresponding PrivateKey at a given point in time according
+to the MLS protocol (or extension). For convenience, the following list
+summarizes lifetimes of MLS key pairs.
 
 - The key pair of a non-blank ratchet tree node. The PrivateKey of such a key pair
   is known to all members in the node’s subtree. In particular, a PrivateKey of a
@@ -219,10 +220,12 @@ extension_type = ExtensionType
 extension_data = Content
 ~~~
 
-Where ExtensionType MUST be set to the ExtensionType of the implemented
-extension, and not to the type of any other extension. In particular,
-this means that an extension cannot produce signatures verified by other extensions.
-This ensures domain separation.
+For signing operations, the ExtensionType MUST be set to the ExtensionType of
+the implemented extension, and not to the type of any other extension. In
+particular, this means that an extension cannot produce signatures in place of
+other extensions. However, extensions can verify signatures computed by other
+extensions. Note that domain separation is ensured by explicitly including the
+ExtensionType with every operation.
 
 ### Exporting Secrets
 
