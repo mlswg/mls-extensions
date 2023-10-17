@@ -206,10 +206,10 @@ In more detail, an extension identified by ExtensionType should sign and verify 
 
 ~~~ tls
 SafeSignWithLabel(ExtensionType, SignatureKey, Label, Content) =
-    SignWithLabel(SignatureKey, "ExtensionsDataTBS", LabeledExtensionContent)
+    SignWithLabel(SignatureKey, "LabeledExtensionContent", LabeledExtensionContent)
 
 SafeVerifyWithLabel(ExtensionType, VerificationKey, Label, Content, SignatureValue) =
-    VerifyWithLabel(VerificationKey, "ExtensionDataTBS", LabeledExtensionContent, SignatureValue)
+    VerifyWithLabel(VerificationKey, "LabeledExtensionContent", LabeledExtensionContent, SignatureValue)
 ~~~
 
 Where the fields of LabeledExtensionContent are set to
