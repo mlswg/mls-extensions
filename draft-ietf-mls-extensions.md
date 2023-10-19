@@ -497,15 +497,14 @@ last-resort KeyPackages as KeyPackages that are meant to be used if all other
 KeyPackages have been exhausted. The specification, however, leaves it to the
 application to distinguish between regular and last-resort KeyPackages.
 
-The last_resort_key_package KeyPackage extension defined in this document fills
+The last_resort_key_package KeyPackage extension defined in this section fills
 this gap and allows clients to specifically mark KeyPackages as KeyPackages of
 last resort that MAY be used more than once in scenarios where all other
 KeyPackages have already been used.
 
 The extension allows clients that pre-publish KeyPackages to signal to the
 Delivery Service which KeyPackage(s) are meant to be used as last resort
-KeyPackages. Such KeyPackages could, for example, support specific ciphersuites
-or contain additional extensions.
+KeyPackages.
 
 In addition, as the extension is still present in an Add proposal, clients
 processing such Add proposals MAY make policy decisions based on the fact that a
