@@ -506,9 +506,11 @@ The extension allows clients that pre-publish KeyPackages to signal to the
 Delivery Service which KeyPackage(s) are meant to be used as last resort
 KeyPackages.
 
-In addition, as the extension is still present in an Add proposal, clients
-processing such Add proposals MAY make policy decisions based on the fact that a
-KeyPackage is a last-resort KeyPackage.
+An additional benefit of using an extension rather than communicating the
+information out-of-band is that the extension is still present in Add proposals.
+Clients processing such Add proposals can authenticate the fact that a
+KeyPackage is a last-resort KeyPackage and MAY make policy decisions based on
+that information.
 
 ### Format
 
