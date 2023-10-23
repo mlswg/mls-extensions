@@ -17,6 +17,20 @@ author:
     organization: Phoenix R&D
     email: ietf@raphaelrobert.com
 
+contributor:
+ - name: Joel Alwen
+   org:  Amazon
+   email:  alwenjo@amazon.com
+ - name: Konrad Kohbrok
+   org:  Phoenix R&D
+   email:  konrad.kohbrok@datashrine.de
+ - name: Rohan Mahy
+   org:  Wire
+   email:  rohan@wire.com
+ - name: Marta Mularczyk
+   org:  Amazon
+   email:  mulmarta@amazon.com
+
 informative:
   mls-protocol:
     target: https://datatracker.ietf.org/doc/draft-ietf-mls-protocol/](https://datatracker.ietf.org/doc/draft-ietf-mls-protocol/
@@ -47,6 +61,15 @@ extend the MLS protocol.
 ## Change Log
 
 RFC EDITOR PLEASE DELETE THIS SECTION.
+
+draft-03
+
+- Add Last Resort KeyPackage extension
+- Add Safe Extensions framework
+
+draft-02
+
+- No changes (prevent expiration)
 
 draft-01
 
@@ -1051,8 +1074,3 @@ could leak some private information visible in KeyPackages and inside an MLS gro
 They could be used to infer a specific implementation, platform, or even version.
 Clients should consider carefully the privacy implications in their environment of
 making a list of acceptable media types available.
-
-# Contributors
-
-The `accepted_media_types` and `rejected_media_types` extensions were written
-by Rohan Mahy.
