@@ -351,8 +351,16 @@ case extension_external_proposal:
 ~~~
 
 The extension_type MUST be set to the type of the extension in question.
-Processing (including further validation rules) of self-defined proposals has to
-be defined by the extension.
+
+Processing and validation of self-defined proposals has to be defined by the
+extension. However, validation rules can lead to a previously valid commit to
+become invalid, not the other way around. This is with the exception of proposal
+validation for external commits, where self-defined proposals can be declared
+valid for use in external commits. More concretely, if an external commit is
+invalid, only because the self-defined proposal is part of it (the last rule in
+external commit proposal validation in Section 12.2 of {{!RFC9420}}), then the
+self-defined validation rules may rule that the commit is instead valid.
+
 
 #### Credentials
 
