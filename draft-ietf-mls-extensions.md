@@ -361,7 +361,6 @@ invalid, only because the self-defined proposal is part of it (the last rule in
 external commit proposal validation in Section 12.2 of {{!RFC9420}}), then the
 self-defined validation rules may rule that the commit is instead valid.
 
-
 #### Credentials
 
 Extension designers can also define their own credential types via the IANA
@@ -849,93 +848,6 @@ as defined below:
 The `media_type` MAY be zero length, in which case, the media type of the
 `application_content` is interpreted as the first MediaType specified in
 `required_media_types`.
-
-## Role-Based Access Control Extension
-
-Role-based access control is a method of expressing an access control policy for
-an MLS session. The RBAC system defines different roles and specifies their
-capabilities. For example, a "moderator" role may have the capability to issue
-new Add Client and Remove Client proposals while an "observer" role is only
-permitted to receive (but not send) application messages. Clients in an MLS
-session with RBAC can be assigned to particular roles dynamically during run
-time.
-
-To improve robustness of an RBAC-governed MLS session, clients can use MLS’s
-agreement properties to ensure that all clients in an MLS epoch E agree on the
-epoch’s RBAC's current state S. For each role, the state S includes a list of
-the clients in that role. To ensure agreement across all clients in E about S,
-one option is to store S in the group context extensions of E. However, this
-allows any MLS extension to modify S which can lead to unintended and
-undesirable behavior of the RBAC system.
-
-Instead, a more stable and predictable means of ensuring all clients agree on S
-is to use the pre-shared key feature of MLS. The state S is maintained as
-external data which only the RBAC extension is aware of and can access. The RBAC
-extension  defines (i) a canonical representation of its state as a serialisable
-data structure and (ii) a custom proposal for clients to modify the RBAC state.
-To ensure clients in an epoch E agree on RBAC state S the extension mandates
-that the commit creating E must include a special PSK containing the (serialized
-representation of) S.
-
-A simple example of this pattern is the following MLS extension for an RBAC
-system with the roles “moderator” and “observer” (and with hypothetical
-extension ID 0xFFFFF). RBAC states are serialized using the `RBACState` struct
-below which contains the list of `leaf_index` values for the clients in the two
-roles.
-
-~~~ tls
-struct {
-  uint32 moderators<V>;
-  uint32 observers<V>;
-} RBACState
-~~~
-
-For each commit, the new epoch’s RBAC state is injected as a PSK proposal with
-the `psk` field populated as follows.
-
-~~~ tls
-psk.PSKType = 3;            // extension(3)
-psk.extension_id = 0XFFFFF; // IANA registered Extension ID
-psk.psk_id = “RBAC State”;
-~~~
-
-The pre-shared key is an instance of the `RBACState` struct populated with the
-list of clients in each role during epoch E.
-
-When a group using the RBAC extension is created the creating client must be
-listed as a moderator in the first epoch. To modify the state S between epochs
-the extension uses a custom custom proposal of the type `extension_proposal`
-where `extension_data` field in the `ExtensionContent` struct is an instance of
-the following `RBACOperation` struct which specifies which role to change,
-whether clients are being appended to or removed from the role and a list of the
-leaf indicies of the clients being added/removed.
-
-~~~ tls
-enum {
-  moderator(0),
-  observer(1),
-  (255)
-} RoleType
-
-enum {
-  add(0),
-  remove(1),
-  (255)
-} RBACOperationType
-
-struct {
-  RoleType role;
-  RBACOperationType opType;
-  uint32 clients<V>;
-} RBACOperation
-~~~
-
-RBAC extension proposals can only be sent in epoch E by clients listed as
-moderators in the RBAC state for E. RBAC proposals are applied in the order they
-appear in the commit. A commit that includes an invalid proposal or that results
-in either an empty moderator list or a blank leaf being listed in any role is
-invalid. A proposal is invalid if the `clients` list contains the leaf index of
-a leaf not in the ratchet tree.
 
 # IANA Considerations
 
