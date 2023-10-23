@@ -483,6 +483,50 @@ The `media_type` MAY be zero length, in which case, the media type of the
 `application_content` is interpreted as the first MediaType specified in
 `required_media_types`.
 
+## Last resort KeyPackages
+
+Type: KeyPackage extension
+
+### Description
+
+Section 10 of {{!RFC9420}} details that clients are required to pre-publish
+KeyPackages s.t. other clients can add them to groups asynchronously. It also
+states that they should not be re-used:
+
+> KeyPackages are intended to be used only once and SHOULD NOT be reused except
+> in the case of a "last resort" KeyPackage (see Section 16.8). Clients MAY
+> generate and publish multiple KeyPackages to support multiple cipher suites.
+
+Section 16.8 of {{!RFC9420}} then introduces the notion of last-resort
+KeyPackages as follows:
+
+> An application MAY allow for reuse of a "last resort" KeyPackage in order to
+> prevent denial-of-service attacks.
+
+However, {{!RFC9420}} does not specify how to distinguish regular KeyPackages
+from last-resort ones. The last_resort_key_package KeyPackage extension defined
+in this section fills this gap and allows clients to specifically mark
+KeyPackages as KeyPackages of last resort that MAY be used more than once in
+scenarios where all other KeyPackages have already been used.
+
+The extension allows clients that pre-publish KeyPackages to signal to the
+Delivery Service which KeyPackage(s) are meant to be used as last resort
+KeyPackages.
+
+An additional benefit of using an extension rather than communicating the
+information out-of-band is that the extension is still present in Add proposals.
+Clients processing such Add proposals can authenticate that a KeyPackage is a
+last-resort KeyPackage and MAY make policy decisions based on that information.
+
+### Format
+
+The purpose of the extension is simply to mark a given KeyPackage, which means
+it carries no additional data.
+
+As a result, a LastResort Extension contains the ExtensionType with an empty
+`extension_data` field.
+
+
 # IANA Considerations
 
 This document requests the addition of various new values under the heading
@@ -547,6 +591,18 @@ MLS members of the group to support.
 * Value: 0x0009
 * Name: required_media_types
 * Message(s): GC: This extension may appear in GroupContext objects
+* Recommended: Y
+* Reference: RFC XXXX
+
+### last_resort_key_package MLS Extension
+
+The last_resort_key_package MLS Extension Type is used inside KeyPackage
+objects. It marks the KeyPackage for usage in last resort scenarios and contains
+no additional data.
+
+* Value: 0x0009
+* Name: last_resort_key_package
+* Message(s): KP: This extension may appear in KeyPackage objects
 * Recommended: Y
 * Reference: RFC XXXX
 
