@@ -489,18 +489,25 @@ Type: KeyPackage extension
 
 ### Description
 
-Section 10 of {{!RFC9420}} details that are required to pre-publish KeyPackages
-s.t. other clients can add them to groups asynchronously. The specification
-states that KeyPackages generally SHOULD NOT be re-used with the exception of
-"last resort" KeyPackages. Section 16.8 of {{!RFC9420}} further describes
-last-resort KeyPackages as KeyPackages that are meant to be used if all other
-KeyPackages have been exhausted. The specification, however, leaves it to the
-application to distinguish between regular and last-resort KeyPackages.
+Section 10 of {{!RFC9420}} details that clients are required to pre-publish
+KeyPackages s.t. other clients can add them to groups asynchronously. It also
+states that they should not be re-used:
 
-The last_resort_key_package KeyPackage extension defined in this section fills
-this gap and allows clients to specifically mark KeyPackages as KeyPackages of
-last resort that MAY be used more than once in scenarios where all other
-KeyPackages have already been used.
+> KeyPackages are intended to be used only once and SHOULD NOT be reused except
+> in the case of a "last resort" KeyPackage (see Section 16.8). Clients MAY
+> generate and publish multiple KeyPackages to support multiple cipher suites.
+
+Section 16.8 of {{!RFC9420}} then introduces the notion of last-resort
+KeyPackages as follows:
+
+> An application MAY allow for reuse of a "last resort" KeyPackage in order to
+> prevent denial-of-service attacks.
+
+However, {{!RFC9420}} does not specify how to distinguish regular KeyPackages
+from last-resort ones. The last_resort_key_package KeyPackage extension defined
+in this section fills this gap and allows clients to specifically mark
+KeyPackages as KeyPackages of last resort that MAY be used more than once in
+scenarios where all other KeyPackages have already been used.
 
 The extension allows clients that pre-publish KeyPackages to signal to the
 Delivery Service which KeyPackage(s) are meant to be used as last resort
