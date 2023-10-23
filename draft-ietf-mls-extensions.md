@@ -324,9 +324,9 @@ Similar to wire formats, extensions can define their own proposals by using one
 of three dedicated extension proposal types: extension_proposal,
 extension_path_proposal and extension_external_propsal. Each type contains the
 same ExtensionContent struct, but is validated differently: extension_proposal
-requires no path and can not be sent by an external sender
-extension_path_proposal requires a path and can not be sent by an external
-sender extensions_external_proposal requires no path and can be sent by an
+requires no UpdatePath and can not be sent by an external sender
+extension_path_proposal requires an UpdatePath and can not be sent by an external
+sender extensions_external_proposal requires no UpdatePath and can be sent by an
 external sender
 
 Each of the three proposal types is IANA registered and extends the select
@@ -402,8 +402,8 @@ the struct is subject to as part of the protocol flow.
   that provides the KeyPackages for download, as well as any part of the
   delivery service that can see the public group state.
 - LeafNode Extensions: LeafNodes are a part of every KeyPackage and thus follow
-  the same lifecycle. However, they are also part of any commit that includes a
-  path and clients generally have a leaf node in each group they are a member
+  the same lifecycle. However, they are also part of any commit that includes an
+  UpdatePath and clients generally have a leaf node in each group they are a member
   of. Leaf node extensions can thus be used to include member-specific data in a
   group state that can be updated by the owner at any time.
 
