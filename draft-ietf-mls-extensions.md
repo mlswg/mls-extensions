@@ -66,6 +66,7 @@ draft-03
 
 - Add Last Resort KeyPackage extension
 - Add Safe Extensions framework
+- Add SelfRemove Proposal
 
 draft-02
 
@@ -872,6 +873,99 @@ The `media_type` MAY be zero length, in which case, the media type of the
 `application_content` is interpreted as the first MediaType specified in
 `required_media_types`.
 
+## SelfRemove Proposal
+
+The design of the MLS protocol prevents a member of
+an MLS group from removing itself immediately from the group. (To cause
+an immediate change in the group, a member must send a Commit message.
+However the sender of a Commit message knows the keying material of the
+new epoch and therefore needs to be part of the group.) Instead a member
+wishing to remove itself can send a Remove Proposal and wait for another
+member to Commit its Proposal.
+
+Unfortunately, MLS clients that join via an External Commit ignore
+pending, but otherwise valid, Remove Proposals. The member trying to remove
+itself has to monitor the group and send a new Remove Proposal in every new
+epoch until the member is removed. In a
+group with a burst of external joiners, a member connected over a
+high-latency link (or one that is merely unlucky) might have to wait
+several epochs to remove itself. A real-world situation in which this happens
+is a member trying to remove itself from a conference call as several dozen
+new participants are trying to join (often on the hour).
+
+This section describes a new `SelfRemove` Proposal extension type. It is
+designed to be included in External Commits.
+
+### Extension Description
+
+This document specifies a new MLS Proposal type called `SelfRemove`. Its syntax
+is described using the TLS Presentation Language [@!RFC8446] below (its content
+is an empty struct). It is allowed in External Commits and requires an UpdatePath.
+SelfRemove proposals are only allowed in a Commit by reference. SelfRemove
+cannot be sent as an external proposal.
+
+~~~ tls-presentation
+struct {} SelfRemove;
+
+struct {
+    ProposalType msg_type;
+    select (Proposal.msg_type) {
+        case add:                      Add;
+        case update:                   Update;
+        case remove:                   Remove;
+        case psk:                      PreSharedKey;
+        case reinit:                   ReInit;
+        case external_init:            ExternalInit;
+        case group_context_extensions: GroupContextExtensions;
+        case self_remove:              SelfRemove;
+    };
+} Proposal;
+~~~
+
+The description of behavior below only applies if all the
+members of a group support this extension in their
+capabilities; such a group is a "self-remove-capable group".
+
+An MLS client which supports this extension can send a
+SelfRemove Proposal whenever it would like to remove itself
+from a self-remove-capable group. Because the point of a
+SelfRemove Proposal is to be available to external joiners
+(which are not yet members), these proposals MUST be sent
+in an MLS PublicMessage.
+
+Whenever a member receives a SelfRemove Proposal, it includes
+it along with any other pending Propsals when sending a Commit.
+It already MUST send a Commit of pending Proposals before sending
+new application messages.
+
+When a member receives a Commit referencing one or more SelfRemove Proposals,
+it treats the proposal like a Remove Proposal, except the leaf node to remove
+is determined by looking in the Sender `leaf_index` of the original Proposal.
+The member is able to verify that the Sender was a member.
+
+Whenever a new joiner is about to join a self-remove-capable group with an
+External Commit, the new joiner MUST fetch any pending SelfRemove Proposals
+along with the GroupInfo object, and include the SelfRemove Proposals
+in its External Commit by reference. (An ExternalCommit can contain zero or
+more SelfRemove proposals). The new joiner MUST validate the SelfRemove
+Proposal before including it by reference, except that it skips the validation
+of the `membership_tag` because a non-member cannot verify membership.
+
+During validation, SelfRemove proposals are processed after Update proposals
+and before Remove proposals. If there is a pending SelfRemove proposal for a specific
+leaf node and a pending Remove proposal for the same leaf node, the Remove proposal is
+invalid. A client MUST NOT issue more than one SelfRemove proposal per epoch.
+
+The MLS Delivery Service (DS) needs to validate SelfRemove Proposals it
+receives (except that it cannot validate the `membership_tag`). If the DS
+provides a GroupInfo object to an external joiner, the DS SHOULD attach any
+SelfRemove proposals known to the DS to the GroupInfo object.
+
+As with Remove proposals, clients need to be able to receive a Commit
+message which removes them from the group via a SelfRemove. If the DS does
+not forward a Commit to a removed client, it needs to inform the removed
+client out-of-band.
+
 ## Last resort KeyPackages
 
 Type: KeyPackage extension
@@ -914,7 +1008,6 @@ it carries no additional data.
 
 As a result, a LastResort Extension contains the ExtensionType with an empty
 `extension_data` field.
-
 
 # IANA Considerations
 
@@ -997,14 +1090,6 @@ no additional data.
 
 ## MLS Proposal Types
 
-### AppAck Proposal
-
-* Value: 0x0008
-* Name: app_ack
-* Recommended: Y
-* Path Required: Y
-* Reference: RFC XXXX
-
 ### Extension Proposal
 
 * Value: 0x0008
@@ -1031,6 +1116,26 @@ no additional data.
 * Path Required: N
 * External Sender: Y
 * Reference: RFC XXXX
+
+### AppAck Proposal
+
+* Value: 0x000b
+* Name: app_ack
+* Recommended: Y
+* Path Required: Y
+* Reference: RFC XXXX
+
+### SelfRemove Proposal
+
+The `self_remove` MLS Proposal Type is used for a member to remove itself
+from a group more efficiently than using a `remove` proposal type, as the
+`self_remove` type is permitted in External Commits.
+
+* Value: 0x000c
+* Name: self_remove
+* Recommended: Y
+* External: N
+* Path Required: Y
 
 ## MLS Credential Types
 
@@ -1074,3 +1179,12 @@ could leak some private information visible in KeyPackages and inside an MLS gro
 They could be used to infer a specific implementation, platform, or even version.
 Clients should consider carefully the privacy implications in their environment of
 making a list of acceptable media types available.
+
+## SelfRemove
+
+An external recipient of a SelfRemove Proposal cannot verify the
+`membership_tag`. However, an external joiner also has no way to
+completely validate a GroupInfo object that it receives. An insider
+can prevent an External Join by providing either an invalid GroupInfo object
+or an invalid SelfRemove Proposal. The security properties of external joins
+does not change with the addition of this proposal type.
