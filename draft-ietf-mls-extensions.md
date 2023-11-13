@@ -1082,7 +1082,7 @@ The last_resort_key_package MLS Extension Type is used inside KeyPackage
 objects. It marks the KeyPackage for usage in last resort scenarios and contains
 no additional data.
 
-* Value: 0x0009
+* Value: 0x000A
 * Name: last_resort_key_package
 * Message(s): KP: This extension may appear in KeyPackage objects
 * Recommended: Y
