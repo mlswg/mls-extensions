@@ -113,7 +113,7 @@ extensions the ability to:
   functionality of MLS, preserves forward secrecy of the exported secrets within
   an epoch.
 - Anchor extension-specific state in an MLS group to ensure agreement and manage
-  state acces authorization across extensions 
+  state acces authorization across extensions.
 
 The Safe Extension API is not an extension itself, it only defines components
 from which other extensions can be built. Some of these components modify the
@@ -412,7 +412,7 @@ extension in the context of the safe extension framework is determined by the
 `extension_type` field. The extension with a matching `extension_type` is called
 the owning extension.
 
-```tls
+~~~tls
 enum {
   reserved(0),
   read(1),
@@ -429,7 +429,7 @@ enum {
 struct {
   HashOrData hash_or_data;
   select(hash_or_data) {
-    case hash: 
+    case hash:
       HashReference state_hash;
     case data:
       opaque state<V>;
@@ -441,7 +441,7 @@ struct {
   Permissions read;
   ExtensionPayload payload;
 } ExtensionState;
-```
+~~~
 
 The `ExtensionState` GroupContext extension contains data either directly (if
 `hash_or_data = data`) or inditectly via a hash (if `hash_or_data = hash`).
