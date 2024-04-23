@@ -1001,6 +1001,27 @@ information out-of-band is that the extension is still present in Add proposals.
 Clients processing such Add proposals can authenticate that a KeyPackage is a
 last-resort KeyPackage and MAY make policy decisions based on that information.
 
+## GroupContextExtensionUpdate Proposal
+
+A new proposal that can be sent instead of the group context extension proposal to update and not replace group context extensions. This may be used to update state that is stored in the group context without having to resend the full state.
+
+~~~tls
+struct {
+  Extension extensions<V>;
+} GroupContextExtensionUpdate;
+~~~
+
+A GroupContextExtensionUpdate proposal is invalid if it includes a required_capabilities extension and some members of the group do not support some of the required capabilities (including those added in the same Commit, and excluding those removed).
+
+A member of the group applies a GroupContextExtensions proposal with the following steps:
+- For every extension in the extensions list
+  - When the extension exists in the group context, the values are extended with the values from the extension list item.
+  - When the extension does not exist in the group context, the extension is added.
+
+Note that once the GroupContext is updated, its inclusion in the confirmation_tag by way of the key schedule will confirm that all members of the group agree on the extensions in use.
+
+Further note that, in contrast to the GroupContextExtensions proposal, this proposal can not be used to remove extensions from the group context.
+
 ### Format
 
 The purpose of the extension is simply to mark a given KeyPackage, which means
@@ -1133,6 +1154,18 @@ from a group more efficiently than using a `remove` proposal type, as the
 
 * Value: 0x000c
 * Name: self_remove
+* Recommended: Y
+* External: N
+* Path Required: Y
+
+### GroupContextExtensionUpdate Proposal
+
+The `gce_update` MLS Proposal Type is used to update Group Context Extensions
+in a group more efficiently than using a `group_context_extensions` proposal
+type, as the `gce_update` type is updating rather than replacing the extensions.
+
+* Value: 0x000d
+* Name: gce_update
 * Recommended: Y
 * External: N
 * Path Required: Y
