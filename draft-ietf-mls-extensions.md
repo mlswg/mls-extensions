@@ -1022,6 +1022,9 @@ Note that once the GroupContext is updated, its inclusion in the confirmation_ta
 
 Further note that, in contrast to the GroupContextExtensions proposal, this proposal can not be used to remove extensions from the group context.
 
+The validation rules in {{Section 12.2 of RFC9420}} are extended with
+- A commit is invalid if it contains more than one `gce_update` proposal, or a `gce_update` and `group_context_extensions`.
+
 ### Format
 
 The purpose of the extension is simply to mark a given KeyPackage, which means
