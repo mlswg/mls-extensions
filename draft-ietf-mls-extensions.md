@@ -333,7 +333,8 @@ struct {
 The safe extension API allows extension designers to sign and encrypt payloads
 without the need to register their own IANA labels. Following the same pattern,
 this document also provides ways for extension designers to define their own
-wire formats, proposals and credentials.
+wire formats, proposals, credentials, and for structured data in the
+Additional Authenticated Data.
 
 #### Wire Formats
 
@@ -400,6 +401,30 @@ The extension_type in the extension_content must be set to that of the extension
 in question  with the extension_data containing all other relevant data. Note
 that any credential defined in this way has to meet the requirements detailed in
 Section 5.3 of the MLS specification.
+
+#### Additional Authenticated Data (AAD) {#safe-aad}
+
+The `PrivateContentAAD` struct in MLS can contain arbitrary additional
+application-specific AAD in its `authenticated_data` field. This framework
+defines a framing used to allow multiple extensions to add AAD safely
+without conflicts or ambiguity.
+
+When any AAD safe extension is included in the `authenticated_data` field,
+the "safe" AAD items MUST come before any non-safe data in the
+`authenticated_data` field. Safe AAD items are framed using the `SafeAAD`
+struct and are sorted in increasing numerical order of the `ExtensionType`
+as described below:
+
+~~~ tls
+struct {
+  ExtensionType extension_type;
+  opaque aad_item_data<V>;
+} SafeAADItem;
+
+struct {
+  SafeAADItem aad_items<V>;
+} SafeAAD;
+~~~
 
 ## Extension Design Guidance
 
@@ -1153,6 +1178,16 @@ from a group more efficiently than using a `remove` proposal type, as the
 * Label: "LabeledExtensionContent"
 * Recommended: Y
 * Reference: RFC XXXX
+
+## MLS Extension Types
+
+This document modifies the rules of the "MLS Extension Types" registry
+to add a new Message type as follows:
+
+- AD: Authenticated Additional Data
+
+The `AD` Message type refers to an `ExtensionType` used inside the
+`SafeAADItem` structure defined in {{safe-aad}}.
 
 # Security considerations
 
