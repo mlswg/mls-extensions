@@ -251,6 +251,16 @@ other extensions. However, extensions can verify signatures computed by other
 extensions. Note that domain separation is ensured by explicitly including the
 ExtensionType with every operation.
 
+If a non-member needs to verify these signatures, the public signing key
+for the extension can be exported using:
+
+~~~ tls
+public_key = SafeSigningPublicKey(ExtensionType, Epoch)
+~~~
+
+Where the epoch is limited to an epoch in the exporting member's key
+schedule.
+
 ### Exporting Secrets
 
 An extension can use MLS as a group key agreement protocol by exporting symmetric keys.
