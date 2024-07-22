@@ -1,0 +1,749 @@
+{
+  "magic": "E!vIA5L86J2I",
+  "timestamp": "2023-04-30T01:06:45.387900+00:00",
+  "repo": "mlswg/mls-extensions",
+  "labels": [
+    {
+      "name": "bug",
+      "description": "Something isn't working",
+      "color": "d73a4a"
+    },
+    {
+      "name": "documentation",
+      "description": "Improvements or additions to documentation",
+      "color": "0075ca"
+    },
+    {
+      "name": "duplicate",
+      "description": "This issue or pull request already exists",
+      "color": "cfd3d7"
+    },
+    {
+      "name": "enhancement",
+      "description": "New feature or request",
+      "color": "a2eeef"
+    },
+    {
+      "name": "good first issue",
+      "description": "Good for newcomers",
+      "color": "7057ff"
+    },
+    {
+      "name": "help wanted",
+      "description": "Extra attention is needed",
+      "color": "008672"
+    },
+    {
+      "name": "invalid",
+      "description": "This doesn't seem right",
+      "color": "e4e669"
+    },
+    {
+      "name": "question",
+      "description": "Further information is requested",
+      "color": "d876e3"
+    },
+    {
+      "name": "wontfix",
+      "description": "This will not be worked on",
+      "color": "ffffff"
+    }
+  ],
+  "issues": [
+    {
+      "number": 3,
+      "id": "I_kwDOHZoI5M5UoiK7",
+      "title": "New IANA registries are contrary to the main spec IANA section",
+      "url": "https://github.com/mlswg/mls-extensions/issues/3",
+      "state": "CLOSED",
+      "author": "rohan-wire",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The extensions draft IANA section begins:\r\n\r\n> This document requests the creation of the following new IANA registries:\r\n>\r\n>* MLS Extension Types ({{extended-mls-extension-types}})\r\n>* MLS Proposal Types ({{extended-mls-proposal-types}})\r\n\r\nThis is contradictory to the clear language in the IANA considerations of the MLS protocol spec (example quoted from Section 17.2):\r\n\r\n>[17.2. ](https://www.ietf.org/archive/id/draft-ietf-mls-protocol-16.html#section-17.2)[MLS Extension Types](https://www.ietf.org/archive/id/draft-ietf-mls-protocol-16.html#name-mls-extension-types)\r\n>\r\n>This registry lists identifiers for extensions to the MLS protocol. The extension type field is two bytes wide, so valid extension type values are in the range 0x0000 to 0xffff.\r\n\r\nNew extensions are supposed to be added to the **_EXISTING_** IANA registries.",
+      "createdAt": "2022-10-23T19:55:43Z",
+      "updatedAt": "2022-12-16T13:39:58Z",
+      "closedAt": "2022-12-16T13:39:58Z",
+      "comments": [
+        {
+          "author": "rohan-wire",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Submitted PR #4 to fix.",
+          "createdAt": "2022-10-23T19:56:51Z",
+          "updatedAt": "2022-10-23T19:56:51Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "Closed via #4.",
+          "createdAt": "2022-12-16T13:39:58Z",
+          "updatedAt": "2022-12-16T13:39:58Z"
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "id": "I_kwDOHZoI5M5Za6JA",
+      "title": "Add IANA entry for new wire format / Targeted messages",
+      "url": "https://github.com/mlswg/mls-extensions/issues/7",
+      "state": "CLOSED",
+      "author": "raphaelrobert",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "Context: https://github.com/mlswg/mls-protocol/pull/821\r\n\r\nTargeted messages should define their own wire format.",
+      "createdAt": "2022-12-16T13:42:54Z",
+      "updatedAt": "2023-03-13T18:15:07Z",
+      "closedAt": "2023-03-13T18:15:07Z",
+      "comments": []
+    },
+    {
+      "number": 8,
+      "id": "I_kwDOHZoI5M5Za9ey",
+      "title": "Fix formatting issue",
+      "url": "https://github.com/mlswg/mls-extensions/issues/8",
+      "state": "CLOSED",
+      "author": "raphaelrobert",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "Formatting issue in code block in 2.2.4.2. Authentication with signatures",
+      "createdAt": "2022-12-16T13:51:04Z",
+      "updatedAt": "2023-01-25T14:51:29Z",
+      "closedAt": "2023-01-25T14:51:29Z",
+      "comments": []
+    }
+  ],
+  "pulls": [
+    {
+      "number": 1,
+      "id": "PR_kwDOHZoI5M479E8G",
+      "title": "Targeted messages draft",
+      "url": "https://github.com/mlswg/mls-extensions/pull/1",
+      "state": "MERGED",
+      "author": "raphaelrobert",
+      "authorAssociation": "MEMBER",
+      "assignees": [
+        "raphaelrobert"
+      ],
+      "labels": [],
+      "body": "",
+      "createdAt": "2022-07-22T14:36:35Z",
+      "updatedAt": "2022-11-25T16:23:55Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "87eff2a22db8663171ceacdcf2edce2a01183f00",
+      "headRepository": "mlswg/mls-extensions",
+      "headRefName": "targeted-messages",
+      "headRefOid": "279975339ba5e521765511fb004f5cace14b8768",
+      "closedAt": "2022-11-25T16:23:54Z",
+      "mergedAt": "2022-11-25T16:23:54Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "424aaab30e9a825984227261764025b9fa895f1a"
+      },
+      "comments": [
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "> I don't exactly understand how things work: how do we obtain the value `encrypted_targeted_message_content`? Is there two layers of encryptions, since TargetMessageContent is encrypted and contains an `HPKECiphertext`?\r\n\r\nThanks for the review @TWal! There was a part missing, that actually turned out to not be as trivial and I made some more changes. I think that it should be more explicit now. Originally, I thought it could be more similar to `MLSCiphertext`, but it turns out that doesn't work.\r\nI think there's more than one way of doing it, right now I mostly wanted to avoid double encryption. Maybe you find a more elegant way to separate the different nested structs.",
+          "createdAt": "2022-10-01T17:24:05Z",
+          "updatedAt": "2022-10-01T17:24:05Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "I will go ahead and merge this in order to publish a new draft. This will require some more analysis obviously.",
+          "createdAt": "2022-11-25T16:22:30Z",
+          "updatedAt": "2022-11-25T16:22:30Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M4_Ytkr",
+          "commit": {
+            "abbreviatedOid": "14f5567"
+          },
+          "author": "franziskuskiefer",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "Some first comments.\r\nThe general approach looks fine. But I'm a little worried about the way the encryption and authentication work together. Maybe you can work out a little better what the security (confidentiality and authentication) guarantees should be for targeted messages (also compared to regular MLS application messages). They are not entirely clear to me.",
+          "createdAt": "2022-08-05T14:24:18Z",
+          "updatedAt": "2022-08-08T11:28:24Z",
+          "comments": [
+            {
+              "originalPosition": 57,
+              "body": "```suggestion\r\nThis extensions introduces a new message type to the MLS protocol,\r\n```",
+              "createdAt": "2022-08-05T14:24:19Z",
+              "updatedAt": "2022-08-08T11:28:24Z"
+            },
+            {
+              "originalPosition": 99,
+              "body": "It's worth noting that the signature/hpke scheme is the same as the one defined in the MLS ciphersuite of the group. I could imagine using a different mechanism for the signature here for example.",
+              "createdAt": "2022-08-08T10:58:00Z",
+              "updatedAt": "2022-08-08T11:28:24Z"
+            },
+            {
+              "originalPosition": 118,
+              "body": "So this is only needed when using signatures, right?",
+              "createdAt": "2022-08-08T10:59:15Z",
+              "updatedAt": "2022-08-08T11:28:24Z"
+            },
+            {
+              "originalPosition": 140,
+              "body": "Why not allow `mode_auth`?",
+              "createdAt": "2022-08-08T11:14:19Z",
+              "updatedAt": "2022-08-08T11:28:24Z"
+            },
+            {
+              "originalPosition": 149,
+              "body": "Is the idea that the PSK binds the message to an epoch? The security properties are a little unclear because the HPKE key is a relatively long-lived key but this one is not.\r\nReading further it looks like you really want to use PSK (encryption) and want use HPKE/Signature (authentication) only for authentication? This doesn't become clear from the text. I thought you were doing HPKE (encryption) + hpke_auth/signature (authentication). But then the encryption is always HPKE (not PSK), which makes me very confused.",
+              "createdAt": "2022-08-08T11:17:02Z",
+              "updatedAt": "2022-08-08T11:28:24Z"
+            },
+            {
+              "originalPosition": 155,
+              "body": "Using `HPKEAuth` when it is actually `HPKEAuthPsk` is a little confusing.",
+              "createdAt": "2022-08-08T11:17:24Z",
+              "updatedAt": "2022-08-08T11:28:24Z"
+            },
+            {
+              "originalPosition": 160,
+              "body": "You should mention somewhere that `SealAuthPSK` etc. are from RFC 9180.",
+              "createdAt": "2022-08-08T11:18:41Z",
+              "updatedAt": "2022-08-08T11:28:24Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M4_kJxz",
+          "commit": {
+            "abbreviatedOid": "14f5567"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "Thanks for the review, I hope my comments clarify things.",
+          "createdAt": "2022-08-09T09:56:37Z",
+          "updatedAt": "2022-08-09T10:02:53Z",
+          "comments": [
+            {
+              "originalPosition": 149,
+              "body": "We could drop the PSK part, but that would be unnecessarily weak because all security guarantees would only depend on the HPKE keys. Using the PSK gives us a pretty efficient way to couple targeted messages with the key schedule of the base protocol to achieve the following guarantees:\r\n\r\n - FS & PCS that we have between epochs\r\n - Better confidentiality, meaning a passive attacker must compromise the group state as well, not just the HPKE key\r\n - Proof of membership, meaning an active attacker must compromise the group state as well, not just the HPKE key\r\n\r\nSo in other words, we always use HPKE + PSK for encryption. For authentication, we always use PSK, and additionally either HPKEAuth or signatures. The latter is really either `mode_auth_psk` or `mode_psk + Signature`.",
+              "createdAt": "2022-08-09T09:56:38Z",
+              "updatedAt": "2022-08-09T10:02:53Z"
+            },
+            {
+              "originalPosition": 140,
+              "body": "See the comment below.",
+              "createdAt": "2022-08-09T09:57:13Z",
+              "updatedAt": "2022-08-09T10:02:53Z"
+            },
+            {
+              "originalPosition": 118,
+              "body": "That's correct",
+              "createdAt": "2022-08-09T10:00:20Z",
+              "updatedAt": "2022-08-09T10:02:53Z"
+            },
+            {
+              "originalPosition": 160,
+              "body": "Good point.",
+              "createdAt": "2022-08-09T10:00:37Z",
+              "updatedAt": "2022-08-09T10:02:53Z"
+            },
+            {
+              "originalPosition": 155,
+              "body": "I see how that's confusing. I left out the PSK part because it is common to both authentication modes and therefore not a differentiator. I'll try to think of a better name.",
+              "createdAt": "2022-08-09T10:02:00Z",
+              "updatedAt": "2022-08-09T10:02:53Z"
+            },
+            {
+              "originalPosition": 99,
+              "body": "Good point.",
+              "createdAt": "2022-08-09T10:02:18Z",
+              "updatedAt": "2022-08-09T10:02:53Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M4_qsIE",
+          "commit": {
+            "abbreviatedOid": "cef89c3"
+          },
+          "author": "franziskuskiefer",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2022-08-10T12:01:46Z",
+          "updatedAt": "2022-08-10T12:02:24Z",
+          "comments": [
+            {
+              "originalPosition": 149,
+              "body": "I'm all for using PSK here \ud83d\ude42 \r\nMy main point is that it needs to become clear where the security is coming from and how the different things work together.\r\nThe PSK in HPKE is only used for the key schedule, not the KEM. Hence, the encapsulation is independent of the PSK and only dependent on the long-lived HPKE key. The encryption happens with the key from the HPKE key schedule that includes the PSK.\r\n\r\nSo I'd suggest to add your explanations about the security guarantees and some basic explanation (like the one above) for how the PSK is used in HPKE (to make it clear where the security properties come from).",
+              "createdAt": "2022-08-10T12:01:46Z",
+              "updatedAt": "2022-08-10T12:02:24Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M5DFqFd",
+          "commit": {
+            "abbreviatedOid": "4d67e13"
+          },
+          "author": "TWal",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "I don't exactly understand how things work: how do we obtain the value `encrypted_targeted_message_content`?\r\nIs there two layers of encryptions, since TargetMessageContent is encrypted and contains an `HPKECiphertext`?",
+          "createdAt": "2022-09-29T15:46:17Z",
+          "updatedAt": "2022-09-29T16:25:58Z",
+          "comments": [
+            {
+              "originalPosition": 100,
+              "body": "Usually, enums are in snake_case and have explicit numbers associated with them",
+              "createdAt": "2022-09-29T15:46:17Z",
+              "updatedAt": "2022-09-29T16:25:58Z"
+            },
+            {
+              "originalPosition": 193,
+              "body": "```suggestion\r\nsignature = SignWithLabel(., \"TargetedMessageTBS\", targeted_message_tbs)\r\n```\r\nfor consistency with the rest of MLS",
+              "createdAt": "2022-09-29T15:46:33Z",
+              "updatedAt": "2022-09-29T16:25:58Z"
+            },
+            {
+              "originalPosition": 205,
+              "body": "```suggestion\r\nVerifyWithLabel.verify(sender_leaf_node.signature_key, \"TargetedMessageTBS\", targeted_message_tbs, signature)\r\n```\r\nfor consistency with the rest of MLS",
+              "createdAt": "2022-09-29T15:46:59Z",
+              "updatedAt": "2022-09-29T16:25:58Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M5DdRBo",
+          "commit": {
+            "abbreviatedOid": "2cb32fa"
+          },
+          "author": "franziskuskiefer",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "I made a PR to fix the build #2.\r\n\r\nAnd I left a question about the `SealAuthPSK` aad.",
+          "createdAt": "2022-10-05T16:46:52Z",
+          "updatedAt": "2022-10-05T16:47:51Z",
+          "comments": [
+            {
+              "originalPosition": 213,
+              "body": "If I read this correctly, you use `targeted_message_tbm` as `aad`, which means it is public.\r\nIs this what you intend to do? The content looks like something that shouldn't be \"public\"\r\nA related question is probably what the attacker model is, in particular is the attacker another group member or from outside the group?",
+              "createdAt": "2022-10-05T16:46:52Z",
+              "updatedAt": "2022-10-05T16:47:37Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M5ErtkM",
+          "commit": {
+            "abbreviatedOid": "2cb32fa"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2022-10-23T13:22:23Z",
+          "updatedAt": "2022-10-23T13:22:24Z",
+          "comments": [
+            {
+              "originalPosition": 213,
+              "body": "I'm not sure what you mean with 'public' in this context? My understanding is that the AAD is only included in the integrity verification but the actual payload is not included.\r\n\r\nThe attacker model should be the same as for the core MLS protocol. The base attacker is a network attacker, but you also need to consider what could happen if that attacker has compromised group members.",
+              "createdAt": "2022-10-23T13:22:24Z",
+              "updatedAt": "2022-10-23T13:22:24Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M5FHunw",
+          "commit": {
+            "abbreviatedOid": "2799753"
+          },
+          "author": "franziskuskiefer",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2022-10-28T08:16:36Z",
+          "updatedAt": "2022-10-28T08:16:36Z",
+          "comments": [
+            {
+              "originalPosition": 213,
+              "body": "The way AAD is transferred is outside of the security models. It's attacker controlled, but actual mode of transport is irrelevant.\r\nThere's just a lot of stuff in there and I wanted to make sure this is intentional. I  don't think I see anything dangerous in there.",
+              "createdAt": "2022-10-28T08:16:36Z",
+              "updatedAt": "2022-10-28T08:16:36Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "id": "PR_kwDOHZoI5M5AOtKB",
+      "title": "fix code blocks and other nits",
+      "url": "https://github.com/mlswg/mls-extensions/pull/2",
+      "state": "CLOSED",
+      "author": "franziskuskiefer",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "@raphaelrobert this should fix the build",
+      "createdAt": "2022-10-05T16:43:33Z",
+      "updatedAt": "2022-10-23T12:49:55Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "refs/heads/targeted-messages",
+      "baseRefOid": "2cb32fa3328d9be7c244ea91839b20ceefffc7a9",
+      "headRepository": "franziskuskiefer/mls-extensions",
+      "headRefName": "patch-1",
+      "headRefOid": "95a110a390aff3ebb4ba5a0a2f44d4f97eadc416",
+      "closedAt": "2022-10-23T12:49:54Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "Turns out the build error was something else entirely. I'm closing this, but I ported the typo fix. Thanks again.",
+          "createdAt": "2022-10-23T12:49:54Z",
+          "updatedAt": "2022-10-23T12:49:54Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M5DdQML",
+          "commit": {
+            "abbreviatedOid": "95a110a"
+          },
+          "author": "franziskuskiefer",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2022-10-05T16:44:07Z",
+          "updatedAt": "2022-10-05T16:44:17Z",
+          "comments": [
+            {
+              "originalPosition": 4,
+              "body": "This looks like a typo?",
+              "createdAt": "2022-10-05T16:44:07Z",
+              "updatedAt": "2022-10-05T16:44:17Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M5Errrz",
+          "commit": {
+            "abbreviatedOid": "95a110a"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "Thanks!",
+          "createdAt": "2022-10-23T12:20:03Z",
+          "updatedAt": "2022-10-23T12:20:03Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "id": "PR_kwDOHZoI5M5BXdtN",
+      "title": "Fix IANA Considerations Section to use existing registries",
+      "url": "https://github.com/mlswg/mls-extensions/pull/4",
+      "state": "MERGED",
+      "author": "rohan-wire",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The MLS protocol spec defines IANA registries explicitly for extensions. See Issue #3 ",
+      "createdAt": "2022-10-23T19:56:07Z",
+      "updatedAt": "2022-10-29T15:23:44Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "87eff2a22db8663171ceacdcf2edce2a01183f00",
+      "headRepository": "rohan-wire/mls-extensions",
+      "headRefName": "rohan/normal-extensions",
+      "headRefOid": "9fb13ce38c3a21a7377e2e8a747e6c64880e4d3b",
+      "closedAt": "2022-10-29T15:23:44Z",
+      "mergedAt": "2022-10-29T15:23:43Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "69c8f5a527eb7a4c9e4529699e502114985a7951"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M5FM4KK",
+          "commit": {
+            "abbreviatedOid": "9fb13ce"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-10-29T15:22:19Z",
+          "updatedAt": "2022-10-29T15:22:19Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "id": "PR_kwDOHZoI5M5BXjC3",
+      "title": "Add Content Advertisement extensions",
+      "url": "https://github.com/mlswg/mls-extensions/pull/5",
+      "state": "CLOSED",
+      "author": "rohan-wire",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This PR contains the text that I will also submit as draft-mahy-mls-content-adv-00.\r\n\r\nThese extensions should have a home, whether a separate document or here.\r\n",
+      "createdAt": "2022-10-23T21:18:28Z",
+      "updatedAt": "2022-12-28T20:29:08Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "69c8f5a527eb7a4c9e4529699e502114985a7951",
+      "headRepository": "rohan-wire/mls-extensions",
+      "headRefName": "rohan/media-types",
+      "headRefOid": "a1d9c76a6057736693eb289431f60862c14a7eb9",
+      "closedAt": "2022-12-28T20:29:08Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "Thanks, I'll leave this open until the decision is taken in which document it should go. Probably to be discussed at the next interim.",
+          "createdAt": "2022-10-29T15:25:15Z",
+          "updatedAt": "2022-10-29T15:25:15Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "Discussed during interim on Dec 16, 2022: Consensus to merge",
+          "createdAt": "2022-12-16T16:34:05Z",
+          "updatedAt": "2022-12-16T16:34:05Z"
+        },
+        {
+          "author": "rohan-wire",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Replaced this PR with #11 . Closing this one.",
+          "createdAt": "2022-12-28T20:29:08Z",
+          "updatedAt": "2022-12-28T20:29:08Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 6,
+      "id": "PR_kwDOHZoI5M5DuMTm",
+      "title": "draft-01",
+      "url": "https://github.com/mlswg/mls-extensions/pull/6",
+      "state": "MERGED",
+      "author": "raphaelrobert",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "Prepares draft-01",
+      "createdAt": "2022-11-25T17:30:18Z",
+      "updatedAt": "2022-11-25T17:38:21Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "424aaab30e9a825984227261764025b9fa895f1a",
+      "headRepository": "mlswg/mls-extensions",
+      "headRefName": "draft-01",
+      "headRefOid": "ade2f3dcbf9853629d9e13497863626214cc2486",
+      "closedAt": "2022-11-25T17:38:21Z",
+      "mergedAt": "2022-11-25T17:38:21Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "edd6618cba4300c55d515b66ea0d71516632a7b9"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 9,
+      "id": "PR_kwDOHZoI5M5FpUF5",
+      "title": "Fix code blocks",
+      "url": "https://github.com/mlswg/mls-extensions/pull/9",
+      "state": "MERGED",
+      "author": "raphaelrobert",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "Fixes #8 and reformats code blocks in general.",
+      "createdAt": "2022-12-16T14:12:24Z",
+      "updatedAt": "2023-01-25T14:51:28Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "edd6618cba4300c55d515b66ea0d71516632a7b9",
+      "headRepository": "mlswg/mls-extensions",
+      "headRefName": "fix-code-blocks",
+      "headRefOid": "afb5bed26632e9d5bf933cbef094c4f2ed57705f",
+      "closedAt": "2023-01-25T14:51:27Z",
+      "mergedAt": "2023-01-25T14:51:27Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "58446752cf8982ffb8f58719eefeae750cd89d9d"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M5IyE5L",
+          "commit": {
+            "abbreviatedOid": "afb5bed"
+          },
+          "author": "rohan-wire",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-12-16T16:01:33Z",
+          "updatedAt": "2022-12-16T16:01:33Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 10,
+      "id": "PR_kwDOHZoI5M5F60vh",
+      "title": "Fix links in README.md",
+      "url": "https://github.com/mlswg/mls-extensions/pull/10",
+      "state": "MERGED",
+      "author": "rohan-wire",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The links in the mls-extensions README were pointing at mls-federation.",
+      "createdAt": "2022-12-21T01:26:17Z",
+      "updatedAt": "2023-01-25T14:51:48Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "edd6618cba4300c55d515b66ea0d71516632a7b9",
+      "headRepository": "rohan-wire/mls-extensions",
+      "headRefName": "rohan/fix-readme-links",
+      "headRefOid": "afd9381f0afcb2b692f02b583265839a131e74f3",
+      "closedAt": "2023-01-25T14:51:47Z",
+      "mergedAt": "2023-01-25T14:51:47Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "7bf5db00841f4d548ea033bbda5f84f4e019110e"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 11,
+      "id": "PR_kwDOHZoI5M5F65HF",
+      "title": "Add Content Advertisement extensions",
+      "url": "https://github.com/mlswg/mls-extensions/pull/11",
+      "state": "MERGED",
+      "author": "rohan-wire",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "As decided at 16-Dec-2022 Interim WG meeting",
+      "createdAt": "2022-12-21T01:57:45Z",
+      "updatedAt": "2023-01-25T14:51:13Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "edd6618cba4300c55d515b66ea0d71516632a7b9",
+      "headRepository": "rohan-wire/mls-extensions",
+      "headRefName": "rohan/add-content-adv",
+      "headRefOid": "7616882678421db37caec415ccaf4854dcb72a25",
+      "closedAt": "2023-01-25T14:51:13Z",
+      "mergedAt": "2023-01-25T14:51:13Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "760dd0833a6fdb25a7fccb7f7498721c7f88622c"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 12,
+      "id": "PR_kwDOHZoI5M5L63t4",
+      "title": "Prepare draft-01",
+      "url": "https://github.com/mlswg/mls-extensions/pull/12",
+      "state": "MERGED",
+      "author": "raphaelrobert",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-03-13T17:56:59Z",
+      "updatedAt": "2023-03-13T18:16:09Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "7bf5db00841f4d548ea033bbda5f84f4e019110e",
+      "headRepository": "mlswg/mls-extensions",
+      "headRefName": "draft01",
+      "headRefOid": "3acb10748fbcbd4116470451ba97c5c3de3776ec",
+      "closedAt": "2023-03-13T18:16:08Z",
+      "mergedAt": "2023-03-13T18:16:08Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "742d47630452bcbd29e0358a7b4d5259a6e36689"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 13,
+      "id": "PR_kwDOHZoI5M5L69FN",
+      "title": "New wire format for targeted messages",
+      "url": "https://github.com/mlswg/mls-extensions/pull/13",
+      "state": "MERGED",
+      "author": "raphaelrobert",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #7.",
+      "createdAt": "2023-03-13T18:09:58Z",
+      "updatedAt": "2023-03-13T18:15:02Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "7bf5db00841f4d548ea033bbda5f84f4e019110e",
+      "headRepository": "mlswg/mls-extensions",
+      "headRefName": "tm-wire-format",
+      "headRefOid": "0a33932751a1525c61b06f9982f2d19df418233a",
+      "closedAt": "2023-03-13T18:15:02Z",
+      "mergedAt": "2023-03-13T18:15:02Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "300dcbeead4b574c1db42c284dc3d835b2fd8988"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 14,
+      "id": "PR_kwDOHZoI5M5PSvKU",
+      "title": "Add content type for targeted messages",
+      "url": "https://github.com/mlswg/mls-extensions/pull/14",
+      "state": "OPEN",
+      "author": "kkohbrok",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Adding a content_type field to TargetedMessages allows other extensions to use them without fear of protocol confusion attacks. The alternative would be to use the content advertisement mechanism, which doesn't seem particularly clean, however, as we'd be mixing protocol and application level.\r\n\r\nThis is a draft as basis for further discussion. Especially the IANA considerations for the content type enum are missing.",
+      "createdAt": "2023-04-27T12:40:33Z",
+      "updatedAt": "2023-04-27T12:43:41Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "742d47630452bcbd29e0358a7b4d5259a6e36689",
+      "headRepository": "kkohbrok/mls-extensions",
+      "headRefName": "konrad/content_type",
+      "headRefOid": "62e36ec8ef5bfaf7fe39ca337e688b15611305f7",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    }
+  ]
+}
