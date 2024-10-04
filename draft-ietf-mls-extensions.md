@@ -139,13 +139,14 @@ further analysis of the combination is necessary. This also means that any
 security vulnerabilities introduced by one extension do not spread to other
 extensions or the base MLS.
 
-### Storing State in Extensions
+### Core Struct Extensions
 
-Every type of MLS extension can have data associated with it and, depending on
-the type of extension (KeyPackage Extension, GroupContext Extension, etc.) that
-data is included in the corresponding MLS struct. This allows the authors of an
-extension to make use of any authentication or confidentiality properties that
-the struct is subject to as part of the protocol flow.
+Every type of MLS extension can have data associated with it. The "MLS
+Extensions Types" registry historically represented extensibility of four
+core structs (`GroupContext`, `GroupInfo`, `KeyPackage`, and `LeafNode`)
+that have far reaching effects on the use of the protocol. The majority of
+MLS extensions registered at the time of this writing extend one or more
+of these core structs.
 
 - GroupContext Extensions: Any data in a group context extension is agreed-upon
   by all members of the group in the same way as the rest of the group state. As
@@ -182,9 +183,12 @@ the struct is subject to as part of the protocol flow.
 
 ### Common Data Structures
 
-Most components of the Safe Extension API use the value ExtensionType which is a
-unique uint16 identifier assigned to an extension in the MLS Extension Types
-IANA registry (see Section 17.3 of {{!RFC9420}}).
+The Safe Extension API reuses the `ExtensionType` and the "MLS Extension
+Types" IANA registry used for these core structs (see Section 17.3 of
+{{!RFC9420}}), even for safe extensions with no core struct changes.
+This is because many extensions modify a core struct, either primarily or
+to store state (related to the group or a client) associated with another
+aspect of an extension.
 
 Most Safe Extension API components also use the following data structure, which
 provides domain separation by `extension_type` of various `extension_data`.
@@ -199,7 +203,8 @@ struct {
 Where `extension_type` is set to the type of the extension to which the
 `extension_data` belongs.
 
-If in addition a label is required, the following data structure is used.
+When a label is required for an extension, the following data structure is
+used.
 
 ~~~ tls
 struct {
@@ -207,6 +212,55 @@ struct {
   ExtensionContent extension_content;
 } LabeledExtensionContent;
 ~~~
+
+### Negotiating Support for Safe Extensions
+
+MLS defines a `Capabilities` struct for LeafNodes (in turn used in
+KeyPackages), which describes which extensions are supported by that node.
+However, that struct (defined in Section 7.2 of {{!RFC9420}}) only has
+fields for a subset of the extensions possible in MLS, as reproduced below.
+
+~~~ tls
+...
+struct {
+    ProtocolVersion versions<V>;
+    CipherSuite cipher_suites<V>;
+    ExtensionType extensions<V>;
+    ProposalType proposals<V>;
+    CredentialType credentials<V>;
+} Capabilities;
+...
+~~~
+
+Therefore, all safe extensions MUST be represented by their `extension_type`
+in the `extensions` vector (originally intended for core struct extensions),
+regardless of their type.
+
+If the LeafNode supports any safe extension Credentials, the `credentials`
+vector will contain any non-safe credentials supported, plus the `extension_credential` defined in {extension-credential}.
+
+If the LeafNode supports any safe extension Proposals, then `proposals` will
+contain any non-default non-safe extensions, and whichever safe extension
+proposal types defined in {mls-proposal-types} are relevant to the supported
+safe proposals.
+
+Likewise, the `required_capabilities` GroupContext extension (defined
+in Section 11.1 of {{!RFC9420}} and reproduced below) contains all
+mandatory to support non-default non-safe, and safe extensions in its
+`extension_types` vector. Its `credential_types` vector contains any
+mandatory non-safe credential types, plus `extensions_credential` if any
+safe credential is required. Its `proposal_types` vector contains any
+mandatory to support non-default non-safe Proposals, and the relevant safe
+proposal type or types corresponding to any required safe proposals.
+
+~~~
+struct {
+    ExtensionType extension_types<V>;
+    ProposalType proposal_types<V>;
+    CredentialType credential_types<V>;
+} RequiredCapabilities;
+~~~
+
 
 ### Hybrid Public Key Encryption (HPKE) {#safe-hpke}
 
@@ -378,6 +432,12 @@ without the need to register their own IANA labels. Following the same pattern,
 this document also provides ways for extension designers to define their own
 wire formats, proposals, credentials, and for structured data in the
 Additional Authenticated Data.
+
+#### Core Struct Extensions
+
+Each extension of the GroupContext, GroupInfo, KeyPackage, and/or LeafNode
+structs is required to define the format of its data. These types of
+extensions SHOULD NOT use the `ExtensionContent` struct since the `extension_type` is already in the parent data structure.
 
 #### Wire Formats
 
