@@ -1090,6 +1090,22 @@ this document
 
 ## MLS Extension Types
 
+This document updates the MLS Extension Types registry to insert a new
+column ("Safe") between the "Recommended" column and the "Reference"
+column. The value of the "Safe" column for the first (0x0000) and last
+(0xF000-0xFFFF) rows is "-" while the value of all other existing rows is
+"N".
+
+- Safe: Whether the extension is a Safe Extension as defined in Section 2 of
+ RFC XXXX.  Valid values are:
+    - "Y", indicating the extension is a Safe Extension;
+    - "N", indicating the extension is not a Safe Extension; or
+    - "-", indicating a reserved value which is not a single extension.
+
+This document also extends the list of allowable values for the "Message(s)"
+column, such that the list may be empty (represented by "-") if the
+extension is a Safe Extension.
+
 ### targeted_messages_capability MLS Extension
 
 The `targeted_messages_capability` MLS Extension Type is used in the
