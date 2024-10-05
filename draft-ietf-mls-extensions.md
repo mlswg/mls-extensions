@@ -83,7 +83,7 @@ draft-00
 
 # Safe Extensions
 
-The MLS specification is extensible in a variety of ways (see Section 13 of the
+The MLS specification is extensible in a variety of ways (see Section 13 of
 {{!RFC9420}}) and describes the negotiation and other handling of extensions and
 their data within the protocol. However, it does not provide guidance on how
 extensions can or should safely interact with the base MLS protocol. The goal of
@@ -96,7 +96,7 @@ base MLS protocol to build extensions, defines specific examples of extensions
 built on top of the Safe Extension API alongside the built-in mechanisms of the
 base MLS protocol, defines a number of labels registered in IANA which can be
 safely used by extensions, so that the only value an extension developer must
-add to the IANA registry themselves is a unique ExtensionType.
+add to the IANA registry itself is a unique ExtensionType.
 
 ## Safe Extension API
 
@@ -112,6 +112,9 @@ extensions the ability to:
 - Export secrets from MLS in a way that, in contrast to the built-in export
   functionality of MLS, preserves forward secrecy of the exported secrets within
   an epoch.
+- Define new WireFormat, Proposal, Credential, GroupContext, GroupInfo,
+KeyPackage, and LeafNode extensions which can interact safely with arbitrary
+sets of other current or future Safe Extensions.
 
 The Safe Extension API is not an extension itself, it only defines components
 from which other extensions can be built. Some of these components modify the
@@ -183,7 +186,7 @@ Types" IANA registry used for these core structs (see Section 17.3 of
 {{!RFC9420}}), even for safe extensions with no core struct changes.
 This is because many extensions modify a core struct, either primarily or
 to store state (related to the group or a client) associated with another
-aspect of an extension.
+aspect of that extension.
 
 Most Safe Extension API components also use the following data structure, which
 provides domain separation by `extension_type` of various `extension_data`.
@@ -211,7 +214,8 @@ struct {
 ### Negotiating Support for Safe Extensions
 
 MLS defines a `Capabilities` struct for LeafNodes (in turn used in
-KeyPackages), which describes which extensions are supported by that node.
+KeyPackages), which describes which extensions are supported by the
+associated node.
 However, that struct (defined in Section 7.2 of {{!RFC9420}}) only has
 fields for a subset of the extensions possible in MLS, as reproduced below.
 
