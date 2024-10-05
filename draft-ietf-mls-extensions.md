@@ -1218,7 +1218,7 @@ from a group more efficiently than using a `remove` proposal type, as the
 
 ### Extension Credential
 
-* Value: 0x0000
+* Value: 0x0003
 * Name: extension_credential
 * Recommended: Y
 * Reference: RFC XXXX
