@@ -337,6 +337,41 @@ without the need to register their own IANA labels. Following the same pattern,
 this document also provides ways for extension designers to define their own
 wire formats, proposals and credentials.
 
+#### Encrypted GroupContext Extension data
+
+As mentioned earlier, in some scenarios, the GroupContext
+may be visible to components  that implement the delivery service.
+To protect privacy-sensitive information from the delivery service,
+specific GroupContext extensions can be encrypted only for members of the
+group.
+
+Below is a placeholder mechanism which offers this property, but has two
+disadvantages: a) new joiners don't have a way to decrypt the encrypted
+extensions without some additional pre-shared key, and b) a member colluding
+with the delivery service can decrypt encrypted GroupContext extensions from
+previous epochs (potentially private information related to former
+participants) that has not yet been replaced.
+
+Members encrypt each members-only GroupContext extensions with a separate
+randomly-chosen value.
+Members then derive a `members_only` secret from the `epoch_secret` using
+`DeriveExtensionSecret(epoch_secret, "member_only")` and derive a keypair
+from the `members_only` secret.'
+Members encrypt the individual encryption keys in a separate GroupContext extension call `MembersOnlyGCKeys` using the `members_only` public key.
+
+~~~ tls
+struct {
+    EncryptedGroupContextItem encrypted_group_context_items<V>;
+} MembersOnlyGCKeys;
+
+struct {
+    ExtensionType member_only_extension;
+    opaque item_encryption_key<V>;
+} EncryptedGroupContextItem;
+~~~
+
+TODO: Replace this mechanism with something better.
+
 #### Wire Formats
 
 Extensions can define their own MLS messages by using the mls_extension_message
