@@ -1124,6 +1124,19 @@ no additional data.
 * Recommended: Y
 * Reference: RFC XXXX
 
+### extension_aad MLS Extension
+
+The extension_aad MLS Extension Type is used to signal support for `SafeAAD`
+in LeafNode capabilities, and in GroupContext `required_capabilities`. It contains no additional data.
+
+* Value: 0x000B
+* Name: extension_aad
+* Message(s): LN,GC: This extension may appear in LeafNode and GroupContext
+  objects.
+* Recommended: Y
+* Reference: RFC XXXX
+
+
 ## MLS Proposal Types
 
 ### Extension Proposal
