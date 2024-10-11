@@ -426,6 +426,17 @@ struct {
 } SafeAAD;
 ~~~
 
+If the `SafeAAD` is present or not is determined by the presence of the
+`extension_aad` GroupContext extension in the `required_capabilities` of the
+group. If `extension_aad` is present in `required_capabilities` but no
+"safe" AAD items are present, the `aad_items` is a zero-length vector.
+
+Each extension which include a `SafeAADItem` needs to advertise its
+`ExtensionType` in its LeafNode `capabilities.extensions`. Extensions MAY
+require an `ExtensionType` to be included in `required_capabilities`, but
+members which encounter a `SafeAADItem` they do not recognize can safely
+ignore it.
+
 ## Extension Design Guidance
 
 While extensions can modify the protocol flow of MLS and the associated
