@@ -112,6 +112,8 @@ extensions the ability to:
 - Export secrets from MLS in a way that, in contrast to the built-in export
   functionality of MLS, preserves forward secrecy of the exported secrets within
   an epoch.
+- Anchor extension-specific state in an MLS group to ensure agreement and manage
+  state acces authorization across extensions.
 
 The Safe Extension API is not an extension itself, it only defines components
 from which other extensions can be built. Some of these components modify the
@@ -437,6 +439,85 @@ require an `ExtensionType` to be included in `required_capabilities`, but
 members which encounter a `SafeAADItem` they do not recognize can safely
 ignore it.
 
+
+### Extension state: anchoring, storage and agreement
+
+The safe extension framework can help an MLS extension ensure that all group
+members agree on a piece of extension-specific state by using the
+`ExtensionState` GroupContext extension. The ownership of an `ExtensionState`
+extension in the context of the safe extension framework is determined by the
+`extension_type` field. The extension with a matching `extension_type` is called
+the owning extension.
+
+~~~tls
+enum {
+  reserved(0),
+  read(1),
+  none(2),
+ (255)
+} Permissions;
+
+enum {
+  reserved(0),
+  hash(1),
+  data(2),
+} HashOrData;
+
+struct {
+  HashOrData hash_or_data;
+  select(hash_or_data) {
+    case hash:
+      HashReference state_hash;
+    case data:
+      opaque state<V>;
+  }
+} ExtensionPayload;
+
+struct {
+  extensionType extension_type;
+  Permissions read;
+  ExtensionPayload payload;
+} ExtensionState;
+~~~
+
+The `ExtensionState` GroupContext extension contains data either directly (if
+`hash_or_data = data`) or inditectly via a hash (if `hash_or_data = hash`).
+
+The owning extension can read and write the state stored in an `ExtensionState`
+extension using an extension-defined proposal (see {{proposals}}). The semantics
+of the proposal determines how the state is changed.
+
+The `read` variable determines the permissions that other MLS extensions have
+w.r.t. the data stored within. `read` allows other MLS extensions to read that
+data via their own proposals, while `none` marks the data as private to the
+owning MLS extension.
+
+Other extensions may never write to the `ExtensionState` of the owning MLS
+extension.
+
+#### Direct vs. hash-based storage
+
+Storing the data directly in the `ExtensionState` means the data becomes part of
+the group state. Depending on the application design, this can be advantageous,
+because it is distributed via Welcome messages. However, it could also mean that
+the data is visible to the delivery service. Additionally, if the application
+makes use of GroupContextExtension proposals, it may be necessary to send all of
+the data with each such extension.
+
+Including the data by hash only allows group members to agree on the data
+indirectly, relying on the collision resistance of the associated hash function.
+The data itself, however, may have to be transmitted out-of-band to new joiners.
+
+#### GroupContextExtensions
+
+MLS allows applications to modify GroupContext extensions via the
+GroupContextExtension proposal. However, control via that proposal involves
+including all GroupContext extensions in each such proposal. This makes data
+management more costly than via extension-specific proposals, which can, for
+example, include only the data to be changed for a given GroupContext extension,
+or define semantics that allow modification based on local data only.
+
+
 ## Extension Design Guidance
 
 While extensions can modify the protocol flow of MLS and the associated
@@ -458,7 +539,10 @@ the struct is subject to as part of the protocol flow.
   part of the GroupContext, it is also sent encrypted to new joiners via Welcome
   messages and (depending on the architecture of the application) may be
   available to external joiners. Note that in some scenarios, the GroupContext
-  may also be visible to components  that implement the delivery service.
+  may also be visible to components  that implement the delivery service. While
+  MLS extensions can define arbitrary GroupContext extensions, it is recommended
+  to make use of `ExtensionState` extensions to store state in the group's
+  GroupContext.
 - GroupInfo Extensions: GroupInfo extensions are included in the GroupInfo
   struct and thus sent encrypted and authenticated by the signer of the
   GroupInfo to new joiners as part of Welcome messages. It can thus be used as a
