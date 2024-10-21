@@ -139,6 +139,47 @@ further analysis of the combination is necessary. This also means that any
 security vulnerabilities introduced by one extension do not spread to other
 extensions or the base MLS.
 
+### Storing State in Extensions
+
+Every type of MLS extension can have data associated with it and, depending on
+the type of extension (KeyPackage Extension, GroupContext Extension, etc.) that
+data is included in the corresponding MLS struct. This allows the authors of an
+extension to make use of any authentication or confidentiality properties that
+the struct is subject to as part of the protocol flow.
+
+- GroupContext Extensions: Any data in a group context extension is agreed-upon
+  by all members of the group in the same way as the rest of the group state. As
+  part of the GroupContext, it is also sent encrypted to new joiners via Welcome
+  messages and (depending on the architecture of the application) may be
+  available to external joiners. Note that in some scenarios, the GroupContext
+  may also be visible to components  that implement the delivery service. While
+  MLS extensions can define arbitrary GroupContext extensions, it is recommended
+  to make use of `ExtensionState` extensions to store state in the group's
+  GroupContext.
+- GroupInfo Extensions: GroupInfo extensions are included in the GroupInfo
+  struct and thus sent encrypted and authenticated by the signer of the
+  GroupInfo to new joiners as part of Welcome messages. It can thus be used as a
+  confidential and authenticated channel from the inviting group member to new
+  joiners. Just like GroupContext extensions, they may also be visible to
+  external joiners or even parts of the delivery service. Unlike GroupContext
+  extensions, the GroupInfo struct is not part of the group state that all group
+  members agree on.
+- KeyPackage Extensions: KeyPackages (and the extensions they include) are
+  pre-published by individual clients for asynchronous group joining. They are
+  included in Add proposals and become part of the group state once the Add
+  proposal is committed. They are, however, removed from the group state when
+  the owner of the KeyPackage does the first commit with a path. As such,
+  KeyPackage extensions can be used to communicate data to anyone who wants to
+  invite the owner to a group, as well as the other members of the group the
+  owner is added to. Note that KeyPackage extensions are visible to the server
+  that provides the KeyPackages for download, as well as any part of the
+  delivery service that can see the public group state.
+- LeafNode Extensions: LeafNodes are a part of every KeyPackage and thus follow
+  the same lifecycle. However, they are also part of any commit that includes an
+  UpdatePath and clients generally have a leaf node in each group they are a member
+  of. Leaf node extensions can thus be used to include member-specific data in a
+  group state that can be updated by the owner at any time.
+
 ### Common Data Structures
 
 Most components of the Safe Extension API use the value ExtensionType which is a
@@ -526,46 +567,6 @@ functionalities that extensions can use without modifying MLS itself. Extension
 authors should consider using these built-in mechanisms before employing more
 intrusive changes to the protocol.
 
-### Storing State in Extensions
-
-Every type of MLS extension can have data associated with it and, depending on
-the type of extension (KeyPackage Extension, GroupContext Extension, etc.) that
-data is included in the corresponding MLS struct. This allows the authors of an
-extension to make use of any authentication or confidentiality properties that
-the struct is subject to as part of the protocol flow.
-
-- GroupContext Extensions: Any data in a group context extension is agreed-upon
-  by all members of the group in the same way as the rest of the group state. As
-  part of the GroupContext, it is also sent encrypted to new joiners via Welcome
-  messages and (depending on the architecture of the application) may be
-  available to external joiners. Note that in some scenarios, the GroupContext
-  may also be visible to components  that implement the delivery service. While
-  MLS extensions can define arbitrary GroupContext extensions, it is recommended
-  to make use of `ExtensionState` extensions to store state in the group's
-  GroupContext.
-- GroupInfo Extensions: GroupInfo extensions are included in the GroupInfo
-  struct and thus sent encrypted and authenticated by the signer of the
-  GroupInfo to new joiners as part of Welcome messages. It can thus be used as a
-  confidential and authenticated channel from the inviting group member to new
-  joiners. Just like GroupContext extensions, they may also be visible to
-  external joiners or even parts of the delivery service. Unlike GroupContext
-  extensions, the GroupInfo struct is not part of the group state that all group
-  members agree on.
-- KeyPackage Extensions: KeyPackages (and the extensions they include) are
-  pre-published by individual clients for asynchronous group joining. They are
-  included in Add proposals and become part of the group state once the Add
-  proposal is committed. They are, however, removed from the group state when
-  the owner of the KeyPackage does the first commit with a path. As such,
-  KeyPackage extensions can be used to communicate data to anyone who wants to
-  invite the owner to a group, as well as the other members of the group the
-  owner is added to. Note that KeyPackage extensions are visible to the server
-  that provides the KeyPackages for download, as well as any part of the
-  delivery service that can see the public group state.
-- LeafNode Extensions: LeafNodes are a part of every KeyPackage and thus follow
-  the same lifecycle. However, they are also part of any commit that includes an
-  UpdatePath and clients generally have a leaf node in each group they are a member
-  of. Leaf node extensions can thus be used to include member-specific data in a
-  group state that can be updated by the owner at any time.
 
 # Extensions
 
