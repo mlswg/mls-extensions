@@ -137,6 +137,19 @@ Table of Contents
 
    RFC EDITOR PLEASE DELETE THIS SECTION.
 
+   draft-05
+
+   *  Include definition of ExtensionState extension
+
+   *  Add safe use of AAD to Safe Extensions framework
+
+   *  Clarify how capabilities negotiation works in Safe Extensions
+      framework
+
+   draft-04
+
+   *  No changes (prevent expiration)
+
    draft-03
 
    *  Add Last Resort KeyPackage extension
