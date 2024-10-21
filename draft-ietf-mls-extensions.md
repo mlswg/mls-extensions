@@ -1301,6 +1301,33 @@ in LeafNode capabilities, and in GroupContext `required_capabilities`. It contai
 * Recommended: Y
 * Reference: RFC XXXX
 
+### safe_extensions MLS Extension
+
+The `safe_extensions` MLS Extension Type is used to signal support for the
+Safe Extensions Framework in LeafNode capabilities, and in GroupContext
+`required_capabilities`. It contains no additional data.
+
+* Value: 0x000C
+* Name: safe_extensions
+* Message(s): LN,GC: This extension may appear in LeafNode and GroupContext
+  objects.
+* Recommended: Y
+* Reference: RFC XXXX
+
+### core_struct_extensions MLS Extension
+
+The `core_struct_extensions` MLS Extension Type is used to signal support
+for one or more Core Struct Extensions using the Safe Extensions Framework.
+It appears in LeafNode capabilities, and in GroupContext
+`required_capabilities`. It contains no additional data.
+
+* Value: 0x000D
+* Name: core_struct_extensions
+* Message(s): LN,GC: This extension may appear in LeafNode and GroupContext
+  objects.
+* Recommended: Y
+* Reference: RFC XXXX
+
 
 ## MLS Proposal Types
 
