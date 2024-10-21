@@ -83,7 +83,7 @@ draft-00
 
 # Safe Extensions
 
-The MLS specification is extensible in a variety of ways (see Section 13 of the
+The MLS specification is extensible in a variety of ways (see Section 13 of
 {{!RFC9420}}) and describes the negotiation and other handling of extensions and
 their data within the protocol. However, it does not provide guidance on how
 extensions can or should safely interact with the base MLS protocol. The goal of
@@ -96,7 +96,7 @@ base MLS protocol to build extensions, defines specific examples of extensions
 built on top of the Safe Extension API alongside the built-in mechanisms of the
 base MLS protocol, defines a number of labels registered in IANA which can be
 safely used by extensions, so that the only value an extension developer must
-add to the IANA registry themselves is a unique ExtensionType.
+add to the IANA registry itself is a unique ExtensionType.
 
 ## Safe Extension API
 
@@ -112,6 +112,9 @@ extensions the ability to:
 - Export secrets from MLS in a way that, in contrast to the built-in export
   functionality of MLS, preserves forward secrecy of the exported secrets within
   an epoch.
+- Define new WireFormat, Proposal, Credential, GroupContext, GroupInfo,
+KeyPackage, and LeafNode extensions which can interact safely with arbitrary
+sets of other current or future Safe Extensions.
 - Anchor extension-specific state in an MLS group to ensure agreement and manage
   state acces authorization across extensions.
 
@@ -139,11 +142,56 @@ further analysis of the combination is necessary. This also means that any
 security vulnerabilities introduced by one extension do not spread to other
 extensions or the base MLS.
 
+### Core Struct Extensions
+
+Every type of MLS extension can have data associated with it. The "MLS
+Extensions Types" registry historically represented extensibility of four
+core structs (`GroupContext`, `GroupInfo`, `KeyPackage`, and `LeafNode`)
+that have far reaching effects on the use of the protocol. The majority of
+MLS extensions registered at the time of this writing extend one or more
+of these core structs.
+
+- GroupContext Extensions: Any data in a group context extension is agreed-upon
+  by all members of the group in the same way as the rest of the group state. As
+  part of the GroupContext, it is also sent encrypted to new joiners via Welcome
+  messages and (depending on the architecture of the application) may be
+  available to external joiners. Note that in some scenarios, the GroupContext
+  may also be visible to components  that implement the delivery service. While
+  MLS extensions can define arbitrary GroupContext extensions, it is recommended
+  to make use of `ExtensionState` extensions to store state in the group's
+  GroupContext.
+- GroupInfo Extensions: GroupInfo extensions are included in the GroupInfo
+  struct and thus sent encrypted and authenticated by the signer of the
+  GroupInfo to new joiners as part of Welcome messages. It can thus be used as a
+  confidential and authenticated channel from the inviting group member to new
+  joiners. Just like GroupContext extensions, they may also be visible to
+  external joiners or even parts of the delivery service. Unlike GroupContext
+  extensions, the GroupInfo struct is not part of the group state that all group
+  members agree on.
+- KeyPackage Extensions: KeyPackages (and the extensions they include) are
+  pre-published by individual clients for asynchronous group joining. They are
+  included in Add proposals and become part of the group state once the Add
+  proposal is committed. They are, however, removed from the group state when
+  the owner of the KeyPackage does the first commit with a path. As such,
+  KeyPackage extensions can be used to communicate data to anyone who wants to
+  invite the owner to a group, as well as the other members of the group the
+  owner is added to. Note that KeyPackage extensions are visible to the server
+  that provides the KeyPackages for download, as well as any part of the
+  delivery service that can see the public group state.
+- LeafNode Extensions: LeafNodes are a part of every KeyPackage and thus follow
+  the same lifecycle. However, they are also part of any commit that includes an
+  UpdatePath and clients generally have a leaf node in each group they are a member
+  of. Leaf node extensions can thus be used to include member-specific data in a
+  group state that can be updated by the owner at any time.
+
 ### Common Data Structures
 
-Most components of the Safe Extension API use the value ExtensionType which is a
-unique uint16 identifier assigned to an extension in the MLS Extension Types
-IANA registry (see Section 17.3 of {{!RFC9420}}).
+The Safe Extension API reuses the `ExtensionType` and the "MLS Extension
+Types" IANA registry used for these core structs (see Section 17.3 of
+{{!RFC9420}}), even for safe extensions with no core struct changes.
+This is because many extensions modify a core struct, either primarily or
+to store state (related to the group or a client) associated with another
+aspect of that extension.
 
 Most Safe Extension API components also use the following data structure, which
 provides domain separation by `extension_type` of various `extension_data`.
@@ -158,7 +206,8 @@ struct {
 Where `extension_type` is set to the type of the extension to which the
 `extension_data` belongs.
 
-If in addition a label is required, the following data structure is used.
+When a label is required for an extension, the following data structure is
+used.
 
 ~~~ tls
 struct {
@@ -166,6 +215,56 @@ struct {
   ExtensionContent extension_content;
 } LabeledExtensionContent;
 ~~~
+
+### Negotiating Support for Safe Extensions
+
+MLS defines a `Capabilities` struct for LeafNodes (in turn used in
+KeyPackages), which describes which extensions are supported by the
+associated node.
+However, that struct (defined in Section 7.2 of {{!RFC9420}}) only has
+fields for a subset of the extensions possible in MLS, as reproduced below.
+
+~~~ tls
+...
+struct {
+    ProtocolVersion versions<V>;
+    CipherSuite cipher_suites<V>;
+    ExtensionType extensions<V>;
+    ProposalType proposals<V>;
+    CredentialType credentials<V>;
+} Capabilities;
+...
+~~~
+
+Therefore, all safe extensions MUST be represented by their `extension_type`
+in the `extensions` vector (originally intended for core struct extensions),
+regardless of their type.
+
+If the LeafNode supports any safe extension Credentials, the `credentials`
+vector will contain any non-safe credentials supported, plus the `extension_credential` defined in {extension-credential}.
+
+If the LeafNode supports any safe extension Proposals, then `proposals` will
+contain any non-default non-safe extensions, and whichever safe extension
+proposal types defined in {mls-proposal-types} are relevant to the supported
+safe proposals.
+
+Likewise, the `required_capabilities` GroupContext extension (defined
+in Section 11.1 of {{!RFC9420}} and reproduced below) contains all
+mandatory to support non-default non-safe, and safe extensions in its
+`extension_types` vector. Its `credential_types` vector contains any
+mandatory non-safe credential types, plus `extensions_credential` if any
+safe credential is required. Its `proposal_types` vector contains any
+mandatory to support non-default non-safe Proposals, and the relevant safe
+proposal type or types corresponding to any required safe proposals.
+
+~~~
+struct {
+    ExtensionType extension_types<V>;
+    ProposalType proposal_types<V>;
+    CredentialType credential_types<V>;
+} RequiredCapabilities;
+~~~
+
 
 ### Hybrid Public Key Encryption (HPKE) {#safe-hpke}
 
@@ -337,6 +436,12 @@ without the need to register their own IANA labels. Following the same pattern,
 this document also provides ways for extension designers to define their own
 wire formats, proposals, credentials, and for structured data in the
 Additional Authenticated Data.
+
+#### Core Struct Extensions
+
+Each extension of the GroupContext, GroupInfo, KeyPackage, and/or LeafNode
+structs is required to define the format of its data. These types of
+extensions SHOULD NOT use the `ExtensionContent` struct since the `extension_type` is already in the parent data structure.
 
 #### Wire Formats
 
@@ -526,46 +631,6 @@ functionalities that extensions can use without modifying MLS itself. Extension
 authors should consider using these built-in mechanisms before employing more
 intrusive changes to the protocol.
 
-### Storing State in Extensions
-
-Every type of MLS extension can have data associated with it and, depending on
-the type of extension (KeyPackage Extension, GroupContext Extension, etc.) that
-data is included in the corresponding MLS struct. This allows the authors of an
-extension to make use of any authentication or confidentiality properties that
-the struct is subject to as part of the protocol flow.
-
-- GroupContext Extensions: Any data in a group context extension is agreed-upon
-  by all members of the group in the same way as the rest of the group state. As
-  part of the GroupContext, it is also sent encrypted to new joiners via Welcome
-  messages and (depending on the architecture of the application) may be
-  available to external joiners. Note that in some scenarios, the GroupContext
-  may also be visible to components  that implement the delivery service. While
-  MLS extensions can define arbitrary GroupContext extensions, it is recommended
-  to make use of `ExtensionState` extensions to store state in the group's
-  GroupContext.
-- GroupInfo Extensions: GroupInfo extensions are included in the GroupInfo
-  struct and thus sent encrypted and authenticated by the signer of the
-  GroupInfo to new joiners as part of Welcome messages. It can thus be used as a
-  confidential and authenticated channel from the inviting group member to new
-  joiners. Just like GroupContext extensions, they may also be visible to
-  external joiners or even parts of the delivery service. Unlike GroupContext
-  extensions, the GroupInfo struct is not part of the group state that all group
-  members agree on.
-- KeyPackage Extensions: KeyPackages (and the extensions they include) are
-  pre-published by individual clients for asynchronous group joining. They are
-  included in Add proposals and become part of the group state once the Add
-  proposal is committed. They are, however, removed from the group state when
-  the owner of the KeyPackage does the first commit with a path. As such,
-  KeyPackage extensions can be used to communicate data to anyone who wants to
-  invite the owner to a group, as well as the other members of the group the
-  owner is added to. Note that KeyPackage extensions are visible to the server
-  that provides the KeyPackages for download, as well as any part of the
-  delivery service that can see the public group state.
-- LeafNode Extensions: LeafNodes are a part of every KeyPackage and thus follow
-  the same lifecycle. However, they are also part of any commit that includes an
-  UpdatePath and clients generally have a leaf node in each group they are a member
-  of. Leaf node extensions can thus be used to include member-specific data in a
-  group state that can be updated by the owner at any time.
 
 # Extensions
 
@@ -1149,6 +1214,22 @@ this document
 
 ## MLS Extension Types
 
+This document updates the MLS Extension Types registry to insert a new
+column ("Safe") between the "Recommended" column and the "Reference"
+column. The value of the "Safe" column for the first (0x0000) and last
+(0xF000-0xFFFF) rows is "-" while the value of all other existing rows is
+"N".
+
+- Safe: Whether the extension is a Safe Extension as defined in Section 2 of
+ RFC XXXX.  Valid values are:
+    - "Y", indicating the extension is a Safe Extension;
+    - "N", indicating the extension is not a Safe Extension; or
+    - "-", indicating a reserved value which is not a single extension.
+
+This document also extends the list of allowable values for the "Message(s)"
+column, such that the list may be empty (represented by "-") if the
+extension is a Safe Extension.
+
 ### targeted_messages_capability MLS Extension
 
 The `targeted_messages_capability` MLS Extension Type is used in the
@@ -1220,6 +1301,33 @@ in LeafNode capabilities, and in GroupContext `required_capabilities`. It contai
 * Recommended: Y
 * Reference: RFC XXXX
 
+### safe_extensions MLS Extension
+
+The `safe_extensions` MLS Extension Type is used to signal support for the
+Safe Extensions Framework in LeafNode capabilities, and in GroupContext
+`required_capabilities`. It contains no additional data.
+
+* Value: 0x000C
+* Name: safe_extensions
+* Message(s): LN,GC: This extension may appear in LeafNode and GroupContext
+  objects.
+* Recommended: Y
+* Reference: RFC XXXX
+
+### core_struct_extensions MLS Extension
+
+The `core_struct_extensions` MLS Extension Type is used to signal support
+for one or more Core Struct Extensions using the Safe Extensions Framework.
+It appears in LeafNode capabilities, and in GroupContext
+`required_capabilities`. It contains no additional data.
+
+* Value: 0x000D
+* Name: core_struct_extensions
+* Message(s): LN,GC: This extension may appear in LeafNode and GroupContext
+  objects.
+* Recommended: Y
+* Reference: RFC XXXX
+
 
 ## MLS Proposal Types
 
@@ -1274,7 +1382,7 @@ from a group more efficiently than using a `remove` proposal type, as the
 
 ### Extension Credential
 
-* Value: 0x0000
+* Value: 0x0003
 * Name: extension_credential
 * Recommended: Y
 * Reference: RFC XXXX
