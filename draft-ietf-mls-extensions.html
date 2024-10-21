@@ -1265,6 +1265,9 @@ svg :is([fill="white"], [fill^="#fff"]) {
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.5">
                     <p id="section-toc.1-1.4.2.2.2.5.1"><a href="#section-4.2.5" class="auto internal xref">4.2.5</a>.  <a href="#name-last_resort_key_package-mls" class="internal xref">last_resort_key_package MLS Extension</a></p>
 </li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.6">
+                    <p id="section-toc.1-1.4.2.2.2.6.1"><a href="#section-4.2.6" class="auto internal xref">4.2.6</a>.  <a href="#name-extension_aad-mls-extension" class="internal xref">extension_aad MLS Extension</a></p>
+</li>
                 </ul>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.3">
@@ -1302,6 +1305,9 @@ svg :is([fill="white"], [fill^="#fff"]) {
                     <p id="section-toc.1-1.4.2.5.2.1.1"><a href="#section-4.5.1" class="auto internal xref">4.5.1</a>.  <a href="#name-labeled-extension-content" class="internal xref">Labeled Extension Content</a></p>
 </li>
                 </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.6">
+                <p id="section-toc.1-1.4.2.6.1"><a href="#section-4.6" class="auto internal xref">4.6</a>.  <a href="#name-mls-extension-types-2" class="internal xref">MLS Extension Types</a></p>
 </li>
             </ul>
 </li>
@@ -1692,7 +1698,8 @@ struct {
 <p id="section-2.1.7-1">The safe extension API allows extension designers to sign and encrypt payloads
 without the need to register their own IANA labels. Following the same pattern,
 this document also provides ways for extension designers to define their own
-wire formats, proposals and credentials.<a href="#section-2.1.7-1" class="pilcrow">¶</a></p>
+wire formats, proposals, credentials, and for structured data in the
+Additional Authenticated Data.<a href="#section-2.1.7-1" class="pilcrow">¶</a></p>
 <div id="wire-formats">
 <section id="section-2.1.7.1">
             <h5 id="name-wire-formats">
@@ -1767,6 +1774,43 @@ case extension_credential:
 in question  with the extension_data containing all other relevant data. Note
 that any credential defined in this way has to meet the requirements detailed in
 Section 5.3 of the MLS specification.<a href="#section-2.1.7.3-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="safe-aad">
+<section id="section-2.1.7.4">
+            <h5 id="name-additional-authenticated-da">
+<a href="#section-2.1.7.4" class="section-number selfRef">2.1.7.4. </a><a href="#name-additional-authenticated-da" class="section-name selfRef">Additional Authenticated Data (AAD)</a>
+            </h5>
+<p id="section-2.1.7.4-1">The <code>PrivateContentAAD</code> struct in MLS can contain arbitrary additional
+application-specific AAD in its <code>authenticated_data</code> field. This framework
+defines a framing used to allow multiple extensions to add AAD safely
+without conflicts or ambiguity.<a href="#section-2.1.7.4-1" class="pilcrow">¶</a></p>
+<p id="section-2.1.7.4-2">When any AAD safe extension is included in the <code>authenticated_data</code> field,
+the "safe" AAD items MUST come before any non-safe data in the
+<code>authenticated_data</code> field. Safe AAD items are framed using the <code>SafeAAD</code>
+struct and are sorted in increasing numerical order of the <code>ExtensionType</code>
+as described below:<a href="#section-2.1.7.4-2" class="pilcrow">¶</a></p>
+<div class="lang-tls sourcecode" id="section-2.1.7.4-3">
+<pre>
+struct {
+  ExtensionType extension_type;
+  opaque aad_item_data&lt;V&gt;;
+} SafeAADItem;
+
+struct {
+  SafeAADItem aad_items&lt;V&gt;;
+} SafeAAD;
+</pre><a href="#section-2.1.7.4-3" class="pilcrow">¶</a>
+</div>
+<p id="section-2.1.7.4-4">If the <code>SafeAAD</code> is present or not is determined by the presence of the
+<code>extension_aad</code> GroupContext extension in the <code>required_capabilities</code> of the
+group. If <code>extension_aad</code> is present in <code>required_capabilities</code> but no
+"safe" AAD items are present, the <code>aad_items</code> is a zero-length vector.<a href="#section-2.1.7.4-4" class="pilcrow">¶</a></p>
+<p id="section-2.1.7.4-5">Each extension which include a <code>SafeAADItem</code> needs to advertise its
+<code>ExtensionType</code> in its LeafNode <code>capabilities.extensions</code>. Extensions MAY
+require an <code>ExtensionType</code> to be included in <code>required_capabilities</code>, but
+members which encounter a <code>SafeAADItem</code> they do not recognize can safely
+ignore it.<a href="#section-2.1.7.4-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2744,6 +2788,33 @@ no additional data.<a href="#section-4.2.5-1" class="pilcrow">¶</a></p>
           </ul>
 </section>
 </div>
+<div id="extensionaad-mls-extension">
+<section id="section-4.2.6">
+          <h4 id="name-extension_aad-mls-extension">
+<a href="#section-4.2.6" class="section-number selfRef">4.2.6. </a><a href="#name-extension_aad-mls-extension" class="section-name selfRef">extension_aad MLS Extension</a>
+          </h4>
+<p id="section-4.2.6-1">The extension_aad MLS Extension Type is used to signal support for <code>SafeAAD</code>
+in LeafNode capabilities, and in GroupContext <code>required_capabilities</code>. It contains no additional data.<a href="#section-4.2.6-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.2.6-2.1">
+              <p id="section-4.2.6-2.1.1">Value: 0x000B<a href="#section-4.2.6-2.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-4.2.6-2.2">
+              <p id="section-4.2.6-2.2.1">Name: extension_aad<a href="#section-4.2.6-2.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-4.2.6-2.3">
+              <p id="section-4.2.6-2.3.1">Message(s): LN,GC: This extension may appear in LeafNode and GroupContext
+objects.<a href="#section-4.2.6-2.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-4.2.6-2.4">
+              <p id="section-4.2.6-2.4.1">Recommended: Y<a href="#section-4.2.6-2.4.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-4.2.6-2.5">
+              <p id="section-4.2.6-2.5.1">Reference: RFC XXXX<a href="#section-4.2.6-2.5.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+</section>
+</div>
 </section>
 </div>
 <div id="mls-proposal-types">
@@ -2936,6 +3007,22 @@ from a group more efficiently than using a <code>remove</code> proposal type, as
           </ul>
 </section>
 </div>
+</section>
+</div>
+<div id="mls-extension-types-1">
+<section id="section-4.6">
+        <h3 id="name-mls-extension-types-2">
+<a href="#section-4.6" class="section-number selfRef">4.6. </a><a href="#name-mls-extension-types-2" class="section-name selfRef">MLS Extension Types</a>
+        </h3>
+<p id="section-4.6-1">This document modifies the rules of the "MLS Extension Types" registry
+to add a new Message type as follows:<a href="#section-4.6-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.6-2.1">
+            <p id="section-4.6-2.1.1">AD: Authenticated Additional Data<a href="#section-4.6-2.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-4.6-3">The <code>AD</code> Message type refers to an <code>ExtensionType</code> used inside the
+<code>SafeAADItem</code> structure defined in <a href="#safe-aad" class="auto internal xref">Section 2.1.7.4</a>.<a href="#section-4.6-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
