@@ -2,6 +2,7 @@
 title: The Messaging Layer Security (MLS) Extensions
 abbrev: MLS
 docname: draft-ietf-mls-extensions-latest
+submissiontype: IETF
 category: info
 
 ipr: trust200902
@@ -61,6 +62,16 @@ extend the MLS protocol.
 ## Change Log
 
 RFC EDITOR PLEASE DELETE THIS SECTION.
+
+draft-05
+
+- Include definition of ExtensionState extension
+- Add safe use of AAD to Safe Extensions framework
+- Clarify how capabilities negotiation works in Safe Extensions framework
+
+draft-04
+
+ - No changes (prevent expiration)
 
 draft-03
 
