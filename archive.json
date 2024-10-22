@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-04-30T01:06:45.387900+00:00",
+  "timestamp": "2024-10-22T00:40:21.189909+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -112,6 +112,173 @@
       "updatedAt": "2023-01-25T14:51:29Z",
       "closedAt": "2023-01-25T14:51:29Z",
       "comments": []
+    },
+    {
+      "number": 15,
+      "id": "I_kwDOHZoI5M5r9Qz8",
+      "title": "Targeted message: add IANA entries for signature labels / exporter labels",
+      "url": "https://github.com/mlswg/mls-extensions/issues/15",
+      "state": "OPEN",
+      "author": "TWal",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Now that there are IANA registries for those, we must extend them.",
+      "createdAt": "2023-07-19T06:07:00Z",
+      "updatedAt": "2023-07-19T06:07:00Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 16,
+      "id": "I_kwDOHZoI5M5r9R-P",
+      "title": "Targeted message: use `AuthPSKEncryptWithLabel`?",
+      "url": "https://github.com/mlswg/mls-extensions/issues/16",
+      "state": "OPEN",
+      "author": "TWal",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "To be more future-proof, similarly to `EncryptWithLabel`, I guess we could design a similar function for the HPKE AuthPSK mode?\r\nThis would help ensuring future extensions that would be using the AuthPSK mode with leaf HPKE keys don't interfere with each other.",
+      "createdAt": "2023-07-19T06:10:49Z",
+      "updatedAt": "2023-07-19T06:10:49Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 22,
+      "id": "I_kwDOHZoI5M51sWLz",
+      "title": "SelfRemove still does not allow atomic removal of all a user's clients  ",
+      "url": "https://github.com/mlswg/mls-extensions/issues/22",
+      "state": "OPEN",
+      "author": "rohan-wire",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "If Alice has multiple MLS clients and wants to leave a group, even with SelfRemove as worded, she still can't remove all her clients in one-shot. Maybe we should modify the semantics of SelfRemove so the ExternalSender is allowed to include other leaf nodes with the same \"user\" credential?",
+      "createdAt": "2023-11-02T15:56:52Z",
+      "updatedAt": "2023-11-07T11:35:54Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "I don't think we should make it that complicated. Alice can still issue a Commit removing all her other clients, create the additional SelfRemove proposal based on the new epoch, and send both to the DS in one shot. The only cost is that Alice needs to produce two signatures which I think is tolerable.",
+          "createdAt": "2023-11-07T10:21:14Z",
+          "updatedAt": "2023-11-07T10:21:14Z"
+        },
+        {
+          "author": "rohan-wire",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I don't object to having two signatures, my concern is that the way the extension is defined now, an External Commit would include the SelfRemove, but not the other Remove proposals. I suppose we could change the handling of Remove proposals in the presence of SelfRemove, but SelfRemove could not operate as a safe extension in that case.",
+          "createdAt": "2023-11-07T11:35:54Z",
+          "updatedAt": "2023-11-07T11:35:54Z"
+        }
+      ]
+    },
+    {
+      "number": 24,
+      "id": "I_kwDOHZoI5M58oHNE",
+      "title": "Aren't we missing an extension to signal the strong/weak consistency chosen by the DS ?",
+      "url": "https://github.com/mlswg/mls-extensions/issues/24",
+      "state": "OPEN",
+      "author": "beurdouche",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-01-19T16:31:35Z",
+      "updatedAt": "2024-01-19T18:16:19Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "Bren2010",
+          "authorAssociation": "NONE",
+          "body": "I'm not sure an extension is needed to convey this, as it's application-specific",
+          "createdAt": "2024-01-19T18:16:18Z",
+          "updatedAt": "2024-01-19T18:16:18Z"
+        }
+      ]
+    },
+    {
+      "number": 25,
+      "id": "I_kwDOHZoI5M6CjMcT",
+      "title": "Collision between MLS Extension values",
+      "url": "https://github.com/mlswg/mls-extensions/issues/25",
+      "state": "CLOSED",
+      "author": "RonPeters",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Both the required_media_types and last_resort_key_package MLS Extensions have the Value of 0x0009. I believe the last_resort_key_package should have a Value of 0x000a.\r\n\r\n[required_media_types MLS Extension](https://github.com/mlswg/mls-extensions/blob/main/draft-ietf-mls-extensions.md#required_media_types-mls-extension)\r\n[last_resort_key_package MLS Extension](https://github.com/mlswg/mls-extensions/blob/main/draft-ietf-mls-extensions.md#last_resort_key_package-mls-extension)",
+      "createdAt": "2024-03-16T21:34:19Z",
+      "updatedAt": "2024-03-20T10:38:57Z",
+      "closedAt": "2024-03-20T10:38:57Z",
+      "comments": []
+    },
+    {
+      "number": 30,
+      "id": "I_kwDOHZoI5M6QcDur",
+      "title": "Unclear where the IANA registered value is used for Proposals, Wire Formats, Credentials",
+      "url": "https://github.com/mlswg/mls-extensions/issues/30",
+      "state": "OPEN",
+      "author": "rohanmahy",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "It is unclear in Capabilities in LeafNodes and in the GroupContext where non-GC extension extension IDs are advertised.",
+      "createdAt": "2024-07-22T16:23:49Z",
+      "updatedAt": "2024-08-01T03:31:50Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "The second paragraph of Section 2 of mls-extensions ended: \"so that the only value an extension developer must add to the IANA registry themselves is a unique ExtensionType.\"\r\n\r\nAuthors, is this unique ExtensionType supposed to:\r\n\r\n- be a new safe extensions registry (in which case it needs to be added to the IANA considerations),\r\n- be registered in a single existing registry regardless of the type of the extension (if so which one?), OR\r\n- be registered in the proposals registry if it is a proposal, in the wire_formats registry if it is a wire_format, etc.?\r\n\r\nI think we probably want the first of these, but could be convinced otherwise.",
+          "createdAt": "2024-08-01T03:31:50Z",
+          "updatedAt": "2024-08-01T03:31:50Z"
+        }
+      ]
+    },
+    {
+      "number": 33,
+      "id": "I_kwDOHZoI5M6aOCgK",
+      "title": "Add wire format capability negotiation extension",
+      "url": "https://github.com/mlswg/mls-extensions/issues/33",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "A notable omission from the Capabilities / RequiredCapabilities objects in RFC 9420 is the ability to negotiate support for new wire formats.  This document should address that deficiency.  What we would need is a `supported_wire_formats` extension, where:\r\n\r\n* The content of the extension is `WireFormat wire_formats<V>;`\r\n* The extension can appear in LeafNode and GroupContextExtensions\r\n* The semantic in LeafNode is \"here are the new WireFormats I support\"\r\n* The semantic in GroupContextExtensions is \"here are the WireFormats that are required for this group\"",
+      "createdAt": "2024-10-15T00:55:26Z",
+      "updatedAt": "2024-10-15T00:55:26Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 34,
+      "id": "I_kwDOHZoI5M6aOClW",
+      "title": "Streamline Safe Extensions section",
+      "url": "https://github.com/mlswg/mls-extensions/issues/34",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "The Safe Extensions section currently has a bunch of unnecessary baggage, which we should rearrange and/or delete.\r\n\r\nThe core of what Safe Extensions needs to define is: What does an extension need to do in order to be considered a safe extension?\r\n\r\nFrom that perspective, the sections on HPKE, signatures, export, and PSKs all make sense, in the sense that an extension is safe if the only HPKE/signature/export/PSKs mechanisms uses are the ones defined here.  That leaves the \"Security\", \"Extension Designer Tools\", and \"Extension Design Guidance\" sections.\r\n\r\n* \"Security\" should just be the introduction to the Safe Extensions section.\r\n* \"Extension Designer Tools\" should be deleted.  The mechanisms here abuse the extension types for labelling things other than extensions, and they don't really provide any value over the base extensibility mechanisms they use.  At best, they provide \"ignorable\" objects of the various types, which is a totally different property than Safe Extensions provides.\r\n* \"Extension Design Guidance\" is not specific to Safe Extensions.  It should be promoted to its own top-level section.",
+      "createdAt": "2024-10-15T00:55:54Z",
+      "updatedAt": "2024-10-15T10:12:26Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I agree with your points 1 and 3. Point 3 is (I believe) already covered by Rohan's #31.\r\n\r\nOn Point 2: I partially agree in that this section should live outside of Section 2, because it's useful for both safe and unsafe extensions. I don't think it should be removed, though. The purpose of these additional structs is to allow extensions authors to just request an extension code point, after which they can create any proposal/credential or WireFormat they like without requiring additional code points. It also makes negotiation simpler, as support for an extension always implies support for all proposals, etc. associated by that extension. If anything, this mechanisms improve the base extensibility mechanisms we have in MLS.",
+          "createdAt": "2024-10-15T10:12:24Z",
+          "updatedAt": "2024-10-15T10:12:24Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -393,7 +560,7 @@
       "createdAt": "2022-10-05T16:43:33Z",
       "updatedAt": "2022-10-23T12:49:55Z",
       "baseRepository": "mlswg/mls-extensions",
-      "baseRefName": "refs/heads/targeted-messages",
+      "baseRefName": "targeted-messages",
       "baseRefOid": "2cb32fa3328d9be7c244ea91839b20ceefffc7a9",
       "headRepository": "franziskuskiefer/mls-extensions",
       "headRefName": "patch-1",
@@ -724,24 +891,1178 @@
       "id": "PR_kwDOHZoI5M5PSvKU",
       "title": "Add content type for targeted messages",
       "url": "https://github.com/mlswg/mls-extensions/pull/14",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "kkohbrok",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Adding a content_type field to TargetedMessages allows other extensions to use them without fear of protocol confusion attacks. The alternative would be to use the content advertisement mechanism, which doesn't seem particularly clean, however, as we'd be mixing protocol and application level.\r\n\r\nThis is a draft as basis for further discussion. Especially the IANA considerations for the content type enum are missing.",
       "createdAt": "2023-04-27T12:40:33Z",
-      "updatedAt": "2023-04-27T12:43:41Z",
+      "updatedAt": "2023-10-18T08:54:01Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "742d47630452bcbd29e0358a7b4d5259a6e36689",
       "headRepository": "kkohbrok/mls-extensions",
       "headRefName": "konrad/content_type",
       "headRefOid": "62e36ec8ef5bfaf7fe39ca337e688b15611305f7",
+      "closedAt": "2023-10-18T08:54:00Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Closing this for now.",
+          "createdAt": "2023-10-18T08:54:00Z",
+          "updatedAt": "2023-10-18T08:54:00Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 17,
+      "id": "PR_kwDOHZoI5M5WaFCL",
+      "title": "Last resort KeyPackage Extension",
+      "url": "https://github.com/mlswg/mls-extensions/pull/17",
+      "state": "MERGED",
+      "author": "kkohbrok",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-07-26T07:21:06Z",
+      "updatedAt": "2023-10-23T15:30:33Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "742d47630452bcbd29e0358a7b4d5259a6e36689",
+      "headRepository": "kkohbrok/mls-extensions",
+      "headRefName": "konrad/last_resort",
+      "headRefOid": "70d946db67cf5d107677606adf6647918b662538",
+      "closedAt": "2023-10-23T15:30:33Z",
+      "mergedAt": "2023-10-23T15:30:33Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "aafd319e5ba20a69d4155387c1a9f411c89d4c80"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M5dDrjG",
+          "commit": {
+            "abbreviatedOid": "1c64f74"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "Thanks, just one nit.",
+          "createdAt": "2023-08-03T14:32:35Z",
+          "updatedAt": "2023-08-03T14:33:46Z",
+          "comments": [
+            {
+              "originalPosition": 26,
+              "body": "It's not entirely clear to me why last-resort KPs should be different from other KPs, i.e. the example is not really motivated.",
+              "createdAt": "2023-08-03T14:32:35Z",
+              "updatedAt": "2023-08-03T14:33:46Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M5k0fml",
+          "commit": {
+            "abbreviatedOid": "5be587b"
+          },
+          "author": "rohan-wire",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-10-22T19:42:47Z",
+          "updatedAt": "2023-10-22T19:42:55Z",
+          "comments": [
+            {
+              "originalPosition": 15,
+              "body": "Indented quote from the spec might be better here\r\n",
+              "createdAt": "2023-10-22T19:42:47Z",
+              "updatedAt": "2023-10-22T19:42:55Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M5k51a_",
+          "commit": {
+            "abbreviatedOid": "70d946d"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-10-23T15:30:02Z",
+          "updatedAt": "2023-10-23T15:30:02Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 18,
+      "id": "PR_kwDOHZoI5M5YROS6",
+      "title": "Message Streams",
+      "url": "https://github.com/mlswg/mls-extensions/pull/18",
+      "state": "CLOSED",
+      "author": "jbis9051",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-08-18T18:02:12Z",
+      "updatedAt": "2024-07-22T14:37:06Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "742d47630452bcbd29e0358a7b4d5259a6e36689",
+      "headRepository": "jbis9051/mls-extensions",
+      "headRefName": "main",
+      "headRefOid": "fc1d961904d8db184ed411dcb1ce67646f8d21b5",
+      "closedAt": "2024-07-22T14:37:05Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "jbis9051",
+          "authorAssociation": "NONE",
+          "body": "https://mailarchive.ietf.org/arch/msg/mls/0fIOJicObz5CPaNx9dRfdwZyqIM/",
+          "createdAt": "2023-08-18T18:03:14Z",
+          "updatedAt": "2023-08-18T18:03:14Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "Closing because of inactivity. Feel free to re-open if you want to work on this again.",
+          "createdAt": "2024-07-22T14:37:05Z",
+          "updatedAt": "2024-07-22T14:37:05Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M5ee-5J",
+          "commit": {
+            "abbreviatedOid": "fc1d961"
+          },
+          "author": "jbis9051",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-08-18T20:23:18Z",
+          "updatedAt": "2023-08-18T20:23:19Z",
+          "comments": [
+            {
+              "originalPosition": 80,
+              "body": "This should `aasvg` but I don't know how to add it without breaking the build process",
+              "createdAt": "2023-08-18T20:23:18Z",
+              "updatedAt": "2023-08-18T20:23:35Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M5e3u86",
+          "commit": {
+            "abbreviatedOid": "fc1d961"
+          },
+          "author": "TWal",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "Looks overall good, however I think there is no need to derive a second separate secret tree.\r\nWe can derive the `message_stream_[I]` from the original secret tree.\r\n\r\nAs a personal taste, I wouldn't serialize the stream number in ascii as is suggested by `message_stream_[I]`, and instead use the standard big-endian encoding (e.g. in the `context` input of `ExpandWithLabel`).\r\n\r\nAs noted in a separate comment, `stream_id` is not authenticated by signature of `FramedContentTBS`.\r\nIt is probably fine because it is implicitly authenticated as being part of the key derivations to obtain the encryption key, though, but I'm not entirely sure about that (didn't think deeply about it).",
+          "createdAt": "2023-08-23T13:55:39Z",
+          "updatedAt": "2023-08-23T14:20:59Z",
+          "comments": [
+            {
+              "originalPosition": 10,
+              "body": "```suggestion\r\nSome applications may require more than one application message ratchet. For example, an application may want to send messages with different delivery semantics or different policies. This section describes an extension to MLS which allows MLS clients to send multiple types of messages. Each message type has its own independent key ratchet.\r\n```\r\n\r\nOverall I find this introduction a bit vague. I understood that the main motivation was to be able to process the different streams at different paces, i.e. to be able to decrypt latest message of stream A without decrypting all messages of stream B.\r\nIt would be great if this paragraph transmitted this intuition.",
+              "createdAt": "2023-08-23T13:55:40Z",
+              "updatedAt": "2023-08-23T14:20:59Z"
+            },
+            {
+              "originalPosition": 12,
+              "body": "\"application may encode their different message types within `FramedContent.application_data`\"?",
+              "createdAt": "2023-08-23T14:01:12Z",
+              "updatedAt": "2023-08-23T14:20:59Z"
+            },
+            {
+              "originalPosition": 43,
+              "body": "Note that `stream_id` isn't authenticated in the message signature (unlike `wire_format` which is present in `FramedContentTBS`).\r\nIt might not be a problem since it is included in the key schedule, but I'm not sure about that.",
+              "createdAt": "2023-08-23T14:05:29Z",
+              "updatedAt": "2023-08-23T14:20:59Z"
+            },
+            {
+              "originalPosition": 90,
+              "body": "What is the LeafNode extension?",
+              "createdAt": "2023-08-23T14:11:48Z",
+              "updatedAt": "2023-08-23T14:20:59Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M5k0fkq",
+          "commit": {
+            "abbreviatedOid": "fc1d961"
+          },
+          "author": "rohan-wire",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-10-22T19:41:35Z",
+          "updatedAt": "2023-10-22T19:41:36Z",
+          "comments": [
+            {
+              "originalPosition": 10,
+              "body": "I agree with TWal. A slightly less vague example would help a lot in the intro.\r\n\r\n\"For example, one message stream might be used for frequent bulk-priority messages, while another is used for infrequent urgent notifications. This would allow a client after a network outage to decrypt the urgent stream immediately while still decrypting bulk-priority messages.\"\r\n\r\nWhat happens with the handshake messages is still not clear though. If there are lots of adds and joins in the group, the client will still need to process all of the commits and all the ratchets will need to change anyway right? ",
+              "createdAt": "2023-10-22T19:41:35Z",
+              "updatedAt": "2023-10-22T19:41:36Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 19,
+      "id": "PR_kwDOHZoI5M5c6JYX",
+      "title": "Safe extensions",
+      "url": "https://github.com/mlswg/mls-extensions/pull/19",
+      "state": "MERGED",
+      "author": "kkohbrok",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This PR is joint work with @mulmarta, @raphaelrobert and @psyoptix. It includes a brief section on general guidance, as well as the \u201csafe extension API\u201d.\r\n\r\n(The following text was also sent to the MLS WG mailing list.)\r\n\r\nThe extension developer guidance section gives a brief overview over the different places in which MLS is extensible (GroupInfo, GroupContext, etc.) and what properties MLS can provide for extensions in each of those places. There is nothing that can\u2019t be gleaned from the MLS specification or the architecture doc, but it might be a helpful summary for extension designers.\r\n\r\nThe main contribution of the PR is the safe extension API. The MLS specification doesn\u2019t place any restrictions on what extensions can and can\u2019t do, which means that in particular extensions can invalidate any and all of the security guarantees MLS and other extensions provide. While in some cases it makes sense for an extension to interfere with the main protocol mechanics, for the majority of extensions controlled access to a subset of the functionalities provided by MLS should be sufficient. The safe extensions API describes an interface that extensions can use to make use of functionalities like exporters, PSK injection, public key encryption, signatures, etc. without invalidating the privacy, authenticity and agreement properties of MLS. Similarly, extensions that only use this API do not interfere with any other extensions which only use this API. We call extensions that only use this API \u201csafe extensions\u201d.\r\n\r\nFor the most part, this is achieved through proper domain separation both between extensions and the MLS protocol, as well as between extensions.\r\n\r\nAs part of the API, the PR defines generic proposals, wire formats and credentials that can be safely used by extension developers. These definitions also mean that an extension developer won\u2019t have to request IANA code points for any additional structs besides the extension itself.\r\n\r\nThe PR also provides two examples of safe extensions: The first example is a simple RBAC extension that keeps state externally. Note that there are many ways to implement RBAC and this is just an example (which will be modified in a later PR, see below). The second example is the already existing Targeted Messages extension, which we have adapted to use the safe extension API.\r\n\r\nFinally, we want to note that this PR is only step one. In the next step, we want to provide a safe way of reading and writing to (the state of) GroupContext extensions beyond a group context extension proposal. We felt that the PR had already gotten quite big and we wanted to put it up for discussion in time for a fresh draft of the extension doc before IETF 118.\r\n",
+      "createdAt": "2023-10-16T14:41:39Z",
+      "updatedAt": "2023-10-23T15:32:22Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "742d47630452bcbd29e0358a7b4d5259a6e36689",
+      "headRepository": "kkohbrok/mls-extensions",
+      "headRefName": "safe_extensions",
+      "headRefOid": "abf3b8dbc6c86ff996c1669e0d701dcde3046db7",
+      "closedAt": "2023-10-23T15:32:21Z",
+      "mergedAt": "2023-10-23T15:32:21Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "b011453895150b35a7c5ff9701c4754a7a70a54d"
+      },
+      "comments": [
+        {
+          "author": "TWal",
+          "authorAssociation": "NONE",
+          "body": "It's a good idea -- it would be a shame if an extension reduced the security of MLS!\r\n\r\nI only skimmed through it, but I do have a few remarks.\r\n\r\nTo ensure disambiguation between signatures / HPKE encryptions / exported secrets, we created a IANA registry for their labels, to ensure an extension doesn't reuse a label defined in MLS, or defined in another extension.\r\nThe safe extension API do use these labels (and update the IANA registry) to define new \"safe\" versions of these functions, but then I think we then need another IANA registry to ensure two extensions don't use the same label e.g. for `SafeSignWithLabel` (same for other \"safe\" functions).\r\n\r\nAnd a small nit, `VerifyWithLabel` / `SignWithLabel` are always used with a label consisting of the signature input type name (here, `LabeledExtensionContent`), although here it's used with the labels `ExtensionsDataTBS` and `ExtensionDataTBS` (which is a bug by the way!)",
+          "createdAt": "2023-10-16T15:51:19Z",
+          "updatedAt": "2023-10-16T15:51:19Z"
+        },
+        {
+          "author": "psyoptix",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "yup, domain separation between extensions is critical to achieve the Safe API's goals. the API does this using just the (IANA registered)  Extension Type. A safe extension must register its own Extension Type unique among all other safe extensions with IANA. That already gives us a unique number we can extend to domain separate all labels.\r\n\r\nFor example, for a safe extension to use HPKE the safe API enforces that the HPKE label is `LabeledExtensionContent` which contains the `ExtensionContent` which in turn has an `ExtensionType` field. As that value is different for each safe extension the full HPKE labels for different extensions is always distinct.\r\n\r\nThe same idea is used for all other extension defined labels in the safe API which means the only value a new extension must register with IANA is its Extension Type.",
+          "createdAt": "2023-10-17T08:24:52Z",
+          "updatedAt": "2023-10-17T08:25:08Z"
+        },
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> And a small nit, `VerifyWithLabel` / `SignWithLabel` are always used with a label consisting of the signature input type name (here, `LabeledExtensionContent`), although here it's used with the labels `ExtensionsDataTBS` and `ExtensionDataTBS` (which is a bug by the way!)\r\n\r\nThanks for pointing this out! I've changed the labels accordingly.\r\n",
+          "createdAt": "2023-10-17T08:58:52Z",
+          "updatedAt": "2023-10-17T08:58:52Z"
+        },
+        {
+          "author": "TWal",
+          "authorAssociation": "NONE",
+          "body": "Ah indeed, I didn't notice the extension type was included. My remark doesn't apply then, there is correct domain separation between extensions!",
+          "createdAt": "2023-10-17T10:09:10Z",
+          "updatedAt": "2023-10-17T10:09:10Z"
+        },
+        {
+          "author": "rohan-wire",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "My overall reaction is that this is much more straightforward than I imagined when Jo\u00ebl described the idea. \r\nI'll just emphasize again to please make our PRs small and atomic. Updating Targeted messages to use Safe Extensions, and RBAC should be in separate PRs. \r\n\r\nThe IANA Considerations and Security Considerations section need to be one top-level section with level-2 headings. You should also add a paragraph under the top-level Contributors section",
+          "createdAt": "2023-10-22T19:16:20Z",
+          "updatedAt": "2023-10-22T19:16:20Z"
+        },
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Thinking some more about it, I think updating the targeted messages extension in this PR should be fine since it's just an update, not a change in its semantics. I have removed the RBAC extension, though. We won't create a PR for it right now, but we might re-use it as an example for our next pass over the safe extensions API.\r\n\r\nI also updated the section on proposals, to allow \"safe\" definition of proposals for external commits. Generally, there is still some work to be done on what it means for a proposal to be safe, but that, too, we'll save for the next iteration.",
+          "createdAt": "2023-10-23T13:00:52Z",
+          "updatedAt": "2023-10-23T13:00:52Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M5k0eaC",
+          "commit": {
+            "abbreviatedOid": "756c5c7"
+          },
+          "author": "rohan-wire",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "CHANGES_REQUESTED",
+          "body": "",
+          "createdAt": "2023-10-22T18:58:36Z",
+          "updatedAt": "2023-10-22T19:09:47Z",
+          "comments": [
+            {
+              "originalPosition": 214,
+              "body": "I think it is unclear from the \"K\" is PSK to most readers what the implications are what kind of \"shared file\" can be a PSK. Could I include a MIMI policy document as a PSK for example? ",
+              "createdAt": "2023-10-22T18:58:36Z",
+              "updatedAt": "2023-10-22T19:09:47Z"
+            },
+            {
+              "originalPosition": 281,
+              "body": "```suggestion\r\nrequires no UpdatePath and can not be sent by an external sender\r\nextension_path_proposal requires an UpdatePath and can not be sent by an external\r\nsender extensions_external_proposal requires no UpdatePath and can be sent by an\r\n```",
+              "createdAt": "2023-10-22T19:02:39Z",
+              "updatedAt": "2023-10-22T19:09:47Z"
+            },
+            {
+              "originalPosition": 358,
+              "body": "```suggestion\r\n  the same lifecycle. However, they are also part of any commit that includes an\r\n  UpdatePath and clients generally have a leaf node in each group they are a member\r\n```",
+              "createdAt": "2023-10-22T19:04:37Z",
+              "updatedAt": "2023-10-22T19:09:47Z"
+            },
+            {
+              "originalPosition": 583,
+              "body": "Could we please make this PR exclusive to safe extensions, and split-out a separate PR for RBAC (which I also support)?",
+              "createdAt": "2023-10-22T19:07:47Z",
+              "updatedAt": "2023-10-22T19:09:47Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M5k1rz2",
+          "commit": {
+            "abbreviatedOid": "cd98b9d"
+          },
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "Thanks for the review!\r\n\r\nThe idea behind the inclusion of the two extensions was to showcase the use of the safe API. We can split them from this PR once we have agreed on the details of the safe API.",
+          "createdAt": "2023-10-23T06:33:53Z",
+          "updatedAt": "2023-10-23T06:42:33Z",
+          "comments": [
+            {
+              "originalPosition": 214,
+              "body": "Good point! I've updated the text to elaborate a bit more on what the PSK mechanism can be used for.",
+              "createdAt": "2023-10-23T06:33:53Z",
+              "updatedAt": "2023-10-23T06:35:51Z"
+            },
+            {
+              "originalPosition": 583,
+              "body": "The RBAC extensions was meant as an example for use of the safe API. I'd be happy to move it to a separate PR. @psyoptix any thoughts?",
+              "createdAt": "2023-10-23T06:35:39Z",
+              "updatedAt": "2023-10-23T06:35:51Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M5k52Ha",
+          "commit": {
+            "abbreviatedOid": "abf3b8d"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-10-23T15:31:23Z",
+          "updatedAt": "2023-10-23T15:31:23Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 20,
+      "id": "PR_kwDOHZoI5M5deKTQ",
+      "title": "Add SelfRemove proposal to MLS extensions",
+      "url": "https://github.com/mlswg/mls-extensions/pull/20",
+      "state": "MERGED",
+      "author": "rohan-wire",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "As discussed during IETF 117, this PR corresponds to the text from draft-mahy-mls-selfremove.\r\n",
+      "createdAt": "2023-10-22T20:15:29Z",
+      "updatedAt": "2023-10-23T19:10:02Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "e3cca8ad712311bb66394217c02241244b632d70",
+      "headRepository": "rohan-wire/mls-extensions",
+      "headRefName": "rohan/selfremove",
+      "headRefOid": "2761ac72995d45d6b357da7623b51a22d1d3ad65",
+      "closedAt": "2023-10-23T19:10:02Z",
+      "mergedAt": "2023-10-23T19:10:02Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "eda23582f4203c824ae863eab17e1e1526862fa8"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M5k22Ky",
+          "commit": {
+            "abbreviatedOid": "adda81f"
+          },
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "CHANGES_REQUESTED",
+          "body": "A very useful extension and the PR looks good in general.\r\n\r\nI left a few comments inline. Also, the text should probably be wrapped to 80(?) characters.\r\n",
+          "createdAt": "2023-10-23T09:30:07Z",
+          "updatedAt": "2023-10-23T09:42:54Z",
+          "comments": [
+            {
+              "originalPosition": 27,
+              "body": "The first of these three sentences seems to be the conclusion of the second and third. Maybe change up the order a bit?",
+              "createdAt": "2023-10-23T09:30:07Z",
+              "updatedAt": "2023-10-23T09:42:54Z"
+            },
+            {
+              "originalPosition": 35,
+              "body": "```suggestion\r\nto monitor the group and send a new Remove Proposal in every new epoch until the member is\r\n```",
+              "createdAt": "2023-10-23T09:31:03Z",
+              "updatedAt": "2023-10-23T09:42:54Z"
+            },
+            {
+              "originalPosition": 50,
+              "body": "```suggestion\r\nare an empty struct). It is allowed in External Commits and requires an UpdatePath.\r\n```\r\nThis should be plural, shouldn't it?",
+              "createdAt": "2023-10-23T09:32:24Z",
+              "updatedAt": "2023-10-23T09:42:54Z"
+            },
+            {
+              "originalPosition": 76,
+              "body": "```suggestion\r\nAn MLS client which supports this extension can send a\r\n```",
+              "createdAt": "2023-10-23T09:33:14Z",
+              "updatedAt": "2023-10-23T09:42:54Z"
+            },
+            {
+              "originalPosition": 81,
+              "body": "```suggestion\r\nas MLS PublicMessages.\r\n```",
+              "createdAt": "2023-10-23T09:33:46Z",
+              "updatedAt": "2023-10-23T09:42:54Z"
+            },
+            {
+              "originalPosition": 88,
+              "body": "\"embedded\" (at least to me) implies that it's by-value. Maybe\r\n```suggestion\r\nWhen a member receives a Commit referencing one or more SelfRemove Proposals,\r\n```",
+              "createdAt": "2023-10-23T09:36:08Z",
+              "updatedAt": "2023-10-23T09:42:54Z"
+            },
+            {
+              "originalPosition": 97,
+              "body": "```suggestion\r\nmore SelfRemove proposals). The new joiner MUST validate the SelfRemove\r\n```",
+              "createdAt": "2023-10-23T09:37:15Z",
+              "updatedAt": "2023-10-23T09:42:54Z"
+            },
+            {
+              "originalPosition": 106,
+              "body": "```suggestion\r\nThe MLS Delivery Service (DS) needs to validate SelfRemove Proposals it\r\n```",
+              "createdAt": "2023-10-23T09:37:50Z",
+              "updatedAt": "2023-10-23T09:42:54Z"
+            },
+            {
+              "originalPosition": 106,
+              "body": "\"needs to\" maybe this should be \"SHOULD\"?",
+              "createdAt": "2023-10-23T09:38:13Z",
+              "updatedAt": "2023-10-23T09:42:54Z"
+            },
+            {
+              "originalPosition": 111,
+              "body": "This is a bit unclear to me. What does it mean for a client to be prepared?",
+              "createdAt": "2023-10-23T09:39:10Z",
+              "updatedAt": "2023-10-23T09:42:54Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M5k6dyU",
+          "commit": {
+            "abbreviatedOid": "adda81f"
+          },
+          "author": "rohan-wire",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-10-23T16:52:44Z",
+          "updatedAt": "2023-10-23T16:52:44Z",
+          "comments": [
+            {
+              "originalPosition": 111,
+              "body": "```suggestion\r\nAs with Remove proposals, clients need to be able to receive a Commit\r\n```",
+              "createdAt": "2023-10-23T16:52:44Z",
+              "updatedAt": "2023-10-23T16:52:44Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M5k6eas",
+          "commit": {
+            "abbreviatedOid": "adda81f"
+          },
+          "author": "rohan-wire",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-10-23T16:53:40Z",
+          "updatedAt": "2023-10-23T16:53:40Z",
+          "comments": [
+            {
+              "originalPosition": 49,
+              "body": "```suggestion\r\nis described using the TLS Presentation Language [@!RFC8446] below (its content\r\n```",
+              "createdAt": "2023-10-23T16:53:40Z",
+              "updatedAt": "2023-10-23T16:53:41Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M5k6euP",
+          "commit": {
+            "abbreviatedOid": "adda81f"
+          },
+          "author": "rohan-wire",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-10-23T16:54:28Z",
+          "updatedAt": "2023-10-23T16:54:28Z",
+          "comments": [
+            {
+              "originalPosition": 81,
+              "body": "```suggestion\r\nin an MLS PublicMessage.\r\n```",
+              "createdAt": "2023-10-23T16:54:28Z",
+              "updatedAt": "2023-10-23T16:54:29Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M5k6fID",
+          "commit": {
+            "abbreviatedOid": "adda81f"
+          },
+          "author": "rohan-wire",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-10-23T16:55:28Z",
+          "updatedAt": "2023-10-23T16:55:28Z",
+          "comments": [
+            {
+              "originalPosition": 26,
+              "body": "```suggestion\r\nan MLS group from removing itself immediately from the group. (To cause\r\n```",
+              "createdAt": "2023-10-23T16:55:28Z",
+              "updatedAt": "2023-10-23T16:55:29Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M5k6fWX",
+          "commit": {
+            "abbreviatedOid": "adda81f"
+          },
+          "author": "rohan-wire",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-10-23T16:55:54Z",
+          "updatedAt": "2023-10-23T16:55:54Z",
+          "comments": [
+            {
+              "originalPosition": 29,
+              "body": "```suggestion\r\nnew epoch and therefore needs to be part of the group.) Instead a member\r\n```",
+              "createdAt": "2023-10-23T16:55:54Z",
+              "updatedAt": "2023-10-23T16:55:54Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M5k6qip",
+          "commit": {
+            "abbreviatedOid": "f1820e0"
+          },
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-10-23T17:21:39Z",
+          "updatedAt": "2023-10-23T17:21:39Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 21,
+      "id": "PR_kwDOHZoI5M5di--h",
+      "title": "Add contributors and update changelog",
+      "url": "https://github.com/mlswg/mls-extensions/pull/21",
+      "state": "MERGED",
+      "author": "raphaelrobert",
+      "authorAssociation": "MEMBER",
+      "assignees": [
+        "raphaelrobert"
+      ],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-10-23T15:42:47Z",
+      "updatedAt": "2023-10-23T15:45:40Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "b011453895150b35a7c5ff9701c4754a7a70a54d",
+      "headRepository": "mlswg/mls-extensions",
+      "headRefName": "contributors",
+      "headRefOid": "2c412b10eefc936095742c678c93bd9427d08a93",
+      "closedAt": "2023-10-23T15:45:40Z",
+      "mergedAt": "2023-10-23T15:45:40Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "e3cca8ad712311bb66394217c02241244b632d70"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 23,
+      "id": "PR_kwDOHZoI5M5fSFlP",
+      "title": "fix extension id for last resort extension",
+      "url": "https://github.com/mlswg/mls-extensions/pull/23",
+      "state": "MERGED",
+      "author": "kkohbrok",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-11-13T10:15:49Z",
+      "updatedAt": "2024-03-20T10:38:56Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "eda23582f4203c824ae863eab17e1e1526862fa8",
+      "headRepository": "kkohbrok/mls-extensions",
+      "headRefName": "konrad/fix_last_resort_id",
+      "headRefOid": "e1a00dacc80676021c5d17593f222d9812ee7d60",
+      "closedAt": "2024-03-20T10:38:56Z",
+      "mergedAt": "2024-03-20T10:38:56Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "fad299d873ae690083818182889c2140426c8100"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 26,
+      "id": "PR_kwDOHZoI5M5tKoEl",
+      "title": "include definition of `ExtensionState` extension",
+      "url": "https://github.com/mlswg/mls-extensions/pull/26",
+      "state": "MERGED",
+      "author": "kkohbrok",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This PR is joint work with @psyoptix, @mulmarta and @raphaelrobert.",
+      "createdAt": "2024-04-19T12:34:14Z",
+      "updatedAt": "2024-10-08T06:46:26Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "fad299d873ae690083818182889c2140426c8100",
+      "headRepository": "kkohbrok/mls-extensions",
+      "headRefName": "konrad/extension_storage",
+      "headRefOid": "ec68d2dc9129b25c97aa98c02f23df65f18443d5",
+      "closedAt": "2024-07-22T14:35:17Z",
+      "mergedAt": "2024-07-22T14:35:17Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "14332f7f5894c974e198f8de97bc717b2f6c6c9d"
+      },
+      "comments": [
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Hi, @kkohbrok @psyoptix @mulmarta I realize that this has been approved, however I think it conflates three things:\r\n- making GroupContext items that are hidden from non-members. This should be encrypted somehow rather than hashed. Hashing just pushes the problem of getting the context somewhere else\r\n- the ability to patch the GroupContext is a problem we are also trying to solve with the (App)Sync proposal. Again, we don't want a hash here.\r\n- incorporating GroupState for which the master copy of this data is elsewhere, but we want to have agreement on it. This is a great use of a hash. ",
+          "createdAt": "2024-10-07T17:34:14Z",
+          "updatedAt": "2024-10-07T17:34:14Z"
+        },
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I'm not sure I understand what you're suggesting here. A couple of points:\r\n\r\n- ExtensionState allows (safe) extensions to safely anchor state in the group context. As such it's a \"lower-level\" mechanism than AppSync as it's meant to be used by extensions (such as AppSync) rather than an application running on top of MLS. \r\n- ExtensionState doesn't preclude extensions from storing encrypted data. I agree that hashing isn't necessarily the best way to limit visibility, mostly because the hash might leak data to the DS. I'd be okay with removing that sentence. However, as you point out using ExtensionState to anchor data in hash form is still useful.\r\n- ExtensionState doesn't prescribe how individual extensions should patch their data. That's by design, as we assume that the extension will handle that in some other way, for example, via extension-defined proposals. So there's no redundancy with what AppSync is trying to do.",
+          "createdAt": "2024-10-08T06:46:25Z",
+          "updatedAt": "2024-10-08T06:46:25Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 27,
+      "id": "PR_kwDOHZoI5M5td5ws",
+      "title": "group context extension update proposal",
+      "url": "https://github.com/mlswg/mls-extensions/pull/27",
+      "state": "CLOSED",
+      "author": "franziskuskiefer",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "A proposal type to update rather than replace group context extensions.\r\nThis is somewhat related to #26 as it allows to update extension data more efficiently.",
+      "createdAt": "2024-04-23T12:05:21Z",
+      "updatedAt": "2024-10-21T13:23:54Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "fad299d873ae690083818182889c2140426c8100",
+      "headRepository": "franziskuskiefer/mls-extensions",
+      "headRefName": "gce-update",
+      "headRefOid": "20c985d6ba0ef092528ac1c093f142b580308b35",
+      "closedAt": "2024-10-21T13:23:53Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "cameronvoell",
+          "authorAssociation": "NONE",
+          "body": "This looks great so far. I have a few questions. \r\n\r\nCurrently [MLS RFC section 12.2-3.8](https://www.rfc-editor.org/rfc/rfc9420.html#section-12.2-3.8) specifies that a proposal list for a commit is invalid if it has more than one Group Context Extension Proposal.\r\n\r\n1. I'm guessing the same reasoning for that rule might mean that a commit can not have more than one \"gce_update\" proposal, is that correct?  \r\n\r\n2. Is it right to assume that a single commit could not contain both a \"gce_update\" proposal and the group context proposal?\r\n\r\n> When the extension exists in the group context, the values are extended with the values from the extension list item.\r\n\r\n3. For the above line, is it correct to say that the values for the extension that exists in group context are \"replaced by\" the values of the extension from the gce_update proposal, or does \"extended with\" mean something slightly different in this context?",
+          "createdAt": "2024-04-26T17:06:32Z",
+          "updatedAt": "2024-04-26T17:06:32Z"
+        },
+        {
+          "author": "franziskuskiefer",
+          "authorAssociation": "NONE",
+          "body": "> * I'm guessing the same reasoning for that rule might mean that a commit can not have more than one \"gce_update\" proposal, is that correct?\r\n> * Is it right to assume that a single commit could not contain both a \"gce_update\" proposal and the group context proposal?\r\n\r\nGood points. Yes, I'll add validation rules like this here. In particular:\r\nA commit is invalid if it contains more than one `gce_update` proposal, or a `gce_update` and `group_context_extensions`.\r\n\r\n> 3\\. For the above line, is it correct to say that the values for the extension that exists in group context are \"replaced by\" the values of the extension from the gce_update proposal, or does \"extended with\" mean something slightly different in this context?\r\n\r\nThe extension values are merged. This should be more specific indeed. But the main point of this proposal is to not replace, but merge the values. What wording would you suggest?",
+          "createdAt": "2024-04-29T18:22:39Z",
+          "updatedAt": "2024-04-29T18:22:39Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "@franziskuskiefer This was never presented/discussed on list or at a meeting. Is this still something you want to get in?",
+          "createdAt": "2024-07-22T14:38:12Z",
+          "updatedAt": "2024-07-22T14:38:12Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "This extension suffers from two problems:\r\n- no way to distinguish between updating an extension to be present with zero-length content, and an extension between completely removed\r\n- A single extension with very long content (for example, the MIMI participant list) also probably needs the ability to modify state within the extension.",
+          "createdAt": "2024-10-07T18:28:27Z",
+          "updatedAt": "2024-10-07T18:28:27Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> > * I'm guessing the same reasoning for that rule might mean that a commit can not have more than one \"gce_update\" proposal, is that correct?\r\n\r\nIt seems perfectly reasonable to have more than one gce_update proposal as long as the same extension is not referenced in more than one gce_update.\r\n\r\n> > * Is it right to assume that a single commit could not contain both a \"gce_update\" proposal and the group context proposal?\r\n\r\nagreed\r\n\r\n\r\n> Good points. Yes, I'll add validation rules like this here. In particular: A commit is invalid if it contains more than one `gce_update` proposal, or a `gce_update` and `group_context_extensions`.\r\n> \r\n> > 3. For the above line, is it correct to say that the values for the extension that exists in group context are \"replaced by\" the values of the extension from the gce_update proposal, or does \"extended with\" mean something slightly different in this context?\r\n> \r\n> The extension values are merged. This should be more specific indeed. But the main point of this proposal is to not replace, but merge the values. What wording would you suggest?\r\n\r\nfor a given extension, you should be able to add a value, update its value, or remove the extension.\r\n\r\n",
+          "createdAt": "2024-10-07T20:41:14Z",
+          "updatedAt": "2024-10-07T20:41:14Z"
+        },
+        {
+          "author": "franziskuskiefer",
+          "authorAssociation": "NONE",
+          "body": "Oh I totally lost track of this one.\r\nI agree @rohanmahy that this isn't fully fleshed out. Seeing that #26 got merged I think the question is if #26 is doing the right thing and if it may cover the use case here as well. Or if it's better to have a more light weight mechanism. In any case would this one need to be adapted to work in the context of #26.",
+          "createdAt": "2024-10-08T06:07:49Z",
+          "updatedAt": "2024-10-08T06:07:49Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "In that case, I'll close this for now. Feel free to open it again, if and when you start working on it.",
+          "createdAt": "2024-10-21T13:23:54Z",
+          "updatedAt": "2024-10-21T13:23:54Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 28,
+      "id": "PR_kwDOHZoI5M5ywcR9",
+      "title": "Add ability to export SafeSignature public key",
+      "url": "https://github.com/mlswg/mls-extensions/pull/28",
+      "state": "CLOSED",
+      "author": "rohanmahy",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "I added a PR which allows a Safe Extensions API user to export the public key corresponding to the SafeSignature private key.",
+      "createdAt": "2024-06-17T23:53:20Z",
+      "updatedAt": "2024-07-22T14:36:02Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "fad299d873ae690083818182889c2140426c8100",
+      "headRepository": "rohanmahy/mls-extensions",
+      "headRefName": "rohan/export-sigpubkey",
+      "headRefOid": "12d4adf30e82c0d8ffa4cfb9eb069cfa596d0eb0",
+      "closedAt": "2024-07-22T14:36:02Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "As discussed offline, this PR does not make sense.",
+          "createdAt": "2024-07-22T14:36:02Z",
+          "updatedAt": "2024-07-22T14:36:02Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 29,
+      "id": "PR_kwDOHZoI5M5ywdLy",
+      "title": "Add safe use of AAD to Safe Extensions framework",
+      "url": "https://github.com/mlswg/mls-extensions/pull/29",
+      "state": "MERGED",
+      "author": "rohanmahy",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Incorporate AAD in the safe extensions framework to make a safe muxing of potentially multiple sources of authenticated_data",
+      "createdAt": "2024-06-17T23:57:11Z",
+      "updatedAt": "2024-10-21T15:55:07Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "14332f7f5894c974e198f8de97bc717b2f6c6c9d",
+      "headRepository": "rohanmahy/mls-extensions",
+      "headRefName": "rohan/safe-aad",
+      "headRefOid": "61119e49e3835109da73acc1368c1fa6c830142d",
+      "closedAt": "2024-10-21T15:55:07Z",
+      "mergedAt": "2024-10-21T15:55:07Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "f880364d4e1adfa0166e12bedfa719a7f25ca5fe"
+      },
+      "comments": [
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "It's been a while since we discussed this. @rohanmahy did you want to add a brief discussion noting that in contrast to other safe extension framework features, the use of the AAD is a little different, because the application can typically also just use the AAD? I know we discussed this but I can't remember what we decided on.",
+          "createdAt": "2024-07-22T14:36:02Z",
+          "updatedAt": "2024-07-22T14:36:02Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Hi, if two extensions (safe or not) want to add AAD, there needs to be a way to mux and demux that data. I'm open to suggestions about what additional text you'd like added.",
+          "createdAt": "2024-07-22T16:18:54Z",
+          "updatedAt": "2024-07-22T16:18:54Z"
+        },
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I guess my question is how the implementation would know when to expect a SafeAAD item in the `authenticated_data` field. We probably need a rule that says something like: \"If there is an extension (probably a group context extension) that sometimes makes use of the AAD field, then there MUST always be a SafeAAD item in `authenticated_data`, even if it's empty. Does that make sense? Otherwise the implementation won't know if it's parsing for a SafeAAD item or the application's (unsafe) AAD.",
+          "createdAt": "2024-07-23T06:49:10Z",
+          "updatedAt": "2024-07-23T06:49:10Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> I guess my question is how the implementation would know when to expect a SafeAAD item in the `authenticated_data` field. We probably need a rule that says something like: \"If there is an extension (probably a group context extension) that sometimes makes use of the AAD field, then there MUST always be a SafeAAD item in `authenticated_data`, even if it's empty. Does that make sense? Otherwise the implementation won't know if it's parsing for a SafeAAD item or the application's (unsafe) AAD.\r\n\r\nI think there needs to be a SafeAAD GC extension. If it exists in a group, the first octet(s) of the AAD is/are the length of the SafeAAD vector (which could be zero). If there is any AAD left after that, it is non-Safe AAD.\r\n\r\nIs that concept OK?",
+          "createdAt": "2024-07-23T16:41:59Z",
+          "updatedAt": "2024-07-23T16:41:59Z"
+        },
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "That sounds good. Could you add/clarify that in the PR?",
+          "createdAt": "2024-07-23T19:01:44Z",
+          "updatedAt": "2024-07-23T19:01:44Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "Let's get this in. @rohanmahy can you please resolve the conflict?",
+          "createdAt": "2024-10-21T13:25:42Z",
+          "updatedAt": "2024-10-21T13:25:42Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> Let's get this in. @rohanmahy can you please resolve the conflict?\r\n\r\nDone!",
+          "createdAt": "2024-10-21T14:05:52Z",
+          "updatedAt": "2024-10-21T14:05:52Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M6NMdBn",
+          "commit": {
+            "abbreviatedOid": "612071f"
+          },
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "Thanks, looks good to me!",
+          "createdAt": "2024-10-15T10:21:42Z",
+          "updatedAt": "2024-10-15T10:21:42Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 31,
+      "id": "PR_kwDOHZoI5M59q-RU",
+      "title": "Clarify how capabilities negotiation works in Safe Extensions framework.",
+      "url": "https://github.com/mlswg/mls-extensions/pull/31",
+      "state": "CLOSED",
+      "author": "rohanmahy",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Note: this diff is easier to read when viewed as diffs for its separate commits. The first Commit is just a plain move of one section.\r\n\r\n- Moved the text in \"Storing State in Extensions\" earlier and renamed\r\n- describe the original \"ExtensionTypes\" as \"Core struct extensions\"\r\n- added a section on capabilities handling and negotiation\r\n- instruct IANA to add a \"Safe\" column to \"MLS Extension Types\"\r\n- instruct IANA that a safe extension can have N/A in the Message(s) column.",
+      "createdAt": "2024-10-04T21:45:42Z",
+      "updatedAt": "2024-10-21T16:36:38Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "f880364d4e1adfa0166e12bedfa719a7f25ca5fe",
+      "headRepository": "rohanmahy/mls-extensions",
+      "headRefName": "ext-types",
+      "headRefOid": "99a317cb3d1d8c186984f9c148d07f5987b045a5",
+      "closedAt": "2024-10-21T16:36:37Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> Is there a reason you want the extension WireFormat, Proposal, etc. to be part of the safe extension API? \r\n\r\nYes! Safe WireFormats, Safe Proposals, and Safe Credentials share the `mls-extension_message`, `extension*proposal`, and `extension_credential` types respectively;  all of these MUST use the ExtensionContent struct; and all of them use the capabilities negotiation I described. The whole reason I wrote this PR was because it was simply not possible to write rules for safe extension of one these types without stepping into rules that should be defined in the framework.\r\n\r\n>Our thinking was to keep it separate, because *it* [my emphasis] might also be useful for non-safe extensions.\r\n\r\nI'm not sure what the *it* is. RFC9420 already says what you need to do for non-safe extensions of these types. If the creator of a non-safe extension wants to reuse some structs defined the Safe Extensions framework, I don't see any problem with this, but they absolutely MUST NOT use the IANA registered `mls-extension_message`, `extension*proposal`, and `extension_credential` types.  If you wanted to make it easier to find/reference the `ExtensionState` struct for example, I would suggest we get this PR merged and then we can have a clean PR proposing the move. Otherwise the conflicts get ugly and the PR is harder to review.",
+          "createdAt": "2024-10-11T14:44:41Z",
+          "updatedAt": "2024-10-11T14:44:41Z"
+        },
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "What I meant was: Why shouldn't unsafe extension authors make use of mls-extension_message, extension*proposal and extension_credential? Is there a safety or a negotiation consideration I'm not seeing?",
+          "createdAt": "2024-10-14T07:13:14Z",
+          "updatedAt": "2024-10-14T07:13:14Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "They shouldn't use those types because that is how the stack of some *other\r\nclient*  knows that the (to it unknown) extension is safe or not.\r\n\r\nOn Mon, Oct 14, 2024, 00:13 Konrad Kohbrok ***@***.***> wrote:\r\n\r\n> What I meant was: Why shouldn't unsafe extension authors make use of\r\n> mls-extension_message, extension*proposal and extension_credential? Is\r\n> there a safety or a negotiation consideration I'm not seeing?\r\n>\r\n> \u2014\r\n> Reply to this email directly, view it on GitHub\r\n> <https://github.com/mlswg/mls-extensions/pull/31#issuecomment-2410227732>,\r\n> or unsubscribe\r\n> <https://github.com/notifications/unsubscribe-auth/AADSQPTKANLMJRH6AU2SCATZ3NVKBAVCNFSM6AAAAABPMU4X72VHI2DSMVQWIX3LMV43OSLTON2WKQ3PNVWWK3TUHMZDIMJQGIZDONZTGI>\r\n> .\r\n> You are receiving this because you authored the thread.Message ID:\r\n> ***@***.***>\r\n>\r\n",
+          "createdAt": "2024-10-14T11:27:10Z",
+          "updatedAt": "2024-10-14T11:27:10Z"
+        },
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "If the other client doesn't know the extension, how can its semantics (and thus its safety) be relevant to it?",
+          "createdAt": "2024-10-14T12:58:30Z",
+          "updatedAt": "2024-10-14T12:58:30Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "1) So it can ignore them safely\r\n2) If it is a Safe Extension, the stack could conceivably pass it to the consumer of the stack to implement the safe extension.\r\n\r\nOn Mon, Oct 14, 2024, 05:58 Konrad Kohbrok ***@***.***> wrote:\r\n\r\n> If the other client doesn't know the extension, how can its semantics (and\r\n> thus its safety) be relevant to it?\r\n>\r\n> \u2014\r\n> Reply to this email directly, view it on GitHub\r\n> <https://github.com/mlswg/mls-extensions/pull/31#issuecomment-2411164100>,\r\n> or unsubscribe\r\n> <https://github.com/notifications/unsubscribe-auth/AADSQPWEQ6XT7SZOGVTSZX3Z3O5Y3AVCNFSM6AAAAABPMU4X72VHI2DSMVQWIX3LMV43OSLTON2WKQ3PNVWWK3TUHMZDIMJRGE3DIMJQGA>\r\n> .\r\n> You are receiving this because you authored the thread.Message ID:\r\n> ***@***.***>\r\n>\r\n",
+          "createdAt": "2024-10-14T13:57:07Z",
+          "updatedAt": "2024-10-14T14:30:55Z"
+        },
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "1) If an extension can't be safely ignored, it should be a required capability, shouldn't it?\r\n2) If the application wants to do anything with the extension, why wouldn't it signal support for it? Also, why would an application expect to be shown the data for safe extensions, but not for unsafe ones?",
+          "createdAt": "2024-10-15T10:18:04Z",
+          "updatedAt": "2024-10-15T10:18:04Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Safe Extensions has two main benefits:\r\n- Arbitrary combinations of safe extensions can be used together safely.\r\n- Because of that property, an MLS stack can also delegate implementation\r\nof safe extensions to the consumer of the stack, whereas it cannot with a\r\nnon-safe extension (even if it is not in required_capabilities).\r\n\r\n\r\nOn Tue, Oct 15, 2024, 03:18 Konrad Kohbrok ***@***.***> wrote:\r\n\r\n>\r\n>    1. If an extension can't be safely ignored, it should be a required\r\n>    capability, shouldn't it?\r\n>    2. If the application wants to do anything with the extension, why\r\n>    wouldn't it signal support for it? Also, why would an application expect to\r\n>    be shown the data for safe extensions, but not for unsafe ones?\r\n>\r\n> \u2014\r\n> Reply to this email directly, view it on GitHub\r\n> <https://github.com/mlswg/mls-extensions/pull/31#issuecomment-2413484893>,\r\n> or unsubscribe\r\n> <https://github.com/notifications/unsubscribe-auth/AADSQPVISXO3DMIVV3WODATZ3TTXFAVCNFSM6AAAAABPMU4X72VHI2DSMVQWIX3LMV43OSLTON2WKQ3PNVWWK3TUHMZDIMJTGQ4DIOBZGM>\r\n> .\r\n> You are receiving this because you authored the thread.Message ID:\r\n> ***@***.***>\r\n>\r\n",
+          "createdAt": "2024-10-15T11:25:35Z",
+          "updatedAt": "2024-10-15T11:25:35Z"
+        },
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "In a scenario where the MLS implementation doesn't know the extension, i.e. it's not in the capabilities then why wouldn't the application show proposals, etc. to the application regardless whether the extension is safe or not? If the implementation of the unknown extension can't be delegated to the application, the extension really should have been in the required capabilities.",
+          "createdAt": "2024-10-16T07:28:01Z",
+          "updatedAt": "2024-10-16T07:28:01Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> In a scenario where the MLS implementation doesn't know the extension, i.e. it's not in the capabilities then why wouldn't the application show proposals, etc. to the application regardless whether the extension is safe or not? If the implementation of the unknown extension can't be delegated to the application, the extension really should have been in the required capabilities.\r\n\r\nLet's take the example of an AssociatedParties \"feature\". It has:\r\n- one GroupContext\r\n- 3 Proposals (adding, removing, and updating this GC)\r\n- A label for a new secret\r\n\r\nThe \"feature\" has a single ExtensionType say it is type 0xBEEF. The proposals are `extension_proposal`, `extension_path_proposal`, and `extension_path_proposal` types respectively. After each of these would be the ExtensionType 0xBEEF and then inside the extension_path_proposal, a selector in the TLS struct to select between the remove and update variants of the struct.",
+          "createdAt": "2024-10-19T19:01:09Z",
+          "updatedAt": "2024-10-19T19:01:09Z"
+        },
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I see what you're getting at. I think this an issue beyond safe extensions that we best discuss in the next meeting.",
+          "createdAt": "2024-10-21T13:27:28Z",
+          "updatedAt": "2024-10-21T13:27:28Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> I see what you're getting at. I think this an issue beyond safe extensions that we best discuss in the next meeting.\r\n\r\nI think the group will have a hard time reviewing it properly inside a PR. If we have consensus from the editors can we merge this to have something concrete to discuss?\r\n",
+          "createdAt": "2024-10-21T13:32:10Z",
+          "updatedAt": "2024-10-21T13:32:10Z"
+        },
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Looking at it more closely, maybe I don't understand what you're getting at. I understand the AP extension example and that's indeed how the mechanism is intended, but why can't we use the same mechanism (i.e. bundle multiple proposals, WireFormats, etc. behind a single extension type) with a non-safe extension?",
+          "createdAt": "2024-10-21T13:44:45Z",
+          "updatedAt": "2024-10-21T13:44:45Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> Looking at it more closely, maybe I don't understand what you're getting at. I understand the AP extension example and that's indeed how the mechanism is intended, but why can't we use the same mechanism (i.e. bundle multiple proposals, WireFormats, etc. behind a single extension type) with a non-safe extension?\r\n\r\nI think we should be making it clear and easy to make safe extensions. The creator of a non-safe extension *could* use the same or similar mechanism, but we can't be prescriptive about what non-safe extension can and can't do. They don't *HAVE TO*. However for safe extensions we can say, they have to do a specific thing. That's why I don't particularly care to spend a lot of energy on considerations for non-safe extensions. It's not that I don't want non-safe extensions to do better, it's that they are free to ignore anything we do say now (the horse is already out of the barn).",
+          "createdAt": "2024-10-21T13:59:06Z",
+          "updatedAt": "2024-10-21T13:59:06Z"
+        },
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Fair enough, then I'm okay with this PR. \r\n\r\nI don't think, however, that just because an extension is safe, it can be safely ignored by both client and application. For example, if a client receives a commit with an extension proposal from a safe extension where the proposal is invalid according to the extension's semantics. A client that is knows the extension will consider the commit invalid. A client that doesn't will consider the commit invalid.",
+          "createdAt": "2024-10-21T14:26:02Z",
+          "updatedAt": "2024-10-21T14:26:02Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> Fair enough, then I'm okay with this PR.\r\n\r\nGreat!\r\n\r\n> I don't think, however, that just because an extension is safe, it can be safely ignored by both client and application. For example, if a client receives a commit with an extension proposal from a safe extension where the proposal is invalid according to the extension's semantics. A client that is knows the extension will consider the commit invalid. A client that doesn't will consider the commit invalid.\r\n\r\nAgreed. All proposals used would have to be in required_capabilities because a member needs to be able to understand if they are valid or not.",
+          "createdAt": "2024-10-21T14:28:21Z",
+          "updatedAt": "2024-10-21T14:28:21Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "Closing in favor of #36.",
+          "createdAt": "2024-10-21T16:36:37Z",
+          "updatedAt": "2024-10-21T16:36:37Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M6MG3od",
+          "commit": {
+            "abbreviatedOid": "14cbae1"
+          },
+          "author": "Bren2010",
+          "authorAssociation": "NONE",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-10-06T22:08:16Z",
+          "updatedAt": "2024-10-06T22:08:16Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6Mzpd7",
+          "commit": {
+            "abbreviatedOid": "14cbae1"
+          },
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "I hadn't realized that we were missing the section on extension negotiation, so thanks for adding it.\r\n\r\nIs there a reason you want the extension WireFormat, Proposal, etc. to be part of the safe extension API? Our thinking was to keep it separate, because it might also be useful for non-safe extensions.",
+          "createdAt": "2024-10-11T09:16:49Z",
+          "updatedAt": "2024-10-11T09:16:49Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 32,
+      "id": "PR_kwDOHZoI5M5-QuxO",
+      "title": "placeholder GroupContext encryption mechanism",
+      "url": "https://github.com/mlswg/mls-extensions/pull/32",
+      "state": "OPEN",
+      "author": "rohanmahy",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This mechanism is a placeholder for encrypting individual GroupContext extensions for group members only. ",
+      "createdAt": "2024-10-10T19:10:45Z",
+      "updatedAt": "2024-10-10T19:10:45Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "14332f7f5894c974e198f8de97bc717b2f6c6c9d",
+      "headRepository": "rohanmahy/mls-extensions",
+      "headRefName": "encrypted-groupcontext",
+      "headRefOid": "9388b18ca5538b75195a7ba85f8a02d6250ab800",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 35,
+      "id": "PR_kwDOHZoI5M5_VUG1",
+      "title": "Fix upload action",
+      "url": "https://github.com/mlswg/mls-extensions/pull/35",
+      "state": "MERGED",
+      "author": "raphaelrobert",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-10-21T14:46:13Z",
+      "updatedAt": "2024-10-21T14:49:07Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "14332f7f5894c974e198f8de97bc717b2f6c6c9d",
+      "headRepository": "mlswg/mls-extensions",
+      "headRefName": "fix-upload-ci",
+      "headRefOid": "df6a003556f4fd14e539fae590d401337d6d9c18",
+      "closedAt": "2024-10-21T14:49:07Z",
+      "mergedAt": "2024-10-21T14:49:06Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "c025ed8e958743881968f89d732cf4edc1f2d4dd"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 36,
+      "id": "PR_kwDOHZoI5M5_WRAe",
+      "title": "Clarify how capabilities negotiation works in Safe Extensions framework (redo)",
+      "url": "https://github.com/mlswg/mls-extensions/pull/36",
+      "state": "MERGED",
+      "author": "rohanmahy",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Same thing as PR #31 without the merge conflicts.",
+      "createdAt": "2024-10-21T16:27:44Z",
+      "updatedAt": "2024-10-21T16:36:16Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "f880364d4e1adfa0166e12bedfa719a7f25ca5fe",
+      "headRepository": "rohanmahy/mls-extensions",
+      "headRefName": "ext-types2",
+      "headRefOid": "c1f2ca9e825ae1e780095b7f99e5ff9994d9b699",
+      "closedAt": "2024-10-21T16:36:16Z",
+      "mergedAt": "2024-10-21T16:36:16Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "02cbd2f7dfda3b6cee066f5640369bece487158f"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 37,
+      "id": "PR_kwDOHZoI5M5_WsfT",
+      "title": "draft-05",
+      "url": "https://github.com/mlswg/mls-extensions/pull/37",
+      "state": "MERGED",
+      "author": "raphaelrobert",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-10-21T17:26:47Z",
+      "updatedAt": "2024-10-21T17:35:54Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "02cbd2f7dfda3b6cee066f5640369bece487158f",
+      "headRepository": "mlswg/mls-extensions",
+      "headRefName": "draft-05",
+      "headRefOid": "a7a636088e110e9280a19f58bf2c7e2699602b3a",
+      "closedAt": "2024-10-21T17:35:54Z",
+      "mergedAt": "2024-10-21T17:35:54Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "348b7fe0cad9321751b969cb5d13aac86deedff5"
+      },
       "comments": [],
       "reviews": []
     }
