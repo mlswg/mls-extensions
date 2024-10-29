@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-10-27T00:43:27.995589+00:00",
+  "timestamp": "2024-10-29T00:41:06.032427+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -2063,6 +2063,58 @@
       "mergeCommit": {
         "oid": "348b7fe0cad9321751b969cb5d13aac86deedff5"
       },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 38,
+      "id": "PR_kwDOHZoI5M6AGLcL",
+      "title": "add additional credential types",
+      "url": "https://github.com/mlswg/mls-extensions/pull/38",
+      "state": "OPEN",
+      "author": "rohanmahy",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "- add multi and weak-multi credential types",
+      "createdAt": "2024-10-28T12:48:36Z",
+      "updatedAt": "2024-10-28T12:50:25Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "348b7fe0cad9321751b969cb5d13aac86deedff5",
+      "headRepository": "rohanmahy/mls-extensions",
+      "headRefName": "more-credentials",
+      "headRefOid": "7019bb89b049f7779e2af2e7a54701a73c4b11d7",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 39,
+      "id": "PR_kwDOHZoI5M6AG_Ig",
+      "title": "Update Rohan's contact info",
+      "url": "https://github.com/mlswg/mls-extensions/pull/39",
+      "state": "OPEN",
+      "author": "rohanmahy",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-10-28T14:22:20Z",
+      "updatedAt": "2024-10-28T14:22:20Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "348b7fe0cad9321751b969cb5d13aac86deedff5",
+      "headRepository": "rohanmahy/mls-extensions",
+      "headRefName": "patch-1",
+      "headRefOid": "2f233acbb06a39334e16cb8c9037f1a010ffb77c",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
       "comments": [],
       "reviews": []
     }
