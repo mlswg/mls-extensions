@@ -26,8 +26,8 @@ contributor:
    org:  Phoenix R&D
    email:  konrad.kohbrok@datashrine.de
  - name: Rohan Mahy
-   org:  Wire
-   email:  rohan@wire.com
+   org:  Rohan Mahy Consulting Services
+   email:  rohan.ietf@gmail.com
  - name: Marta Mularczyk
    org:  Amazon
    email:  mulmarta@amazon.com
