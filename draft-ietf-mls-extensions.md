@@ -1251,6 +1251,7 @@ Messages Extension. The extension does not carry any payload.
 * Name: targeted_messages_capability
 * Message(s): LN: This extension may appear in LeafNode objects
 * Recommended: Y
+* Safe: Y
 * Reference: RFC XXXX
 
 ### targeted_messages MLS Extension
@@ -1262,6 +1263,7 @@ indicates that the group supports the Targeted Messages Extension.
 * Name: targeted_messages
 * Message(s): GC: This extension may appear in GroupContext objects
 * Recommended: Y
+* Safe: Y
 * Reference: RFC XXXX
 
 ### accepted_media_types MLS Extension
@@ -1274,6 +1276,7 @@ MLS client referred to by the LeafNode.
 * Name: accepted_media_types
 * Message(s): LN: This extension may appear in LeafNode objects
 * Recommended: Y
+* Safe: Y
 * Reference: RFC XXXX
 
 ### required_media_types MLS Extension
@@ -1286,6 +1289,7 @@ MLS members of the group to support.
 * Name: required_media_types
 * Message(s): GC: This extension may appear in GroupContext objects
 * Recommended: Y
+* Safe: Y
 * Reference: RFC XXXX
 
 ### last_resort_key_package MLS Extension
@@ -1298,6 +1302,7 @@ no additional data.
 * Name: last_resort_key_package
 * Message(s): KP: This extension may appear in KeyPackage objects
 * Recommended: Y
+* Safe: Y
 * Reference: RFC XXXX
 
 ### extension_aad MLS Extension
@@ -1310,6 +1315,7 @@ in LeafNode capabilities, and in GroupContext `required_capabilities`. It contai
 * Message(s): LN,GC: This extension may appear in LeafNode and GroupContext
   objects.
 * Recommended: Y
+* Safe: Y
 * Reference: RFC XXXX
 
 ### safe_extensions MLS Extension
@@ -1323,6 +1329,7 @@ Safe Extensions Framework in LeafNode capabilities, and in GroupContext
 * Message(s): LN,GC: This extension may appear in LeafNode and GroupContext
   objects.
 * Recommended: Y
+* Safe: Y
 * Reference: RFC XXXX
 
 ### core_struct_extensions MLS Extension
@@ -1337,6 +1344,7 @@ It appears in LeafNode capabilities, and in GroupContext
 * Message(s): LN,GC: This extension may appear in LeafNode and GroupContext
   objects.
 * Recommended: Y
+* Safe: Y
 * Reference: RFC XXXX
 
 
