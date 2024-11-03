@@ -1247,7 +1247,7 @@ The `targeted_messages_capability` MLS Extension Type is used in the
 capabilities field of LeafNodes to indicate the support for the Targeted
 Messages Extension. The extension does not carry any payload.
 
-* Value: 0x0006
+* Value: 0x0006 (suggested)
 * Name: targeted_messages_capability
 * Message(s): LN: This extension may appear in LeafNode objects
 * Recommended: Y
@@ -1258,7 +1258,7 @@ Messages Extension. The extension does not carry any payload.
 The `targeted_messages` MLS Extension Type is used inside GroupContext objects. It
 indicates that the group supports the Targeted Messages Extension.
 
-* Value: 0x0007
+* Value: 0x0007 (suggested)
 * Name: targeted_messages
 * Message(s): GC: This extension may appear in GroupContext objects
 * Recommended: Y
@@ -1270,7 +1270,7 @@ The `accepted_media_types` MLS Extension Type is used inside LeafNode objects. I
 contains a MediaTypeList representing all the media types supported by the
 MLS client referred to by the LeafNode.
 
-* Value: 0x0008
+* Value: 0x0008 (suggested)
 * Name: accepted_media_types
 * Message(s): LN: This extension may appear in LeafNode objects
 * Recommended: Y
@@ -1282,7 +1282,7 @@ The required_media_types MLS Extension Type is used inside GroupContext objects.
 contains a MediaTypeList representing the media types which are mandatory for all
 MLS members of the group to support.
 
-* Value: 0x0009
+* Value: 0x0009 (suggested)
 * Name: required_media_types
 * Message(s): GC: This extension may appear in GroupContext objects
 * Recommended: Y
@@ -1294,7 +1294,7 @@ The last_resort_key_package MLS Extension Type is used inside KeyPackage
 objects. It marks the KeyPackage for usage in last resort scenarios and contains
 no additional data.
 
-* Value: 0x000A
+* Value: 0x000A (suggested)
 * Name: last_resort_key_package
 * Message(s): KP: This extension may appear in KeyPackage objects
 * Recommended: Y
@@ -1305,7 +1305,7 @@ no additional data.
 The extension_aad MLS Extension Type is used to signal support for `SafeAAD`
 in LeafNode capabilities, and in GroupContext `required_capabilities`. It contains no additional data.
 
-* Value: 0x000B
+* Value: 0x000B (suggested)
 * Name: extension_aad
 * Message(s): LN,GC: This extension may appear in LeafNode and GroupContext
   objects.
@@ -1318,7 +1318,7 @@ The `safe_extensions` MLS Extension Type is used to signal support for the
 Safe Extensions Framework in LeafNode capabilities, and in GroupContext
 `required_capabilities`. It contains no additional data.
 
-* Value: 0x000C
+* Value: 0x000C (suggested)
 * Name: safe_extensions
 * Message(s): LN,GC: This extension may appear in LeafNode and GroupContext
   objects.
@@ -1332,7 +1332,7 @@ for one or more Core Struct Extensions using the Safe Extensions Framework.
 It appears in LeafNode capabilities, and in GroupContext
 `required_capabilities`. It contains no additional data.
 
-* Value: 0x000D
+* Value: 0x000D (suggested)
 * Name: core_struct_extensions
 * Message(s): LN,GC: This extension may appear in LeafNode and GroupContext
   objects.
@@ -1344,7 +1344,7 @@ It appears in LeafNode capabilities, and in GroupContext
 
 ### Extension Proposal
 
-* Value: 0x0008
+* Value: 0x0008 (suggested)
 * Name: extension_proposal
 * Recommended: Y
 * Path Required: N
@@ -1353,7 +1353,7 @@ It appears in LeafNode capabilities, and in GroupContext
 
 ### Extension Path Proposal
 
-* Value: 0x0009
+* Value: 0x0009 (suggested)
 * Name: extension_path_proposal
 * Recommended: Y
 * Path Required: Y
@@ -1362,7 +1362,7 @@ It appears in LeafNode capabilities, and in GroupContext
 
 ### Extension External Proposal
 
-* Value: 0x000a
+* Value: 0x000a (suggested)
 * Name: extension_external_proposal
 * Recommended: Y
 * Path Required: N
@@ -1371,7 +1371,7 @@ It appears in LeafNode capabilities, and in GroupContext
 
 ### AppAck Proposal
 
-* Value: 0x000b
+* Value: 0x000b (suggested)
 * Name: app_ack
 * Recommended: Y
 * Path Required: Y
@@ -1383,7 +1383,7 @@ The `self_remove` MLS Proposal Type is used for a member to remove itself
 from a group more efficiently than using a `remove` proposal type, as the
 `self_remove` type is permitted in External Commits.
 
-* Value: 0x000c
+* Value: 0x000c (suggested)
 * Name: self_remove
 * Recommended: Y
 * External: N
@@ -1393,7 +1393,7 @@ from a group more efficiently than using a `remove` proposal type, as the
 
 ### Extension Credential
 
-* Value: 0x0003
+* Value: 0x0003 (suggested)
 * Name: extension_credential
 * Recommended: Y
 * Reference: RFC XXXX
@@ -1402,7 +1402,7 @@ from a group more efficiently than using a `remove` proposal type, as the
 
 ### Labeled Extension Content
 
-* Label: "LabeledExtensionContent"
+* Label: "LabeledExtensionContent" (suggested)
 * Recommended: Y
 * Reference: RFC XXXX
 
