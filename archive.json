@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-11-03T00:43:47.798603+00:00",
+  "timestamp": "2024-11-05T00:39:20.130144+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -2130,20 +2130,98 @@
       "id": "PR_kwDOHZoI5M6AG_Ig",
       "title": "Update Rohan's contact info",
       "url": "https://github.com/mlswg/mls-extensions/pull/39",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "rohanmahy",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2024-10-28T14:22:20Z",
-      "updatedAt": "2024-10-28T14:22:20Z",
+      "updatedAt": "2024-11-03T11:15:17Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "348b7fe0cad9321751b969cb5d13aac86deedff5",
       "headRepository": "rohanmahy/mls-extensions",
       "headRefName": "patch-1",
       "headRefOid": "2f233acbb06a39334e16cb8c9037f1a010ffb77c",
+      "closedAt": "2024-11-03T11:15:17Z",
+      "mergedAt": "2024-11-03T11:15:17Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "16ff720882dc651d0c5279217ea3d7cfe90afbc2"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M6PwaGV",
+          "commit": {
+            "abbreviatedOid": "2f233ac"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-11-03T11:15:12Z",
+          "updatedAt": "2024-11-03T11:15:12Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 40,
+      "id": "PR_kwDOHZoI5M6AujF2",
+      "title": "IANA recommendations",
+      "url": "https://github.com/mlswg/mls-extensions/pull/40",
+      "state": "OPEN",
+      "author": "raphaelrobert",
+      "authorAssociation": "MEMBER",
+      "assignees": [
+        "raphaelrobert"
+      ],
+      "labels": [],
+      "body": "Apply recommendations received from IANA",
+      "createdAt": "2024-11-03T15:34:29Z",
+      "updatedAt": "2024-11-04T06:13:48Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "16ff720882dc651d0c5279217ea3d7cfe90afbc2",
+      "headRepository": "mlswg/mls-extensions",
+      "headRefName": "iana-recommendations",
+      "headRefOid": "ab2cfa63c9c9d2e94e821985db55c769a1fed95a",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Hi, It is not clear to me that all of the extensions in [ab2cfa6](https://github.com/mlswg/mls-extensions/pull/40/commits/ab2cfa63c9c9d2e94e821985db55c769a1fed95a) are Safe",
+          "createdAt": "2024-11-04T06:13:47Z",
+          "updatedAt": "2024-11-04T06:13:47Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 41,
+      "id": "PR_kwDOHZoI5M6A0fmK",
+      "title": "Make Standards Track",
+      "url": "https://github.com/mlswg/mls-extensions/pull/41",
+      "state": "OPEN",
+      "author": "seanturner",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-11-04T16:02:21Z",
+      "updatedAt": "2024-11-04T16:08:11Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "16ff720882dc651d0c5279217ea3d7cfe90afbc2",
+      "headRepository": "mlswg/mls-extensions",
+      "headRefName": "seanturner-std",
+      "headRefOid": "15ed209404d6a898ad6eeb3e5918afd4f719b680",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
