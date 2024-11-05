@@ -3,7 +3,7 @@ title: The Messaging Layer Security (MLS) Extensions
 abbrev: MLS
 docname: draft-ietf-mls-extensions-latest
 submissiontype: IETF
-category: info
+category: std
 
 ipr: trust200902
 area: Security
