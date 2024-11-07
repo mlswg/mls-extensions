@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-11-05T00:39:20.130144+00:00",
+  "timestamp": "2024-11-07T00:39:28.359994+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -2181,7 +2181,7 @@
       "labels": [],
       "body": "Apply recommendations received from IANA",
       "createdAt": "2024-11-03T15:34:29Z",
-      "updatedAt": "2024-11-04T06:13:48Z",
+      "updatedAt": "2024-11-05T10:59:21Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "16ff720882dc651d0c5279217ea3d7cfe90afbc2",
@@ -2199,6 +2199,13 @@
           "body": "Hi, It is not clear to me that all of the extensions in [ab2cfa6](https://github.com/mlswg/mls-extensions/pull/40/commits/ab2cfa63c9c9d2e94e821985db55c769a1fed95a) are Safe",
           "createdAt": "2024-11-04T06:13:47Z",
           "updatedAt": "2024-11-04T06:13:47Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "> Hi, It is not clear to me that all of the extensions in [ab2cfa6](https://github.com/mlswg/mls-extensions/pull/40/commits/ab2cfa63c9c9d2e94e821985db55c769a1fed95a) are Safe\r\n\r\nCan you elaborate?",
+          "createdAt": "2024-11-05T10:59:20Z",
+          "updatedAt": "2024-11-05T10:59:20Z"
         }
       ],
       "reviews": []
@@ -2208,26 +2215,55 @@
       "id": "PR_kwDOHZoI5M6A0fmK",
       "title": "Make Standards Track",
       "url": "https://github.com/mlswg/mls-extensions/pull/41",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "seanturner",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2024-11-04T16:02:21Z",
-      "updatedAt": "2024-11-04T16:08:11Z",
+      "updatedAt": "2024-11-05T10:57:34Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "16ff720882dc651d0c5279217ea3d7cfe90afbc2",
       "headRepository": "mlswg/mls-extensions",
       "headRefName": "seanturner-std",
       "headRefOid": "15ed209404d6a898ad6eeb3e5918afd4f719b680",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2024-11-05T10:57:34Z",
+      "mergedAt": "2024-11-05T10:57:34Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "6285784da5d19a853c9864ecfd1261f961eaf490"
+      },
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M6P9YUT",
+          "commit": {
+            "abbreviatedOid": "15ed209"
+          },
+          "author": "bifurcation",
+          "authorAssociation": "NONE",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-11-05T10:31:01Z",
+          "updatedAt": "2024-11-05T10:31:01Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6P9nrC",
+          "commit": {
+            "abbreviatedOid": "15ed209"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-11-05T10:57:24Z",
+          "updatedAt": "2024-11-05T10:57:24Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
