@@ -1205,6 +1205,106 @@ it carries no additional data.
 As a result, a LastResort Extension contains the ExtensionType with an empty
 `extension_data` field.
 
+## Multi-Credentials
+
+Multi-credentials address use cases where there might not be a single
+credential that captures all of a client's authenticated attributes.  For
+example, an enterprise messaging client may wish to provide attributes both
+from its messaging service, to prove that its user has a given handle in
+that service, and from its corporate owner, to prove that its user is an
+employee of the corporation. Multi-credentials can also be used in migration
+scenarios, where some clients in a group might wish to rely on a newer type
+of credential, but other clients haven't yet been upgraded.
+
+New safe credential types `MultiCredential` and `WeakMultiCredential` are
+defined as shown below. These credential types are indicated with
+ExtensionType values `multi` and `weak-multi` (see {{iana-creds}}).
+
+~~~ tls-presentation
+struct {
+  CipherSuite cipher_suite;
+  Credential credential;
+  SignaturePublicKey credential_key;
+
+  /* SignWithLabel(., "CredentialBindingTBS", CredentialBindingTBS) */
+  opaque signature<V>;
+} CredentialBinding
+
+struct {
+  CredentialBinding bindings<V>;
+} MultiCredential;
+
+struct {
+  CredentialBinding bindings<V>;
+} WeakMultiCredential;
+~~~
+
+The two types of credentials are processed in exactly the same way.  The only
+difference is in how they are treated when evaluating support by other clients,
+as discussed below.
+
+## Credential Bindings
+
+A multi-credential consists of a collection of "credential bindings".  Each
+credential binding is a signed statement by the holder of the credential that
+the signature key in the LeafNode belongs to the holder of that credential.
+Specifically, the signature is computed using the MLS `SignWithLabel` function,
+with label `"CredentialBindingTBS"` and with a content that covers the contents
+of the CredentialBinding, plus the `signature_key` field from the LeafNode in
+which this credential will be embedded.
+
+~~~ tls-presentation
+struct {
+  CipherSuite cipher_suite;
+  Credential credential;
+  SignaturePublicKey credential_key;
+  SignaturePublicKey signature_key;
+} CredentialBindingTBS;
+~~~
+
+The `cipher_suite` for a credential is NOT REQUIRED to match the cipher suite
+for the MLS group in which it is used, but MUST meet the support requirements
+with regard to support by group members discussed below.
+
+## Verifying a Multi-Credential
+
+A credential binding is supported by a client if the client supports the
+credential type and cipher suite of the binding.  A credential binding is valid
+in the context of a given LeafNode if both of the following are true:
+
+* The `credential` is valid according to the MLS Authentication Service.
+
+* The `credential_key` corresponds to the specified `credential`, in the same
+  way that the `signature_key` would have to correspond to the credential if
+  the credential were presented in a LeafNode.
+
+* The `signature` field is valid with respect to the `signature_key` value in
+  the leaf node.
+
+A client that receives a credential of type `multi` in a LeafNode MUST verify
+that all of the following are true:
+
+* All members of the group support credential type `multi`.
+
+* For each credential binding in the multi-credential:
+
+  * Every member of the group supports the cipher suite and credential type
+    values for the binding.
+
+  * The binding is valid in the context of the LeafNode.
+
+A client that receives a credential of type `weak-multi` in a LeafNode MUST verify
+that all of the following are true:
+
+* All members of the group support credential type `multi`.
+
+* Each member of the group supports at least one binding in the
+  multi-credential.  (Different members may support different subsets.)
+
+* Every binding that this client supports is valid in the context of the
+  LeafNode.
+
+
 # IANA Considerations
 
 This document requests the addition of various new values under the heading
@@ -1389,12 +1489,26 @@ from a group more efficiently than using a `remove` proposal type, as the
 * External: N
 * Path Required: Y
 
-## MLS Credential Types
+## MLS Credential Types {#iana-creds}
 
 ### Extension Credential
 
 * Value: 0x0003
 * Name: extension_credential
+* Recommended: Y
+* Reference: RFC XXXX
+
+### Multi Credential
+
+* Value: 0x0004
+* Name: multi
+* Recommended: Y
+* Reference: RFC XXXX
+
+### Weak Multi Credential
+
+* Value: 0x0005
+* Name: weak-multi
 * Recommended: Y
 * Reference: RFC XXXX
 
@@ -1450,3 +1564,8 @@ completely validate a GroupInfo object that it receives. An insider
 can prevent an External Join by providing either an invalid GroupInfo object
 or an invalid SelfRemove Proposal. The security properties of external joins
 does not change with the addition of this proposal type.
+
+## Multi Credentials
+
+Using a Weak Multi Credential reduces the overall credential security to the
+security of the least secure of its credential bindings.
