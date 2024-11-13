@@ -59,6 +59,12 @@ extensions that are likely to be useful to many applications. The extensions
 described in this document are intended to be used by applications that need to
 extend the MLS protocol.
 
+In general, while extensions can modify the protocol flow of MLS and the
+associated properties in arbitrary ways, the base MLS protocol already enables a
+number of functionalities that extensions can use without modifying MLS itself.
+Extension authors should consider using these built-in mechanisms before
+employing more intrusive changes to the protocol.
+
 ## Change Log
 
 RFC EDITOR PLEASE DELETE THIS SECTION.
@@ -136,8 +142,6 @@ MLS protocol and, therefore, so do the extensions built from them.
 Where possible, the API makes use of mechanisms defined in the MLS
 specification. For example, part of the safe API is the use of the
 `SignWithLabel` function described in Section 5.1.2 of {{!RFC9420}}.
-
-### Security
 
 An extension is called safe if it does not modify the base MLS protocol or other
 MLS extensions beyond using components of the Safe Extension API. The Safe
@@ -440,122 +444,6 @@ struct {
 } PreSharedKeyID;
 ~~~
 
-### Extension Designer Tools
-
-The safe extension API allows extension designers to sign and encrypt payloads
-without the need to register their own IANA labels. Following the same pattern,
-this document also provides ways for extension designers to define their own
-wire formats, proposals, credentials, and for structured data in the
-Additional Authenticated Data.
-
-#### Core Struct Extensions
-
-Each extension of the GroupContext, GroupInfo, KeyPackage, and/or LeafNode
-structs is required to define the format of its data. These types of
-extensions SHOULD NOT use the `ExtensionContent` struct since the `extension_type` is already in the parent data structure.
-
-#### Wire Formats
-
-Extensions can define their own MLS messages by using the mls_extension_message
-MLS Wire Format. The mls_extension_message Wire Format is IANA registered
-specifically for this purpose and extends the select statement in the MLSMessage
-struct as follows:
-
-~~~tls
-case mls_extension_message:
-    ExtensionContent extension_content;
-~~~
-
-The extension_type in `extension_content` MUST be set to the type of the
-extension in question.
-Processing of self-defined wire formats has to be defined by the extension.
-
-#### Proposals
-
-Similar to wire formats, extensions can define their own proposals by using one
-of three dedicated extension proposal types: extension_proposal,
-extension_path_proposal and extension_external_propsal. Each type contains the
-same ExtensionContent struct, but is validated differently: extension_proposal
-requires no UpdatePath and can not be sent by an external sender
-extension_path_proposal requires an UpdatePath and can not be sent by an external
-sender extensions_external_proposal requires no UpdatePath and can be sent by an
-external sender.
-
-Each of the three proposal types is IANA registered and extends the select
-statement in the Proposal struct as follows:
-
-~~~tls
-case extension_proposal:
-    ExtensionContent extension_content;
-case extension_path_proposal:
-    ExtensionContent extension_content;
-case extension_external_proposal:
-    ExtensionContent extension_content;
-~~~
-
-The extension_type MUST be set to the type of the extension in question.
-
-Processing and validation of self-defined proposals has to be defined by the
-extension. However, validation rules can lead to a previously valid commit to
-become invalid, not the other way around. This is with the exception of proposal
-validation for external commits, where self-defined proposals can be declared
-valid for use in external commits. More concretely, if an external commit is
-invalid, only because the self-defined proposal is part of it (the last rule in
-external commit proposal validation in Section 12.2 of {{!RFC9420}}), then the
-self-defined validation rules may rule that the commit is instead valid.
-
-#### Credentials
-
-Extension designers can also define their own credential types via the IANA
-registered extension_credential credential type. The extension_credential
-extends the select statement in the Credential struct as follows:
-
-~~~tls
-case extension_credential:
-    ExtensionContent extension_content;
-~~~
-
-The extension_type in the extension_content must be set to that of the extension
-in question  with the extension_data containing all other relevant data. Note
-that any credential defined in this way has to meet the requirements detailed in
-Section 5.3 of the MLS specification.
-
-#### Additional Authenticated Data (AAD) {#safe-aad}
-
-The `PrivateContentAAD` struct in MLS can contain arbitrary additional
-application-specific AAD in its `authenticated_data` field. This framework
-defines a framing used to allow multiple extensions to add AAD safely
-without conflicts or ambiguity.
-
-When any AAD safe extension is included in the `authenticated_data` field,
-the "safe" AAD items MUST come before any non-safe data in the
-`authenticated_data` field. Safe AAD items are framed using the `SafeAAD`
-struct and are sorted in increasing numerical order of the `ExtensionType`
-as described below:
-
-~~~ tls
-struct {
-  ExtensionType extension_type;
-  opaque aad_item_data<V>;
-} SafeAADItem;
-
-struct {
-  SafeAADItem aad_items<V>;
-} SafeAAD;
-~~~
-
-If the `SafeAAD` is present or not is determined by the presence of the
-`extension_aad` GroupContext extension in the `required_capabilities` of the
-group. If `extension_aad` is present in `required_capabilities` but no
-"safe" AAD items are present, the `aad_items` is a zero-length vector.
-
-Each extension which include a `SafeAADItem` needs to advertise its
-`ExtensionType` in its LeafNode `capabilities.extensions`. Extensions MAY
-require an `ExtensionType` to be included in `required_capabilities`, but
-members which encounter a `SafeAADItem` they do not recognize can safely
-ignore it.
-
-
 ### Extension state: anchoring, storage and agreement
 
 The safe extension framework can help an MLS extension ensure that all group
@@ -600,8 +488,8 @@ The `ExtensionState` GroupContext extension contains data either directly (if
 `hash_or_data = data`) or inditectly via a hash (if `hash_or_data = hash`).
 
 The owning extension can read and write the state stored in an `ExtensionState`
-extension using an extension-defined proposal (see {{proposals}}). The semantics
-of the proposal determines how the state is changed.
+extension using an extension-defined proposal, or with the existing
+GroupContextExtensions proposal.
 
 The `read` variable determines the permissions that other MLS extensions have
 w.r.t. the data stored within. `read` allows other MLS extensions to read that
@@ -632,16 +520,6 @@ including all GroupContext extensions in each such proposal. This makes data
 management more costly than via extension-specific proposals, which can, for
 example, include only the data to be changed for a given GroupContext extension,
 or define semantics that allow modification based on local data only.
-
-
-## Extension Design Guidance
-
-While extensions can modify the protocol flow of MLS and the associated
-properties in arbitrary ways, the base MLS protocol already enables a number of
-functionalities that extensions can use without modifying MLS itself. Extension
-authors should consider using these built-in mechanisms before employing more
-intrusive changes to the protocol.
-
 
 # Extensions
 
@@ -728,8 +606,7 @@ reuse mechanisms from {{mls-protocol}}, in particular {{hpke}}.
 
 ### Format
 
-This extension uses the `mls_extension_message` WireFormat as defined in Section
-{{wire-formats}}, where the content is a `TargetedMessage`.
+This extension defines a new WireFormat `TargetedMessage`.
 
 ~~~ tls
 struct {
@@ -1300,74 +1177,7 @@ no additional data.
 * Recommended: Y
 * Reference: RFC XXXX
 
-### extension_aad MLS Extension
-
-The extension_aad MLS Extension Type is used to signal support for `SafeAAD`
-in LeafNode capabilities, and in GroupContext `required_capabilities`. It contains no additional data.
-
-* Value: 0x000B
-* Name: extension_aad
-* Message(s): LN,GC: This extension may appear in LeafNode and GroupContext
-  objects.
-* Recommended: Y
-* Reference: RFC XXXX
-
-### safe_extensions MLS Extension
-
-The `safe_extensions` MLS Extension Type is used to signal support for the
-Safe Extensions Framework in LeafNode capabilities, and in GroupContext
-`required_capabilities`. It contains no additional data.
-
-* Value: 0x000C
-* Name: safe_extensions
-* Message(s): LN,GC: This extension may appear in LeafNode and GroupContext
-  objects.
-* Recommended: Y
-* Reference: RFC XXXX
-
-### core_struct_extensions MLS Extension
-
-The `core_struct_extensions` MLS Extension Type is used to signal support
-for one or more Core Struct Extensions using the Safe Extensions Framework.
-It appears in LeafNode capabilities, and in GroupContext
-`required_capabilities`. It contains no additional data.
-
-* Value: 0x000D
-* Name: core_struct_extensions
-* Message(s): LN,GC: This extension may appear in LeafNode and GroupContext
-  objects.
-* Recommended: Y
-* Reference: RFC XXXX
-
-
 ## MLS Proposal Types
-
-### Extension Proposal
-
-* Value: 0x0008
-* Name: extension_proposal
-* Recommended: Y
-* Path Required: N
-* External Sender: N
-* Reference: RFC XXXX
-
-### Extension Path Proposal
-
-* Value: 0x0009
-* Name: extension_path_proposal
-* Recommended: Y
-* Path Required: Y
-* External Sender: N
-* Reference: RFC XXXX
-
-### Extension External Proposal
-
-* Value: 0x000a
-* Name: extension_external_proposal
-* Recommended: Y
-* Path Required: N
-* External Sender: Y
-* Reference: RFC XXXX
 
 ### AppAck Proposal
 
@@ -1388,33 +1198,6 @@ from a group more efficiently than using a `remove` proposal type, as the
 * Recommended: Y
 * External: N
 * Path Required: Y
-
-## MLS Credential Types
-
-### Extension Credential
-
-* Value: 0x0003
-* Name: extension_credential
-* Recommended: Y
-* Reference: RFC XXXX
-
-## MLS Signature Labels
-
-### Labeled Extension Content
-
-* Label: "LabeledExtensionContent"
-* Recommended: Y
-* Reference: RFC XXXX
-
-## MLS Extension Types
-
-This document modifies the rules of the "MLS Extension Types" registry
-to add a new Message type as follows:
-
-- AD: Authenticated Additional Data
-
-The `AD` Message type refers to an `ExtensionType` used inside the
-`SafeAADItem` structure defined in {{safe-aad}}.
 
 # Security considerations
 
