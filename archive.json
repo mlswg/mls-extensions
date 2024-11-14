@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-11-12T00:38:52.647021+00:00",
+  "timestamp": "2024-11-14T00:39:49.891986+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -2264,6 +2264,47 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 42,
+      "id": "PR_kwDOHZoI5M6BzcF3",
+      "title": "Streamline safe extensions section",
+      "url": "https://github.com/mlswg/mls-extensions/pull/42",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "As discussed in #34, the additional protocol mechanisms defined in the \"Extension Designer Tools\" section are not necessary for safe extensions.  We can discuss separately whether they should be re-added; my argument would be that they are not necessary, in that they don't really add anything over the extensibility mechanisms.\r\n\r\nFixes #34\r\n\r\n",
+      "createdAt": "2024-11-13T15:47:44Z",
+      "updatedAt": "2024-11-13T16:34:42Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "6285784da5d19a853c9864ecfd1261f961eaf490",
+      "headRepository": "bifurcation/mls-extensions",
+      "headRefName": "remove-extra-structs",
+      "headRefOid": "7a6397b8e8444c3aa19f4841cdcff4dbff495154",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "@kkohbrok I think the original text was from you.",
+          "createdAt": "2024-11-13T15:51:30Z",
+          "updatedAt": "2024-11-13T15:51:30Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "If we remove a bunch of this text, there is text missing about the consequences (now the stack or application need to be configured with a knowledge of what is safe and in what scope). Suggested text:\r\n\r\n\"In some cases, a group or related extensions (often of multiple types) may be used only together as a single \"feature\". It is appropriate to define an additional LeafNode or GroupContext extension that means support for a specific combination of extensions. In order to determine if a single extension is safe, or if a combination of extensions in a single \"feature\" can safely access the same state, the stack or application need to be configured with that information. Misconfiguration could result in a catastrophic violation of the safe extension contract.\"",
+          "createdAt": "2024-11-13T16:34:40Z",
+          "updatedAt": "2024-11-13T16:34:40Z"
+        }
+      ],
+      "reviews": []
     }
   ]
 }
