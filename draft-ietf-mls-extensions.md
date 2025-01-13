@@ -31,19 +31,13 @@ contributor:
  - name: Marta Mularczyk
    org:  Amazon
    email:  mulmarta@amazon.com
+ - name: Richard Barnes
+   org: Cisco Systems
+   email: rlb@ipv.sx
+
+normative:
 
 informative:
-  mls-protocol:
-    target: https://datatracker.ietf.org/doc/draft-ietf-mls-protocol/](https://datatracker.ietf.org/doc/draft-ietf-mls-protocol/
-    title: The Messaging Layer Security (MLS) Protocol
-
-  hpke:
-    target: https://www.rfc-editor.org/rfc/rfc9180.html](https://www.rfc-editor.org/rfc/rfc9180.html
-    title: Hybrid Public Key Encryption
-
-  hpke-security-considerations:
-    target: https://www.rfc-editor.org/rfc/rfc9180.html#name-key-compromise-impersonatio](https://www.rfc-editor.org/rfc/rfc9180.html#name-key-compromise-impersonatio
-    title: HPKE Security Considerations
 
 --- abstract
 
@@ -53,7 +47,7 @@ This document describes extensions to the Messaging Layer Security (MLS) protoco
 
 # Introduction
 
-This document describes extensions to {{mls-protocol}} that are not part of the
+This document describes extensions to {{!RFC9420}} that are not part of the
 main protocol specification. The protocol specification includes a set of core
 extensions that are likely to be useful to many applications. The extensions
 described in this document are intended to be used by applications that need to
@@ -62,6 +56,10 @@ extend the MLS protocol.
 ## Change Log
 
 RFC EDITOR PLEASE DELETE THIS SECTION.
+
+draft-06
+
+- Integrate notion of Application API from draft-barnes-mls-appsync
 
 draft-05
 
@@ -94,8 +92,8 @@ draft-00
 
 # Safe Extensions
 
-The MLS specification is extensible in a variety of ways (see Section 13 of
-{{!RFC9420}}) and describes the negotiation and other handling of extensions and
+The MLS specification is extensible in a variety of ways (see {{Section 13 of
+!RFC9420}}) and describes the negotiation and other handling of extensions and
 their data within the protocol. However, it does not provide guidance on how
 extensions can or should safely interact with the base MLS protocol. The goal of
 this section is to simplify the task of developing MLS extensions.
@@ -135,7 +133,7 @@ MLS protocol and, therefore, so do the extensions built from them.
 
 Where possible, the API makes use of mechanisms defined in the MLS
 specification. For example, part of the safe API is the use of the
-`SignWithLabel` function described in Section 5.1.2 of {{!RFC9420}}.
+`SignWithLabel` function described in {{Section 5.1.2 of !RFC9420}}.
 
 ### Security
 
@@ -198,8 +196,8 @@ of these core structs.
 ### Common Data Structures
 
 The Safe Extension API reuses the `ExtensionType` and the "MLS Extension
-Types" IANA registry used for these core structs (see Section 17.3 of
-{{!RFC9420}}), even for safe extensions with no core struct changes.
+Types" IANA registry used for these core structs (see {{Section 17.3 of
+!RFC9420}}), even for safe extensions with no core struct changes.
 This is because many extensions modify a core struct, either primarily or
 to store state (related to the group or a client) associated with another
 aspect of that extension.
@@ -232,7 +230,7 @@ struct {
 MLS defines a `Capabilities` struct for LeafNodes (in turn used in
 KeyPackages), which describes which extensions are supported by the
 associated node.
-However, that struct (defined in Section 7.2 of {{!RFC9420}}) only has
+However, that struct (defined in {{Section 7.2 of !RFC9420}}) only has
 fields for a subset of the extensions possible in MLS, as reproduced below.
 
 ~~~ tls
@@ -260,7 +258,7 @@ proposal types defined in {mls-proposal-types} are relevant to the supported
 safe proposals.
 
 Likewise, the `required_capabilities` GroupContext extension (defined
-in Section 11.1 of {{!RFC9420}} and reproduced below) contains all
+in {{Section 11.1 of !RFC9420}} and reproduced below) contains all
 mandatory to support non-default non-safe, and safe extensions in its
 `extension_types` vector. Its `credential_types` vector contains any
 mandatory non-safe credential types, plus `extensions_credential` if any
@@ -388,13 +386,13 @@ DeriveExtensionSecret(Secret, Label) =
   ExpandWithLabel(Secret, "ExtensionExport " + ExtensionType + " " + Label)
 ~~~
 
-Where ExpandWithLabel is defined in Section 8 of {{!RFC9420}} and where ExtensionType
+Where ExpandWithLabel is defined in {{Section 8 of !RFC9420}} and where ExtensionType
 MUST be set to the ExtensionType of the implemented extension.
 
 ### Pre-Shared Keys (PSKs)
 
 PSKs represent key material that is injected into the MLS key schedule when
-creating or processing a commit as defined in Section 8.4 of {{!RFC9420}}. Its
+creating or processing a commit as defined in {{Section 8.4 of !RFC9420}}. Its
 injection into the key schedule means that all group members have to agree on
 the value of the PSK.
 
@@ -501,7 +499,7 @@ become invalid, not the other way around. This is with the exception of proposal
 validation for external commits, where self-defined proposals can be declared
 valid for use in external commits. More concretely, if an external commit is
 invalid, only because the self-defined proposal is part of it (the last rule in
-external commit proposal validation in Section 12.2 of {{!RFC9420}}), then the
+external commit proposal validation in {{Section 12.2 of !RFC9420}}), then the
 self-defined validation rules may rule that the commit is instead valid.
 
 #### Credentials
@@ -518,7 +516,7 @@ case extension_credential:
 The extension_type in the extension_content must be set to that of the extension
 in question  with the extension_data containing all other relevant data. Note
 that any credential defined in this way has to meet the requirements detailed in
-Section 5.3 of the MLS specification.
+{{Section 5.3 of !RFC9420}}.
 
 #### Additional Authenticated Data (AAD) {#safe-aad}
 
@@ -724,7 +722,7 @@ The goal is to provide a one-shot messaging mechanism that provides
 confidentiality and authentication.
 
 Targeted Messages makes use the Safe Extension API as defined in {{safe-extension-api}}.
-reuse mechanisms from {{mls-protocol}}, in particular {{hpke}}.
+reuse mechanisms from {{!RFC9420}}, in particular {{!RFC9180}}.
 
 ### Format
 
@@ -793,7 +791,7 @@ Targeted messages uses HPKE to encrypt the message content between two leaves.
 #### Sender data encryption
 
 In addition, `TargetedMessageSenderAuthData` is encrypted in a similar way to
-`MLSSenderData` as described in section 6.3.2 in {{mls-protocol}}. The
+`MLSSenderData` as described in {{Section 6.3.2 of !RFC9420}}. The
 `TargetedMessageSenderAuthData.sender_leaf_index` field is the leaf index of the
 sender. The `TargetedMessageSenderAuthData.authentication_scheme` field is the
 authentication scheme used to authenticate the sender. The
@@ -850,9 +848,9 @@ targeted_message_psk
   = DeriveExtensionSecret(extension_secret, "targeted message psk")
 ~~~
 
-The functions `SealAuth` and `OpenAuth` defined in {{hpke}} are used as
+The functions `SealAuth` and `OpenAuth` defined in {{!RFC9180}} are used as
 described in {{safe-hpke}} with an empty context. Other functions are defined in
-{{mls-protocol}}.
+{{!RFC9420}}.
 
 #### Authentication with HPKE
 
@@ -951,7 +949,7 @@ implementations MUST choose `TargetedMessageAuthScheme.SignatureHPKEPsk`.
 If the group’s ciphersuite does support HPKE `mode_auth_psk`, implementations
 CAN choose `TargetedMessageAuthScheme.HPKEAuthPsk` if better efficiency and/or
 repudiability is desired. Implementations SHOULD consult
-{{hpke-security-considerations}} beforehand.
+{{Section 9.1.1 of !RFC9180}} beforehand.
 
 ## Content Advertisement
 
@@ -1168,7 +1166,7 @@ Type: KeyPackage extension
 
 ### Description
 
-Section 10 of {{!RFC9420}} details that clients are required to pre-publish
+{{Section 10 of !RFC9420}} details that clients are required to pre-publish
 KeyPackages s.t. other clients can add them to groups asynchronously. It also
 states that they should not be re-used:
 
@@ -1176,7 +1174,7 @@ states that they should not be re-used:
 > in the case of a "last resort" KeyPackage (see Section 16.8). Clients MAY
 > generate and publish multiple KeyPackages to support multiple cipher suites.
 
-Section 16.8 of {{!RFC9420}} then introduces the notion of last-resort
+{{Section 16.8 of !RFC9420}} then introduces the notion of last-resort
 KeyPackages as follows:
 
 > An application MAY allow for reuse of a "last resort" KeyPackage in order to
