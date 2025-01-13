@@ -41,17 +41,63 @@ informative:
 
 --- abstract
 
-This document describes extensions to the Messaging Layer Security (MLS) protocol.
+This document describes how to write extensions to the Messaging Layer Security
+(MLS) protocol, a handful of MLS extensions, and an application interface
+designed to allow multiple uncoordinated applications to safely use the features
+of MLS safely.
 
 --- middle
 
 # Introduction
 
-This document describes extensions to {{!RFC9420}} that are not part of the
-main protocol specification. The protocol specification includes a set of core
-extensions that are likely to be useful to many applications. The extensions
-described in this document are intended to be used by applications that need to
-extend the MLS protocol.
+This document defines extensions to MLS {{!RFC9420}} that are not part of the
+main protocol specification, and uses them to explain how to extend the
+core operation of the MLS protocol. It also describes how applications can
+safely interact with the MLS to take advantage of security features of MLS.
+
+The MLS protocol is designed to be integrated into applications, in order to
+provide security services that the application requires.  There are two
+questions to answer when designing such an integration:
+
+1. How does the application provide the services that MLS requires?
+2. How does the application use MLS to get security benefits?
+
+The MLS Architecture {{?I-D.ietf-mls-architecture}} describes the requirements
+for the first of these questions, namely the structure of the Delivery Service
+and Authentication Service that MLS requires. The next section of this document
+focuses on the second question.
+
+MLS itself offers some basic functions that applications can use, such as the
+secure message encapsulation (PrivateMessage), the MLS exporter, and the epoch
+authenticator.  Current MLS applications make use of these mechanisms to acheive
+a variety of confidentiality and authentication properties.
+
+As application designers become familiar with MLS, there is
+interest in leveraging other cryptographic tools that an MLS group provides:
+
+- HPKE (Hybrid Public Key Encryption {{!RFC9180}}) and signature key pairs for
+  each member, where the private key is known only to that member, and the
+  public key is authenticated to the other members.
+
+- A pre-shared key mechanism that can allow an application to inject data into
+  the MLS key schedule.
+
+- An exporter mechanism that allows applications to derive secrets from the MLS
+  key schedule.
+
+- Association of data with Commits as a synchronization mechanism.
+
+- Binding of information to the GroupContext to confirm group agreement.
+
+There is also interest in exposing an MLS group to multiple loosely-coordinated
+components of an application.  To accommodate such cases, the above mechanisms
+need to be exposed in such a way that the usage of different components do not
+conflict with each other, or with MLS itself.
+
+This document defines a set of mechanisms that application components can use to
+ensure that their use of these facilities is properly domain-separated from MLS
+itself, and from other application components that might be using the same MLS
+group.
 
 
 # Safe Extensions
