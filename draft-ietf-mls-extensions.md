@@ -1057,7 +1057,7 @@ designed to be included in External Commits.
 ### Extension Description
 
 This document specifies a new MLS Proposal type called `SelfRemove`. Its syntax
-is described using the TLS Presentation Language [@!RFC8446] below (its content
+is described using the TLS Presentation Language {{!RFC8446}} below (its content
 is an empty struct). It is allowed in External Commits and requires an UpdatePath.
 SelfRemove proposals are only allowed in a Commit by reference. SelfRemove
 cannot be sent as an external proposal.
