@@ -53,42 +53,6 @@ extensions that are likely to be useful to many applications. The extensions
 described in this document are intended to be used by applications that need to
 extend the MLS protocol.
 
-## Change Log
-
-RFC EDITOR PLEASE DELETE THIS SECTION.
-
-draft-06
-
-- Integrate notion of Application API from draft-barnes-mls-appsync
-
-draft-05
-
-- Include definition of ExtensionState extension
-- Add safe use of AAD to Safe Extensions framework
-- Clarify how capabilities negotiation works in Safe Extensions framework
-
-draft-04
-
- - No changes (prevent expiration)
-
-draft-03
-
-- Add Last Resort KeyPackage extension
-- Add Safe Extensions framework
-- Add SelfRemove Proposal
-
-draft-02
-
-- No changes (prevent expiration)
-
-draft-01
-
-- Add Content Advertisement extensions
-
-draft-00
-
-- Initial adoption of draft-robert-mls-protocol-00 as a WG item.
-- Add Targeted Messages extension (\*)
 
 # Safe Extensions
 
@@ -1448,3 +1412,42 @@ completely validate a GroupInfo object that it receives. An insider
 can prevent an External Join by providing either an invalid GroupInfo object
 or an invalid SelfRemove Proposal. The security properties of external joins
 does not change with the addition of this proposal type.
+
+--- back
+
+# Change Log
+
+RFC EDITOR PLEASE DELETE THIS SECTION.
+
+draft-06
+
+- Integrate notion of Application API from draft-barnes-mls-appsync
+
+draft-05
+
+- Include definition of ExtensionState extension
+- Add safe use of AAD to Safe Extensions framework
+- Clarify how capabilities negotiation works in Safe Extensions framework
+
+draft-04
+
+ - No changes (prevent expiration)
+
+draft-03
+
+- Add Last Resort KeyPackage extension
+- Add Safe Extensions framework
+- Add SelfRemove Proposal
+
+draft-02
+
+- No changes (prevent expiration)
+
+draft-01
+
+- Add Content Advertisement extensions
+
+draft-00
+
+- Initial adoption of draft-robert-mls-protocol-00 as a WG item.
+- Add Targeted Messages extension (\*)
