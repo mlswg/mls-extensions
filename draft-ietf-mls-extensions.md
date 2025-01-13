@@ -100,6 +100,26 @@ itself, and from other application components that might be using the same MLS
 group.
 
 
+# Conventions and Definitions
+
+{::boilerplate bcp14-tagged}
+
+This document makes heavy use of the terminology and the names of structs in the
+MLS specification {{!RFC9420}}.
+
+Application:
+: The system that instantiates, manages, and uses an MLS group.  Each MLS group
+is used by exactly one application, but an application may maintain multiple
+groups.
+
+Application component:
+: A subsystem of an application that has access to an MLS group.
+
+Component ID:
+: An identifier for an application component.  These identifiers are assigned by
+the application.
+
+
 # Safe Extensions
 
 The MLS specification is extensible in a variety of ways (see {{Section 13 of
