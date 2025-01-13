@@ -5,12 +5,25 @@ docname: draft-ietf-mls-extensions-latest
 submissiontype: IETF
 category: std
 
-ipr: trust200902
-area: Security
-keyword: Internet-Draft
-
-stand_alone: yes
-pi: [toc, sortrefs, symrefs]
+number:
+date:
+consensus: true
+v: 3
+area: "Security"
+workgroup: "Messaging Layer Security"
+keyword:
+ - messaging layer security
+ - end-to-end encryption
+ - application api
+ - extension
+ - extensibility
+venue:
+  group: "Messaging Layer Security"
+  type: "Working Group"
+  mail: "mls@ietf.org"
+  arch: "https://mailarchive.ietf.org/arch/browse/mls/"
+  github: "mlswg/mls-extensions"
+  latest: "https://mlswg.github.io/mls-extensions/draft-ietf-mls-extensions.html"
 
 author:
  -  ins: R. Robert
