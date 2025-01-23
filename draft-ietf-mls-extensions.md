@@ -161,7 +161,8 @@ from each other:
   being exported, so that different components will get different exported
   values.
 
-- Application data can be identified with media types.
+- The content of application messages (`application_data`) can be identified
+  with media types.
 
 - Additional Authenticated Data (AAD) can be domain separated by component.
 
@@ -169,14 +170,14 @@ We also define new general mechanisms that allow applications to take advantage
 of the extensibility mechanisms of MLS without having to define extensions
 themselves:
 
-- An `application_data` extension type that associates application data with MLS
-  messages, or with the state of the group.
+- An `app_data_dictionary` extension type that associates application data with
+  MLS messages, or with the state of the group.
 
 - An AppEphemeral proposal type that enables arbitrary application data to
   be associated to a Commit.
 
 - An AppDataUpdate proposal type that enables efficient updates to
-  an `application_data` GroupContext extension.
+  an `app_data_dictionary` GroupContext extension.
 
 As with the above, information carried in these proposals and extension marked
 as belonging to a specific application component, so that components can manage
