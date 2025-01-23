@@ -4,8 +4,8 @@
 
 Network Working Group                                          R. Robert
 Internet-Draft                                               Phoenix R&D
-Intended status: Standards Track                         5 November 2024
-Expires: 9 May 2025
+Intended status: Standards Track                         23 January 2025
+Expires: 27 July 2025
 
 
              The Messaging Layer Security (MLS) Extensions
@@ -38,11 +38,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 9 May 2025.
+   This Internet-Draft will expire on 27 July 2025.
 
 Copyright Notice
 
-   Copyright (c) 2024 IETF Trust and the persons identified as the
+   Copyright (c) 2025 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -1351,13 +1351,15 @@ Table of Contents
    Targeted Messages Extension.  The extension does not carry any
    payload.
 
-   *  Value: 0x0006
+   *  Value: 0x0006 (suggested)
 
    *  Name: targeted_messages_capability
 
    *  Message(s): LN: This extension may appear in LeafNode objects
 
    *  Recommended: Y
+
+   *  Safe: Y
 
    *  Reference: RFC XXXX
 
@@ -1367,13 +1369,15 @@ Table of Contents
    objects.  It indicates that the group supports the Targeted Messages
    Extension.
 
-   *  Value: 0x0007
+   *  Value: 0x0007 (suggested)
 
    *  Name: targeted_messages
 
    *  Message(s): GC: This extension may appear in GroupContext objects
 
    *  Recommended: Y
+
+   *  Safe: Y
 
    *  Reference: RFC XXXX
 
@@ -1383,13 +1387,15 @@ Table of Contents
    objects.  It contains a MediaTypeList representing all the media
    types supported by the MLS client referred to by the LeafNode.
 
-   *  Value: 0x0008
+   *  Value: 0x0008 (suggested)
 
    *  Name: accepted_media_types
 
    *  Message(s): LN: This extension may appear in LeafNode objects
 
    *  Recommended: Y
+
+   *  Safe: Y
 
    *  Reference: RFC XXXX
 
@@ -1400,13 +1406,15 @@ Table of Contents
    media types which are mandatory for all MLS members of the group to
    support.
 
-   *  Value: 0x0009
+   *  Value: 0x0009 (suggested)
 
    *  Name: required_media_types
 
    *  Message(s): GC: This extension may appear in GroupContext objects
 
    *  Recommended: Y
+
+   *  Safe: Y
 
    *  Reference: RFC XXXX
 
@@ -1416,13 +1424,15 @@ Table of Contents
    KeyPackage objects.  It marks the KeyPackage for usage in last resort
    scenarios and contains no additional data.
 
-   *  Value: 0x000A
+   *  Value: 0x000A (suggested)
 
    *  Name: last_resort_key_package
 
    *  Message(s): KP: This extension may appear in KeyPackage objects
 
    *  Recommended: Y
+
+   *  Safe: Y
 
    *  Reference: RFC XXXX
 
@@ -1432,7 +1442,7 @@ Table of Contents
    SafeAAD in LeafNode capabilities, and in GroupContext
    required_capabilities.  It contains no additional data.
 
-   *  Value: 0x000B
+   *  Value: 0x000B (suggested)
 
    *  Name: extension_aad
 
@@ -1440,6 +1450,8 @@ Table of Contents
       GroupContext objects.
 
    *  Recommended: Y
+
+   *  Safe: Y
 
    *  Reference: RFC XXXX
 
@@ -1449,7 +1461,7 @@ Table of Contents
    the Safe Extensions Framework in LeafNode capabilities, and in
    GroupContext required_capabilities.  It contains no additional data.
 
-   *  Value: 0x000C
+   *  Value: 0x000C (suggested)
 
    *  Name: safe_extensions
 
@@ -1457,6 +1469,8 @@ Table of Contents
       GroupContext objects.
 
    *  Recommended: Y
+
+   *  Safe: Y
 
    *  Reference: RFC XXXX
 
@@ -1467,7 +1481,7 @@ Table of Contents
    Extensions Framework.  It appears in LeafNode capabilities, and in
    GroupContext required_capabilities.  It contains no additional data.
 
-   *  Value: 0x000D
+   *  Value: 0x000D (suggested)
 
    *  Name: core_struct_extensions
 
@@ -1476,13 +1490,15 @@ Table of Contents
 
    *  Recommended: Y
 
+   *  Safe: Y
+
    *  Reference: RFC XXXX
 
 4.3.  MLS Proposal Types
 
 4.3.1.  Extension Proposal
 
-   *  Value: 0x0008
+   *  Value: 0x0008 (suggested)
 
    *  Name: extension_proposal
 
@@ -1496,7 +1512,7 @@ Table of Contents
 
 4.3.2.  Extension Path Proposal
 
-   *  Value: 0x0009
+   *  Value: 0x0009 (suggested)
 
    *  Name: extension_path_proposal
 
@@ -1510,7 +1526,7 @@ Table of Contents
 
 4.3.3.  Extension External Proposal
 
-   *  Value: 0x000a
+   *  Value: 0x000a (suggested)
 
    *  Name: extension_external_proposal
 
@@ -1524,7 +1540,7 @@ Table of Contents
 
 4.3.4.  AppAck Proposal
 
-   *  Value: 0x000b
+   *  Value: 0x000b (suggested)
 
    *  Name: app_ack
 
@@ -1540,7 +1556,7 @@ Table of Contents
    itself from a group more efficiently than using a remove proposal
    type, as the self_remove type is permitted in External Commits.
 
-   *  Value: 0x000c
+   *  Value: 0x000c (suggested)
 
    *  Name: self_remove
 
@@ -1554,7 +1570,7 @@ Table of Contents
 
 4.4.1.  Extension Credential
 
-   *  Value: 0x0003
+   *  Value: 0x0003 (suggested)
 
    *  Name: extension_credential
 
@@ -1566,7 +1582,7 @@ Table of Contents
 
 4.5.1.  Labeled Extension Content
 
-   *  Label: "LabeledExtensionContent"
+   *  Label: "LabeledExtensionContent" (suggested)
 
    *  Recommended: Y
 
