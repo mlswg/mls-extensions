@@ -188,6 +188,38 @@ component a unique component ID number.  These numbers are then incorporated
 into the appopriate calculations in the protocol to achieve the required
 separation.
 
+## Component IDs
+
+A component ID is a four-byte value that uniquely identifies a component within
+the scope of an application.
+
+~~~
+uint32 ComponentID;
+~~~
+
+> TODO: What are the uniqueness requirements on these?  It seems like the more
+> diversity, the better.  For example, if a ComponentID is reused across
+> applications (e.g., via an IANA registry), then there will be a risk of replay
+> across applications.  Maybe we should include a binder to the group/epoch as
+> well, something derived from the key schedule.
+
+> TODO: It might be better to frame these in terms of "data types" instead of
+> components, to avoid presuming software architecture.  Though that makes less
+> sense for the more "active" portions of the API, e.g., signing and encryption.
+
+When a label is required for an operation, the following data structure is used.
+The `label` field identifies the operation being performed.  The `component_id`
+field identifies the component performing the operation.  The `context` field is
+specified by the operation in question.
+
+~~~ tls
+struct {
+  opaque label<V>;
+  ComponentID component_id;
+  opaque context<V>;
+} ComponentOperationLabel;
+~~~
+
 
 # Safe Extensions
 
