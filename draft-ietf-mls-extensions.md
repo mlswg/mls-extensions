@@ -132,6 +132,61 @@ Component ID:
 : An identifier for an application component.  These identifiers are assigned by
 the application.
 
+# Developing Extensions for the MLS Protocol
+
+MLS is highly extensible, and was designed to be used in a variety of different
+applications. As such, it is important to separate extensions that change the
+behavior of an MLS stack, and application usages of MLS that just take advantage
+of features of MLS or specific extensions (hereafter referred to as *components*). Furthermore it is essential that application components do not change the security properties of MLS or require new security analysis of the MLS protocol itself.
+
+# The Safe Application Interface
+
+The mechansms in this section take MLS mechanisms that are either not
+inherently designed to be used by applications, or not inherently designed to be
+used by multiple application components, and adds a domain separator that
+separates application usage from MLS usage, and application components' usage
+from each other:
+
+- Signing operations are tagged so that signatures will only verify in the
+  context of a given component.
+
+- Public-key encryption operations are similarly tagged so that encrypted data
+  will only decrypt in the context of a given component.
+
+- Pre-shared keys are identified as originating from a specific component, so
+  that differnet components' contributions to the MLS key schedule will not
+  collide.
+
+- Exported values include an identifier for the component to which they are
+  being exported, so that different components will get different exported
+  values.
+
+- Application data can be identified with media types.
+
+- Additional Authenticated Data (AAD) can be domain separated by component.
+
+We also define new general mechanisms that allow applications to take advantage
+of the extensibility mechanisms of MLS without having to define extensions
+themselves:
+
+- An `application_data` extension type that associates application data with MLS
+  messages, or with the state of the group.
+
+- An AppEphemeral proposal type that enables arbitrary application data to
+  be associated to a Commit.
+
+- An AppDataUpdate proposal type that enables efficient updates to
+  an `application_data` GroupContext extension.
+
+As with the above, information carried in these proposals and extension marked
+as belonging to a specific application component, so that components can manage
+their information independently.
+
+The separation between components is acheived by the application assigning each
+component a unique component ID number.  These numbers are then incorporated
+into the appopriate calculations in the protocol to achieve the required
+separation.
+
 
 # Safe Extensions
 
