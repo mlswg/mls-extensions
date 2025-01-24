@@ -703,37 +703,6 @@ of these core structs.
   of. Leaf node extensions can thus be used to include member-specific data in a
   group state that can be updated by the owner at any time.
 
-### Common Data Structures
-
-The Safe Extension API reuses the `ExtensionType` and the "MLS Extension
-Types" IANA registry used for these core structs (see {{Section 17.3 of
-!RFC9420}}), even for safe extensions with no core struct changes.
-This is because many extensions modify a core struct, either primarily or
-to store state (related to the group or a client) associated with another
-aspect of that extension.
-
-Most Safe Extension API components also use the following data structure, which
-provides domain separation by `extension_type` of various `extension_data`.
-
-~~~ tls
-struct {
-  ExtensionType extension_type;
-  opaque extension_data<V>;
-} ExtensionContent;
-~~~
-
-Where `extension_type` is set to the type of the extension to which the
-`extension_data` belongs.
-
-When a label is required for an extension, the following data structure is
-used.
-
-~~~ tls
-struct {
-  opaque label;
-  ExtensionContent extension_content;
-} LabeledExtensionContent;
-~~~
 
 ### Negotiating Support for Safe Extensions
 
