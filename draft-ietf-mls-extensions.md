@@ -358,7 +358,7 @@ export.
 ## Pre-Shared Keys (PSKs)
 
 PSKs represent key material that is injected into the MLS key schedule when
-creating or processing a commit as defined in {{Section 8.4 of RFC9420}}. Its
+creating or processing a commit as defined in {{Section 8.4 of !RFC9420}}. Its
 injection into the key schedule means that all group members have to agree on
 the value of the PSK.
 
@@ -399,6 +399,205 @@ struct {
 > TODO: It seems like you could also do this by structuring the `external`
 > PSKType as (component_id, psk_id).  I guess this approach separates this API
 > from other external PSKs.
+
+
+## Attaching Application Data to MLS Messages
+
+The MLS GroupContext, LeafNode, KeyPackage, and GroupInfo objects each have an
+`extensions` field that can carry additional data not defined by the MLS
+specification.  The `app_data_dictionary` extension provides a generic container
+that applications can use to attach application data to these messages.  Each
+usage of the extension serves a slightly different purpose:
+
+* GroupContext: Confirms that all members of the group agree on the application
+  data, and automatically distributes it to new joiners.
+
+* KeyPackage and LeafNode: Associates the application data to a particular
+  client, and advertises it to the other members of the group.
+
+* GroupInfo: Distributes the application data confidentially to the new joiners
+  for whom the GroupInfo is encrypted (as a Welcome message).
+
+The content of the `app_data_dictionary` extension is a serialized
+AppDataDictionary object:
+
+~~~ tls-presentation
+struct {
+    ComponentID component_id;
+    opaque data<V>;
+} ComponentData;
+
+struct {
+    ComponentData component_data<V>;
+} AppDataDictionary;
+~~~
+
+The entries in the `component_data` MUST be sorted by `component_id`, and there
+MUST be at most one entry for each `component_id`.
+
+An `app_data_dictionary` extension in a LeafNode, KeyPackage, or GroupInfo can be
+set when the object is created.  An `app_data_dictionary` extension in the
+GroupContext needs to be managed using the tools available to update GroupContext extensions. The creator of the group can set extensions unilaterally. Thereafter, the AppDataUpdate proposal described in the next section is used to update the `app_data_dictionary` extension.
+
+## Updating Application Data in the GroupContext {#appdataupdate}
+
+Updating the `app_data_dictionary` with a GroupContextExtensions proposal is
+cumbersome.  The application data needs to be transmitted in its entirety,
+along with any other extensions, whether or not they are being changed.  And a
+GroupContextExtensions proposal always requires an UpdatePath, which updating
+application state never should.
+
+The AppDataUpdate proposal allows the `app_data_dictionary` extension to
+be updated without these costs.  Instead of sending the whole value of the
+extension, it sends only an update, which is interpreted by the application to
+provide the new content for the `app_data_dictionary` extension.  No other
+extensions are sent or updated, and no UpdatePath is required.
+
+~~~
+enum {
+    invalid(0),
+    update(1),
+    remove(2),
+    (255)
+} AppDataUpdateOperation;
+
+struct {
+    ComponentID component_id;
+    AppDataUpdateOperation op;
+
+    select (AppDataUpdate.op) {
+        case update: opaque update<V>;
+        case remove: struct{};
+    };
+} AppDataUpdate;
+~~~
+
+An AppDataUpdate proposal is invalid if its `component_id` references a
+component that is not known to the application, or if it specifies the removal
+of state for a `component_id` that has no state present.  A proposal list is
+invalid if it includes multiple AppDataUpdate proposals that `remove`
+state for the same `component_id`, or proposals that both `update` and `remove`
+state for the same `component_id`.  In other words, for a given `component_id`,
+a proposal list is valid only if it contains (a) a single `remove` operation or
+(b) one or more `update` operation.
+
+AppDataUpdate proposals are processed after any default proposals (i.e., those
+defined in {{RFC9420}}), and any AppEphemeral proposals (defined in
+{{app-ephemeral}}).
+
+When an MLS group contains the AppDataUpdate proposal type in the
+`proposal_types` list in the group's `required_capabilities` extension, a
+GroupContextExtensions proposal MUST NOT add, remove, or modify the
+`app_data_dictionary` GroupContext extension. In other words, when every member of
+the group supports the AppDataUpdate proposal, a GroupContextExtensions proposal
+could be sent to update some other extension(s), but the `app_data_dictionary`
+GroupContext extension, if it exists, is left as it was.
+
+A commit can contain a GroupContextExtensions proposal which modifies
+GroupContext extensions other than `app_data_dictionary`, and can be followed by
+zero or more AppDataUpdate proposals.  This allows modifications to both the
+`app_data_dictionary` extension (via AppDataUpdate) and other extensions (via
+GroupContextExtensions) in the same Commit.
+
+A client applies AppDataUpdate proposals by component ID.  For each
+`component_id` field that appears in an AppDataUpdate proposal in the
+Commit, the client assembles a list of AppDataUpdate proposals with that
+`component_id`, in the order in which they appear in the Commit, and processes
+them in the following way:
+
+* If the list comprises a single proposal with the `op` field set to `remove`:
+
+    * If there is an entry in the `component_states` vector in the
+      `application_state` extension with the specified `component_id`, remove
+      it.
+
+    * Otherwise, the proposal is invalid.
+
+* If the list comprises one or more proposals, all with `op` field set to
+  `update`:
+
+    * Provide the application logic registered to the `component_id` value with
+      the content of the `update` field from each proposal, in the order
+      specified.
+
+    * The application logic returns either an opaque value `new_data` that will be
+      stored as the new application data for this component, or else an
+      indication that it considers this update invalid.
+
+    * If the application logic considers the update invalid, the MLS client MUST
+      consider the proposal list invalid.
+
+    * If no `app_data_dictionary` extension is present in the GroupContext, add one
+      to the end of the `extensions` list in the GroupContext.
+
+    * If there is an entry in the `component_data` vector in the
+      `app_data_dictionary` extension with the specified `component_id`, then set
+      its `data` field to the specified `new_data`.
+
+    * Otherwise, insert a new entry in the `component_states` vector with the
+      specified `component_id` and the `data` field set to the `new_data`
+      value.  The new entry is inserted at the proper point to keep the
+      `component_states` vector sorted by `component_id`.
+
+* Otherwise, the proposal list is invalid.
+
+> NOTE: An alternative design here would be to have the `update` operation
+> simply set the new value for the `app_data_dictionary` GCE, instead of sending a
+> diff.  This would be simpler in that the MLS stack wouldn't have to ask the
+> application for the new state value, and would discourage applications from
+> storing large state in the GroupContext directly (which bloats Welcome
+> messages).  It would effectively require the state in the GroupContext to be a
+> hash of the real state, to avoid large AppDataUpdate proposals.  This
+> pushes some complexity onto the application, since the application has to
+> define a hashing algorithm, and define its own scheme for initializing new
+> joiners.
+
+AppDataUpdate proposals do not require an UpdatePath.
+An AppDataUpdate proposal can be sent by an external sender. Likewise,
+AppDataUpdate proposals can be included in an external commit. Applications
+can make more restrictive validity rules for the update of their components,
+such that some components would not be valid at the application when sent in
+an external commit or via an external proposer.
+
+
+## Attaching Application Data to a Commit {#app-ephemeral}
+
+The AppEphemeral proposal type allows an application component to associate
+application data to a Commit, so that the member processing the Commit knows
+that all other group members will be processing the same data.  AppEphemeral
+proposals are ephemeral in the sense that they do not change any persistent
+state related to MLS, aside from their appearance in the transcript hash.
+
+The content of an AppEphemeral proposal is the same as an `app_data_dictionary`
+extension.  The proposal type is set in {{iana-considerations}}.
+
+~~~ tls-presentation
+struct {
+    ComponentID component_id;
+    opaque data<V>;
+} AppEphemeral;
+~~~
+
+An AppEphemeral proposal is invalid if it contains a `component_id` that is
+unknown to the application, or if the `app_data_dictionary` field contains any
+`ComponentData` entry whose `data` field is considered invalid by the
+application logic registered to the indicated `component_id`.
+
+AppEphemeral proposals MUST be processed after any default proposals (i.e.,
+those defined in {{RFC9420}}), but before any AppDataUpdate proposals.
+
+A client applies an AppEphemeral proposal by providing the contents of the
+`app_data_dictionary` field to the component identified by the `component_id`.  If
+a Commit references more than one AppEphemeral proposal for the same
+`component_id` value, then they MUST be processed in the order in which they are
+specified in the Commit.
+
+AppEphemeral proposals do not require an UpdatePath.
+An AppEphemeral proposal can be sent by an external sender. Likewise,
+AppEphemeral proposals can be included in an external commit. Applications
+can make more restrictive validity rules for ephemeral updates of their
+components, such that some components would not be valid at the application when
+sent in an external commit or via an external proposer.
 
 
 # Safe Extensions
