@@ -639,6 +639,10 @@ members which encounter a `SafeAADItem` they do not recognize can safely
 ignore it.
 
 
+# Negotiating Extensions and Components
+
+**TODO** Describe supported and required wire formats, components, and media types.
+
 # Safe Extensions
 
 The MLS specification is extensible in a variety of ways (see {{Section 13 of
