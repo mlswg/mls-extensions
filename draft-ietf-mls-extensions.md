@@ -320,31 +320,40 @@ with every operation.
 
 ## Exported Secrets
 
-An extension can use MLS as a group key agreement protocol by exporting symmetric keys.
-Such keys can be exported (i.e. derived from MLS key material) in two phases per
-epoch: Either at the start of the epoch, or during the epoch. Derivation at the
-start of the epoch has the added advantage that the source key material is
-deleted after use, allowing the derived key material to be deleted later even
-during the same MLS epoch to achieve forward secrecy. The following protocol
-secrets can be used to derive key from for use by extensions:
+An application component can use MLS as a group key agreement protocol by
+exporting symmetric keys.  Such keys can be exported (i.e. derived from MLS key
+material) in two phases per epoch: Either at the start of the epoch, or during
+the epoch. Derivation at the start of the epoch has the added advantage that the
+source key material is deleted after use, allowing the derived key material to
+be deleted later even during the same MLS epoch to achieve forward secrecy. The
+following protocol secrets can be used to derive key from for use by application
+components:
 
-- epoch_secret at the beginning of an epoch
-- extension_secret during an epoch
+- `exporter_secret` at the beginning of an epoch
+- `application_export_secret` during an epoch
 
-The extension_secret is an additional secret derived from the epoch_secret at
-the beginning of the epoch in the same way as the other secrets listed in Table
-4 of {{!RFC9420}} using the label "extension".
+The `application_export_secret` is an additional secret derived from the
+`epoch_secret` at the beginning of the epoch in the same way as the other
+secrets listed in Table 4 of {{!RFC9420}} using the label "application_export".
 
-Any derivation performed by an extension either from the epoch_secret or the
-extension_secret has to use the following function:
+Any derivation performed by an application component either from the
+`exporter_secret` or the `application_export_secret` has to use the following
+function:
 
 ~~~ tls
-DeriveExtensionSecret(Secret, Label) =
-  ExpandWithLabel(Secret, "ExtensionExport " + ExtensionType + " " + Label)
+DeriveApplicationSecret(Secret, Label) =
+  ExpandWithLabel(Secret, "ApplicationExport " +
+                  ComponentID + " " + Label)
 ~~~
 
-Where ExpandWithLabel is defined in {{Section 8 of !RFC9420}} and where ExtensionType
-MUST be set to the ExtensionType of the implemented extension.
+Where ExpandWithLabel is defined in {{Section 8 of RFC9420}} and where
+ComponentID MUST be set to the ComponentID of the component performing the
+export.
+
+> TODO: This section seems over-complicated to me.  Why is it not sufficient to
+> just use the `exporter_secret`?  Or the `MLS-Exporter` mechanism with a
+> label structured to include the ComponentID?
+
 
 ## Pre-Shared Keys (PSKs)
 
