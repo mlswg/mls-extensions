@@ -600,6 +600,45 @@ components, such that some components would not be valid at the application when
 sent in an external commit or via an external proposer.
 
 
+## Additional Authenticated Data (AAD) {#safe-aad}
+
+The `PrivateContentAAD` struct in MLS can contain arbitrary additional
+application-specific AAD in its `authenticated_data` field. This API
+defines a framing used to allow multiple extensions to add AAD safely
+without conflicts or ambiguity.
+
+When any AAD safe extension is included in the `authenticated_data` field,
+the "safe" AAD items MUST come before any non-safe data in the
+`authenticated_data` field. Safe AAD items are framed using the `SafeAAD`
+struct and are sorted in increasing numerical order of the `component_id`.
+The struct is described below:
+
+~~~ tls-presentation
+struct {
+  ComponentID component_id;
+  opaque aad_item_data<V>;
+} SafeAADItem;
+
+struct {
+  SafeAADItem aad_items<V>;
+} SafeAAD;
+~~~
+
+If the `SafeAAD` is present or not is determined by the presence of the
+`extension_aad` GroupContext extension in the `required_capabilities` of the
+group. If `extension_aad` is present in `required_capabilities` but no
+"safe" AAD items are present, the `aad_items` is a zero-length vector.
+
+>**TODO**: fix this and create a way to negotiate components, wire formats,
+ and Safe AAD.
+
+Each component which include a `SafeAADItem` needs to advertise its
+`ComponentID` in its LeafNode `capabilities.extensions`. Extensions MAY
+require a `ComponentID` to be included in `required_capabilities`, but
+members which encounter a `SafeAADItem` they do not recognize can safely
+ignore it.
+
+
 # Safe Extensions
 
 The MLS specification is extensible in a variety of ways (see {{Section 13 of
@@ -834,40 +873,7 @@ in question  with the extension_data containing all other relevant data. Note
 that any credential defined in this way has to meet the requirements detailed in
 {{Section 5.3 of !RFC9420}}.
 
-#### Additional Authenticated Data (AAD) {#safe-aad}
 
-The `PrivateContentAAD` struct in MLS can contain arbitrary additional
-application-specific AAD in its `authenticated_data` field. This framework
-defines a framing used to allow multiple extensions to add AAD safely
-without conflicts or ambiguity.
-
-When any AAD safe extension is included in the `authenticated_data` field,
-the "safe" AAD items MUST come before any non-safe data in the
-`authenticated_data` field. Safe AAD items are framed using the `SafeAAD`
-struct and are sorted in increasing numerical order of the `ExtensionType`
-as described below:
-
-~~~ tls
-struct {
-  ExtensionType extension_type;
-  opaque aad_item_data<V>;
-} SafeAADItem;
-
-struct {
-  SafeAADItem aad_items<V>;
-} SafeAAD;
-~~~
-
-If the `SafeAAD` is present or not is determined by the presence of the
-`extension_aad` GroupContext extension in the `required_capabilities` of the
-group. If `extension_aad` is present in `required_capabilities` but no
-"safe" AAD items are present, the `aad_items` is a zero-length vector.
-
-Each extension which include a `SafeAADItem` needs to advertise its
-`ExtensionType` in its LeafNode `capabilities.extensions`. Extensions MAY
-require an `ExtensionType` to be included in `required_capabilities`, but
-members which encounter a `SafeAADItem` they do not recognize can safely
-ignore it.
 
 
 ### Extension state: anchoring, storage and agreement
