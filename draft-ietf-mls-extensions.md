@@ -147,24 +147,26 @@ used by multiple application components, and adds a domain separator that
 separates application usage from MLS usage, and application components' usage
 from each other:
 
-- Signing operations are tagged so that signatures will only verify in the
-  context of a given component.
-
-- Public-key encryption operations are similarly tagged so that encrypted data
+- Public-key encryption operations are tagged so that encrypted data
   will only decrypt in the context of a given component.
 
-- Pre-shared keys are identified as originating from a specific component, so
-  that differnet components' contributions to the MLS key schedule will not
-  collide.
+- Signing operations are similarly tagged so that signatures will only verify
+  in the context of a given component.
 
 - Exported values include an identifier for the component to which they are
   being exported, so that different components will get different exported
   values.
 
-- The content of application messages (`application_data`) can be identified
-  with media types.
+- Pre-shared keys are identified as originating from a specific component, so
+  that differnet components' contributions to the MLS key schedule will not
+  collide.
 
 - Additional Authenticated Data (AAD) can be domain separated by component.
+
+Similarly, the content of application messages (`application_data`) can be
+distinguished and routed to different parts of an application according to
+the media type of that content using the content negotiation mechanism defined
+in {{content-advertisement}}.
 
 We also define new general mechanisms that allow applications to take advantage
 of the extensibility mechanisms of MLS without having to define extensions
@@ -641,7 +643,63 @@ ignore it.
 
 # Negotiating Extensions and Components
 
-**TODO** Describe supported and required wire formats, components, and media types.
+MLS defines a `Capabilities` struct for LeafNodes (in turn used in
+KeyPackages), which describes which extensions are supported by the
+associated node.
+However, that struct (defined in {{Section 7.2 of !RFC9420}}) only has
+fields for a subset of the extensions possible in MLS, as reproduced below.
+
+~~~ tls-presentation
+struct {
+    ProtocolVersion versions<V>;
+    CipherSuite cipher_suites<V>;
+    ExtensionType extensions<V>;
+    ProposalType proposals<V>;
+    CredentialType credentials<V>;
+} Capabilities;
+~~~
+
+> The "MLS Extensions Types" registry represents extensibility of four
+  core structs (`GroupContext`, `GroupInfo`, `KeyPackage`, and `LeafNode`)
+  that have far reaching effects on the use of the protocol. The majority of
+  MLS extensions in {{!RFC9420}} extend one or more of these core structs.
+
+Likewise, the `required_capabilities` GroupContext extension (defined
+in {{Section 11.1 of !RFC9420}} and reproduced below) contains all
+mandatory to support non-default extensions in its `extension_types` vector.
+Its `proposal_types` vector contains any mandatory to support Proposals.
+Its `credential_types` vector contains any mandatory credential types.
+
+~~~
+struct {
+    ExtensionType extension_types<V>;
+    ProposalType proposal_types<V>;
+    CredentialType credential_types<V>;
+} RequiredCapabilities;
+~~~
+
+Due to an oversight in {{!RFC9420}}, the Capabilities struct does not include
+MLS Wire Formats. Instead, this document defines two extensions: `supported_wire_formats` (which can appear in LeafNodes), and
+`required_wire_formats` (which can appear in the GroupContext).
+
+~~~ tls-presentation
+
+~~~
+
+Finally, this document defines new components for supported and required Safe AAD, media types, and components.
+
+- `safe_aad`
+- `content_media_types`
+- `app_components`
+
+~~~ tls-presentation
+
+~~~
+
+The presence of `safe_aad` in the `app_data_dictionary` means that the AAD will always start with the SafeAAD framing. If `safe_aad` is present but contains no components, that means that the framing is used with a zero-sized vector.
+
+...same for `content_media_types` and `app_components`.
+
 
 # Safe Extensions
 
@@ -718,7 +776,7 @@ of these core structs.
   part of the GroupContext, it is also sent encrypted to new joiners via Welcome
   messages and (depending on the architecture of the application) may be
   available to external joiners. Note that in some scenarios, the GroupContext
-  may also be visible to components  that implement the delivery service. While
+  may also be visible to the delivery service. While
   MLS extensions can define arbitrary GroupContext extensions, it is recommended
   to make use of `ExtensionState` extensions to store state in the group's
   GroupContext.
@@ -745,56 +803,6 @@ of these core structs.
   UpdatePath and clients generally have a leaf node in each group they are a member
   of. Leaf node extensions can thus be used to include member-specific data in a
   group state that can be updated by the owner at any time.
-
-
-### Negotiating Support for Safe Extensions
-
-MLS defines a `Capabilities` struct for LeafNodes (in turn used in
-KeyPackages), which describes which extensions are supported by the
-associated node.
-However, that struct (defined in {{Section 7.2 of !RFC9420}}) only has
-fields for a subset of the extensions possible in MLS, as reproduced below.
-
-~~~ tls
-...
-struct {
-    ProtocolVersion versions<V>;
-    CipherSuite cipher_suites<V>;
-    ExtensionType extensions<V>;
-    ProposalType proposals<V>;
-    CredentialType credentials<V>;
-} Capabilities;
-...
-~~~
-
-Therefore, all safe extensions MUST be represented by their `extension_type`
-in the `extensions` vector (originally intended for core struct extensions),
-regardless of their type.
-
-If the LeafNode supports any safe extension Credentials, the `credentials`
-vector will contain any non-safe credentials supported, plus the `extension_credential` defined in {extension-credential}.
-
-If the LeafNode supports any safe extension Proposals, then `proposals` will
-contain any non-default non-safe extensions, and whichever safe extension
-proposal types defined in {mls-proposal-types} are relevant to the supported
-safe proposals.
-
-Likewise, the `required_capabilities` GroupContext extension (defined
-in {{Section 11.1 of !RFC9420}} and reproduced below) contains all
-mandatory to support non-default non-safe, and safe extensions in its
-`extension_types` vector. Its `credential_types` vector contains any
-mandatory non-safe credential types, plus `extensions_credential` if any
-safe credential is required. Its `proposal_types` vector contains any
-mandatory to support non-default non-safe Proposals, and the relevant safe
-proposal type or types corresponding to any required safe proposals.
-
-~~~
-struct {
-    ExtensionType extension_types<V>;
-    ProposalType proposal_types<V>;
-    CredentialType credential_types<V>;
-} RequiredCapabilities;
-~~~
 
 
 ### Extension Designer Tools
