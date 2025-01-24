@@ -283,35 +283,40 @@ list summarizes lifetimes of MLS key pairs.
 ## Signature Keys
 
 MLS session states contain a number of signature keys including the ones in the
-LeafNode structs. Extensions can safely sign content and verify signatures using
-these keys via the SafeSignWithLabel and SafeVerifyWithLabel functions,
-respectively, much like how the basic MLS protocol uses SignWithLabel and
-VerifyWithLabel.
+LeafNode structs. Application components can safely sign content and verify
+signatures using these keys via the SafeSignWithLabel and SafeVerifyWithLabel
+functions, respectively, much like how the basic MLS protocol uses SignWithLabel
+and VerifyWithLabel.
 
-In more detail, an extension identified by ExtensionType should sign and verify using:
+In more detail, a component identified by ComponentID should sign and verify
+using:
 
 ~~~ tls
-SafeSignWithLabel(ExtensionType, SignatureKey, Label, Content) =
-    SignWithLabel(SignatureKey, "LabeledExtensionContent", LabeledExtensionContent)
+SafeSignWithLabel(ComponentID, SignatureKey, Label, Content) =
+   SignWithLabel(SignatureKey, "ComponentOperationLabel",
+      ComponentOperationLabel)
 
-SafeVerifyWithLabel(ExtensionType, VerificationKey, Label, Content, SignatureValue) =
-    VerifyWithLabel(VerificationKey, "LabeledExtensionContent", LabeledExtensionContent, SignatureValue)
+SafeVerifyWithLabel(ComponentID, VerificationKey, Label, Content,
+  SignatureValue) = VerifyWithLabel(VerificationKey,
+                      "ComponentOperationLabel",
+                       ComponentOperationLabel,
+                       SignatureValue)
 ~~~
 
-Where the fields of LabeledExtensionContent are set to
+Where the fields of ComponentOperationLabel are set to
 
 ~~~ tls
 label = Label
-extension_type = ExtensionType
-extension_data = Content
+component_id = ComponentID
+context = Content
 ~~~
 
-For signing operations, the ExtensionType MUST be set to the ExtensionType of
-the implemented extension, and not to the type of any other extension. In
-particular, this means that an extension cannot produce signatures in place of
-other extensions. However, extensions can verify signatures computed by other
-extensions. Note that domain separation is ensured by explicitly including the
-ExtensionType with every operation.
+For signing operations, the ComponentID MUST be set to the ComponentID of the
+component performing the signature, and not to the ID of any other component.
+This means that a component cannot produce signatures in place of other
+component. However, components can verify signatures computed by other
+components. Domain separation is ensured by explicitly including the ComponentID
+with every operation.
 
 ## Exported Secrets
 
