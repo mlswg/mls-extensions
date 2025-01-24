@@ -358,7 +358,7 @@ export.
 ## Pre-Shared Keys (PSKs)
 
 PSKs represent key material that is injected into the MLS key schedule when
-creating or processing a commit as defined in {{Section 8.4 of !RFC9420}}. Its
+creating or processing a commit as defined in {{Section 8.4 of RFC9420}}. Its
 injection into the key schedule means that all group members have to agree on
 the value of the PSK.
 
@@ -366,43 +366,40 @@ While PSKs are typically cryptographic keys which due to their properties add to
 the overall security of the group, the PSK mechanism can also be used to ensure
 that all members of a group agree on arbitrary pieces of data represented as
 octet strings (without the necessity of sending the data itself over the wire).
-For example, an extension can use the PSK mechanism to enforce that all group
+For example, a component can use the PSK mechanism to enforce that all group
 members have access to and agree on a password or a shared file.
 
 This is achieved by creating a new epoch via a PSK proposal. Transitioning to
 the new epoch requires using the information agreed upon.
 
 To facilitate using PSKs in a safe way, this document defines a new PSKType for
-extensions. This provides domain separation between pre-shared keys used by the
-core MLS protocol and applications, and between those used by different extensions.
+application components. This provides domain separation between pre-shared keys
+used by the core MLS protocol and applications, and between those used by
+different components.
 
-~~~tls
+~~~ tls-presentation
 enum {
-  reserved(0),
-  external(1),
-  resumption(2),
-  extensions(3),
+  // ...
+  application(3),
   (255)
 } PSKType;
 
 struct {
   PSKType psktype;
   select (PreSharedKeyID.psktype) {
-    case external:
-      opaque psk_id<V>;
-
-    case resumption:
-      ResumptionPSKUsage usage;
-      opaque psk_group_id<V>;
-      uint64 psk_epoch;
-
-    case extensions:
-      ExtensionType extension_type;
+    // ...
+    case application:
+      ComponentID component_id;
       opaque psk_id<V>;
   };
   opaque psk_nonce<V>;
 } PreSharedKeyID;
 ~~~
+
+> TODO: It seems like you could also do this by structuring the `external`
+> PSKType as (component_id, psk_id).  I guess this approach separates this API
+> from other external PSKs.
+
 
 # Safe Extensions
 
