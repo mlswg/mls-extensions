@@ -54,7 +54,7 @@ informative:
 
 --- abstract
 
-The Messaging Layer Security (MLS) protocol is an asynchronous group 
+The Messaging Layer Security (MLS) protocol is an asynchronous group
 authenticated key exchange protocol.  MLS provides a number of capabilities
 to applications, as well as several extension points internal to the protocol.  This
 document provides a consolidated application API, guidance for how the
