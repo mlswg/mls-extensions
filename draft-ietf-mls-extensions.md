@@ -730,44 +730,8 @@ their data within the protocol. However, it does not provide guidance on how
 extensions can or should safely interact with the base MLS protocol. The goal of
 this section is to simplify the task of developing MLS extensions.
 
-More concretely, this section defines the Safe Extension API, a library of
-extension components which simplifies development and security analysis of
-extensions, provides general guidance on using the built-in functionality of the
-base MLS protocol to build extensions, defines specific examples of extensions
-built on top of the Safe Extension API alongside the built-in mechanisms of the
-base MLS protocol, defines a number of labels registered in IANA which can be
-safely used by extensions, so that the only value an extension developer must
-add to the IANA registry itself is a unique ExtensionType.
 
-## Safe Extension API
-
-The Safe Extension API is a library that defines a number of components from
-which extensions can be built. In particular, these components provide
-extensions the ability to:
-
-- Make use of selected private and public key material from the MLS
-  specification, e.g. to encrypt, decrypt, sign, verify and derive fresh key
-  material.
-- Inject key material via PSKs in a safe way to facilitate state agreement
-  without the use of a group context extension.
-- Export secrets from MLS in a way that, in contrast to the built-in export
-  functionality of MLS, preserves forward secrecy of the exported secrets within
-  an epoch.
-- Define new WireFormat, Proposal, Credential, GroupContext, GroupInfo,
-KeyPackage, and LeafNode extensions which can interact safely with arbitrary
-sets of other current or future Safe Extensions.
-- Anchor extension-specific state in an MLS group to ensure agreement and manage
-  state acces authorization across extensions.
-
-The Safe Extension API is not an extension itself, it only defines components
-from which other extensions can be built. Some of these components modify the
-MLS protocol and, therefore, so do the extensions built from them.
-
-Where possible, the API makes use of mechanisms defined in the MLS
-specification. For example, part of the safe API is the use of the
-`SignWithLabel` function described in {{Section 5.1.2 of !RFC9420}}.
-
-### Security
+## Security
 
 An extension is called safe if it does not modify the base MLS protocol or other
 MLS extensions beyond using components of the Safe Extension API. The Safe
@@ -783,133 +747,8 @@ further analysis of the combination is necessary. This also means that any
 security vulnerabilities introduced by one extension do not spread to other
 extensions or the base MLS.
 
-### Core Struct Extensions
 
-Every type of MLS extension can have data associated with it. The "MLS
-Extensions Types" registry historically represented extensibility of four
-core structs (`GroupContext`, `GroupInfo`, `KeyPackage`, and `LeafNode`)
-that have far reaching effects on the use of the protocol. The majority of
-MLS extensions registered at the time of this writing extend one or more
-of these core structs.
-
-- GroupContext Extensions: Any data in a group context extension is agreed-upon
-  by all members of the group in the same way as the rest of the group state. As
-  part of the GroupContext, it is also sent encrypted to new joiners via Welcome
-  messages and (depending on the architecture of the application) may be
-  available to external joiners. Note that in some scenarios, the GroupContext
-  may also be visible to the delivery service. While
-  MLS extensions can define arbitrary GroupContext extensions, it is recommended
-  to make use of `ExtensionState` extensions to store state in the group's
-  GroupContext.
-- GroupInfo Extensions: GroupInfo extensions are included in the GroupInfo
-  struct and thus sent encrypted and authenticated by the signer of the
-  GroupInfo to new joiners as part of Welcome messages. It can thus be used as a
-  confidential and authenticated channel from the inviting group member to new
-  joiners. Just like GroupContext extensions, they may also be visible to
-  external joiners or even parts of the delivery service. Unlike GroupContext
-  extensions, the GroupInfo struct is not part of the group state that all group
-  members agree on.
-- KeyPackage Extensions: KeyPackages (and the extensions they include) are
-  pre-published by individual clients for asynchronous group joining. They are
-  included in Add proposals and become part of the group state once the Add
-  proposal is committed. They are, however, removed from the group state when
-  the owner of the KeyPackage does the first commit with a path. As such,
-  KeyPackage extensions can be used to communicate data to anyone who wants to
-  invite the owner to a group, as well as the other members of the group the
-  owner is added to. Note that KeyPackage extensions are visible to the server
-  that provides the KeyPackages for download, as well as any part of the
-  delivery service that can see the public group state.
-- LeafNode Extensions: LeafNodes are a part of every KeyPackage and thus follow
-  the same lifecycle. However, they are also part of any commit that includes an
-  UpdatePath and clients generally have a leaf node in each group they are a member
-  of. Leaf node extensions can thus be used to include member-specific data in a
-  group state that can be updated by the owner at any time.
-
-
-### Extension Designer Tools
-
-The safe extension API allows extension designers to sign and encrypt payloads
-without the need to register their own IANA labels. Following the same pattern,
-this document also provides ways for extension designers to define their own
-wire formats, proposals, credentials, and for structured data in the
-Additional Authenticated Data.
-
-#### Core Struct Extensions
-
-Each extension of the GroupContext, GroupInfo, KeyPackage, and/or LeafNode
-structs is required to define the format of its data. These types of
-extensions SHOULD NOT use the `ExtensionContent` struct since the `extension_type` is already in the parent data structure.
-
-#### Wire Formats
-
-Extensions can define their own MLS messages by using the mls_extension_message
-MLS Wire Format. The mls_extension_message Wire Format is IANA registered
-specifically for this purpose and extends the select statement in the MLSMessage
-struct as follows:
-
-~~~tls
-case mls_extension_message:
-    ExtensionContent extension_content;
-~~~
-
-The extension_type in `extension_content` MUST be set to the type of the
-extension in question.
-Processing of self-defined wire formats has to be defined by the extension.
-
-#### Proposals
-
-Similar to wire formats, extensions can define their own proposals by using one
-of three dedicated extension proposal types: extension_proposal,
-extension_path_proposal and extension_external_propsal. Each type contains the
-same ExtensionContent struct, but is validated differently: extension_proposal
-requires no UpdatePath and can not be sent by an external sender
-extension_path_proposal requires an UpdatePath and can not be sent by an external
-sender extensions_external_proposal requires no UpdatePath and can be sent by an
-external sender.
-
-Each of the three proposal types is IANA registered and extends the select
-statement in the Proposal struct as follows:
-
-~~~tls
-case extension_proposal:
-    ExtensionContent extension_content;
-case extension_path_proposal:
-    ExtensionContent extension_content;
-case extension_external_proposal:
-    ExtensionContent extension_content;
-~~~
-
-The extension_type MUST be set to the type of the extension in question.
-
-Processing and validation of self-defined proposals has to be defined by the
-extension. However, validation rules can lead to a previously valid commit to
-become invalid, not the other way around. This is with the exception of proposal
-validation for external commits, where self-defined proposals can be declared
-valid for use in external commits. More concretely, if an external commit is
-invalid, only because the self-defined proposal is part of it (the last rule in
-external commit proposal validation in {{Section 12.2 of !RFC9420}}), then the
-self-defined validation rules may rule that the commit is instead valid.
-
-#### Credentials
-
-Extension designers can also define their own credential types via the IANA
-registered extension_credential credential type. The extension_credential
-extends the select statement in the Credential struct as follows:
-
-~~~tls
-case extension_credential:
-    ExtensionContent extension_content;
-~~~
-
-The extension_type in the extension_content must be set to that of the extension
-in question  with the extension_data containing all other relevant data. Note
-that any credential defined in this way has to meet the requirements detailed in
-{{Section 5.3 of !RFC9420}}.
-
-
-
-
-### Extension state: anchoring, storage and agreement
+## Extension state: anchoring, storage and agreement
 
 The safe extension framework can help an MLS extension ensure that all group
 members agree on a piece of extension-specific state by using the
@@ -953,7 +792,7 @@ The `ExtensionState` GroupContext extension contains data either directly (if
 `hash_or_data = data`) or inditectly via a hash (if `hash_or_data = hash`).
 
 The owning extension can read and write the state stored in an `ExtensionState`
-extension using an extension-defined proposal (see {{proposals}}). The semantics
+extension using an extension-defined proposal (see ). The semantics
 of the proposal determines how the state is changed.
 
 The `read` variable determines the permissions that other MLS extensions have
@@ -964,7 +803,7 @@ owning MLS extension.
 Other extensions may never write to the `ExtensionState` of the owning MLS
 extension.
 
-#### Direct vs. hash-based storage
+### Direct vs. hash-based storage
 
 Storing the data directly in the `ExtensionState` means the data becomes part of
 the group state. Depending on the application design, this can be advantageous,
@@ -976,16 +815,6 @@ the data with each such extension.
 Including the data by hash only allows group members to agree on the data
 indirectly, relying on the collision resistance of the associated hash function.
 The data itself, however, may have to be transmitted out-of-band to new joiners.
-
-#### GroupContextExtensions
-
-MLS allows applications to modify GroupContext extensions via the
-GroupContextExtension proposal. However, control via that proposal involves
-including all GroupContext extensions in each such proposal. This makes data
-management more costly than via extension-specific proposals, which can, for
-example, include only the data to be changed for a given GroupContext extension,
-or define semantics that allow modification based on local data only.
-
 
 ## Extension Design Guidance
 
@@ -1076,13 +905,11 @@ that group.
 The goal is to provide a one-shot messaging mechanism that provides
 confidentiality and authentication.
 
-Targeted Messages makes use the Safe Extension API as defined in {{safe-extension-api}}.
 reuse mechanisms from {{!RFC9420}}, in particular {{!RFC9180}}.
 
 ### Format
 
-This extension uses the `mls_extension_message` WireFormat as defined in Section
-{{wire-formats}}, where the content is a `TargetedMessage`.
+This extension uses the `mls_extension_message` WireFormat, where the content is a `TargetedMessage`.
 
 ~~~ tls
 struct {
