@@ -437,8 +437,8 @@ struct {
 The entries in the `component_data` MUST be sorted by `component_id`, and there
 MUST be at most one entry for each `component_id`.
 
-An `app_data_dictionary` extension in a LeafNode, KeyPackage, or GroupInfo can be
-set when the object is created.  An `app_data_dictionary` extension in the
+An `app_data_dictionary` extension in a LeafNode, KeyPackage, or GroupInfo can
+be set when the object is created.  An `app_data_dictionary` extension in the
 GroupContext needs to be managed using the tools available to update GroupContext extensions. The creator of the group can set extensions unilaterally. Thereafter, the AppDataUpdate proposal described in the next section is used to update the `app_data_dictionary` extension.
 
 ## Updating Application Data in the GroupContext {#appdataupdate}
@@ -602,7 +602,7 @@ components, such that some components would not be valid at the application when
 sent in an external commit or via an external proposer.
 
 
-## Additional Authenticated Data (AAD) {#safe-aad}
+## Safe Additional Authenticated Data (AAD) {#safe-aad}
 
 The `PrivateContentAAD` struct in MLS can contain arbitrary additional
 application-specific AAD in its `authenticated_data` field. This API
@@ -626,22 +626,14 @@ struct {
 } SafeAAD;
 ~~~
 
-If the `SafeAAD` is present or not is determined by the presence of the
-`extension_aad` GroupContext extension in the `required_capabilities` of the
-group. If `extension_aad` is present in `required_capabilities` but no
-"safe" AAD items are present, the `aad_items` is a zero-length vector.
-
->**TODO**: fix this and create a way to negotiate components, wire formats,
- and Safe AAD.
-
-Each component which include a `SafeAADItem` needs to advertise its
-`ComponentID` in its LeafNode `capabilities.extensions`. Extensions MAY
-require a `ComponentID` to be included in `required_capabilities`, but
-members which encounter a `SafeAADItem` they do not recognize can safely
-ignore it.
+If the `SafeAAD` is present or not in the `authenticated_data` is determined by
+the presence of the `safe_aad` component in the `app_data_dictionary` extension
+in the GroupContext (see {{negotiation}}). If `safe_aad` is present, but none
+of the "safe" AAD components have data to send in a particular message, the
+`aad_items` is a zero-length vector.
 
 
-# Negotiating Extensions and Components
+# Negotiating Extensions and Components {#negotiation}
 
 MLS defines a `Capabilities` struct for LeafNodes (in turn used in
 KeyPackages), which describes which extensions are supported by the
@@ -672,9 +664,9 @@ Its `credential_types` vector contains any mandatory credential types.
 
 ~~~
 struct {
-    ExtensionType extension_types<V>;
-    ProposalType proposal_types<V>;
-    CredentialType credential_types<V>;
+   ExtensionType extension_types<V>;
+   ProposalType proposal_types<V>;
+   CredentialType credential_types<V>;
 } RequiredCapabilities;
 ~~~
 
@@ -683,22 +675,49 @@ MLS Wire Formats. Instead, this document defines two extensions: `supported_wire
 `required_wire_formats` (which can appear in the GroupContext).
 
 ~~~ tls-presentation
+struct {
+   WireFormat wire_formats<V>;
+} WireFormats
 
+WireFormats supported_wire_formats;
+WireFormats requires_wire_formats;
 ~~~
 
-Finally, this document defines new components for supported and required Safe AAD, media types, and components.
+This document also defines new components of the `app_data_dictionary`
+extension for supported and required Safe AAD, media types, and components.
 
-- `safe_aad`
-- `content_media_types`
-- `app_components`
+The `safe_aad` component contains a list of components IDs. When present (in an
+`app_data_dictionary` extension) in a LeafNode, the semantic is the list of
+supported components that use Safe AAD. When present (in an
+`app_data_dictionary` extension) in the GroupContext, the semantic is the list
+of required Safe AAD components (those that must be understood by the entire
+group). If the `safe_aad` component is present, even with an empty list, (in the
+`app_data_dictionary` extension) in the GroupContext, then the
+`authenticated_data` field always starts with the SafeAAD struct defined in
+{{safe-aad}}.
 
 ~~~ tls-presentation
+struct {
+    ComponentID component_ids<V>;
+} ComponentsList;
 
+ComponentsList safe_aad;
 ~~~
 
-The presence of `safe_aad` in the `app_data_dictionary` means that the AAD will always start with the SafeAAD framing. If `safe_aad` is present but contains no components, that means that the framing is used with a zero-sized vector.
+The list of required and supported components follows the same model with the
+new component `app_components`. When present in a LeafNode, the semantic is the
+list of supported components. When present in the GroupContext, the semantic is
+the list of required components.
 
-...same for `content_media_types` and `app_components`.
+~~~ tls-presentation
+ComponentsList app_components;
+~~~
+
+Finally, the supported and required media types (formerly called MIME types)
+is communicated in the `content_media_types` component (see
+{{content-advertisement}}).
+
+
 
 
 # Safe Extensions
