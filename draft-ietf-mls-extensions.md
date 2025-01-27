@@ -1677,3 +1677,105 @@ draft-00
 
 - Initial adoption of draft-robert-mls-protocol-00 as a WG item.
 - Add Targeted Messages extension (\*)
+
+# Old Safe Extensions Text
+
+The MLS specification is extensible in a variety of ways (see {{Section 13 of
+!RFC9420}}) and describes the negotiation and other handling of extensions and
+their data within the protocol. However, it does not provide guidance on how
+extensions can or should safely interact with the base MLS protocol. The goal of
+this section is to simplify the task of developing MLS extensions.
+
+
+## Security
+
+An extension is called safe if it does not modify the base MLS protocol or other
+MLS extensions beyond using components of the Safe Extension API. The Safe
+Extension API provides the following security guarantee: If an application uses
+MLS and only safe MLS extensions, then the security guarantees of the base MLS
+protocol and the security guarantees of safe extensions, each analyzed in
+isolation, still hold for the composed extended MLS protocol. In other words,
+the Safe Extension API protects applications from careless extension
+developers. As long as all used extensions are safe, it is not possible that a
+combination of extensions  (the developers of which did not know about each
+other) impedes the security of the base MLS protocol or any used extension. No
+further analysis of the combination is necessary. This also means that any
+security vulnerabilities introduced by one extension do not spread to other
+extensions or the base MLS.
+
+
+## Extension state: anchoring, storage and agreement
+
+The safe extension framework can help an MLS extension ensure that all group
+members agree on a piece of extension-specific state by using the
+`ExtensionState` GroupContext extension. The ownership of an `ExtensionState`
+extension in the context of the safe extension framework is determined by the
+`extension_type` field. The extension with a matching `extension_type` is called
+the owning extension.
+
+~~~tls
+enum {
+  reserved(0),
+  read(1),
+  none(2),
+ (255)
+} Permissions;
+
+enum {
+  reserved(0),
+  hash(1),
+  data(2),
+} HashOrData;
+
+struct {
+  HashOrData hash_or_data;
+  select(hash_or_data) {
+    case hash:
+      HashReference state_hash;
+    case data:
+      opaque state<V>;
+  }
+} ExtensionPayload;
+
+struct {
+  extensionType extension_type;
+  Permissions read;
+  ExtensionPayload payload;
+} ExtensionState;
+~~~
+
+The `ExtensionState` GroupContext extension contains data either directly (if
+`hash_or_data = data`) or inditectly via a hash (if `hash_or_data = hash`).
+
+The owning extension can read and write the state stored in an `ExtensionState`
+extension using an extension-defined proposal (see ). The semantics
+of the proposal determines how the state is changed.
+
+The `read` variable determines the permissions that other MLS extensions have
+w.r.t. the data stored within. `read` allows other MLS extensions to read that
+data via their own proposals, while `none` marks the data as private to the
+owning MLS extension.
+
+Other extensions may never write to the `ExtensionState` of the owning MLS
+extension.
+
+### Direct vs. hash-based storage
+
+Storing the data directly in the `ExtensionState` means the data becomes part of
+the group state. Depending on the application design, this can be advantageous,
+because it is distributed via Welcome messages. However, it could also mean that
+the data is visible to the delivery service. Additionally, if the application
+makes use of GroupContextExtension proposals, it may be necessary to send all of
+the data with each such extension.
+
+Including the data by hash only allows group members to agree on the data
+indirectly, relying on the collision resistance of the associated hash function.
+The data itself, however, may have to be transmitted out-of-band to new joiners.
+
+## Extension Design Guidance
+
+While extensions can modify the protocol flow of MLS and the associated
+properties in arbitrary ways, the base MLS protocol already enables a number of
+functionalities that extensions can use without modifying MLS itself. Extension
+authors should consider using these built-in mechanisms before employing more
+intrusive changes to the protocol.
