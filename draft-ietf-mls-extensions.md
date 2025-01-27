@@ -54,10 +54,12 @@ informative:
 
 --- abstract
 
-This document describes how to write extensions to the Messaging Layer Security
-(MLS) protocol, a handful of MLS extensions, and an application interface
-designed to allow multiple uncoordinated applications to safely use the features
-of MLS safely.
+The Messaging Layer Security (MLS) protocol is an asynchronous group 
+authenticated key exchange protocol.  MLS provides a number of capabilities
+to applications, as well as several extension points internal to the protocol.  This
+document provides a consolidated application API, guidance for how the
+protocol's extension points should be used, and a few concrete examples of both
+core protocol extensions and uses of the application API.
 
 --- middle
 
@@ -118,7 +120,7 @@ group.
 {::boilerplate bcp14-tagged}
 
 This document makes heavy use of the terminology and the names of structs in the
-MLS specification {{!RFC9420}}.
+MLS specification {{!RFC9420}}.  In addition, we introduce the following new terms:
 
 Application:
 : The system that instantiates, manages, and uses an MLS group.  Each MLS group
