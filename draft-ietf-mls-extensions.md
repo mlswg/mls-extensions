@@ -1291,7 +1291,7 @@ As a result, a LastResort Extension contains the `component_id` with an empty
 ## Multi-Credentials
 
 Multi-credentials address use cases where there might not be a single
-credential that captures all of a client's authenticated attributes.  For
+credential that captures all of a client's authenticated attributes. For
 example, an enterprise messaging client may wish to provide attributes both
 from its messaging service, to prove that its user has a given handle in
 that service, and from its corporate owner, to prove that its user is an
@@ -1299,9 +1299,9 @@ employee of the corporation. Multi-credentials can also be used in migration
 scenarios, where some clients in a group might wish to rely on a newer type
 of credential, but other clients haven't yet been upgraded.
 
-New safe credential types `MultiCredential` and `WeakMultiCredential` are
+New credential types `MultiCredential` and `WeakMultiCredential` are
 defined as shown below. These credential types are indicated with
-ExtensionType values `multi` and `weak-multi` (see {{iana-creds}}).
+the values `multi` and `weak-multi` (see {{iana-creds}}).
 
 ~~~ tls-presentation
 struct {
