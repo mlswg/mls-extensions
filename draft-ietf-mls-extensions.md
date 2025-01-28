@@ -716,7 +716,7 @@ ComponentsList app_components;
 ~~~
 
 Finally, the supported and required media types (formerly called MIME types)
-is communicated in the `content_media_types` component (see
+are communicated in the `content_media_types` component (see
 {{content-advertisement}}).
 
 
@@ -798,9 +798,8 @@ message that is sent from a member of an existing group to another member of
 that group.
 
 The goal is to provide a one-shot messaging mechanism that provides
-confidentiality and authentication.
-
-reuse mechanisms from {{!RFC9420}}, in particular {{!RFC9180}}.
+confidentiality and authentication, reusing mechanisms from {{!RFC9420}}, in
+particular {{!RFC9180}}.
 
 ### Format
 
@@ -1032,31 +1031,39 @@ repudiability is desired. Implementations SHOULD consult
 
 ### Description
 
-This section describes two extensions to MLS. The first allows MLS clients
-to advertise their support for specific formats inside MLS `application_data`.
-These are expressed using the extensive IANA Media Types registry (formerly
-called MIME Types).  The `accepted_media_types` LeafNode extension lists the
-formats a client supports inside `application_data`. The second, the
-`required_media_types` GroupContext extension specifies which media types
-need to be supported by all members of a particular MLS group.
-These allow clients to confirm that all members of a group can communicate.
-Note that when the membership of a group changes, or when the policy of the
-group changes, it is responsibility of the committer to insure that the membership
-and policies are compatible.
+This section defines a minimal framing format so MLS clients can signal
+which media type is being sent inside the MLS `application_data` object when
+multiple formats are permitted in the same group.
 
-Finally, this document defines a minimal framing format so MLS clients can signal
-which media type is being sent when multiple formats are permitted in the same group.
+It also defines a new `content_media_types` application component which is used to indicate support for specific formats, using the extensive IANA Media Types
+registry (formerly called MIME Types). When the `content_media_types` component
+is present (in the `app_data_dictionary` extension) in a LeafNode, it indicates
+that node's support for a particular (non-empty) list of media types. When the
+`content_media_types` component is present (in the `app_data_dictionary`
+extension) in the GroupContext, it indicates a (non-empty) list of media types
+that need to be supported by all members of that MLS group, *and* that the
+`application_data` will be framed using the application framing format
+described later in {{app-framing}}. This allows clients to confirm that all
+members of a group can communicate.
+
+>Note that when the membership of a group changes, or when the policy of the
+ group changes, it is responsibility of the committer to insure that the
+ membership and policies are compatible.
+
 As clients are upgraded to support new formats they can use these extensions
-to detect when all members support a new or more efficient encoding, or select the
-relevant format or formats to send.
+to detect when all members support a new or more efficient encoding, or select
+the relevant format or formats to send.
 
-Note that the usage of IANA media types in general does not imply the usage of MIME
-Headers {{?RFC2045}} for framing. Vendor-specific media subtypes starting with
-`vnd.` can be registered with IANA without standards action as described in
-{{?RFC6838}}.  Implementations which wish to send multiple formats in a single
-application message, may be interested in the `multipart/alternative` media type
-defined in {{?RFC2046}} or may use or define another type with similar semantics
-(for example using TLS Presentation Language syntax {{!RFC8446}}).
+Vendor-specific media subtypes starting with `vnd.` can be registered with IANA
+without standards action as described in {{?RFC6838}}. Implementations which
+wish to send multiple formats in a single application message, may be interested
+in the `multipart/alternative` media type defined in {{?RFC2046}} or may use or
+define another type with similar semantics (for example using TLS Presentation
+Language syntax {{!RFC8446}}).
+
+>Note that the usage of IANA media types in general does not imply the usage of
+ MIME Headers {{?RFC2045}} for framing.
+
 
 ### Syntax
 
@@ -1084,11 +1091,11 @@ struct {
 } MediaType;
 
 struct {
+    /* must contain at least one item */
     MediaType media_types<V>;
 } MediaTypeList;
 
-MediaTypeList accepted_media_types;
-MediaTypeList required_media_types;
+MediaTypeList content_media_types;
 ~~~
 
 Example IANA media types with optional parameters:
@@ -1107,31 +1114,33 @@ with a `parameter_name` of `charset` and a `parameter_value` of `UTF-8`.
 ### Expected Behavior
 
 An MLS client which implements this section SHOULD include the
-`accepted_media_types` extension in its LeafNodes, listing
-all the media types it can receive. As usual, the
-client also includes `accepted_media_types` in its `capabilities` field in
-its LeafNodes (including LeafNodes inside its KeyPackages).
+`content_media_types` component (in the `app_data_dictionary` extension)
+in its LeafNodes, listing all the media types it can receive. As usual, the
+client also includes `content_media_types` in the `app_components` list (in the
+`app_data_dictionary` extension) and support for the `app_data_dictionary`
+extension in its `capabilities.extensions` field in its LeafNodes (including
+in LeafNodes inside its KeyPackages).
 
 When creating a new MLS group for an application using this specification,
-the group MAY include a `required_media_type` extension in the GroupContext
-Extensions. As usual, the client also includes
-`required_media_types` in its `capabilities` field in its LeafNodes
-(including LeafNodes inside its KeyPackages). When used in a group, the client
-MUST include the `required_media_types` and `accepted_media_types` extensions
-in the list of extensions in RequiredCapabilities.
+the group MAY include a `content_media_types` component (in the
+`app_data_dictionary` extension) in the GroupContext. (The creating
+client also includes its `content_media_types` component in its own
+LeafNode as described in the previous paragraph.)
 
-MLS clients SHOULD NOT add an MLS client to an MLS group with `required_media_types`
-unless the MLS client advertises it can support all of the required MediaTypes.
+MLS clients SHOULD NOT add an MLS client to an MLS group with
+`content_media_types` in its GroupContext unless the MLS client advertises it
+can support all of the required MediaTypes.
 As an exception, a client could be preconfigured to know that certain clients
-support the requried types. Likewise, an MLS client is already forbidden from
-issuing or committing a GroupContextExtensions Proposal which introduces required
-extensions which are not supported by all members in the resulting epoch.
+support the required types. Likewise, an MLS client is already forbidden from
+issuing or committing a GroupContextExtensions Proposal which introduces
+required extensions which are not supported by all members in the resulting
+epoch.
 
-### Framing of application_data
+### Framing of application_data {#app-framing}
 
-When an MLS group contains the `required_media_types` GroupContext extension,
-the `application_data` sent in that group is interpreted as `ApplicationFraming`
-as defined below:
+When an MLS group contains the `content_media_types` component (in the
+`app_data_dictionary` extension) in its GroupContext, the `application_data`
+sent in that group is interpreted as `ApplicationFraming` as defined below:
 
 ~~~ tls
   struct {
@@ -1142,7 +1151,7 @@ as defined below:
 
 The `media_type` MAY be zero length, in which case, the media type of the
 `application_content` is interpreted as the first MediaType specified in
-`required_media_types`.
+the `content_media_types` component in the GroupContext.
 
 ## SelfRemove Proposal
 
