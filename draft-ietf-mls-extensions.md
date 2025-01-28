@@ -724,14 +724,10 @@ are communicated in the `content_media_types` component (see
 
 ## AppAck
 
-Type: Proposal
-
-### Description
-
-An AppAck proposal is used to acknowledge receipt of application messages.
-Though this information implies no change to the group, it is structured as a
-Proposal message so that it is included in the group's transcript by being
-included in Commit messages.
+An AppAck object is used to acknowledge receipt of application messages.
+Though this information implies no change to the group, it is conveyed inside
+an AppEphermeral Proposal with a component ID `app_ack`, so that it is included
+in the group's transcript by being included in Commit messages.
 
 ~~~ tls
 struct {
@@ -745,13 +741,13 @@ struct {
 } AppAck;
 ~~~
 
-An AppAck proposal represents a set of messages received by the sender in the
+An AppAck represents a set of messages received by the sender in the
 current epoch.  Messages are represented by the `sender` and `generation` values
 in the MLSCiphertext for the message.  Each MessageRange represents receipt of a
 span of messages whose `generation` values form a continuous range from
 `first_generation` to `last_generation`, inclusive.
 
-AppAck proposals are sent as a guard against the Delivery Service dropping
+AppAck objects are sent as a guard against the Delivery Service dropping
 application messages.  The sequential nature of the `generation` field provides
 a degree of loss detection, since gaps in the `generation` sequence indicate
 dropped messages.  AppAck completes this story by addressing the scenario where
@@ -760,10 +756,11 @@ generation is never observed.  Obviously, there is a risk that AppAck messages
 could be suppressed as well, but their inclusion in the transcript means that if
 they are suppressed then the group cannot advance at all.
 
-The schedule on which sending AppAck proposals are sent is up to the application,
-and determines which cases of loss/suppression are detected.  For example:
+The schedule on which AppAck objects are sent in AppEphemeral proposals is up to
+the application,and determines which cases of loss/suppression are detected.
+For example:
 
-- The application might have the committer include an AppAck proposal whenever a
+- The application might have the committer include an AppAck whenever a
   Commit is sent, so that other members could know when one of their messages
   did not reach the committer.
 
@@ -774,13 +771,16 @@ and determines which cases of loss/suppression are detected.  For example:
 - The application could simply have clients send AppAck proposals on a timer, so
   that all participants' state would be known.
 
-An application using AppAck proposals to guard against loss/suppression of
+An application using AppAck to guard against loss/suppression of
 application messages also needs to ensure that AppAck messages and the Commits
 that reference them are not dropped.  One way to do this is to always encrypt
 Proposal and Commit messages, to make it more difficult for the Delivery Service
 to recognize which messages contain AppAcks.  The application can also have
 clients enforce an AppAck schedule, reporting loss if an AppAck is not received
 at the expected time.
+
+>Note: External Commits do not typically contain pending proposals (including
+ AppEphemeral proposals).
 
 ## Targeted messages
 
