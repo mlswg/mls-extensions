@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-01-26T00:40:35.981378+00:00",
+  "timestamp": "2025-01-28T00:39:32.467635+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -2470,19 +2470,78 @@
       "labels": [],
       "body": "",
       "createdAt": "2025-01-13T17:36:32Z",
-      "updatedAt": "2025-01-24T21:38:09Z",
+      "updatedAt": "2025-01-27T23:38:29Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "b4d9d3224c82a375647a496bf8c1d5365e412eca",
       "headRepository": "rohanmahy/mls-extensions",
       "headRefName": "merge-appsync",
-      "headRefOid": "550f386882717b81e025ae5d9bfe12d4733ec951",
+      "headRefOid": "02d7d5637c7c501e86b0d25c3377b11cabcadaf3",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M6ZlNOl",
+          "commit": {
+            "abbreviatedOid": "4c3bca6"
+          },
+          "author": "bifurcation",
+          "authorAssociation": "NONE",
+          "state": "APPROVED",
+          "body": "Couple of minor things and notes to handle in follow-up, but overall, this seems like a good step.",
+          "createdAt": "2025-01-27T22:16:57Z",
+          "updatedAt": "2025-01-27T23:27:31Z",
+          "comments": [
+            {
+              "originalPosition": 61,
+              "body": "I might overall organize the doc as: \r\n* Application API\r\n* Guidance on extending the core protocol (including when to just use the app API)\r\n* Some specific extensions and reusable components\r\n\r\nIn that spirit:\r\n```suggestion\r\nThe Messaging Layer Security (MLS) protocol is an asynchronous group \r\nauthenticated key exchange protocol.  MLS provides a number of capabilities\r\nto applications, as well as several extension points internal to the protocol.  This\r\ndocument provides a consolidated application API, guidance for how the\r\nprotocol's extension points should be used, and a few concrete examples of both\r\ncore protocol extensions and uses of the application API.\r\n```",
+              "createdAt": "2025-01-27T22:16:57Z",
+              "updatedAt": "2025-01-27T23:27:31Z"
+            },
+            {
+              "originalPosition": 72,
+              "body": "This intro section is copy/pasted from -appsync-01.  That's fine for now, but we should do a follow-on PR that generalizes it.",
+              "createdAt": "2025-01-27T22:20:37Z",
+              "updatedAt": "2025-01-27T23:27:31Z"
+            },
+            {
+              "originalPosition": 152,
+              "body": "```suggestion\r\nThis document makes heavy use of the terminology and the names of structs in the\r\nMLS specification {{!RFC9420}}.  In addition, we introduce the following new terms:\r\n```",
+              "createdAt": "2025-01-27T22:22:26Z",
+              "updatedAt": "2025-01-27T23:27:31Z"
+            },
+            {
+              "originalPosition": 191,
+              "body": "This text should go in the intro or terminology.  But again, happy to handle this in a follow-on.",
+              "createdAt": "2025-01-27T22:24:21Z",
+              "updatedAt": "2025-01-27T23:27:31Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6ZlmGC",
+          "commit": {
+            "abbreviatedOid": "4c3bca6"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-01-27T23:38:29Z",
+          "updatedAt": "2025-01-27T23:38:29Z",
+          "comments": [
+            {
+              "originalPosition": 191,
+              "body": "agreed",
+              "createdAt": "2025-01-27T23:38:29Z",
+              "updatedAt": "2025-01-27T23:38:29Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
