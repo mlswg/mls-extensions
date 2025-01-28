@@ -1253,8 +1253,8 @@ Type: KeyPackage extension
 ### Description
 
 {{Section 10 of !RFC9420}} details that clients are required to pre-publish
-KeyPackages s.t. other clients can add them to groups asynchronously. It also
-states that they should not be re-used:
+KeyPackages so that other clients can add them to groups asynchronously. It
+also states that they should not be re-used:
 
 > KeyPackages are intended to be used only once and SHOULD NOT be reused except
 > in the case of a "last resort" KeyPackage (see Section 16.8). Clients MAY
@@ -1267,27 +1267,26 @@ KeyPackages as follows:
 > prevent denial-of-service attacks.
 
 However, {{!RFC9420}} does not specify how to distinguish regular KeyPackages
-from last-resort ones. The last_resort_key_package KeyPackage extension defined
-in this section fills this gap and allows clients to specifically mark
-KeyPackages as KeyPackages of last resort that MAY be used more than once in
-scenarios where all other KeyPackages have already been used.
+from last-resort ones. The last_resort_key_package KeyPackage application
+component defined in this section fills this gap and allows clients to specifically mark KeyPackages as KeyPackages of last resort that MAY be used
+more than once in scenarios where all other KeyPackages have already been used.
 
-The extension allows clients that pre-publish KeyPackages to signal to the
+The component allows clients that pre-publish KeyPackages to signal to the
 Delivery Service which KeyPackage(s) are meant to be used as last resort
 KeyPackages.
 
-An additional benefit of using an extension rather than communicating the
-information out-of-band is that the extension is still present in Add proposals.
+An additional benefit of using a component rather than communicating the
+information out-of-band is that the component is still present in Add proposals.
 Clients processing such Add proposals can authenticate that a KeyPackage is a
 last-resort KeyPackage and MAY make policy decisions based on that information.
 
 ### Format
 
-The purpose of the extension is simply to mark a given KeyPackage, which means
-it carries no additional data.
+The purpose of the application component is simply to mark a given KeyPackage,
+which means it carries no additional data.
 
-As a result, a LastResort Extension contains the ExtensionType with an empty
-`extension_data` field.
+As a result, a LastResort Extension contains the `component_id` with an empty
+`data` field.
 
 ## Multi-Credentials
 
