@@ -4,8 +4,8 @@
 
 Network Working Group                                          R. Robert
 Internet-Draft                                               Phoenix R&D
-Intended status: Standards Track                         23 January 2025
-Expires: 27 July 2025
+Intended status: Standards Track                         28 January 2025
+Expires: 1 August 2025
 
 
              The Messaging Layer Security (MLS) Extensions
@@ -38,7 +38,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 27 July 2025.
+   This Internet-Draft will expire on 1 August 2025.
 
 Copyright Notice
 
