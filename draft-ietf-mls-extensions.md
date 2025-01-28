@@ -1542,10 +1542,15 @@ Template:
 - Where: The objects(s) in which the component may appear,
          drawn from the following list:
     - AD: SafeAAD objects
+    - AE: AppEpheral proposals
+    - ES: Exporter Secret labels
     - GC: GroupContext objects
     - GI: GroupInfo objects
+    - HP: HPKE key labels
     - KP: KeyPackage objects
     - LN: LeafNode objects
+    - PS: PSK labels
+    - SK: Signature Key labels
 - Recommended: Same as in {{Section 17.1 of !RFC9420}}
 - Reference: The document where this component is defined
 
@@ -1558,6 +1563,7 @@ Initial Contents:
 | 0x0002 0000   | safe_aad                 | LN,GC | Y | RFCXXXX |
 | 0x0003 0000   | content_media_types      | LN,GC | Y | RFCXXXX |
 | 0x0004 0000   | last_resort_key_package  | KP    | Y | RFCXXXX |
+| 0x0005 0000   | app_ack                  | AE    | Y | RFCXXXX |
 | 0x8000 0000 -
   0xFFFF FFFF   | Reserved for Private Use | N/A   | N | RFCXXXX |
 
