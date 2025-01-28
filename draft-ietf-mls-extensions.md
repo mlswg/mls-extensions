@@ -5,12 +5,25 @@ docname: draft-ietf-mls-extensions-latest
 submissiontype: IETF
 category: std
 
-ipr: trust200902
-area: Security
-keyword: Internet-Draft
-
-stand_alone: yes
-pi: [toc, sortrefs, symrefs]
+number:
+date:
+consensus: true
+v: 3
+area: "Security"
+workgroup: "Messaging Layer Security"
+keyword:
+ - messaging layer security
+ - end-to-end encryption
+ - application api
+ - extension
+ - extensibility
+venue:
+  group: "Messaging Layer Security"
+  type: "Working Group"
+  mail: "mls@ietf.org"
+  arch: "https://mailarchive.ietf.org/arch/browse/mls/"
+  github: "mlswg/mls-extensions"
+  latest: "https://mlswg.github.io/mls-extensions/draft-ietf-mls-extensions.html"
 
 author:
  -  ins: R. Robert
@@ -31,289 +44,229 @@ contributor:
  - name: Marta Mularczyk
    org:  Amazon
    email:  mulmarta@amazon.com
+ - name: Richard Barnes
+   org: Cisco Systems
+   email: rlb@ipv.sx
+
+normative:
 
 informative:
-  mls-protocol:
-    target: https://datatracker.ietf.org/doc/draft-ietf-mls-protocol/](https://datatracker.ietf.org/doc/draft-ietf-mls-protocol/
-    title: The Messaging Layer Security (MLS) Protocol
-
-  hpke:
-    target: https://www.rfc-editor.org/rfc/rfc9180.html](https://www.rfc-editor.org/rfc/rfc9180.html
-    title: Hybrid Public Key Encryption
-
-  hpke-security-considerations:
-    target: https://www.rfc-editor.org/rfc/rfc9180.html#name-key-compromise-impersonatio](https://www.rfc-editor.org/rfc/rfc9180.html#name-key-compromise-impersonatio
-    title: HPKE Security Considerations
 
 --- abstract
 
-This document describes extensions to the Messaging Layer Security (MLS) protocol.
+The Messaging Layer Security (MLS) protocol is an asynchronous group
+authenticated key exchange protocol.  MLS provides a number of capabilities
+to applications, as well as several extension points internal to the protocol.  This
+document provides a consolidated application API, guidance for how the
+protocol's extension points should be used, and a few concrete examples of both
+core protocol extensions and uses of the application API.
 
 --- middle
 
 # Introduction
 
-This document describes extensions to {{mls-protocol}} that are not part of the
-main protocol specification. The protocol specification includes a set of core
-extensions that are likely to be useful to many applications. The extensions
-described in this document are intended to be used by applications that need to
-extend the MLS protocol.
+This document defines extensions to MLS {{!RFC9420}} that are not part of the
+main protocol specification, and uses them to explain how to extend the
+core operation of the MLS protocol. It also describes how applications can
+safely interact with the MLS to take advantage of security features of MLS.
 
-## Change Log
+The MLS protocol is designed to be integrated into applications, in order to
+provide security services that the application requires.  There are two
+questions to answer when designing such an integration:
 
-RFC EDITOR PLEASE DELETE THIS SECTION.
+1. How does the application provide the services that MLS requires?
+2. How does the application use MLS to get security benefits?
 
-draft-05
+The MLS Architecture {{?I-D.ietf-mls-architecture}} describes the requirements
+for the first of these questions, namely the structure of the Delivery Service
+and Authentication Service that MLS requires. The next section of this document
+focuses on the second question.
 
-- Include definition of ExtensionState extension
-- Add safe use of AAD to Safe Extensions framework
-- Clarify how capabilities negotiation works in Safe Extensions framework
+MLS itself offers some basic functions that applications can use, such as the
+secure message encapsulation (PrivateMessage), the MLS exporter, and the epoch
+authenticator.  Current MLS applications make use of these mechanisms to acheive
+a variety of confidentiality and authentication properties.
 
-draft-04
+As application designers become familiar with MLS, there is
+interest in leveraging other cryptographic tools that an MLS group provides:
 
- - No changes (prevent expiration)
+- HPKE (Hybrid Public Key Encryption {{!RFC9180}}) and signature key pairs for
+  each member, where the private key is known only to that member, and the
+  public key is authenticated to the other members.
 
-draft-03
+- A pre-shared key mechanism that can allow an application to inject data into
+  the MLS key schedule.
 
-- Add Last Resort KeyPackage extension
-- Add Safe Extensions framework
-- Add SelfRemove Proposal
+- An exporter mechanism that allows applications to derive secrets from the MLS
+  key schedule.
 
-draft-02
+- Association of data with Commits as a synchronization mechanism.
 
-- No changes (prevent expiration)
+- Binding of information to the GroupContext to confirm group agreement.
 
-draft-01
+There is also interest in exposing an MLS group to multiple loosely-coordinated
+components of an application.  To accommodate such cases, the above mechanisms
+need to be exposed in such a way that the usage of different components do not
+conflict with each other, or with MLS itself.
 
-- Add Content Advertisement extensions
+This document defines a set of mechanisms that application components can use to
+ensure that their use of these facilities is properly domain-separated from MLS
+itself, and from other application components that might be using the same MLS
+group.
 
-draft-00
 
-- Initial adoption of draft-robert-mls-protocol-00 as a WG item.
-- Add Targeted Messages extension (\*)
+# Conventions and Definitions
 
-# Safe Extensions
+{::boilerplate bcp14-tagged}
 
-The MLS specification is extensible in a variety of ways (see Section 13 of
-{{!RFC9420}}) and describes the negotiation and other handling of extensions and
-their data within the protocol. However, it does not provide guidance on how
-extensions can or should safely interact with the base MLS protocol. The goal of
-this section is to simplify the task of developing MLS extensions.
+This document makes heavy use of the terminology and the names of structs in the
+MLS specification {{!RFC9420}}.  In addition, we introduce the following new terms:
 
-More concretely, this section defines the Safe Extension API, a library of
-extension components which simplifies development and security analysis of
-extensions, provides general guidance on using the built-in functionality of the
-base MLS protocol to build extensions, defines specific examples of extensions
-built on top of the Safe Extension API alongside the built-in mechanisms of the
-base MLS protocol, defines a number of labels registered in IANA which can be
-safely used by extensions, so that the only value an extension developer must
-add to the IANA registry itself is a unique ExtensionType.
+Application:
+: The system that instantiates, manages, and uses an MLS group.  Each MLS group
+is used by exactly one application, but an application may maintain multiple
+groups.
 
-## Safe Extension API
+Application component:
+: A subsystem of an application that has access to an MLS group.
 
-The Safe Extension API is a library that defines a number of components from
-which extensions can be built. In particular, these components provide
-extensions the ability to:
+Component ID:
+: An identifier for an application component.  These identifiers are assigned by
+the application.
 
-- Make use of selected private and public key material from the MLS
-  specification, e.g. to encrypt, decrypt, sign, verify and derive fresh key
-  material.
-- Inject key material via PSKs in a safe way to facilitate state agreement
-  without the use of a group context extension.
-- Export secrets from MLS in a way that, in contrast to the built-in export
-  functionality of MLS, preserves forward secrecy of the exported secrets within
-  an epoch.
-- Define new WireFormat, Proposal, Credential, GroupContext, GroupInfo,
-KeyPackage, and LeafNode extensions which can interact safely with arbitrary
-sets of other current or future Safe Extensions.
-- Anchor extension-specific state in an MLS group to ensure agreement and manage
-  state acces authorization across extensions.
+# Developing Extensions for the MLS Protocol
 
-The Safe Extension API is not an extension itself, it only defines components
-from which other extensions can be built. Some of these components modify the
-MLS protocol and, therefore, so do the extensions built from them.
+MLS is highly extensible, and was designed to be used in a variety of different
+applications. As such, it is important to separate extensions that change the
+behavior of an MLS stack, and application usages of MLS that just take advantage
+of features of MLS or specific extensions (hereafter referred to as *components*). Furthermore it is essential that application components do not change the security properties of MLS or require new security analysis of the MLS protocol itself.
 
-Where possible, the API makes use of mechanisms defined in the MLS
-specification. For example, part of the safe API is the use of the
-`SignWithLabel` function described in Section 5.1.2 of {{!RFC9420}}.
+# The Safe Application Interface
 
-### Security
+The mechansms in this section take MLS mechanisms that are either not
+inherently designed to be used by applications, or not inherently designed to be
+used by multiple application components, and adds a domain separator that
+separates application usage from MLS usage, and application components' usage
+from each other:
 
-An extension is called safe if it does not modify the base MLS protocol or other
-MLS extensions beyond using components of the Safe Extension API. The Safe
-Extension API provides the following security guarantee: If an application uses
-MLS and only safe MLS extensions, then the security guarantees of the base MLS
-protocol and the security guarantees of safe extensions, each analyzed in
-isolation, still hold for the composed extended MLS protocol. In other words,
-the Safe Extension API protects applications from careless extension
-developers. As long as all used extensions are safe, it is not possible that a
-combination of extensions  (the developers of which did not know about each
-other) impedes the security of the base MLS protocol or any used extension. No
-further analysis of the combination is necessary. This also means that any
-security vulnerabilities introduced by one extension do not spread to other
-extensions or the base MLS.
+- Public-key encryption operations are tagged so that encrypted data
+  will only decrypt in the context of a given component.
 
-### Core Struct Extensions
+- Signing operations are similarly tagged so that signatures will only verify
+  in the context of a given component.
 
-Every type of MLS extension can have data associated with it. The "MLS
-Extensions Types" registry historically represented extensibility of four
-core structs (`GroupContext`, `GroupInfo`, `KeyPackage`, and `LeafNode`)
-that have far reaching effects on the use of the protocol. The majority of
-MLS extensions registered at the time of this writing extend one or more
-of these core structs.
+- Exported values include an identifier for the component to which they are
+  being exported, so that different components will get different exported
+  values.
 
-- GroupContext Extensions: Any data in a group context extension is agreed-upon
-  by all members of the group in the same way as the rest of the group state. As
-  part of the GroupContext, it is also sent encrypted to new joiners via Welcome
-  messages and (depending on the architecture of the application) may be
-  available to external joiners. Note that in some scenarios, the GroupContext
-  may also be visible to components  that implement the delivery service. While
-  MLS extensions can define arbitrary GroupContext extensions, it is recommended
-  to make use of `ExtensionState` extensions to store state in the group's
-  GroupContext.
-- GroupInfo Extensions: GroupInfo extensions are included in the GroupInfo
-  struct and thus sent encrypted and authenticated by the signer of the
-  GroupInfo to new joiners as part of Welcome messages. It can thus be used as a
-  confidential and authenticated channel from the inviting group member to new
-  joiners. Just like GroupContext extensions, they may also be visible to
-  external joiners or even parts of the delivery service. Unlike GroupContext
-  extensions, the GroupInfo struct is not part of the group state that all group
-  members agree on.
-- KeyPackage Extensions: KeyPackages (and the extensions they include) are
-  pre-published by individual clients for asynchronous group joining. They are
-  included in Add proposals and become part of the group state once the Add
-  proposal is committed. They are, however, removed from the group state when
-  the owner of the KeyPackage does the first commit with a path. As such,
-  KeyPackage extensions can be used to communicate data to anyone who wants to
-  invite the owner to a group, as well as the other members of the group the
-  owner is added to. Note that KeyPackage extensions are visible to the server
-  that provides the KeyPackages for download, as well as any part of the
-  delivery service that can see the public group state.
-- LeafNode Extensions: LeafNodes are a part of every KeyPackage and thus follow
-  the same lifecycle. However, they are also part of any commit that includes an
-  UpdatePath and clients generally have a leaf node in each group they are a member
-  of. Leaf node extensions can thus be used to include member-specific data in a
-  group state that can be updated by the owner at any time.
+- Pre-shared keys are identified as originating from a specific component, so
+  that differnet components' contributions to the MLS key schedule will not
+  collide.
 
-### Common Data Structures
+- Additional Authenticated Data (AAD) can be domain separated by component.
 
-The Safe Extension API reuses the `ExtensionType` and the "MLS Extension
-Types" IANA registry used for these core structs (see Section 17.3 of
-{{!RFC9420}}), even for safe extensions with no core struct changes.
-This is because many extensions modify a core struct, either primarily or
-to store state (related to the group or a client) associated with another
-aspect of that extension.
+Similarly, the content of application messages (`application_data`) can be
+distinguished and routed to different parts of an application according to
+the media type of that content using the content negotiation mechanism defined
+in {{content-advertisement}}.
 
-Most Safe Extension API components also use the following data structure, which
-provides domain separation by `extension_type` of various `extension_data`.
+We also define new general mechanisms that allow applications to take advantage
+of the extensibility mechanisms of MLS without having to define extensions
+themselves:
+
+- An `app_data_dictionary` extension type that associates application data with
+  MLS messages, or with the state of the group.
+
+- An AppEphemeral proposal type that enables arbitrary application data to
+  be associated to a Commit.
+
+- An AppDataUpdate proposal type that enables efficient updates to
+  an `app_data_dictionary` GroupContext extension.
+
+As with the above, information carried in these proposals and extension marked
+as belonging to a specific application component, so that components can manage
+their information independently.
+
+The separation between components is acheived by the application assigning each
+component a unique component ID number.  These numbers are then incorporated
+into the appopriate calculations in the protocol to achieve the required
+separation.
+
+## Component IDs
+
+A component ID is a four-byte value that uniquely identifies a component within
+the scope of an application.
+
+~~~
+uint32 ComponentID;
+~~~
+
+> TODO: What are the uniqueness requirements on these?  It seems like the more
+> diversity, the better.  For example, if a ComponentID is reused across
+> applications (e.g., via an IANA registry), then there will be a risk of replay
+> across applications.  Maybe we should include a binder to the group/epoch as
+> well, something derived from the key schedule.
+
+> TODO: It might be better to frame these in terms of "data types" instead of
+> components, to avoid presuming software architecture.  Though that makes less
+> sense for the more "active" portions of the API, e.g., signing and encryption.
+
+When a label is required for an operation, the following data structure is used.
+The `label` field identifies the operation being performed.  The `component_id`
+field identifies the component performing the operation.  The `context` field is
+specified by the operation in question.
 
 ~~~ tls
 struct {
-  ExtensionType extension_type;
-  opaque extension_data<V>;
-} ExtensionContent;
+  opaque label<V>;
+  ComponentID component_id;
+  opaque context<V>;
+} ComponentOperationLabel;
 ~~~
 
-Where `extension_type` is set to the type of the extension to which the
-`extension_data` belongs.
 
-When a label is required for an extension, the following data structure is
-used.
+## Hybrid Public Key Encryption (HPKE) Keys {#safe-hpke}
+
+This component of the API allows components to make use of the HPKE key pairs
+generated by MLS. A component identified by a ComponentID can use any HPKE
+key pair for any operation defined in {{!RFC9180}}, such as encryption,
+exporting keys and the PSK mode, as long as the `info` input to `Setup<MODE>S`
+and `Setup<MODE>R` is set to ComponentOperationLabel with `component_id` set
+to the appopriate ComponentID. The `context` can be set to an arbitrary Context
+specified by the application designer and can be empty if not needed. For
+example, a component can use a key pair PublicKey, PrivateKey to encrypt data
+as follows:
 
 ~~~ tls
-struct {
-  opaque label;
-  ExtensionContent extension_content;
-} LabeledExtensionContent;
+SafeEncryptWithContext(ComponentID, PublicKey, Context, Plaintext) =
+  SealBase(PublicKey, ComponentOperationLabel, "", Plaintext)
+
+SafeDecryptWithContext(ComponentID, PrivateKey, Context,
+  KEMOutput, Ciphertext) = OpenBase(KEMOutput, PrivateKey,
+                             ComponentOperationLabel, "", Ciphertext)
 ~~~
 
-### Negotiating Support for Safe Extensions
-
-MLS defines a `Capabilities` struct for LeafNodes (in turn used in
-KeyPackages), which describes which extensions are supported by the
-associated node.
-However, that struct (defined in Section 7.2 of {{!RFC9420}}) only has
-fields for a subset of the extensions possible in MLS, as reproduced below.
+Where the fields of ComponentOperationLabel are set to
 
 ~~~ tls
-...
-struct {
-    ProtocolVersion versions<V>;
-    CipherSuite cipher_suites<V>;
-    ExtensionType extensions<V>;
-    ProposalType proposals<V>;
-    CredentialType credentials<V>;
-} Capabilities;
-...
+label = "MLS 1.0 Application"
+component_id = ComponentID
+context = Context
 ~~~
 
-Therefore, all safe extensions MUST be represented by their `extension_type`
-in the `extensions` vector (originally intended for core struct extensions),
-regardless of their type.
+> TODO: Should this use EncryptWithLabel / DecryptWithLabel?  That wouldn't
+> cover other modes / exports, but you could say "mutatis mutandis".
 
-If the LeafNode supports any safe extension Credentials, the `credentials`
-vector will contain any non-safe credentials supported, plus the `extension_credential` defined in {extension-credential}.
-
-If the LeafNode supports any safe extension Proposals, then `proposals` will
-contain any non-default non-safe extensions, and whichever safe extension
-proposal types defined in {mls-proposal-types} are relevant to the supported
-safe proposals.
-
-Likewise, the `required_capabilities` GroupContext extension (defined
-in Section 11.1 of {{!RFC9420}} and reproduced below) contains all
-mandatory to support non-default non-safe, and safe extensions in its
-`extension_types` vector. Its `credential_types` vector contains any
-mandatory non-safe credential types, plus `extensions_credential` if any
-safe credential is required. Its `proposal_types` vector contains any
-mandatory to support non-default non-safe Proposals, and the relevant safe
-proposal type or types corresponding to any required safe proposals.
-
-~~~
-struct {
-    ExtensionType extension_types<V>;
-    ProposalType proposal_types<V>;
-    CredentialType credential_types<V>;
-} RequiredCapabilities;
-~~~
-
-
-### Hybrid Public Key Encryption (HPKE) {#safe-hpke}
-
-This component of the Safe Extension API allows extensions to make use of all
-HPKE key pairs generated by MLS. An extension identified by an ExtensionType can
-use any HPKE key pair for any operation defined in {{!RFC9180}}, such as
-encryption, exporting keys and the PSK mode, as long as the `info` input to
-`Setup<MODE>S` and `Setup<MODE>R` is set to LabeledExtensionContent with
-`extension_type` set to ExtensionType. The `extension_data` can be set to an
-arbitrary Context specified by the extension designer (and can be empty if not
-needed). For example, an extension can use a key pair PublicKey, PrivateKey to
-encrypt data as follows:
-
-~~~ tls
-SafeEncryptWithContext(ExtensionType, PublicKey, Context, Plaintext) =
-    SealBase(PublicKey, LabeledExtensionContent, "", Plaintext)
-
-SafeDecryptWithContext(ExtensionType, PrivateKey, Context, KEMOutput, Ciphertext) =
-    OpenBase(KEMOutput, PrivateKey, LabeledExtensionContent, "", Ciphertext)
-~~~
-
-Where the fields of LabeledExtensionContent are set to
-
-~~~ tls
-label = "MLS 1.0 ExtensionData"
-extension_type = ExtensionType
-extension_data = Context
-~~~
-
-For operations involving the secret key, ExtensionType MUST be set to the
-ExtensionType of the implemented extension, and not to the type of any other
-extension. In particular, this means that an extension cannot decrypt data meant
-for another extension, while extensions can encrypt data to other extensions.
+For operations involving the secret key, ComponentID MUST be set to the
+ComponentID of the component performing the operation, and not to the ID of
+any other component. In particular, this means that a component cannot decrypt
+data meant for another component, while components can encrypt data that other
+components can decrypt.
 
 In general, a ciphertext encrypted with a PublicKey can be decrypted by any
 entity who has the corresponding PrivateKey at a given point in time according
-to the MLS protocol (or extension). For convenience, the following list
-summarizes lifetimes of MLS key pairs.
+to the MLS protocol (or application component). For convenience, the following
+list summarizes lifetimes of MLS key pairs.
 
 - The key pair of a non-blank ratchet tree node. The PrivateKey of such a key pair
   is known to all members in the node’s subtree. In particular, a PrivateKey of a
@@ -330,71 +283,86 @@ summarizes lifetimes of MLS key pairs.
   is known only to the owner of the KeyPackage and is deleted immediately after it
   is used to join a group.
 
-### Signature Keys
+
+## Signature Keys
 
 MLS session states contain a number of signature keys including the ones in the
-LeafNode structs. Extensions can safely sign content and verify signatures using
-these keys via the SafeSignWithLabel and SafeVerifyWithLabel functions,
-respectively, much like how the basic MLS protocol uses SignWithLabel and
-VerifyWithLabel.
+LeafNode structs. Application components can safely sign content and verify
+signatures using these keys via the SafeSignWithLabel and SafeVerifyWithLabel
+functions, respectively, much like how the basic MLS protocol uses SignWithLabel
+and VerifyWithLabel.
 
-In more detail, an extension identified by ExtensionType should sign and verify using:
+In more detail, a component identified by ComponentID should sign and verify
+using:
 
 ~~~ tls
-SafeSignWithLabel(ExtensionType, SignatureKey, Label, Content) =
-    SignWithLabel(SignatureKey, "LabeledExtensionContent", LabeledExtensionContent)
+SafeSignWithLabel(ComponentID, SignatureKey, Label, Content) =
+   SignWithLabel(SignatureKey, "ComponentOperationLabel",
+      ComponentOperationLabel)
 
-SafeVerifyWithLabel(ExtensionType, VerificationKey, Label, Content, SignatureValue) =
-    VerifyWithLabel(VerificationKey, "LabeledExtensionContent", LabeledExtensionContent, SignatureValue)
+SafeVerifyWithLabel(ComponentID, VerificationKey, Label, Content,
+  SignatureValue) = VerifyWithLabel(VerificationKey,
+                      "ComponentOperationLabel",
+                       ComponentOperationLabel,
+                       SignatureValue)
 ~~~
 
-Where the fields of LabeledExtensionContent are set to
+Where the fields of ComponentOperationLabel are set to
 
 ~~~ tls
 label = Label
-extension_type = ExtensionType
-extension_data = Content
+component_id = ComponentID
+context = Content
 ~~~
 
-For signing operations, the ExtensionType MUST be set to the ExtensionType of
-the implemented extension, and not to the type of any other extension. In
-particular, this means that an extension cannot produce signatures in place of
-other extensions. However, extensions can verify signatures computed by other
-extensions. Note that domain separation is ensured by explicitly including the
-ExtensionType with every operation.
+For signing operations, the ComponentID MUST be set to the ComponentID of the
+component performing the signature, and not to the ID of any other component.
+This means that a component cannot produce signatures in place of other
+component. However, components can verify signatures computed by other
+components. Domain separation is ensured by explicitly including the ComponentID
+with every operation.
 
-### Exporting Secrets
+## Exported Secrets
 
-An extension can use MLS as a group key agreement protocol by exporting symmetric keys.
-Such keys can be exported (i.e. derived from MLS key material) in two phases per
-epoch: Either at the start of the epoch, or during the epoch. Derivation at the
-start of the epoch has the added advantage that the source key material is
-deleted after use, allowing the derived key material to be deleted later even
-during the same MLS epoch to achieve forward secrecy. The following protocol
-secrets can be used to derive key from for use by extensions:
+An application component can use MLS as a group key agreement protocol by
+exporting symmetric keys.  Such keys can be exported (i.e. derived from MLS key
+material) in two phases per epoch: Either at the start of the epoch, or during
+the epoch. Derivation at the start of the epoch has the added advantage that the
+source key material is deleted after use, allowing the derived key material to
+be deleted later even during the same MLS epoch to achieve forward secrecy. The
+following protocol secrets can be used to derive key from for use by application
+components:
 
-- epoch_secret at the beginning of an epoch
-- extension_secret during an epoch
+- `exporter_secret` at the beginning of an epoch
+- `application_export_secret` during an epoch
 
-The extension_secret is an additional secret derived from the epoch_secret at
-the beginning of the epoch in the same way as the other secrets listed in Table
-4 of {{!RFC9420}} using the label "extension".
+The `application_export_secret` is an additional secret derived from the
+`epoch_secret` at the beginning of the epoch in the same way as the other
+secrets listed in Table 4 of {{!RFC9420}} using the label "application_export".
 
-Any derivation performed by an extension either from the epoch_secret or the
-extension_secret has to use the following function:
+Any derivation performed by an application component either from the
+`exporter_secret` or the `application_export_secret` has to use the following
+function:
 
 ~~~ tls
-DeriveExtensionSecret(Secret, Label) =
-  ExpandWithLabel(Secret, "ExtensionExport " + ExtensionType + " " + Label)
+DeriveApplicationSecret(Secret, Label) =
+  ExpandWithLabel(Secret, "ApplicationExport " +
+                  ComponentID + " " + Label)
 ~~~
 
-Where ExpandWithLabel is defined in Section 8 of {{!RFC9420}} and where ExtensionType
-MUST be set to the ExtensionType of the implemented extension.
+Where ExpandWithLabel is defined in {{Section 8 of RFC9420}} and where
+ComponentID MUST be set to the ComponentID of the component performing the
+export.
 
-### Pre-Shared Keys (PSKs)
+> TODO: This section seems over-complicated to me.  Why is it not sufficient to
+> just use the `exporter_secret`?  Or the `MLS-Exporter` mechanism with a
+> label structured to include the ComponentID?
+
+
+## Pre-Shared Keys (PSKs)
 
 PSKs represent key material that is injected into the MLS key schedule when
-creating or processing a commit as defined in Section 8.4 of {{!RFC9420}}. Its
+creating or processing a commit as defined in {{Section 8.4 of !RFC9420}}. Its
 injection into the key schedule means that all group members have to agree on
 the value of the PSK.
 
@@ -402,140 +370,256 @@ While PSKs are typically cryptographic keys which due to their properties add to
 the overall security of the group, the PSK mechanism can also be used to ensure
 that all members of a group agree on arbitrary pieces of data represented as
 octet strings (without the necessity of sending the data itself over the wire).
-For example, an extension can use the PSK mechanism to enforce that all group
+For example, a component can use the PSK mechanism to enforce that all group
 members have access to and agree on a password or a shared file.
 
 This is achieved by creating a new epoch via a PSK proposal. Transitioning to
 the new epoch requires using the information agreed upon.
 
 To facilitate using PSKs in a safe way, this document defines a new PSKType for
-extensions. This provides domain separation between pre-shared keys used by the
-core MLS protocol and applications, and between those used by different extensions.
+application components. This provides domain separation between pre-shared keys
+used by the core MLS protocol and applications, and between those used by
+different components.
 
-~~~tls
+~~~ tls-presentation
 enum {
-  reserved(0),
-  external(1),
-  resumption(2),
-  extensions(3),
+  // ...
+  application(3),
   (255)
 } PSKType;
 
 struct {
   PSKType psktype;
   select (PreSharedKeyID.psktype) {
-    case external:
-      opaque psk_id<V>;
-
-    case resumption:
-      ResumptionPSKUsage usage;
-      opaque psk_group_id<V>;
-      uint64 psk_epoch;
-
-    case extensions:
-      ExtensionType extension_type;
+    // ...
+    case application:
+      ComponentID component_id;
       opaque psk_id<V>;
   };
   opaque psk_nonce<V>;
 } PreSharedKeyID;
 ~~~
 
-### Extension Designer Tools
+> TODO: It seems like you could also do this by structuring the `external`
+> PSKType as (component_id, psk_id).  I guess this approach separates this API
+> from other external PSKs.
 
-The safe extension API allows extension designers to sign and encrypt payloads
-without the need to register their own IANA labels. Following the same pattern,
-this document also provides ways for extension designers to define their own
-wire formats, proposals, credentials, and for structured data in the
-Additional Authenticated Data.
 
-#### Core Struct Extensions
+## Attaching Application Data to MLS Messages
 
-Each extension of the GroupContext, GroupInfo, KeyPackage, and/or LeafNode
-structs is required to define the format of its data. These types of
-extensions SHOULD NOT use the `ExtensionContent` struct since the `extension_type` is already in the parent data structure.
+The MLS GroupContext, LeafNode, KeyPackage, and GroupInfo objects each have an
+`extensions` field that can carry additional data not defined by the MLS
+specification.  The `app_data_dictionary` extension provides a generic container
+that applications can use to attach application data to these messages.  Each
+usage of the extension serves a slightly different purpose:
 
-#### Wire Formats
+* GroupContext: Confirms that all members of the group agree on the application
+  data, and automatically distributes it to new joiners.
 
-Extensions can define their own MLS messages by using the mls_extension_message
-MLS Wire Format. The mls_extension_message Wire Format is IANA registered
-specifically for this purpose and extends the select statement in the MLSMessage
-struct as follows:
+* KeyPackage and LeafNode: Associates the application data to a particular
+  client, and advertises it to the other members of the group.
 
-~~~tls
-case mls_extension_message:
-    ExtensionContent extension_content;
+* GroupInfo: Distributes the application data confidentially to the new joiners
+  for whom the GroupInfo is encrypted (as a Welcome message).
+
+The content of the `app_data_dictionary` extension is a serialized
+AppDataDictionary object:
+
+~~~ tls-presentation
+struct {
+    ComponentID component_id;
+    opaque data<V>;
+} ComponentData;
+
+struct {
+    ComponentData component_data<V>;
+} AppDataDictionary;
 ~~~
 
-The extension_type in `extension_content` MUST be set to the type of the
-extension in question.
-Processing of self-defined wire formats has to be defined by the extension.
+The entries in the `component_data` MUST be sorted by `component_id`, and there
+MUST be at most one entry for each `component_id`.
 
-#### Proposals
+An `app_data_dictionary` extension in a LeafNode, KeyPackage, or GroupInfo can
+be set when the object is created.  An `app_data_dictionary` extension in the
+GroupContext needs to be managed using the tools available to update GroupContext extensions. The creator of the group can set extensions unilaterally. Thereafter, the AppDataUpdate proposal described in the next section is used to update the `app_data_dictionary` extension.
 
-Similar to wire formats, extensions can define their own proposals by using one
-of three dedicated extension proposal types: extension_proposal,
-extension_path_proposal and extension_external_propsal. Each type contains the
-same ExtensionContent struct, but is validated differently: extension_proposal
-requires no UpdatePath and can not be sent by an external sender
-extension_path_proposal requires an UpdatePath and can not be sent by an external
-sender extensions_external_proposal requires no UpdatePath and can be sent by an
-external sender.
+## Updating Application Data in the GroupContext {#appdataupdate}
 
-Each of the three proposal types is IANA registered and extends the select
-statement in the Proposal struct as follows:
+Updating the `app_data_dictionary` with a GroupContextExtensions proposal is
+cumbersome.  The application data needs to be transmitted in its entirety,
+along with any other extensions, whether or not they are being changed.  And a
+GroupContextExtensions proposal always requires an UpdatePath, which updating
+application state never should.
 
-~~~tls
-case extension_proposal:
-    ExtensionContent extension_content;
-case extension_path_proposal:
-    ExtensionContent extension_content;
-case extension_external_proposal:
-    ExtensionContent extension_content;
+The AppDataUpdate proposal allows the `app_data_dictionary` extension to
+be updated without these costs.  Instead of sending the whole value of the
+extension, it sends only an update, which is interpreted by the application to
+provide the new content for the `app_data_dictionary` extension.  No other
+extensions are sent or updated, and no UpdatePath is required.
+
+~~~
+enum {
+    invalid(0),
+    update(1),
+    remove(2),
+    (255)
+} AppDataUpdateOperation;
+
+struct {
+    ComponentID component_id;
+    AppDataUpdateOperation op;
+
+    select (AppDataUpdate.op) {
+        case update: opaque update<V>;
+        case remove: struct{};
+    };
+} AppDataUpdate;
 ~~~
 
-The extension_type MUST be set to the type of the extension in question.
+An AppDataUpdate proposal is invalid if its `component_id` references a
+component that is not known to the application, or if it specifies the removal
+of state for a `component_id` that has no state present.  A proposal list is
+invalid if it includes multiple AppDataUpdate proposals that `remove`
+state for the same `component_id`, or proposals that both `update` and `remove`
+state for the same `component_id`.  In other words, for a given `component_id`,
+a proposal list is valid only if it contains (a) a single `remove` operation or
+(b) one or more `update` operation.
 
-Processing and validation of self-defined proposals has to be defined by the
-extension. However, validation rules can lead to a previously valid commit to
-become invalid, not the other way around. This is with the exception of proposal
-validation for external commits, where self-defined proposals can be declared
-valid for use in external commits. More concretely, if an external commit is
-invalid, only because the self-defined proposal is part of it (the last rule in
-external commit proposal validation in Section 12.2 of {{!RFC9420}}), then the
-self-defined validation rules may rule that the commit is instead valid.
+AppDataUpdate proposals are processed after any default proposals (i.e., those
+defined in {{RFC9420}}), and any AppEphemeral proposals (defined in
+{{app-ephemeral}}).
 
-#### Credentials
+When an MLS group contains the AppDataUpdate proposal type in the
+`proposal_types` list in the group's `required_capabilities` extension, a
+GroupContextExtensions proposal MUST NOT add, remove, or modify the
+`app_data_dictionary` GroupContext extension. In other words, when every member of
+the group supports the AppDataUpdate proposal, a GroupContextExtensions proposal
+could be sent to update some other extension(s), but the `app_data_dictionary`
+GroupContext extension, if it exists, is left as it was.
 
-Extension designers can also define their own credential types via the IANA
-registered extension_credential credential type. The extension_credential
-extends the select statement in the Credential struct as follows:
+A commit can contain a GroupContextExtensions proposal which modifies
+GroupContext extensions other than `app_data_dictionary`, and can be followed by
+zero or more AppDataUpdate proposals.  This allows modifications to both the
+`app_data_dictionary` extension (via AppDataUpdate) and other extensions (via
+GroupContextExtensions) in the same Commit.
 
-~~~tls
-case extension_credential:
-    ExtensionContent extension_content;
+A client applies AppDataUpdate proposals by component ID.  For each
+`component_id` field that appears in an AppDataUpdate proposal in the
+Commit, the client assembles a list of AppDataUpdate proposals with that
+`component_id`, in the order in which they appear in the Commit, and processes
+them in the following way:
+
+* If the list comprises a single proposal with the `op` field set to `remove`:
+
+    * If there is an entry in the `component_states` vector in the
+      `application_state` extension with the specified `component_id`, remove
+      it.
+
+    * Otherwise, the proposal is invalid.
+
+* If the list comprises one or more proposals, all with `op` field set to
+  `update`:
+
+    * Provide the application logic registered to the `component_id` value with
+      the content of the `update` field from each proposal, in the order
+      specified.
+
+    * The application logic returns either an opaque value `new_data` that will be
+      stored as the new application data for this component, or else an
+      indication that it considers this update invalid.
+
+    * If the application logic considers the update invalid, the MLS client MUST
+      consider the proposal list invalid.
+
+    * If no `app_data_dictionary` extension is present in the GroupContext, add one
+      to the end of the `extensions` list in the GroupContext.
+
+    * If there is an entry in the `component_data` vector in the
+      `app_data_dictionary` extension with the specified `component_id`, then set
+      its `data` field to the specified `new_data`.
+
+    * Otherwise, insert a new entry in the `component_states` vector with the
+      specified `component_id` and the `data` field set to the `new_data`
+      value.  The new entry is inserted at the proper point to keep the
+      `component_states` vector sorted by `component_id`.
+
+* Otherwise, the proposal list is invalid.
+
+> NOTE: An alternative design here would be to have the `update` operation
+> simply set the new value for the `app_data_dictionary` GCE, instead of sending a
+> diff.  This would be simpler in that the MLS stack wouldn't have to ask the
+> application for the new state value, and would discourage applications from
+> storing large state in the GroupContext directly (which bloats Welcome
+> messages).  It would effectively require the state in the GroupContext to be a
+> hash of the real state, to avoid large AppDataUpdate proposals.  This
+> pushes some complexity onto the application, since the application has to
+> define a hashing algorithm, and define its own scheme for initializing new
+> joiners.
+
+AppDataUpdate proposals do not require an UpdatePath.
+An AppDataUpdate proposal can be sent by an external sender. Likewise,
+AppDataUpdate proposals can be included in an external commit. Applications
+can make more restrictive validity rules for the update of their components,
+such that some components would not be valid at the application when sent in
+an external commit or via an external proposer.
+
+
+## Attaching Application Data to a Commit {#app-ephemeral}
+
+The AppEphemeral proposal type allows an application component to associate
+application data to a Commit, so that the member processing the Commit knows
+that all other group members will be processing the same data.  AppEphemeral
+proposals are ephemeral in the sense that they do not change any persistent
+state related to MLS, aside from their appearance in the transcript hash.
+
+The content of an AppEphemeral proposal is the same as an `app_data_dictionary`
+extension.  The proposal type is set in {{iana-considerations}}.
+
+~~~ tls-presentation
+struct {
+    ComponentID component_id;
+    opaque data<V>;
+} AppEphemeral;
 ~~~
 
-The extension_type in the extension_content must be set to that of the extension
-in question  with the extension_data containing all other relevant data. Note
-that any credential defined in this way has to meet the requirements detailed in
-Section 5.3 of the MLS specification.
+An AppEphemeral proposal is invalid if it contains a `component_id` that is
+unknown to the application, or if the `app_data_dictionary` field contains any
+`ComponentData` entry whose `data` field is considered invalid by the
+application logic registered to the indicated `component_id`.
 
-#### Additional Authenticated Data (AAD) {#safe-aad}
+AppEphemeral proposals MUST be processed after any default proposals (i.e.,
+those defined in {{RFC9420}}), but before any AppDataUpdate proposals.
+
+A client applies an AppEphemeral proposal by providing the contents of the
+`app_data_dictionary` field to the component identified by the `component_id`.  If
+a Commit references more than one AppEphemeral proposal for the same
+`component_id` value, then they MUST be processed in the order in which they are
+specified in the Commit.
+
+AppEphemeral proposals do not require an UpdatePath.
+An AppEphemeral proposal can be sent by an external sender. Likewise,
+AppEphemeral proposals can be included in an external commit. Applications
+can make more restrictive validity rules for ephemeral updates of their
+components, such that some components would not be valid at the application when
+sent in an external commit or via an external proposer.
+
+
+## Safe Additional Authenticated Data (AAD) {#safe-aad}
 
 The `PrivateContentAAD` struct in MLS can contain arbitrary additional
-application-specific AAD in its `authenticated_data` field. This framework
+application-specific AAD in its `authenticated_data` field. This API
 defines a framing used to allow multiple extensions to add AAD safely
 without conflicts or ambiguity.
 
 When any AAD safe extension is included in the `authenticated_data` field,
 the "safe" AAD items MUST come before any non-safe data in the
 `authenticated_data` field. Safe AAD items are framed using the `SafeAAD`
-struct and are sorted in increasing numerical order of the `ExtensionType`
-as described below:
+struct and are sorted in increasing numerical order of the `component_id`.
+The struct is described below:
 
-~~~ tls
+~~~ tls-presentation
 struct {
-  ExtensionType extension_type;
+  ComponentID component_id;
   opaque aad_item_data<V>;
 } SafeAADItem;
 
@@ -544,103 +628,96 @@ struct {
 } SafeAAD;
 ~~~
 
-If the `SafeAAD` is present or not is determined by the presence of the
-`extension_aad` GroupContext extension in the `required_capabilities` of the
-group. If `extension_aad` is present in `required_capabilities` but no
-"safe" AAD items are present, the `aad_items` is a zero-length vector.
-
-Each extension which include a `SafeAADItem` needs to advertise its
-`ExtensionType` in its LeafNode `capabilities.extensions`. Extensions MAY
-require an `ExtensionType` to be included in `required_capabilities`, but
-members which encounter a `SafeAADItem` they do not recognize can safely
-ignore it.
+If the `SafeAAD` is present or not in the `authenticated_data` is determined by
+the presence of the `safe_aad` component in the `app_data_dictionary` extension
+in the GroupContext (see {{negotiation}}). If `safe_aad` is present, but none
+of the "safe" AAD components have data to send in a particular message, the
+`aad_items` is a zero-length vector.
 
 
-### Extension state: anchoring, storage and agreement
+# Negotiating Extensions and Components {#negotiation}
 
-The safe extension framework can help an MLS extension ensure that all group
-members agree on a piece of extension-specific state by using the
-`ExtensionState` GroupContext extension. The ownership of an `ExtensionState`
-extension in the context of the safe extension framework is determined by the
-`extension_type` field. The extension with a matching `extension_type` is called
-the owning extension.
+MLS defines a `Capabilities` struct for LeafNodes (in turn used in
+KeyPackages), which describes which extensions are supported by the
+associated node.
+However, that struct (defined in {{Section 7.2 of !RFC9420}}) only has
+fields for a subset of the extensions possible in MLS, as reproduced below.
 
-~~~tls
-enum {
-  reserved(0),
-  read(1),
-  none(2),
- (255)
-} Permissions;
-
-enum {
-  reserved(0),
-  hash(1),
-  data(2),
-} HashOrData;
-
+~~~ tls-presentation
 struct {
-  HashOrData hash_or_data;
-  select(hash_or_data) {
-    case hash:
-      HashReference state_hash;
-    case data:
-      opaque state<V>;
-  }
-} ExtensionPayload;
-
-struct {
-  extensionType extension_type;
-  Permissions read;
-  ExtensionPayload payload;
-} ExtensionState;
+    ProtocolVersion versions<V>;
+    CipherSuite cipher_suites<V>;
+    ExtensionType extensions<V>;
+    ProposalType proposals<V>;
+    CredentialType credentials<V>;
+} Capabilities;
 ~~~
 
-The `ExtensionState` GroupContext extension contains data either directly (if
-`hash_or_data = data`) or inditectly via a hash (if `hash_or_data = hash`).
+> The "MLS Extensions Types" registry represents extensibility of four
+  core structs (`GroupContext`, `GroupInfo`, `KeyPackage`, and `LeafNode`)
+  that have far reaching effects on the use of the protocol. The majority of
+  MLS extensions in {{!RFC9420}} extend one or more of these core structs.
 
-The owning extension can read and write the state stored in an `ExtensionState`
-extension using an extension-defined proposal (see {{proposals}}). The semantics
-of the proposal determines how the state is changed.
+Likewise, the `required_capabilities` GroupContext extension (defined
+in {{Section 11.1 of !RFC9420}} and reproduced below) contains all
+mandatory to support non-default extensions in its `extension_types` vector.
+Its `proposal_types` vector contains any mandatory to support Proposals.
+Its `credential_types` vector contains any mandatory credential types.
 
-The `read` variable determines the permissions that other MLS extensions have
-w.r.t. the data stored within. `read` allows other MLS extensions to read that
-data via their own proposals, while `none` marks the data as private to the
-owning MLS extension.
+~~~
+struct {
+   ExtensionType extension_types<V>;
+   ProposalType proposal_types<V>;
+   CredentialType credential_types<V>;
+} RequiredCapabilities;
+~~~
 
-Other extensions may never write to the `ExtensionState` of the owning MLS
-extension.
+Due to an oversight in {{!RFC9420}}, the Capabilities struct does not include
+MLS Wire Formats. Instead, this document defines two extensions: `supported_wire_formats` (which can appear in LeafNodes), and
+`required_wire_formats` (which can appear in the GroupContext).
 
-#### Direct vs. hash-based storage
+~~~ tls-presentation
+struct {
+   WireFormat wire_formats<V>;
+} WireFormats
 
-Storing the data directly in the `ExtensionState` means the data becomes part of
-the group state. Depending on the application design, this can be advantageous,
-because it is distributed via Welcome messages. However, it could also mean that
-the data is visible to the delivery service. Additionally, if the application
-makes use of GroupContextExtension proposals, it may be necessary to send all of
-the data with each such extension.
+WireFormats supported_wire_formats;
+WireFormats requires_wire_formats;
+~~~
 
-Including the data by hash only allows group members to agree on the data
-indirectly, relying on the collision resistance of the associated hash function.
-The data itself, however, may have to be transmitted out-of-band to new joiners.
+This document also defines new components of the `app_data_dictionary`
+extension for supported and required Safe AAD, media types, and components.
 
-#### GroupContextExtensions
+The `safe_aad` component contains a list of components IDs. When present (in an
+`app_data_dictionary` extension) in a LeafNode, the semantic is the list of
+supported components that use Safe AAD. When present (in an
+`app_data_dictionary` extension) in the GroupContext, the semantic is the list
+of required Safe AAD components (those that must be understood by the entire
+group). If the `safe_aad` component is present, even with an empty list, (in the
+`app_data_dictionary` extension) in the GroupContext, then the
+`authenticated_data` field always starts with the SafeAAD struct defined in
+{{safe-aad}}.
 
-MLS allows applications to modify GroupContext extensions via the
-GroupContextExtension proposal. However, control via that proposal involves
-including all GroupContext extensions in each such proposal. This makes data
-management more costly than via extension-specific proposals, which can, for
-example, include only the data to be changed for a given GroupContext extension,
-or define semantics that allow modification based on local data only.
+~~~ tls-presentation
+struct {
+    ComponentID component_ids<V>;
+} ComponentsList;
 
+ComponentsList safe_aad;
+~~~
 
-## Extension Design Guidance
+The list of required and supported components follows the same model with the
+new component `app_components`. When present in a LeafNode, the semantic is the
+list of supported components. When present in the GroupContext, the semantic is
+the list of required components.
 
-While extensions can modify the protocol flow of MLS and the associated
-properties in arbitrary ways, the base MLS protocol already enables a number of
-functionalities that extensions can use without modifying MLS itself. Extension
-authors should consider using these built-in mechanisms before employing more
-intrusive changes to the protocol.
+~~~ tls-presentation
+ComponentsList app_components;
+~~~
+
+Finally, the supported and required media types (formerly called MIME types)
+is communicated in the `content_media_types` component (see
+{{content-advertisement}}).
 
 
 # Extensions
@@ -723,13 +800,11 @@ that group.
 The goal is to provide a one-shot messaging mechanism that provides
 confidentiality and authentication.
 
-Targeted Messages makes use the Safe Extension API as defined in {{safe-extension-api}}.
-reuse mechanisms from {{mls-protocol}}, in particular {{hpke}}.
+reuse mechanisms from {{!RFC9420}}, in particular {{!RFC9180}}.
 
 ### Format
 
-This extension uses the `mls_extension_message` WireFormat as defined in Section
-{{wire-formats}}, where the content is a `TargetedMessage`.
+This extension uses the `mls_extension_message` WireFormat, where the content is a `TargetedMessage`.
 
 ~~~ tls
 struct {
@@ -793,7 +868,7 @@ Targeted messages uses HPKE to encrypt the message content between two leaves.
 #### Sender data encryption
 
 In addition, `TargetedMessageSenderAuthData` is encrypted in a similar way to
-`MLSSenderData` as described in section 6.3.2 in {{mls-protocol}}. The
+`MLSSenderData` as described in {{Section 6.3.2 of !RFC9420}}. The
 `TargetedMessageSenderAuthData.sender_leaf_index` field is the leaf index of the
 sender. The `TargetedMessageSenderAuthData.authentication_scheme` field is the
 authentication scheme used to authenticate the sender. The
@@ -850,9 +925,9 @@ targeted_message_psk
   = DeriveExtensionSecret(extension_secret, "targeted message psk")
 ~~~
 
-The functions `SealAuth` and `OpenAuth` defined in {{hpke}} are used as
+The functions `SealAuth` and `OpenAuth` defined in {{!RFC9180}} are used as
 described in {{safe-hpke}} with an empty context. Other functions are defined in
-{{mls-protocol}}.
+{{!RFC9420}}.
 
 #### Authentication with HPKE
 
@@ -951,7 +1026,7 @@ implementations MUST choose `TargetedMessageAuthScheme.SignatureHPKEPsk`.
 If the group’s ciphersuite does support HPKE `mode_auth_psk`, implementations
 CAN choose `TargetedMessageAuthScheme.HPKEAuthPsk` if better efficiency and/or
 repudiability is desired. Implementations SHOULD consult
-{{hpke-security-considerations}} beforehand.
+{{Section 9.1.1 of !RFC9180}} beforehand.
 
 ## Content Advertisement
 
@@ -1095,7 +1170,7 @@ designed to be included in External Commits.
 ### Extension Description
 
 This document specifies a new MLS Proposal type called `SelfRemove`. Its syntax
-is described using the TLS Presentation Language [@!RFC8446] below (its content
+is described using the TLS Presentation Language {{!RFC8446}} below (its content
 is an empty struct). It is allowed in External Commits and requires an UpdatePath.
 SelfRemove proposals are only allowed in a Commit by reference. SelfRemove
 cannot be sent as an external proposal.
@@ -1168,7 +1243,7 @@ Type: KeyPackage extension
 
 ### Description
 
-Section 10 of {{!RFC9420}} details that clients are required to pre-publish
+{{Section 10 of !RFC9420}} details that clients are required to pre-publish
 KeyPackages s.t. other clients can add them to groups asynchronously. It also
 states that they should not be re-used:
 
@@ -1176,7 +1251,7 @@ states that they should not be re-used:
 > in the case of a "last resort" KeyPackage (see Section 16.8). Clients MAY
 > generate and publish multiple KeyPackages to support multiple cipher suites.
 
-Section 16.8 of {{!RFC9420}} then introduces the notion of last-resort
+{{Section 16.8 of !RFC9420}} then introduces the notion of last-resort
 KeyPackages as follows:
 
 > An application MAY allow for reuse of a "last resort" KeyPackage in order to
@@ -1458,3 +1533,144 @@ completely validate a GroupInfo object that it receives. An insider
 can prevent an External Join by providing either an invalid GroupInfo object
 or an invalid SelfRemove Proposal. The security properties of external joins
 does not change with the addition of this proposal type.
+
+--- back
+
+# Change Log
+
+RFC EDITOR PLEASE DELETE THIS SECTION.
+
+draft-06
+
+- Integrate notion of Application API from draft-barnes-mls-appsync
+
+draft-05
+
+- Include definition of ExtensionState extension
+- Add safe use of AAD to Safe Extensions framework
+- Clarify how capabilities negotiation works in Safe Extensions framework
+
+draft-04
+
+ - No changes (prevent expiration)
+
+draft-03
+
+- Add Last Resort KeyPackage extension
+- Add Safe Extensions framework
+- Add SelfRemove Proposal
+
+draft-02
+
+- No changes (prevent expiration)
+
+draft-01
+
+- Add Content Advertisement extensions
+
+draft-00
+
+- Initial adoption of draft-robert-mls-protocol-00 as a WG item.
+- Add Targeted Messages extension (\*)
+
+# Old Safe Extensions Text
+
+The MLS specification is extensible in a variety of ways (see {{Section 13 of
+!RFC9420}}) and describes the negotiation and other handling of extensions and
+their data within the protocol. However, it does not provide guidance on how
+extensions can or should safely interact with the base MLS protocol. The goal of
+this section is to simplify the task of developing MLS extensions.
+
+
+## Security
+
+An extension is called safe if it does not modify the base MLS protocol or other
+MLS extensions beyond using components of the Safe Extension API. The Safe
+Extension API provides the following security guarantee: If an application uses
+MLS and only safe MLS extensions, then the security guarantees of the base MLS
+protocol and the security guarantees of safe extensions, each analyzed in
+isolation, still hold for the composed extended MLS protocol. In other words,
+the Safe Extension API protects applications from careless extension
+developers. As long as all used extensions are safe, it is not possible that a
+combination of extensions  (the developers of which did not know about each
+other) impedes the security of the base MLS protocol or any used extension. No
+further analysis of the combination is necessary. This also means that any
+security vulnerabilities introduced by one extension do not spread to other
+extensions or the base MLS.
+
+
+## Extension state: anchoring, storage and agreement
+
+The safe extension framework can help an MLS extension ensure that all group
+members agree on a piece of extension-specific state by using the
+`ExtensionState` GroupContext extension. The ownership of an `ExtensionState`
+extension in the context of the safe extension framework is determined by the
+`extension_type` field. The extension with a matching `extension_type` is called
+the owning extension.
+
+~~~tls
+enum {
+  reserved(0),
+  read(1),
+  none(2),
+ (255)
+} Permissions;
+
+enum {
+  reserved(0),
+  hash(1),
+  data(2),
+} HashOrData;
+
+struct {
+  HashOrData hash_or_data;
+  select(hash_or_data) {
+    case hash:
+      HashReference state_hash;
+    case data:
+      opaque state<V>;
+  }
+} ExtensionPayload;
+
+struct {
+  extensionType extension_type;
+  Permissions read;
+  ExtensionPayload payload;
+} ExtensionState;
+~~~
+
+The `ExtensionState` GroupContext extension contains data either directly (if
+`hash_or_data = data`) or inditectly via a hash (if `hash_or_data = hash`).
+
+The owning extension can read and write the state stored in an `ExtensionState`
+extension using an extension-defined proposal (see ). The semantics
+of the proposal determines how the state is changed.
+
+The `read` variable determines the permissions that other MLS extensions have
+w.r.t. the data stored within. `read` allows other MLS extensions to read that
+data via their own proposals, while `none` marks the data as private to the
+owning MLS extension.
+
+Other extensions may never write to the `ExtensionState` of the owning MLS
+extension.
+
+### Direct vs. hash-based storage
+
+Storing the data directly in the `ExtensionState` means the data becomes part of
+the group state. Depending on the application design, this can be advantageous,
+because it is distributed via Welcome messages. However, it could also mean that
+the data is visible to the delivery service. Additionally, if the application
+makes use of GroupContextExtension proposals, it may be necessary to send all of
+the data with each such extension.
+
+Including the data by hash only allows group members to agree on the data
+indirectly, relying on the collision resistance of the associated hash function.
+The data itself, however, may have to be transmitted out-of-band to new joiners.
+
+## Extension Design Guidance
+
+While extensions can modify the protocol flow of MLS and the associated
+properties in arbitrary ways, the base MLS protocol already enables a number of
+functionalities that extensions can use without modifying MLS itself. Extension
+authors should consider using these built-in mechanisms before employing more
+intrusive changes to the protocol.
