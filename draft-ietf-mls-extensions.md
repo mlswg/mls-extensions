@@ -1296,7 +1296,7 @@ that all of the following are true:
 A client that receives a credential of type `weak-multi` in a LeafNode MUST verify
 that all of the following are true:
 
-* All members of the group support credential type `multi`.
+* All members of the group support credential type `weak-multi`.
 
 * Each member of the group supports at least one binding in the
   multi-credential.  (Different members may support different subsets.)
