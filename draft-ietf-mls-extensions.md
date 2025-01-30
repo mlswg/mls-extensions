@@ -1558,6 +1558,7 @@ The restrictions noted in the "Where" column are to be enforced by the
 application.  MLS implementations MUST NOT impose restrictions on where
 component IDs are used in which parts of MLS, unless specifically directed to by
 the application.
+
 Initial Contents:
 
 | Value         | Name                     | Where | R | Ref     |
