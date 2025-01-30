@@ -1537,6 +1537,7 @@ policy {{!RFC8126}} using the MLS Designated Experts. Assignments in the range
 0x8000 0000 to 0xFFFF FFFF are for private use.
 
 Template:
+
 - Value: The numeric value of the component ID
 - Name: The name of the component
 - Where: The objects(s) in which the component may appear,
