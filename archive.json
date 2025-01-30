@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-01-28T00:39:32.467635+00:00",
+  "timestamp": "2025-01-30T00:38:40.665324+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -264,7 +264,7 @@
       "labels": [],
       "body": "It is unclear in Capabilities in LeafNodes and in the GroupContext where non-GC extension extension IDs are advertised.",
       "createdAt": "2024-07-22T16:23:49Z",
-      "updatedAt": "2025-01-23T18:16:33Z",
+      "updatedAt": "2025-01-29T04:30:15Z",
       "closedAt": null,
       "comments": [
         {
@@ -280,6 +280,20 @@
           "body": "Will be addressed as -appsync to -mls-extension merge.",
           "createdAt": "2025-01-23T18:16:32Z",
           "updatedAt": "2025-01-23T18:16:32Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "@bifurcation @rohanmahy was this addressed by #43?",
+          "createdAt": "2025-01-28T18:44:09Z",
+          "updatedAt": "2025-01-28T18:44:09Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> [@bifurcation](https://github.com/bifurcation) [@rohanmahy](https://github.com/rohanmahy) was this addressed by [#43](https://github.com/mlswg/mls-extensions/pull/43)?\n\nCovered in part in #43 and the rest in #45 ",
+          "createdAt": "2025-01-29T04:30:14Z",
+          "updatedAt": "2025-01-29T04:30:14Z"
         }
       ]
     },
@@ -290,14 +304,14 @@
       "url": "https://github.com/mlswg/mls-extensions/issues/33",
       "state": "OPEN",
       "author": "bifurcation",
-      "authorAssociation": "NONE",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [
         "bifurcation"
       ],
       "labels": [],
       "body": "A notable omission from the Capabilities / RequiredCapabilities objects in RFC 9420 is the ability to negotiate support for new wire formats.  This document should address that deficiency.  What we would need is a `supported_wire_formats` extension, where:\r\n\r\n* The content of the extension is `WireFormat wire_formats<V>;`\r\n* The extension can appear in LeafNode and GroupContextExtensions\r\n* The semantic in LeafNode is \"here are the new WireFormats I support\"\r\n* The semantic in GroupContextExtensions is \"here are the WireFormats that are required for this group\"",
       "createdAt": "2024-10-15T00:55:26Z",
-      "updatedAt": "2025-01-23T18:18:48Z",
+      "updatedAt": "2025-01-29T04:31:40Z",
       "closedAt": null,
       "comments": [
         {
@@ -306,6 +320,13 @@
           "body": "Not covered by the current appsync, but this should just be a short extension/section in the document.\n\nWould also be great if we could add this to content type.",
           "createdAt": "2025-01-23T18:18:46Z",
           "updatedAt": "2025-01-23T18:18:46Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "This was added in #43 ",
+          "createdAt": "2025-01-29T04:31:39Z",
+          "updatedAt": "2025-01-29T04:31:39Z"
         }
       ]
     },
@@ -316,12 +337,12 @@
       "url": "https://github.com/mlswg/mls-extensions/issues/34",
       "state": "OPEN",
       "author": "bifurcation",
-      "authorAssociation": "NONE",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "The Safe Extensions section currently has a bunch of unnecessary baggage, which we should rearrange and/or delete.\r\n\r\nThe core of what Safe Extensions needs to define is: What does an extension need to do in order to be considered a safe extension?\r\n\r\nFrom that perspective, the sections on HPKE, signatures, export, and PSKs all make sense, in the sense that an extension is safe if the only HPKE/signature/export/PSKs mechanisms uses are the ones defined here.  That leaves the \"Security\", \"Extension Designer Tools\", and \"Extension Design Guidance\" sections.\r\n\r\n* \"Security\" should just be the introduction to the Safe Extensions section.\r\n* \"Extension Designer Tools\" should be deleted.  The mechanisms here abuse the extension types for labelling things other than extensions, and they don't really provide any value over the base extensibility mechanisms they use.  At best, they provide \"ignorable\" objects of the various types, which is a totally different property than Safe Extensions provides.\r\n* \"Extension Design Guidance\" is not specific to Safe Extensions.  It should be promoted to its own top-level section.",
       "createdAt": "2024-10-15T00:55:54Z",
-      "updatedAt": "2025-01-23T18:19:34Z",
+      "updatedAt": "2025-01-29T04:31:01Z",
       "closedAt": null,
       "comments": [
         {
@@ -337,6 +358,13 @@
           "body": "Will be addressed with refactoring PR.",
           "createdAt": "2025-01-23T18:19:33Z",
           "updatedAt": "2025-01-23T18:19:33Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I believe this is now addressed in #43 ",
+          "createdAt": "2025-01-29T04:31:00Z",
+          "updatedAt": "2025-01-29T04:31:00Z"
         }
       ]
     }
@@ -2139,24 +2167,26 @@
       "id": "PR_kwDOHZoI5M6AGLcL",
       "title": "add additional credential types",
       "url": "https://github.com/mlswg/mls-extensions/pull/38",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "rohanmahy",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "- add multi and weak-multi credential types",
       "createdAt": "2024-10-28T12:48:36Z",
-      "updatedAt": "2025-01-23T20:10:43Z",
+      "updatedAt": "2025-01-28T18:42:29Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
-      "baseRefOid": "348b7fe0cad9321751b969cb5d13aac86deedff5",
+      "baseRefOid": "4f2d0e818d862293c4016753d88df7fc68a93aa2",
       "headRepository": "rohanmahy/mls-extensions",
       "headRefName": "more-credentials",
-      "headRefOid": "7019bb89b049f7779e2af2e7a54701a73c4b11d7",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "0bbc4c39ce96e29846af3cf3a3cb208d695d1ce4",
+      "closedAt": "2025-01-28T18:42:29Z",
+      "mergedAt": "2025-01-28T18:42:29Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "49b739cd05ec748432881270ac83cc3066f09b29"
+      },
       "comments": [
         {
           "author": "seanturner",
@@ -2225,7 +2255,7 @@
             "abbreviatedOid": "7019bb8"
           },
           "author": "bifurcation",
-          "authorAssociation": "NONE",
+          "authorAssociation": "COLLABORATOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2025-01-23T18:42:40Z",
@@ -2258,6 +2288,32 @@
               "updatedAt": "2025-01-23T20:10:43Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6ZuXo6",
+          "commit": {
+            "abbreviatedOid": "0bbc4c3"
+          },
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "This looks good to me.  I believe we have addressed the comments from @Bren2010  in GitHub comments, so we should be clear to merge.",
+          "createdAt": "2025-01-28T18:10:19Z",
+          "updatedAt": "2025-01-28T18:10:19Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6Zun0j",
+          "commit": {
+            "abbreviatedOid": "0bbc4c3"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-01-28T18:42:20Z",
+          "updatedAt": "2025-01-28T18:42:20Z",
+          "comments": []
         }
       ]
     },
@@ -2388,7 +2444,7 @@
             "abbreviatedOid": "15ed209"
           },
           "author": "bifurcation",
-          "authorAssociation": "NONE",
+          "authorAssociation": "COLLABORATOR",
           "state": "APPROVED",
           "body": "",
           "createdAt": "2024-11-05T10:31:01Z",
@@ -2417,7 +2473,7 @@
       "url": "https://github.com/mlswg/mls-extensions/pull/42",
       "state": "CLOSED",
       "author": "bifurcation",
-      "authorAssociation": "NONE",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "As discussed in #34, the additional protocol mechanisms defined in the \"Extension Designer Tools\" section are not necessary for safe extensions.  We can discuss separately whether they should be re-added; my argument would be that they are not necessary, in that they don't really add anything over the extensibility mechanisms.\r\n\r\nFixes #34\r\n\r\n",
@@ -2463,24 +2519,26 @@
       "id": "PR_kwDOHZoI5M6Hksj0",
       "title": "Incorporate Application API from AppSync-01",
       "url": "https://github.com/mlswg/mls-extensions/pull/43",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "rohanmahy",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2025-01-13T17:36:32Z",
-      "updatedAt": "2025-01-27T23:38:29Z",
+      "updatedAt": "2025-01-28T18:08:03Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "b4d9d3224c82a375647a496bf8c1d5365e412eca",
       "headRepository": "rohanmahy/mls-extensions",
       "headRefName": "merge-appsync",
       "headRefOid": "02d7d5637c7c501e86b0d25c3377b11cabcadaf3",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-01-28T18:08:03Z",
+      "mergedAt": "2025-01-28T18:08:03Z",
+      "mergedBy": "bifurcation",
+      "mergeCommit": {
+        "oid": "4f2d0e818d862293c4016753d88df7fc68a93aa2"
+      },
       "comments": [],
       "reviews": [
         {
@@ -2489,7 +2547,7 @@
             "abbreviatedOid": "4c3bca6"
           },
           "author": "bifurcation",
-          "authorAssociation": "NONE",
+          "authorAssociation": "COLLABORATOR",
           "state": "APPROVED",
           "body": "Couple of minor things and notes to handle in follow-up, but overall, this seems like a good step.",
           "createdAt": "2025-01-27T22:16:57Z",
@@ -2542,6 +2600,60 @@
           ]
         }
       ]
+    },
+    {
+      "number": 44,
+      "id": "PR_kwDOHZoI5M6JQNNF",
+      "title": "Create CODEOWNERS with all authors and contributors",
+      "url": "https://github.com/mlswg/mls-extensions/pull/44",
+      "state": "MERGED",
+      "author": "rohanmahy",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-01-28T16:25:18Z",
+      "updatedAt": "2025-01-28T17:07:15Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "b4d9d3224c82a375647a496bf8c1d5365e412eca",
+      "headRepository": "rohanmahy/mls-extensions",
+      "headRefName": "patch-2",
+      "headRefOid": "0f815afa87cdbbd4bb99a84f600ddbbb56355e97",
+      "closedAt": "2025-01-28T17:07:15Z",
+      "mergedAt": "2025-01-28T17:07:15Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "cb62d1d0451c444518d3132b8904cea72af78fab"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 45,
+      "id": "PR_kwDOHZoI5M6JSH8i",
+      "title": "Next part of appsync merge",
+      "url": "https://github.com/mlswg/mls-extensions/pull/45",
+      "state": "OPEN",
+      "author": "rohanmahy",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "includes updates of all \"Extensions\" and the IANA considerations\r\n\r\nFixes #30, #33, #34.\r\n",
+      "createdAt": "2025-01-28T21:13:37Z",
+      "updatedAt": "2025-01-29T16:53:33Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "49b739cd05ec748432881270ac83cc3066f09b29",
+      "headRepository": "rohanmahy/mls-extensions",
+      "headRefName": "merge-part2",
+      "headRefOid": "026d680cb479dfff09bb31719d5314eaa4adad37",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
