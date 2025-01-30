@@ -1554,16 +1554,20 @@ Template:
 - Recommended: Same as in {{Section 17.1 of !RFC9420}}
 - Reference: The document where this component is defined
 
+The restrictions noted in the "Where" column are to be enforced by the
+application.  MLS implementations MUST NOT impose restrictions on where
+component IDs are used in which parts of MLS, unless specifically directed to by
+the application.
 Initial Contents:
 
 | Value         | Name                     | Where | R | Ref     |
 |---------------+--------------------------+-------+---+---------|
 | 0x0000 0000   | RESERVED                 | N/A   | - | RFCXXXX |
-| 0x0001 0000   | app_components           | LN,GC | Y | RFCXXXX |
-| 0x0002 0000   | safe_aad                 | LN,GC | Y | RFCXXXX |
-| 0x0003 0000   | content_media_types      | LN,GC | Y | RFCXXXX |
-| 0x0004 0000   | last_resort_key_package  | KP    | Y | RFCXXXX |
-| 0x0005 0000   | app_ack                  | AE    | Y | RFCXXXX |
+| 0x0000 0001   | app_components           | LN,GC | Y | RFCXXXX |
+| 0x0000 0002   | safe_aad                 | LN,GC | Y | RFCXXXX |
+| 0x0000 0003   | content_media_types      | LN,GC | Y | RFCXXXX |
+| 0x0000 0004   | last_resort_key_package  | KP    | Y | RFCXXXX |
+| 0x0000 0005   | app_ack                  | AE    | Y | RFCXXXX |
 | 0x8000 0000 -
   0xFFFF FFFF   | Reserved for Private Use | N/A   | N | RFCXXXX |
 
