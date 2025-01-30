@@ -716,7 +716,7 @@ ComponentsList app_components;
 ~~~
 
 Finally, the supported and required media types (formerly called MIME types)
-is communicated in the `content_media_types` component (see
+are communicated in the `content_media_types` component (see
 {{content-advertisement}}).
 
 
@@ -724,14 +724,10 @@ is communicated in the `content_media_types` component (see
 
 ## AppAck
 
-Type: Proposal
-
-### Description
-
-An AppAck proposal is used to acknowledge receipt of application messages.
-Though this information implies no change to the group, it is structured as a
-Proposal message so that it is included in the group's transcript by being
-included in Commit messages.
+An AppAck object is used to acknowledge receipt of application messages.
+Though this information implies no change to the group, it is conveyed inside
+an AppEphermeral Proposal with a component ID `app_ack`, so that it is included
+in the group's transcript by being included in Commit messages.
 
 ~~~ tls
 struct {
@@ -745,13 +741,13 @@ struct {
 } AppAck;
 ~~~
 
-An AppAck proposal represents a set of messages received by the sender in the
+An AppAck represents a set of messages received by the sender in the
 current epoch.  Messages are represented by the `sender` and `generation` values
 in the MLSCiphertext for the message.  Each MessageRange represents receipt of a
 span of messages whose `generation` values form a continuous range from
 `first_generation` to `last_generation`, inclusive.
 
-AppAck proposals are sent as a guard against the Delivery Service dropping
+AppAck objects are sent as a guard against the Delivery Service dropping
 application messages.  The sequential nature of the `generation` field provides
 a degree of loss detection, since gaps in the `generation` sequence indicate
 dropped messages.  AppAck completes this story by addressing the scenario where
@@ -760,10 +756,11 @@ generation is never observed.  Obviously, there is a risk that AppAck messages
 could be suppressed as well, but their inclusion in the transcript means that if
 they are suppressed then the group cannot advance at all.
 
-The schedule on which sending AppAck proposals are sent is up to the application,
-and determines which cases of loss/suppression are detected.  For example:
+The schedule on which AppAck objects are sent in AppEphemeral proposals is up to
+the application,and determines which cases of loss/suppression are detected.
+For example:
 
-- The application might have the committer include an AppAck proposal whenever a
+- The application might have the committer include an AppAck whenever a
   Commit is sent, so that other members could know when one of their messages
   did not reach the committer.
 
@@ -774,13 +771,16 @@ and determines which cases of loss/suppression are detected.  For example:
 - The application could simply have clients send AppAck proposals on a timer, so
   that all participants' state would be known.
 
-An application using AppAck proposals to guard against loss/suppression of
+An application using AppAck to guard against loss/suppression of
 application messages also needs to ensure that AppAck messages and the Commits
 that reference them are not dropped.  One way to do this is to always encrypt
 Proposal and Commit messages, to make it more difficult for the Delivery Service
 to recognize which messages contain AppAcks.  The application can also have
 clients enforce an AppAck schedule, reporting loss if an AppAck is not received
 at the expected time.
+
+> Note: External Commits do not typically contain pending proposals (including
+> AppEphemeral proposals).
 
 ## Targeted messages
 
@@ -798,9 +798,8 @@ message that is sent from a member of an existing group to another member of
 that group.
 
 The goal is to provide a one-shot messaging mechanism that provides
-confidentiality and authentication.
-
-reuse mechanisms from {{!RFC9420}}, in particular {{!RFC9180}}.
+confidentiality and authentication, reusing mechanisms from {{!RFC9420}}, in
+particular {{!RFC9180}}.
 
 ### Format
 
@@ -1032,31 +1031,39 @@ repudiability is desired. Implementations SHOULD consult
 
 ### Description
 
-This section describes two extensions to MLS. The first allows MLS clients
-to advertise their support for specific formats inside MLS `application_data`.
-These are expressed using the extensive IANA Media Types registry (formerly
-called MIME Types).  The `accepted_media_types` LeafNode extension lists the
-formats a client supports inside `application_data`. The second, the
-`required_media_types` GroupContext extension specifies which media types
-need to be supported by all members of a particular MLS group.
-These allow clients to confirm that all members of a group can communicate.
-Note that when the membership of a group changes, or when the policy of the
-group changes, it is responsibility of the committer to insure that the membership
-and policies are compatible.
+This section defines a minimal framing format so MLS clients can signal
+which media type is being sent inside the MLS `application_data` object when
+multiple formats are permitted in the same group.
 
-Finally, this document defines a minimal framing format so MLS clients can signal
-which media type is being sent when multiple formats are permitted in the same group.
+It also defines a new `content_media_types` application component which is used to indicate support for specific formats, using the extensive IANA Media Types
+registry (formerly called MIME Types). When the `content_media_types` component
+is present (in the `app_data_dictionary` extension) in a LeafNode, it indicates
+that node's support for a particular (non-empty) list of media types. When the
+`content_media_types` component is present (in the `app_data_dictionary`
+extension) in the GroupContext, it indicates a (non-empty) list of media types
+that need to be supported by all members of that MLS group, *and* that the
+`application_data` will be framed using the application framing format
+described later in {{app-framing}}. This allows clients to confirm that all
+members of a group can communicate.
+
+>Note that when the membership of a group changes, or when the policy of the
+ group changes, it is responsibility of the committer to insure that the
+ membership and policies are compatible.
+
 As clients are upgraded to support new formats they can use these extensions
-to detect when all members support a new or more efficient encoding, or select the
-relevant format or formats to send.
+to detect when all members support a new or more efficient encoding, or select
+the relevant format or formats to send.
 
-Note that the usage of IANA media types in general does not imply the usage of MIME
-Headers {{?RFC2045}} for framing. Vendor-specific media subtypes starting with
-`vnd.` can be registered with IANA without standards action as described in
-{{?RFC6838}}.  Implementations which wish to send multiple formats in a single
-application message, may be interested in the `multipart/alternative` media type
-defined in {{?RFC2046}} or may use or define another type with similar semantics
-(for example using TLS Presentation Language syntax {{!RFC8446}}).
+Vendor-specific media subtypes starting with `vnd.` can be registered with IANA
+without standards action as described in {{?RFC6838}}. Implementations which
+wish to send multiple formats in a single application message, may be interested
+in the `multipart/alternative` media type defined in {{?RFC2046}} or may use or
+define another type with similar semantics (for example using TLS Presentation
+Language syntax {{!RFC8446}}).
+
+>Note that the usage of IANA media types in general does not imply the usage of
+ MIME Headers {{?RFC2045}} for framing.
+
 
 ### Syntax
 
@@ -1084,11 +1091,11 @@ struct {
 } MediaType;
 
 struct {
+    /* must contain at least one item */
     MediaType media_types<V>;
 } MediaTypeList;
 
-MediaTypeList accepted_media_types;
-MediaTypeList required_media_types;
+MediaTypeList content_media_types;
 ~~~
 
 Example IANA media types with optional parameters:
@@ -1107,31 +1114,33 @@ with a `parameter_name` of `charset` and a `parameter_value` of `UTF-8`.
 ### Expected Behavior
 
 An MLS client which implements this section SHOULD include the
-`accepted_media_types` extension in its LeafNodes, listing
-all the media types it can receive. As usual, the
-client also includes `accepted_media_types` in its `capabilities` field in
-its LeafNodes (including LeafNodes inside its KeyPackages).
+`content_media_types` component (in the `app_data_dictionary` extension)
+in its LeafNodes, listing all the media types it can receive. As usual, the
+client also includes `content_media_types` in the `app_components` list (in the
+`app_data_dictionary` extension) and support for the `app_data_dictionary`
+extension in its `capabilities.extensions` field in its LeafNodes (including
+in LeafNodes inside its KeyPackages).
 
 When creating a new MLS group for an application using this specification,
-the group MAY include a `required_media_type` extension in the GroupContext
-Extensions. As usual, the client also includes
-`required_media_types` in its `capabilities` field in its LeafNodes
-(including LeafNodes inside its KeyPackages). When used in a group, the client
-MUST include the `required_media_types` and `accepted_media_types` extensions
-in the list of extensions in RequiredCapabilities.
+the group MAY include a `content_media_types` component (in the
+`app_data_dictionary` extension) in the GroupContext. (The creating
+client also includes its `content_media_types` component in its own
+LeafNode as described in the previous paragraph.)
 
-MLS clients SHOULD NOT add an MLS client to an MLS group with `required_media_types`
-unless the MLS client advertises it can support all of the required MediaTypes.
+MLS clients SHOULD NOT add an MLS client to an MLS group with
+`content_media_types` in its GroupContext unless the MLS client advertises it
+can support all of the required MediaTypes.
 As an exception, a client could be preconfigured to know that certain clients
-support the requried types. Likewise, an MLS client is already forbidden from
-issuing or committing a GroupContextExtensions Proposal which introduces required
-extensions which are not supported by all members in the resulting epoch.
+support the required types. Likewise, an MLS client is already forbidden from
+issuing or committing a GroupContextExtensions Proposal which introduces
+required extensions which are not supported by all members in the resulting
+epoch.
 
-### Framing of application_data
+### Framing of application_data {#app-framing}
 
-When an MLS group contains the `required_media_types` GroupContext extension,
-the `application_data` sent in that group is interpreted as `ApplicationFraming`
-as defined below:
+When an MLS group contains the `content_media_types` component (in the
+`app_data_dictionary` extension) in its GroupContext, the `application_data`
+sent in that group is interpreted as `ApplicationFraming` as defined below:
 
 ~~~ tls
   struct {
@@ -1142,7 +1151,7 @@ as defined below:
 
 The `media_type` MAY be zero length, in which case, the media type of the
 `application_content` is interpreted as the first MediaType specified in
-`required_media_types`.
+the `content_media_types` component in the GroupContext.
 
 ## SelfRemove Proposal
 
@@ -1244,8 +1253,8 @@ Type: KeyPackage extension
 ### Description
 
 {{Section 10 of !RFC9420}} details that clients are required to pre-publish
-KeyPackages s.t. other clients can add them to groups asynchronously. It also
-states that they should not be re-used:
+KeyPackages so that other clients can add them to groups asynchronously. It
+also states that they should not be re-used:
 
 > KeyPackages are intended to be used only once and SHOULD NOT be reused except
 > in the case of a "last resort" KeyPackage (see Section 16.8). Clients MAY
@@ -1258,32 +1267,31 @@ KeyPackages as follows:
 > prevent denial-of-service attacks.
 
 However, {{!RFC9420}} does not specify how to distinguish regular KeyPackages
-from last-resort ones. The last_resort_key_package KeyPackage extension defined
-in this section fills this gap and allows clients to specifically mark
-KeyPackages as KeyPackages of last resort that MAY be used more than once in
-scenarios where all other KeyPackages have already been used.
+from last-resort ones. The last_resort_key_package KeyPackage application
+component defined in this section fills this gap and allows clients to specifically mark KeyPackages as KeyPackages of last resort that MAY be used
+more than once in scenarios where all other KeyPackages have already been used.
 
-The extension allows clients that pre-publish KeyPackages to signal to the
+The component allows clients that pre-publish KeyPackages to signal to the
 Delivery Service which KeyPackage(s) are meant to be used as last resort
 KeyPackages.
 
-An additional benefit of using an extension rather than communicating the
-information out-of-band is that the extension is still present in Add proposals.
+An additional benefit of using a component rather than communicating the
+information out-of-band is that the component is still present in Add proposals.
 Clients processing such Add proposals can authenticate that a KeyPackage is a
 last-resort KeyPackage and MAY make policy decisions based on that information.
 
 ### Format
 
-The purpose of the extension is simply to mark a given KeyPackage, which means
-it carries no additional data.
+The purpose of the application component is simply to mark a given KeyPackage,
+which means it carries no additional data.
 
-As a result, a LastResort Extension contains the ExtensionType with an empty
-`extension_data` field.
+As a result, a LastResort Extension contains the `component_id` with an empty
+`data` field.
 
 ## Multi-Credentials
 
 Multi-credentials address use cases where there might not be a single
-credential that captures all of a client's authenticated attributes.  For
+credential that captures all of a client's authenticated attributes. For
 example, an enterprise messaging client may wish to provide attributes both
 from its messaging service, to prove that its user has a given handle in
 that service, and from its corporate owner, to prove that its user is an
@@ -1291,9 +1299,9 @@ employee of the corporation. Multi-credentials can also be used in migration
 scenarios, where some clients in a group might wish to rely on a newer type
 of credential, but other clients haven't yet been upgraded.
 
-New safe credential types `MultiCredential` and `WeakMultiCredential` are
+New credential types `MultiCredential` and `WeakMultiCredential` are
 defined as shown below. These credential types are indicated with
-ExtensionType values `multi` and `weak-multi` (see {{iana-creds}}).
+the values `multi` and `weak-multi` (see {{iana-creds}}).
 
 ~~~ tls-presentation
 struct {
@@ -1386,179 +1394,105 @@ This document requests the addition of various new values under the heading
 of "Messaging Layer Security".  Each registration is organized under the
 relevant registry Type.
 
+This document also requests the creation of a new MLS applications components
+registry as described in {{iana-components}}.
+
 RFC EDITOR: Please replace XXXX throughout with the RFC number assigned to
 this document
 
 ## MLS Wire Formats
 
-### MLS Extension Message
+### MLS Targeted Message
 
- * Value: 0x0006
- * Name: mls_extension_message
+The `mls_targeted_message` MLS Wire Format is used to send a message
+to a subset of members of an MLS group.
+
+ * Value: 0x0006 (suggested)
+ * Name: mls_targeted_message
  * Recommended: Y
  * Reference: RFC XXXX
 
+
 ## MLS Extension Types
 
-This document updates the MLS Extension Types registry to insert a new
-column ("Safe") between the "Recommended" column and the "Reference"
-column. The value of the "Safe" column for the first (0x0000) and last
-(0xF000-0xFFFF) rows is "-" while the value of all other existing rows is
-"N".
+### app_data_dictionary MLS Extension
 
-- Safe: Whether the extension is a Safe Extension as defined in Section 2 of
- RFC XXXX.  Valid values are:
-    - "Y", indicating the extension is a Safe Extension;
-    - "N", indicating the extension is not a Safe Extension; or
-    - "-", indicating a reserved value which is not a single extension.
+The `app_data_dictionary` MLS Extension Type is used inside KeyPackage,
+LeafNode, GroupContext, or GroupInfo objects. It contains a sorted list of
+application component data objects (at most one per component).
 
-This document also extends the list of allowable values for the "Message(s)"
-column, such that the list may be empty (represented by "-") if the
-extension is a Safe Extension.
+* Value: 0x0006 (suggested)
+* Name: app_data_dictionary
+* Message(s): KP: This extension may appear in KeyPackage objects
+              LN: This extension may appear in LeafNode objects
+              GC: This extension may appear in GroupContext objects
+              GI: This extension may appear in GroupInfo objects
+* Recommended: Y
+* Reference: RFC XXXX
+
+### supported_wire_formats MLS Extension
+
+The `supported_wire_formats` MLS Extension Type is used inside LeafNode
+objects. It contains a list of non-default Wire Formats supported by the
+client node.
+
+* Value: 0x0007 (suggested)
+* Name: supported_wire_formats
+* Message(s): LN: This extension may appear in LeafNode objects
+* Recommended: Y
+* Reference: RFC XXXX
+
+### required_wire_formats MLS Extension
+
+The `required_wire_formats` MLS Extension Type is used inside GroupContext
+objects. It contains a list of non-default Wire Formats that are mandatory for
+all MLS members of the group to support.
+
+* Value: 0x0008 (suggested)
+* Name: required_wire_formats
+* Message(s): GC: This extension may appear in GroupContext objects
+* Recommended: Y
+* Reference: RFC XXXX
 
 ### targeted_messages_capability MLS Extension
 
 The `targeted_messages_capability` MLS Extension Type is used in the
-capabilities field of LeafNodes to indicate the support for the Targeted
-Messages Extension. The extension does not carry any payload.
-
-* Value: 0x0006 (suggested)
-* Name: targeted_messages_capability
-* Message(s): LN: This extension may appear in LeafNode objects
-* Recommended: Y
-* Safe: Y
-* Reference: RFC XXXX
-
-### targeted_messages MLS Extension
-
-The `targeted_messages` MLS Extension Type is used inside GroupContext objects. It
-indicates that the group supports the Targeted Messages Extension.
-
-* Value: 0x0007 (suggested)
-* Name: targeted_messages
-* Message(s): GC: This extension may appear in GroupContext objects
-* Recommended: Y
-* Safe: Y
-* Reference: RFC XXXX
-
-### accepted_media_types MLS Extension
-
-The `accepted_media_types` MLS Extension Type is used inside LeafNode objects. It
-contains a MediaTypeList representing all the media types supported by the
-MLS client referred to by the LeafNode.
-
-* Value: 0x0008 (suggested)
-* Name: accepted_media_types
-* Message(s): LN: This extension may appear in LeafNode objects
-* Recommended: Y
-* Safe: Y
-* Reference: RFC XXXX
-
-### required_media_types MLS Extension
-
-The required_media_types MLS Extension Type is used inside GroupContext objects. It
-contains a MediaTypeList representing the media types which are mandatory for all
-MLS members of the group to support.
+`capabilities.extensions` field of LeafNodes to indicate the support for the
+Targeted Messages Extension, and in the `required_capabilities.extension_types`
+field of the GroupContext to indicate all members of the group must support it.
+The extension does not carry any payload.
 
 * Value: 0x0009 (suggested)
-* Name: required_media_types
-* Message(s): GC: This extension may appear in GroupContext objects
+* Name: targeted_messages_capability
+* Message(s): LN: This extension may appear in LeafNode objects
+              GC: This extension may appear in GroupContext objects
 * Recommended: Y
-* Safe: Y
-* Reference: RFC XXXX
-
-### last_resort_key_package MLS Extension
-
-The last_resort_key_package MLS Extension Type is used inside KeyPackage
-objects. It marks the KeyPackage for usage in last resort scenarios and contains
-no additional data.
-
-* Value: 0x000A (suggested)
-* Name: last_resort_key_package
-* Message(s): KP: This extension may appear in KeyPackage objects
-* Recommended: Y
-* Safe: Y
-* Reference: RFC XXXX
-
-### extension_aad MLS Extension
-
-The extension_aad MLS Extension Type is used to signal support for `SafeAAD`
-in LeafNode capabilities, and in GroupContext `required_capabilities`. It contains no additional data.
-
-* Value: 0x000B (suggested)
-* Name: extension_aad
-* Message(s): LN,GC: This extension may appear in LeafNode and GroupContext
-  objects.
-* Recommended: Y
-* Safe: Y
-* Reference: RFC XXXX
-
-### safe_extensions MLS Extension
-
-The `safe_extensions` MLS Extension Type is used to signal support for the
-Safe Extensions Framework in LeafNode capabilities, and in GroupContext
-`required_capabilities`. It contains no additional data.
-
-* Value: 0x000C (suggested)
-* Name: safe_extensions
-* Message(s): LN,GC: This extension may appear in LeafNode and GroupContext
-  objects.
-* Recommended: Y
-* Safe: Y
-* Reference: RFC XXXX
-
-### core_struct_extensions MLS Extension
-
-The `core_struct_extensions` MLS Extension Type is used to signal support
-for one or more Core Struct Extensions using the Safe Extensions Framework.
-It appears in LeafNode capabilities, and in GroupContext
-`required_capabilities`. It contains no additional data.
-
-* Value: 0x000D (suggested)
-* Name: core_struct_extensions
-* Message(s): LN,GC: This extension may appear in LeafNode and GroupContext
-  objects.
-* Recommended: Y
-* Safe: Y
 * Reference: RFC XXXX
 
 
 ## MLS Proposal Types
 
-### Extension Proposal
+### AppDataUpdate Proposal
+
+The `app_data_update` MLS Proposal Type is used to efficiently update
+application component data stored in the `app_data_dictionary` GroupContext
+extension.
 
 * Value: 0x0008 (suggested)
-* Name: extension_proposal
+* Name: app_data_update
 * Recommended: Y
+* External: Y
 * Path Required: N
-* External Sender: N
-* Reference: RFC XXXX
 
-### Extension Path Proposal
+### AppEphemeral Proposal
+ The `app_ephemeral` MLS Proposal Type is used to send opaque ephemeral
+ application data that needs to be synchronized with a specific MLS epoch.
 
 * Value: 0x0009 (suggested)
-* Name: extension_path_proposal
+* Name: app_ephemeral
 * Recommended: Y
-* Path Required: Y
-* External Sender: N
-* Reference: RFC XXXX
-
-### Extension External Proposal
-
-* Value: 0x000a (suggested)
-* Name: extension_external_proposal
-* Recommended: Y
+* External: Y
 * Path Required: N
-* External Sender: Y
-* Reference: RFC XXXX
-
-### AppAck Proposal
-
-* Value: 0x000b (suggested)
-* Name: app_ack
-* Recommended: Y
-* Path Required: Y
-* Reference: RFC XXXX
 
 ### SelfRemove Proposal
 
@@ -1566,7 +1500,7 @@ The `self_remove` MLS Proposal Type is used for a member to remove itself
 from a group more efficiently than using a `remove` proposal type, as the
 `self_remove` type is permitted in External Commits.
 
-* Value: 0x000c (suggested)
+* Value: 0x0008 (suggested)
 * Name: self_remove
 * Recommended: Y
 * External: N
@@ -1574,44 +1508,71 @@ from a group more efficiently than using a `remove` proposal type, as the
 
 ## MLS Credential Types {#iana-creds}
 
-### Extension Credential
-
-* Value: 0x0003 (suggested)
-* Name: extension_credential
-* Recommended: Y
-* Reference: RFC XXXX
-
 ### Multi Credential
 
-* Value: 0x0004
+* Value: 0x0003 (suggested)
 * Name: multi
 * Recommended: Y
 * Reference: RFC XXXX
 
 ### Weak Multi Credential
 
-* Value: 0x0005
+* Value: 0x0004
 * Name: weak-multi
 * Recommended: Y
 * Reference: RFC XXXX
 
-## MLS Signature Labels
+<!-- ## MLS Signature Labels
 
 ### Labeled Extension Content
 
 * Label: "LabeledExtensionContent" (suggested)
 * Recommended: Y
-* Reference: RFC XXXX
+* Reference: RFC XXXX -->
 
-## MLS Extension Types
+## MLS Component Types {#iana-components}
 
-This document modifies the rules of the "MLS Extension Types" registry
-to add a new Message type as follows:
+This document requests the creation of a new IANA "MLS Component Types" registry under the "Messaging Layer Security" group registry heading. Assignments to this registry in the range 0x0000 0000 to 0x7FFF FFFF are via Specification Required
+policy {{!RFC8126}} using the MLS Designated Experts. Assignments in the range
+0x8000 0000 to 0xFFFF FFFF are for private use.
 
-- AD: Authenticated Additional Data
+Template:
 
-The `AD` Message type refers to an `ExtensionType` used inside the
-`SafeAADItem` structure defined in {{safe-aad}}.
+- Value: The numeric value of the component ID
+- Name: The name of the component
+- Where: The objects(s) in which the component may appear,
+         drawn from the following list:
+    - AD: SafeAAD objects
+    - AE: AppEpheral proposals
+    - ES: Exporter Secret labels
+    - GC: GroupContext objects
+    - GI: GroupInfo objects
+    - HP: HPKE key labels
+    - KP: KeyPackage objects
+    - LN: LeafNode objects
+    - PS: PSK labels
+    - SK: Signature Key labels
+- Recommended: Same as in {{Section 17.1 of !RFC9420}}
+- Reference: The document where this component is defined
+
+The restrictions noted in the "Where" column are to be enforced by the
+application.  MLS implementations MUST NOT impose restrictions on where
+component IDs are used in which parts of MLS, unless specifically directed to by
+the application.
+
+Initial Contents:
+
+| Value         | Name                     | Where | R | Ref     |
+|---------------+--------------------------+-------+---+---------|
+| 0x0000 0000   | RESERVED                 | N/A   | - | RFCXXXX |
+| 0x0000 0001   | app_components           | LN,GC | Y | RFCXXXX |
+| 0x0000 0002   | safe_aad                 | LN,GC | Y | RFCXXXX |
+| 0x0000 0003   | content_media_types      | LN,GC | Y | RFCXXXX |
+| 0x0000 0004   | last_resort_key_package  | KP    | Y | RFCXXXX |
+| 0x0000 0005   | app_ack                  | AE    | Y | RFCXXXX |
+| 0x8000 0000 -
+  0xFFFF FFFF   | Reserved for Private Use | N/A   | N | RFCXXXX |
+
 
 # Security considerations
 
