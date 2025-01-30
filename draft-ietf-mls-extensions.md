@@ -779,8 +779,8 @@ to recognize which messages contain AppAcks.  The application can also have
 clients enforce an AppAck schedule, reporting loss if an AppAck is not received
 at the expected time.
 
->Note: External Commits do not typically contain pending proposals (including
- AppEphemeral proposals).
+> Note: External Commits do not typically contain pending proposals (including
+> AppEphemeral proposals).
 
 ## Targeted messages
 
