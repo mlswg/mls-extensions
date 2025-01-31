@@ -1553,6 +1553,20 @@ Initial Contents:
 
 # Security considerations
 
+## Safe Application API
+
+The Safe Application API provides the following security guarantee: If an
+application uses MLS with application components, the security guarantees of
+the base MLS protocol and the security guarantees of each application component
+analyzed in isolation, still hold for the composed application of the MLS
+protocol. In other words, the Safe Application API protects applications from
+careless component developers. It is not possible that a combination of
+components (the developers of which did not know about each other) impedes the
+security of the base MLS protocol or any other component. No further analysis of
+the combination is necessary. This also means that any security vulnerabilities
+introduced by one component do not spread to other components or the base MLS
+implementation.
+
 ## AppAck
 
 When AppAck objects are received, they allow clients to detect if the Delivery
@@ -1677,23 +1691,6 @@ The MLS specification is extensible in a variety of ways (see {{Section 13 of
 their data within the protocol. However, it does not provide guidance on how
 extensions can or should safely interact with the base MLS protocol. The goal of
 this section is to simplify the task of developing MLS extensions.
-
-
-## Security
-
-An extension is called safe if it does not modify the base MLS protocol or other
-MLS extensions beyond using components of the Safe Extension API. The Safe
-Extension API provides the following security guarantee: If an application uses
-MLS and only safe MLS extensions, then the security guarantees of the base MLS
-protocol and the security guarantees of safe extensions, each analyzed in
-isolation, still hold for the composed extended MLS protocol. In other words,
-the Safe Extension API protects applications from careless extension
-developers. As long as all used extensions are safe, it is not possible that a
-combination of extensions  (the developers of which did not know about each
-other) impedes the security of the base MLS protocol or any used extension. No
-further analysis of the combination is necessary. This also means that any
-security vulnerabilities introduced by one extension do not spread to other
-extensions or the base MLS.
 
 
 ## Extension state: anchoring, storage and agreement
