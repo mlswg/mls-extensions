@@ -1570,10 +1570,13 @@ implementation.
 ## AppAck
 
 When AppAck objects are received, they allow clients to detect if the Delivery
-Service (or an intermediary) dropped application messages, since gaps in the `generation` sequence indicate dropped messages. When AppAck messages
+Service (or an intermediary) dropped application messages, since gaps in the
+`generation` sequence indicate dropped messages. When AppAck messages
 are accepted by the Delivery Service, but not received by some members, the
-members who have missed the corresponding AppEphemeral proposals will not be able to send or receive a commit message, because the proposal is included
-in the transcript hash. Likewise if AppAck objects and/or commits are sent periodically by every member, other members will be able to detect a member
+members who have missed the corresponding AppEphemeral proposals will not be
+able to send or receive a commit message, because the proposal is included
+in the transcript hash. Likewise if AppAck objects and/or commits are sent
+periodically by every member, other members will be able to detect a member
 that is no longer sending on that schedule or whose handshake messages are being
 suppressed by the DS.
 
