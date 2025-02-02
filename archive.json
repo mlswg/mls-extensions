@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-01-30T00:38:40.665324+00:00",
+  "timestamp": "2025-02-02T00:41:59.882494+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -255,7 +255,7 @@
       "id": "I_kwDOHZoI5M6QcDur",
       "title": "Unclear where the IANA registered value is used for Proposals, Wire Formats, Credentials",
       "url": "https://github.com/mlswg/mls-extensions/issues/30",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "rohanmahy",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -264,8 +264,8 @@
       "labels": [],
       "body": "It is unclear in Capabilities in LeafNodes and in the GroupContext where non-GC extension extension IDs are advertised.",
       "createdAt": "2024-07-22T16:23:49Z",
-      "updatedAt": "2025-01-29T04:30:15Z",
-      "closedAt": null,
+      "updatedAt": "2025-01-30T22:23:20Z",
+      "closedAt": "2025-01-30T22:23:20Z",
       "comments": [
         {
           "author": "rohanmahy",
@@ -1798,7 +1798,7 @@
       "labels": [],
       "body": "Incorporate AAD in the safe extensions framework to make a safe muxing of potentially multiple sources of authenticated_data",
       "createdAt": "2024-06-17T23:57:11Z",
-      "updatedAt": "2024-10-21T15:55:07Z",
+      "updatedAt": "2025-01-31T16:48:27Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "14332f7f5894c974e198f8de97bc717b2f6c6c9d",
@@ -1890,7 +1890,7 @@
       "labels": [],
       "body": "Note: this diff is easier to read when viewed as diffs for its separate commits. The first Commit is just a plain move of one section.\r\n\r\n- Moved the text in \"Storing State in Extensions\" earlier and renamed\r\n- describe the original \"ExtensionTypes\" as \"Core struct extensions\"\r\n- added a section on capabilities handling and negotiation\r\n- instruct IANA to add a \"Safe\" column to \"MLS Extension Types\"\r\n- instruct IANA that a safe extension can have N/A in the Message(s) column.",
       "createdAt": "2024-10-04T21:45:42Z",
-      "updatedAt": "2024-10-21T16:36:38Z",
+      "updatedAt": "2025-01-31T16:48:25Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "f880364d4e1adfa0166e12bedfa719a7f25ca5fe",
@@ -2049,21 +2049,21 @@
       "id": "PR_kwDOHZoI5M5-QuxO",
       "title": "placeholder GroupContext encryption mechanism",
       "url": "https://github.com/mlswg/mls-extensions/pull/32",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "rohanmahy",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "This mechanism is a placeholder for encrypting individual GroupContext extensions for group members only. ",
       "createdAt": "2024-10-10T19:10:45Z",
-      "updatedAt": "2025-01-23T18:21:05Z",
+      "updatedAt": "2025-01-31T16:07:07Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "14332f7f5894c974e198f8de97bc717b2f6c6c9d",
       "headRepository": "rohanmahy/mls-extensions",
       "headRefName": "encrypted-groupcontext",
       "headRefOid": "9388b18ca5538b75195a7ba85f8a02d6250ab800",
-      "closedAt": null,
+      "closedAt": "2025-01-31T16:07:06Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
@@ -2074,6 +2074,13 @@
           "body": "Not covered by appsync.",
           "createdAt": "2025-01-23T18:21:04Z",
           "updatedAt": "2025-01-23T18:21:04Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "- if the information being encrypted is actually in an application component, this would no longer be an MLS \"extension\"\r\n- the solution is not general enough to include in this document",
+          "createdAt": "2025-01-31T16:07:06Z",
+          "updatedAt": "2025-01-31T16:07:06Z"
         }
       ],
       "reviews": []
@@ -2118,7 +2125,7 @@
       "labels": [],
       "body": "Same thing as PR #31 without the merge conflicts.",
       "createdAt": "2024-10-21T16:27:44Z",
-      "updatedAt": "2024-10-21T16:36:16Z",
+      "updatedAt": "2025-01-31T16:48:24Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "f880364d4e1adfa0166e12bedfa719a7f25ca5fe",
@@ -2174,7 +2181,7 @@
       "labels": [],
       "body": "- add multi and weak-multi credential types",
       "createdAt": "2024-10-28T12:48:36Z",
-      "updatedAt": "2025-01-28T18:42:29Z",
+      "updatedAt": "2025-01-31T16:47:40Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "4f2d0e818d862293c4016753d88df7fc68a93aa2",
@@ -2329,7 +2336,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2024-10-28T14:22:20Z",
-      "updatedAt": "2024-11-03T11:15:17Z",
+      "updatedAt": "2025-01-31T16:45:31Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "348b7fe0cad9321751b969cb5d13aac86deedff5",
@@ -2526,7 +2533,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2025-01-13T17:36:32Z",
-      "updatedAt": "2025-01-28T18:08:03Z",
+      "updatedAt": "2025-01-31T16:45:28Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "b4d9d3224c82a375647a496bf8c1d5365e412eca",
@@ -2613,7 +2620,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2025-01-28T16:25:18Z",
-      "updatedAt": "2025-01-28T17:07:15Z",
+      "updatedAt": "2025-01-31T16:44:10Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "b4d9d3224c82a375647a496bf8c1d5365e412eca",
@@ -2634,20 +2641,233 @@
       "id": "PR_kwDOHZoI5M6JSH8i",
       "title": "Next part of appsync merge",
       "url": "https://github.com/mlswg/mls-extensions/pull/45",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "rohanmahy",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "includes updates of all \"Extensions\" and the IANA considerations\r\n\r\nFixes #30, #33, #34.\r\n",
       "createdAt": "2025-01-28T21:13:37Z",
-      "updatedAt": "2025-01-29T16:53:33Z",
+      "updatedAt": "2025-01-31T16:44:03Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "49b739cd05ec748432881270ac83cc3066f09b29",
       "headRepository": "rohanmahy/mls-extensions",
       "headRefName": "merge-part2",
-      "headRefOid": "026d680cb479dfff09bb31719d5314eaa4adad37",
+      "headRefOid": "b18ab1d57bba6351546036dfc8cf401aa627df3e",
+      "closedAt": "2025-01-30T22:23:19Z",
+      "mergedAt": "2025-01-30T22:23:19Z",
+      "mergedBy": "bifurcation",
+      "mergeCommit": {
+        "oid": "d3d73b0d0ad641716dd1b80b3ea864b17e40ac78"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M6aE9Vq",
+          "commit": {
+            "abbreviatedOid": "026d680"
+          },
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Couple of minor comments, otherwise LGTM.",
+          "createdAt": "2025-01-30T20:48:22Z",
+          "updatedAt": "2025-01-30T20:52:37Z",
+          "comments": [
+            {
+              "originalPosition": 73,
+              "body": "```suggestion\r\n> Note: External Commits do not typically contain pending proposals (including\r\n> AppEphemeral proposals).\r\n```",
+              "createdAt": "2025-01-30T20:48:22Z",
+              "updatedAt": "2025-01-30T20:52:37Z"
+            },
+            {
+              "originalPosition": 358,
+              "body": "```suggestion\r\n* Message(s): KP, LN, GC, GI\r\n```",
+              "createdAt": "2025-01-30T20:50:23Z",
+              "updatedAt": "2025-01-30T20:52:37Z"
+            },
+            {
+              "originalPosition": 407,
+              "body": "```suggestion\r\n* Message(s): GC\r\n```",
+              "createdAt": "2025-01-30T20:50:53Z",
+              "updatedAt": "2025-01-30T20:52:37Z"
+            },
+            {
+              "originalPosition": 472,
+              "body": "```suggestion\r\n* Message(s): LN, GC\r\n```",
+              "createdAt": "2025-01-30T20:51:11Z",
+              "updatedAt": "2025-01-30T20:52:37Z"
+            },
+            {
+              "originalPosition": 592,
+              "body": "Do we need to be this prescriptive?",
+              "createdAt": "2025-01-30T20:52:06Z",
+              "updatedAt": "2025-01-30T20:52:37Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6aFK2y",
+          "commit": {
+            "abbreviatedOid": "026d680"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-01-30T20:57:29Z",
+          "updatedAt": "2025-01-30T20:57:30Z",
+          "comments": [
+            {
+              "originalPosition": 592,
+              "body": "This has caused us to find many problems earlier than we otherwise would have by making the author of an extension or component document where they plan to use it.",
+              "createdAt": "2025-01-30T20:57:30Z",
+              "updatedAt": "2025-01-30T20:57:30Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6aFPs2",
+          "commit": {
+            "abbreviatedOid": "026d680"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-01-30T21:09:27Z",
+          "updatedAt": "2025-01-30T21:09:28Z",
+          "comments": [
+            {
+              "originalPosition": 358,
+              "body": "that's just following how mls-extensions specified these things in all former versions. happy to change across in a future PR.",
+              "createdAt": "2025-01-30T21:09:27Z",
+              "updatedAt": "2025-01-30T21:09:28Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6aFQ6F",
+          "commit": {
+            "abbreviatedOid": "026d680"
+          },
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-01-30T21:12:29Z",
+          "updatedAt": "2025-01-30T21:12:29Z",
+          "comments": [
+            {
+              "originalPosition": 592,
+              "body": "On further thought, I affirmatively think that we should **not** be this prescriptive.  It strongly implies that the MLS stack should enforce these rules, and that doesn't make sense. Unlike extensions, which the MLS stack has to support, the MLS stack is completely ignorant of the meaning of app components.  (Indeed, that's why there's so much private use space.)",
+              "createdAt": "2025-01-30T21:12:29Z",
+              "updatedAt": "2025-01-30T21:12:30Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6aFRv0",
+          "commit": {
+            "abbreviatedOid": "026d680"
+          },
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-01-30T21:14:40Z",
+          "updatedAt": "2025-01-30T21:14:40Z",
+          "comments": [
+            {
+              "originalPosition": 592,
+              "body": "Comments crossed in the ether :)  Maybe we can just be clear that the MLS stack will not enforce these, so the application needs to be prepared for components to show up in unexpected places.",
+              "createdAt": "2025-01-30T21:14:40Z",
+              "updatedAt": "2025-01-30T21:14:40Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6aFUR_",
+          "commit": {
+            "abbreviatedOid": "634dec8"
+          },
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-01-30T21:20:52Z",
+          "updatedAt": "2025-01-30T21:20:52Z",
+          "comments": [
+            {
+              "originalPosition": 605,
+              "body": "```suggestion\r\n\r\nThe restrictions noted in the \"Where\" column are to be enforced by the\r\napplication.  MLS implementations MUST NOT impose restrictions on where\r\ncomponent IDs are used in which parts of MLS, unless specifically directed to by\r\nthe application.\r\n```",
+              "createdAt": "2025-01-30T21:20:52Z",
+              "updatedAt": "2025-01-30T21:20:52Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6aFUjT",
+          "commit": {
+            "abbreviatedOid": "634dec8"
+          },
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-01-30T21:21:33Z",
+          "updatedAt": "2025-01-30T21:21:33Z",
+          "comments": [
+            {
+              "originalPosition": 615,
+              "body": "```suggestion\r\n| 0x0000 0000   | RESERVED                 | N/A   | - | RFCXXXX |\r\n| 0x0000 0001   | app_components           | LN,GC | Y | RFCXXXX |\r\n| 0x0000 0002   | safe_aad                 | LN,GC | Y | RFCXXXX |\r\n| 0x0000 0003   | content_media_types      | LN,GC | Y | RFCXXXX |\r\n| 0x0000 0004   | last_resort_key_package  | KP    | Y | RFCXXXX |\r\n| 0x0000 0005   | app_ack                  | AE    | Y | RFCXXXX |\r\n```",
+              "createdAt": "2025-01-30T21:21:33Z",
+              "updatedAt": "2025-01-30T21:21:33Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6aFnjq",
+          "commit": {
+            "abbreviatedOid": "e4f7c1d"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-01-30T22:11:58Z",
+          "updatedAt": "2025-01-30T22:11:58Z",
+          "comments": [
+            {
+              "originalPosition": 610,
+              "body": "```suggestion\r\n\r\nInitial Contents:\r\n```",
+              "createdAt": "2025-01-30T22:11:58Z",
+              "updatedAt": "2025-01-30T22:11:58Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 46,
+      "id": "PR_kwDOHZoI5M6JrCDN",
+      "title": "Update Security Consideration section",
+      "url": "https://github.com/mlswg/mls-extensions/pull/46",
+      "state": "OPEN",
+      "author": "rohanmahy",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "- Moved security discussions from various other sections into the Security Considerations and adapted to app components merge\r\n- In content advertisement clarified that quoted-pairs are unescaped in the TLS PL syntax.",
+      "createdAt": "2025-01-31T17:57:07Z",
+      "updatedAt": "2025-01-31T17:59:31Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "d3d73b0d0ad641716dd1b80b3ea864b17e40ac78",
+      "headRepository": "rohanmahy/mls-extensions",
+      "headRefName": "minor-sec-considerations",
+      "headRefOid": "0eed33ff5eac6079e564badb427e052538649816",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
