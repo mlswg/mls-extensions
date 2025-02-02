@@ -756,31 +756,6 @@ generation is never observed.  Obviously, there is a risk that AppAck messages
 could be suppressed as well, but their inclusion in the transcript means that if
 they are suppressed then the group cannot advance at all.
 
-The schedule on which AppAck objects are sent in AppEphemeral proposals is up to
-the application,and determines which cases of loss/suppression are detected.
-For example:
-
-- The application might have the committer include an AppAck whenever a
-  Commit is sent, so that other members could know when one of their messages
-  did not reach the committer.
-
-- The application could have a client send an AppAck whenever an application
-  message is sent, covering all messages received since its last AppAck.  This
-  would provide a complete view of any losses experienced by active members.
-
-- The application could simply have clients send AppAck proposals on a timer, so
-  that all participants' state would be known.
-
-An application using AppAck to guard against loss/suppression of
-application messages also needs to ensure that AppAck messages and the Commits
-that reference them are not dropped.  One way to do this is to always encrypt
-Proposal and Commit messages, to make it more difficult for the Delivery Service
-to recognize which messages contain AppAcks.  The application can also have
-clients enforce an AppAck schedule, reporting loss if an AppAck is not received
-at the expected time.
-
-> Note: External Commits do not typically contain pending proposals (including
-> AppEphemeral proposals).
 
 ## Targeted messages
 
@@ -1071,13 +1046,15 @@ MediaType is a TLS encoding of a single IANA media type (including top-level
 type and subtype) and any of its parameters. Even if the `parameter_value`
 would have required formatting as a `quoted-string` in a text encoding, only
 the contents inside the `quoted-string` are included in `parameter_value`.
+Likewise, only the second character of a `quoted-pair` is included in
+`parameter_value`; the first escaping backslash ("\") is omitted.
 MediaTypeList is an ordered list of MediaType objects.
 
 ~~~ tls
 struct {
     opaque parameter_name<V>;
-    /* Note: parameter_value never includes the quotation marks of an
-     * RFC 2045 quoted-string */
+    /* Note: parameter_value never includes the quotation marks of */
+    /* an RFC 2045 quoted-string or the first "\" of a quoted-pair */
     opaque parameter_value<V>;
 } Parameter;
 
@@ -1576,9 +1553,61 @@ Initial Contents:
 
 # Security considerations
 
+## Safe Application API
+
+The Safe Application API provides the following security guarantee: If an
+application uses MLS with application components, the security guarantees of
+the base MLS protocol and the security guarantees of each application component
+analyzed in isolation, still hold for the composed application of the MLS
+protocol. In other words, the Safe Application API protects applications from
+careless component developers. It is not possible that a combination of
+components (the developers of which did not know about each other) impedes the
+security of the base MLS protocol or any other component. No further analysis of
+the combination is necessary. This also means that any security vulnerabilities
+introduced by one component do not spread to other components or the base MLS
+implementation.
+
 ## AppAck
 
-TBC
+When AppAck objects are received, they allow clients to detect if the Delivery
+Service (or an intermediary) dropped application messages, since gaps in the
+`generation` sequence indicate dropped messages. When AppAck messages
+are accepted by the Delivery Service, but not received by some members, the
+members who have missed the corresponding AppEphemeral proposals will not be
+able to send or receive a commit message, because the proposal is included
+in the transcript hash. Likewise if AppAck objects and/or commits are sent
+periodically by every member, other members will be able to detect a member
+that is no longer sending on that schedule or whose handshake messages are being
+suppressed by the DS.
+
+> Note: External Commits do not typically contain pending proposals (including
+> AppEphemeral proposals). Client that send an AppAck component in an
+> AppEphemeral proposal will need to send a new AppAck component in an
+> AppEphemeral proposal (in the new epoch) after receiving an External Commit
+> until it has been incorporated into an accepted Commit.
+
+The schedule on which AppAck objects are sent in AppEphemeral proposals is up to
+the application,and determines which cases of loss/suppression are detected.
+For example:
+
+- The application might have the committer include an AppAck whenever a
+  Commit is sent, so that other members could know when one of their messages
+  did not reach the committer.
+
+- The application could have a client send an AppAck whenever an application
+  message is sent, covering all messages received since its last AppAck.  This
+  would provide a complete view of any losses experienced by active members.
+
+- The application could simply have clients send AppAck proposals on a timer, so
+  that all participants' state would be known.
+
+An application using AppAck to guard against loss/suppression of
+application messages also needs to ensure that AppAck messages and the Commits
+that reference them are not dropped.  One way to do this is to always encrypt
+Proposal and Commit messages, to make it more difficult for the Delivery Service
+to recognize which messages contain AppAcks.  The application can also have
+clients enforce an AppAck schedule, reporting loss if an AppAck is not received
+at the expected time.
 
 ## Targeted Messages
 
@@ -1594,11 +1623,15 @@ passive attackers and authentication guarantees against active attackers.
 
 ## Content Advertisement
 
-Use of the `accepted_media_types` and `rejected_media_types` extensions
-could leak some private information visible in KeyPackages and inside an MLS group.
-They could be used to infer a specific implementation, platform, or even version.
-Clients should consider carefully the privacy implications in their environment of
-making a list of acceptable media types available.
+Use of the `content_media_types` component could leak some private information
+visible in KeyPackages and inside an MLS group. This could be used to infer a
+specific implementation, platform, or even version. Clients should carefully
+consider the privacy implications in their environment of making a list of
+acceptable media types available.
+
+Implementations need to be prepared to parse media types containing long
+parameter lists, potentially containing characters which would be escaped or
+quoted in {{!RFC5322}}.
 
 ## SelfRemove
 
@@ -1661,23 +1694,6 @@ The MLS specification is extensible in a variety of ways (see {{Section 13 of
 their data within the protocol. However, it does not provide guidance on how
 extensions can or should safely interact with the base MLS protocol. The goal of
 this section is to simplify the task of developing MLS extensions.
-
-
-## Security
-
-An extension is called safe if it does not modify the base MLS protocol or other
-MLS extensions beyond using components of the Safe Extension API. The Safe
-Extension API provides the following security guarantee: If an application uses
-MLS and only safe MLS extensions, then the security guarantees of the base MLS
-protocol and the security guarantees of safe extensions, each analyzed in
-isolation, still hold for the composed extended MLS protocol. In other words,
-the Safe Extension API protects applications from careless extension
-developers. As long as all used extensions are safe, it is not possible that a
-combination of extensions  (the developers of which did not know about each
-other) impedes the security of the base MLS protocol or any used extension. No
-further analysis of the combination is necessary. This also means that any
-security vulnerabilities introduced by one extension do not spread to other
-extensions or the base MLS.
 
 
 ## Extension state: anchoring, storage and agreement
