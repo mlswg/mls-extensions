@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-02-02T00:41:59.882494+00:00",
+  "timestamp": "2025-02-04T00:39:37.718600+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -302,7 +302,7 @@
       "id": "I_kwDOHZoI5M6aOCgK",
       "title": "Add wire format capability negotiation extension",
       "url": "https://github.com/mlswg/mls-extensions/issues/33",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "bifurcation",
       "authorAssociation": "COLLABORATOR",
       "assignees": [
@@ -311,8 +311,8 @@
       "labels": [],
       "body": "A notable omission from the Capabilities / RequiredCapabilities objects in RFC 9420 is the ability to negotiate support for new wire formats.  This document should address that deficiency.  What we would need is a `supported_wire_formats` extension, where:\r\n\r\n* The content of the extension is `WireFormat wire_formats<V>;`\r\n* The extension can appear in LeafNode and GroupContextExtensions\r\n* The semantic in LeafNode is \"here are the new WireFormats I support\"\r\n* The semantic in GroupContextExtensions is \"here are the WireFormats that are required for this group\"",
       "createdAt": "2024-10-15T00:55:26Z",
-      "updatedAt": "2025-01-29T04:31:40Z",
-      "closedAt": null,
+      "updatedAt": "2025-02-02T17:52:06Z",
+      "closedAt": "2025-02-02T17:52:05Z",
       "comments": [
         {
           "author": "seanturner",
@@ -327,6 +327,13 @@
           "body": "This was added in #43 ",
           "createdAt": "2025-01-29T04:31:39Z",
           "updatedAt": "2025-01-29T04:31:39Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "Closed via #43.",
+          "createdAt": "2025-02-02T17:52:05Z",
+          "updatedAt": "2025-02-02T17:52:05Z"
         }
       ]
     },
@@ -2854,26 +2861,42 @@
       "id": "PR_kwDOHZoI5M6JrCDN",
       "title": "Update Security Consideration section",
       "url": "https://github.com/mlswg/mls-extensions/pull/46",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "rohanmahy",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "- Moved security discussions from various other sections into the Security Considerations and adapted to app components merge\r\n- In content advertisement clarified that quoted-pairs are unescaped in the TLS PL syntax.",
       "createdAt": "2025-01-31T17:57:07Z",
-      "updatedAt": "2025-01-31T17:59:31Z",
+      "updatedAt": "2025-02-02T17:51:11Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "d3d73b0d0ad641716dd1b80b3ea864b17e40ac78",
       "headRepository": "rohanmahy/mls-extensions",
       "headRefName": "minor-sec-considerations",
       "headRefOid": "0eed33ff5eac6079e564badb427e052538649816",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-02-02T17:51:11Z",
+      "mergedAt": "2025-02-02T17:51:11Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "117fd75d088bbbd99c34161b42ac074bbd77f94a"
+      },
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M6aSvYg",
+          "commit": {
+            "abbreviatedOid": "0eed33f"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-02-02T17:51:04Z",
+          "updatedAt": "2025-02-02T17:51:04Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
