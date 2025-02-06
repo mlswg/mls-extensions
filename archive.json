@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-02-04T00:39:37.718600+00:00",
+  "timestamp": "2025-02-06T00:40:13.911046+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -374,6 +374,22 @@
           "updatedAt": "2025-01-29T04:31:00Z"
         }
       ]
+    },
+    {
+      "number": 47,
+      "id": "I_kwDOHZoI5M6owkSZ",
+      "title": "Re-frame \"Safe Additional Authenticated Data (AAD)\"",
+      "url": "https://github.com/mlswg/mls-extensions/issues/47",
+      "state": "OPEN",
+      "author": "TWal",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "The section about Safe Additional Authenticated Data (AAD) discuss about the `authenticated_data` field of `PrivateContentAAD`.\n\nIt seems to me that this field is defined to be identical to `authenticated_data` in `FramedContent`. Shouldn't we frame this section about `FramedContent` then?",
+      "createdAt": "2025-02-04T21:08:53Z",
+      "updatedAt": "2025-02-04T21:08:53Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
