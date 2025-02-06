@@ -1303,7 +1303,7 @@ The two types of credentials are processed in exactly the same way.  The only
 difference is in how they are treated when evaluating support by other clients,
 as discussed below.
 
-## Credential Bindings
+### Credential Bindings
 
 A multi-credential consists of a collection of "credential bindings".  Each
 credential binding is a signed statement by the holder of the credential that
@@ -1326,7 +1326,7 @@ The `cipher_suite` for a credential is NOT REQUIRED to match the cipher suite
 for the MLS group in which it is used, but MUST meet the support requirements
 with regard to support by group members discussed below.
 
-## Verifying a Multi-Credential
+### Verifying a Multi-Credential
 
 A credential binding is supported by a client if the client supports the
 credential type and cipher suite of the binding.  A credential binding is valid
