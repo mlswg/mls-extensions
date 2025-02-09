@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-02-06T00:40:13.911046+00:00",
+  "timestamp": "2025-02-09T00:42:47.515139+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -127,7 +127,7 @@
       "labels": [],
       "body": "Now that there are IANA registries for those, we must extend them.",
       "createdAt": "2023-07-19T06:07:00Z",
-      "updatedAt": "2025-01-23T18:11:19Z",
+      "updatedAt": "2025-02-06T08:53:00Z",
       "closedAt": null,
       "comments": [
         {
@@ -136,6 +136,13 @@
           "body": "@raphaelrobert will take care of this once we decide what to do with targeted message extension.",
           "createdAt": "2025-01-23T18:06:11Z",
           "updatedAt": "2025-01-23T18:06:36Z"
+        },
+        {
+          "author": "TWal",
+          "authorAssociation": "NONE",
+          "body": "I think this issue is now out-of-date thanks to the safe extension API, because the targeted message extension now uses SafeSignWithLabel and DeriveExtensionSecret. We can probably close it with no action.",
+          "createdAt": "2025-02-06T08:53:00Z",
+          "updatedAt": "2025-02-06T08:53:00Z"
         }
       ]
     },
@@ -153,7 +160,7 @@
       "labels": [],
       "body": "To be more future-proof, similarly to `EncryptWithLabel`, I guess we could design a similar function for the HPKE AuthPSK mode?\r\nThis would help ensuring future extensions that would be using the AuthPSK mode with leaf HPKE keys don't interfere with each other.",
       "createdAt": "2023-07-19T06:10:49Z",
-      "updatedAt": "2025-01-23T18:06:51Z",
+      "updatedAt": "2025-02-06T08:56:26Z",
       "closedAt": null,
       "comments": [
         {
@@ -162,6 +169,13 @@
           "body": "@raphaelrobert will take care of this once we decide what to do with targeted message extension.",
           "createdAt": "2025-01-23T18:06:50Z",
           "updatedAt": "2025-01-23T18:06:50Z"
+        },
+        {
+          "author": "TWal",
+          "authorAssociation": "NONE",
+          "body": "It looks like this point has been addressed with the safe extensions API. However, Targeted Messages re-define a safe API for SealAuthPSK, this could be moved in the safe extension API.",
+          "createdAt": "2025-02-06T08:56:25Z",
+          "updatedAt": "2025-02-06T08:56:25Z"
         }
       ]
     },
@@ -388,6 +402,22 @@
       "body": "The section about Safe Additional Authenticated Data (AAD) discuss about the `authenticated_data` field of `PrivateContentAAD`.\n\nIt seems to me that this field is defined to be identical to `authenticated_data` in `FramedContent`. Shouldn't we frame this section about `FramedContent` then?",
       "createdAt": "2025-02-04T21:08:53Z",
       "updatedAt": "2025-02-04T21:08:53Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 48,
+      "id": "I_kwDOHZoI5M6o-xse",
+      "title": "`SafeEncryptWithContext` should use `EncryptWithLabel`",
+      "url": "https://github.com/mlswg/mls-extensions/issues/48",
+      "state": "OPEN",
+      "author": "TWal",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "MLS defines the safe-ish `SignWithLabel`, `ExpandWithLabel`, `EncryptWithLabel` etc, and the safe API relies on it:\n- `SafeSignWithLabel` uses `SignWithLabel`\n- `DeriveExtensionSecret` uses `ExpandWithLabel`\n\nHowever `SafeEncryptWithContext` doesn't use `EncryptWithLabel` and operate directly with `HPKE.SealBase`. Is there a technical reason for this?\n\nI think it should use `EncryptWithLabel` to ensure proper domain separation with HPKE uses in the MLS RFC. Otherwise, we must ensure that MLS' `EncryptContext` and Safe API's `LabeledExtensionContent` cannot be serialized to the same bytestring (to follow the secure formatting rules of the [Comparse paper](https://eprint.iacr.org/2023/1390)). The latter fact seems to hold, under the condition that `LabeledExtensionContent.label` uses a QUIC-style length encoding (which is not clear because it is written as `opaque label` and not `opaque label<V>`). Using `EncryptWithLabel` would make that fact straightforward.",
+      "createdAt": "2025-02-06T09:43:09Z",
+      "updatedAt": "2025-02-06T09:43:09Z",
       "closedAt": null,
       "comments": []
     }
@@ -2913,6 +2943,32 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 49,
+      "id": "PR_kwDOHZoI5M6KVZQS",
+      "title": "Minor fix of multicredential subsection headings",
+      "url": "https://github.com/mlswg/mls-extensions/pull/49",
+      "state": "OPEN",
+      "author": "rohanmahy",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-02-06T20:56:16Z",
+      "updatedAt": "2025-02-06T20:56:17Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "117fd75d088bbbd99c34161b42ac074bbd77f94a",
+      "headRepository": "rohanmahy/mls-extensions",
+      "headRefName": "patch-1",
+      "headRefOid": "32388374b80ba085fefeed12f6bb8126e6be0c44",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
