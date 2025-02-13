@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-02-11T00:40:06.019240+00:00",
+  "timestamp": "2025-02-13T00:40:28.972218+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -401,9 +401,17 @@
       "labels": [],
       "body": "The section about Safe Additional Authenticated Data (AAD) discuss about the `authenticated_data` field of `PrivateContentAAD`.\n\nIt seems to me that this field is defined to be identical to `authenticated_data` in `FramedContent`. Shouldn't we frame this section about `FramedContent` then?",
       "createdAt": "2025-02-04T21:08:53Z",
-      "updatedAt": "2025-02-04T21:08:53Z",
+      "updatedAt": "2025-02-12T19:06:37Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "There are 3 places where `authenticated_data` appears. I think this needs to apply to all of them.\n- `PrivateContentAAD`\n- `PrivateMessage`\n- `FramedContent`\n\nI'll write something up to fix that.",
+          "createdAt": "2025-02-12T19:06:35Z",
+          "updatedAt": "2025-02-12T19:06:35Z"
+        }
+      ]
     },
     {
       "number": 48,
