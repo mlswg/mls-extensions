@@ -606,10 +606,15 @@ sent in an external commit or via an external proposer.
 
 ## Safe Additional Authenticated Data (AAD) {#safe-aad}
 
-The `PrivateContentAAD` struct in MLS can contain arbitrary additional
-application-specific AAD in its `authenticated_data` field. This API
-defines a framing used to allow multiple extensions to add AAD safely
-without conflicts or ambiguity.
+An MLS PrivateMessage can contain arbitrary additional application-specific
+AAD. The corresponding `authenticated_data` field appears in several MLS
+structs: `FramedContent` (used indirectly to generate the message signature
+and tags), `PrivateContentAAD` (used as the AAD input to the
+`PrivateMessage.ciphertext`), and `PrivateMessage` (to convey the AAD).
+
+The Safe AAD API defines a framing used to allow multiple application
+components to add AAD safely to the `authenticated_data` without conflicts or
+ambiguity.
 
 When any AAD safe extension is included in the `authenticated_data` field,
 the "safe" AAD items MUST come before any non-safe data in the
