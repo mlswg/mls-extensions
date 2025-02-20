@@ -134,9 +134,6 @@ Component ID:
 : An identifier for an application component.  These identifiers are assigned by
 the application.
 
-AEAD:
-: Authenticated Encryption with Additional Data
-
 # Developing Extensions for the MLS Protocol
 
 MLS is highly extensible, and was designed to be used in a variety of different
@@ -609,12 +606,11 @@ sent in an external commit or via an external proposer.
 
 ## Safe Additional Authenticated Data (AAD) {#safe-aad}
 
-MLS can contain arbitrary additional application-specific AAD in
-PrivateMessages. The corresponding `authenticated_data` field appears in
-several MLS structs: `FramedContent` (which for a PrivateMessage is indirectly
-used to generate the message signature and tags), `PrivateContentAAD` (used as
-the AAD input to the `PrivateMessage.ciphertext`) and `PrivateMessage` (to
-convey the AAD).
+An MLS PrivateMessage can contain arbitrary additional application-specific
+AAD. The corresponding `authenticated_data` field appears in several MLS
+structs: `FramedContent` (used indirectly to generate the message signature
+and tags), `PrivateContentAAD` (used as the AAD input to the
+`PrivateMessage.ciphertext`), and `PrivateMessage` (to convey the AAD).
 
 The Safe AAD API defines a framing used to allow multiple application
 components to add AAD safely to the `authenticated_data` without conflicts or
