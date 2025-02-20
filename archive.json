@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-02-18T00:40:03.341177+00:00",
+  "timestamp": "2025-02-20T00:40:44.138728+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -356,15 +356,15 @@
       "id": "I_kwDOHZoI5M6aOClW",
       "title": "Streamline Safe Extensions section",
       "url": "https://github.com/mlswg/mls-extensions/issues/34",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "bifurcation",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "The Safe Extensions section currently has a bunch of unnecessary baggage, which we should rearrange and/or delete.\r\n\r\nThe core of what Safe Extensions needs to define is: What does an extension need to do in order to be considered a safe extension?\r\n\r\nFrom that perspective, the sections on HPKE, signatures, export, and PSKs all make sense, in the sense that an extension is safe if the only HPKE/signature/export/PSKs mechanisms uses are the ones defined here.  That leaves the \"Security\", \"Extension Designer Tools\", and \"Extension Design Guidance\" sections.\r\n\r\n* \"Security\" should just be the introduction to the Safe Extensions section.\r\n* \"Extension Designer Tools\" should be deleted.  The mechanisms here abuse the extension types for labelling things other than extensions, and they don't really provide any value over the base extensibility mechanisms they use.  At best, they provide \"ignorable\" objects of the various types, which is a totally different property than Safe Extensions provides.\r\n* \"Extension Design Guidance\" is not specific to Safe Extensions.  It should be promoted to its own top-level section.",
       "createdAt": "2024-10-15T00:55:54Z",
-      "updatedAt": "2025-01-29T04:31:01Z",
-      "closedAt": null,
+      "updatedAt": "2025-02-19T07:37:02Z",
+      "closedAt": "2025-02-19T07:37:02Z",
       "comments": [
         {
           "author": "kkohbrok",
@@ -2957,20 +2957,62 @@
       "id": "PR_kwDOHZoI5M6KVZQS",
       "title": "Minor fix of multicredential subsection headings",
       "url": "https://github.com/mlswg/mls-extensions/pull/49",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "rohanmahy",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2025-02-06T20:56:16Z",
-      "updatedAt": "2025-02-06T20:56:17Z",
+      "updatedAt": "2025-02-19T07:35:19Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "117fd75d088bbbd99c34161b42ac074bbd77f94a",
       "headRepository": "rohanmahy/mls-extensions",
       "headRefName": "patch-1",
       "headRefOid": "32388374b80ba085fefeed12f6bb8126e6be0c44",
+      "closedAt": "2025-02-19T07:35:19Z",
+      "mergedAt": "2025-02-19T07:35:19Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "d9a51c867259b25021d1761e5c5ab7e0f3bafe12"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M6cg7fM",
+          "commit": {
+            "abbreviatedOid": "3238837"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-02-19T07:35:06Z",
+          "updatedAt": "2025-02-19T07:35:06Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 50,
+      "id": "PR_kwDOHZoI5M6L0afA",
+      "title": "Correctly explain the multiple uses of authenticated_data",
+      "url": "https://github.com/mlswg/mls-extensions/pull/50",
+      "state": "OPEN",
+      "author": "rohanmahy",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-02-20T00:01:34Z",
+      "updatedAt": "2025-02-20T00:04:54Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "d9a51c867259b25021d1761e5c5ab7e0f3bafe12",
+      "headRepository": "rohanmahy/mls-extensions",
+      "headRefName": "clarify-aad",
+      "headRefOid": "9c0322cdf9d973f16212ec025111c4e428cb610f",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
