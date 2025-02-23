@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-02-20T00:40:44.138728+00:00",
+  "timestamp": "2025-02-23T00:43:50.878108+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -401,7 +401,7 @@
       "labels": [],
       "body": "The section about Safe Additional Authenticated Data (AAD) discuss about the `authenticated_data` field of `PrivateContentAAD`.\n\nIt seems to me that this field is defined to be identical to `authenticated_data` in `FramedContent`. Shouldn't we frame this section about `FramedContent` then?",
       "createdAt": "2025-02-04T21:08:53Z",
-      "updatedAt": "2025-02-12T19:06:37Z",
+      "updatedAt": "2025-02-21T14:28:20Z",
       "closedAt": null,
       "comments": [
         {
@@ -410,6 +410,41 @@
           "body": "There are 3 places where `authenticated_data` appears. I think this needs to apply to all of them.\n- `PrivateContentAAD`\n- `PrivateMessage`\n- `FramedContent`\n\nI'll write something up to fix that.",
           "createdAt": "2025-02-12T19:06:35Z",
           "updatedAt": "2025-02-12T19:06:35Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I think this can get closed with the merge of #50 ",
+          "createdAt": "2025-02-21T04:32:08Z",
+          "updatedAt": "2025-02-21T04:32:08Z"
+        },
+        {
+          "author": "TWal",
+          "authorAssociation": "NONE",
+          "body": "Indeed the text is less confusing now, thanks!\n\nStill, I am wondering: it seems to be that MLS clients deal primarily with `FramedContent`, and MLS implementations translate them to `PublicMessage` or `PrivateMessage`, which are more like internal structures? If this is true, I would have framed it as \"An MLS FramedContent can contain [...]\" instead of \"An MLS PrivateMessage can contain [...]\", but this is mostly nit-picking so I guess we can close.",
+          "createdAt": "2025-02-21T13:47:11Z",
+          "updatedAt": "2025-02-21T13:47:11Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Ultimately, there is no way to include application-specific AAD in a PublicMessage because there is no place to put it. Hence I mentioned PrivateMessage. Of course a SemiPrivate message will have the same properties.",
+          "createdAt": "2025-02-21T14:10:03Z",
+          "updatedAt": "2025-02-21T14:10:03Z"
+        },
+        {
+          "author": "TWal",
+          "authorAssociation": "NONE",
+          "body": "I don't understand, `PublicMessage` contains `FramedContent content;` which itself contains `opaque authenticated_data<V>;`?",
+          "createdAt": "2025-02-21T14:15:16Z",
+          "updatedAt": "2025-02-21T14:15:16Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Sorry, I guess I just think of it as the first A in AAD. All the data in a PublicMessage is authenticated data. It doesn't have any different properties in the authenticated_data field than it would elsewhere in the message (in application_data for example).\nBy \"no place to put it\" I just meant that there is no AEAD algorithm we are putting the **_A_** AD into.\n\nI suppose it is perfectly OK to still call this AAD, it's just a different definition. Do you think having application-defined content in authenticated_data is useful in a PublicMessage?",
+          "createdAt": "2025-02-21T14:28:18Z",
+          "updatedAt": "2025-02-21T14:28:18Z"
         }
       ]
     },
@@ -2999,26 +3034,42 @@
       "id": "PR_kwDOHZoI5M6L0afA",
       "title": "Correctly explain the multiple uses of authenticated_data",
       "url": "https://github.com/mlswg/mls-extensions/pull/50",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "rohanmahy",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
-      "body": "",
+      "body": "Addresses #47 ",
       "createdAt": "2025-02-20T00:01:34Z",
-      "updatedAt": "2025-02-20T00:04:54Z",
+      "updatedAt": "2025-02-20T07:46:17Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "d9a51c867259b25021d1761e5c5ab7e0f3bafe12",
       "headRepository": "rohanmahy/mls-extensions",
       "headRefName": "clarify-aad",
       "headRefOid": "9c0322cdf9d973f16212ec025111c4e428cb610f",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-02-20T07:46:17Z",
+      "mergedAt": "2025-02-20T07:46:17Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "5b7b0e79d69da70392bfb2abde3856d65b60442b"
+      },
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M6csrFm",
+          "commit": {
+            "abbreviatedOid": "9c0322c"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-02-20T07:46:04Z",
+          "updatedAt": "2025-02-20T07:46:04Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
