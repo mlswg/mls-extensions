@@ -55,8 +55,8 @@ informative:
 --- abstract
 
 The Messaging Layer Security (MLS) protocol is an asynchronous group
-authenticated key exchange protocol.  MLS provides a number of capabilities
-to applications, as well as several extension points internal to the protocol.  This
+authenticated key exchange protocol. MLS provides a number of capabilities
+to applications, as well as several extension points internal to the protocol. This
 document provides a consolidated application API, guidance for how the
 protocol's extension points should be used, and a few concrete examples of both
 core protocol extensions and uses of the application API.
@@ -68,10 +68,10 @@ core protocol extensions and uses of the application API.
 This document defines extensions to MLS {{!RFC9420}} that are not part of the
 main protocol specification, and uses them to explain how to extend the
 core operation of the MLS protocol. It also describes how applications can
-safely interact with the MLS to take advantage of security features of MLS.
+safely interact with MLS to take advantage of security features of MLS.
 
-The MLS protocol is designed to be integrated into applications, in order to
-provide security services that the application requires.  There are two
+The MLS protocol is designed to be integrated into applications in order to
+provide security services that the application requires. There are two
 questions to answer when designing such an integration:
 
 1. How does the application provide the services that MLS requires?
@@ -84,7 +84,7 @@ focuses on the second question.
 
 MLS itself offers some basic functions that applications can use, such as the
 secure message encapsulation (PrivateMessage), the MLS exporter, and the epoch
-authenticator.  Current MLS applications make use of these mechanisms to acheive
+authenticator. Current MLS applications make use of these mechanisms to achieve
 a variety of confidentiality and authentication properties.
 
 As application designers become familiar with MLS, there is
@@ -104,8 +104,8 @@ interest in leveraging other cryptographic tools that an MLS group provides:
 
 - Binding of information to the GroupContext to confirm group agreement.
 
-There is also interest in exposing an MLS group to multiple loosely-coordinated
-components of an application.  To accommodate such cases, the above mechanisms
+There is also interest in exposing an MLS group to multiple loosely coordinated
+components of an application. To accommodate such cases, the above mechanisms
 need to be exposed in such a way that the usage of different components do not
 conflict with each other, or with MLS itself.
 
@@ -120,10 +120,10 @@ group.
 {::boilerplate bcp14-tagged}
 
 This document makes heavy use of the terminology and the names of structs in the
-MLS specification {{!RFC9420}}.  In addition, we introduce the following new terms:
+MLS specification {{!RFC9420}}. In addition, we introduce the following new terms:
 
 Application:
-: The system that instantiates, manages, and uses an MLS group.  Each MLS group
+: The system that instantiates, manages, and uses an MLS group. Each MLS group
 is used by exactly one application, but an application may maintain multiple
 groups.
 
@@ -131,19 +131,19 @@ Application component:
 : A subsystem of an application that has access to an MLS group.
 
 Component ID:
-: An identifier for an application component.  These identifiers are assigned by
+: An identifier for an application component. These identifiers are assigned by
 the application.
 
 # Developing Extensions for the MLS Protocol
 
-MLS is highly extensible, and was designed to be used in a variety of different
+MLS is highly extensible and was designed to be used in a variety of different
 applications. As such, it is important to separate extensions that change the
 behavior of an MLS stack, and application usages of MLS that just take advantage
-of features of MLS or specific extensions (hereafter referred to as *components*). Furthermore it is essential that application components do not change the security properties of MLS or require new security analysis of the MLS protocol itself.
+of features of MLS or specific extensions (hereafter referred to as *components*). Furthermore, it is essential that application components do not change the security properties of MLS or require new security analysis of the MLS protocol itself.
 
 # The Safe Application Interface
 
-The mechansms in this section take MLS mechanisms that are either not
+The mechanisms in this section take MLS mechanisms that are either not
 inherently designed to be used by applications, or not inherently designed to be
 used by multiple application components, and adds a domain separator that
 separates application usage from MLS usage, and application components' usage
@@ -160,7 +160,7 @@ from each other:
   values.
 
 - Pre-shared keys are identified as originating from a specific component, so
-  that differnet components' contributions to the MLS key schedule will not
+  that different components' contributions to the MLS key schedule will not
   collide.
 
 - Additional Authenticated Data (AAD) can be domain separated by component.
@@ -175,21 +175,21 @@ of the extensibility mechanisms of MLS without having to define extensions
 themselves:
 
 - An `app_data_dictionary` extension type that associates application data with
-  MLS messages, or with the state of the group.
+  MLS messages or with the state of the group.
 
 - An AppEphemeral proposal type that enables arbitrary application data to
-  be associated to a Commit.
+  be associated with a Commit.
 
 - An AppDataUpdate proposal type that enables efficient updates to
   an `app_data_dictionary` GroupContext extension.
 
-As with the above, information carried in these proposals and extension marked
+As with the above, information carried in these proposals and extensions is marked
 as belonging to a specific application component, so that components can manage
 their information independently.
 
-The separation between components is acheived by the application assigning each
-component a unique component ID number.  These numbers are then incorporated
-into the appopriate calculations in the protocol to achieve the required
+The separation between components is achieved by the application assigning each
+component a unique component ID number. These numbers are then incorporated
+into the appropriate calculations in the protocol to achieve the required
 separation.
 
 ## Component IDs
@@ -201,19 +201,19 @@ the scope of an application.
 uint32 ComponentID;
 ~~~
 
-> TODO: What are the uniqueness requirements on these?  It seems like the more
-> diversity, the better.  For example, if a ComponentID is reused across
+> TODO: What are the uniqueness requirements on these? It seems like the more
+> diversity, the better. For example, if a ComponentID is reused across
 > applications (e.g., via an IANA registry), then there will be a risk of replay
-> across applications.  Maybe we should include a binder to the group/epoch as
+> across applications. Maybe we should include a binder to the group/epoch as
 > well, something derived from the key schedule.
 
 > TODO: It might be better to frame these in terms of "data types" instead of
-> components, to avoid presuming software architecture.  Though that makes less
+> components, to avoid presuming software architecture. Though that makes less
 > sense for the more "active" portions of the API, e.g., signing and encryption.
 
 When a label is required for an operation, the following data structure is used.
-The `label` field identifies the operation being performed.  The `component_id`
-field identifies the component performing the operation.  The `context` field is
+The `label` field identifies the operation being performed. The `component_id`
+field identifies the component performing the operation. The `context` field is
 specified by the operation in question.
 
 ~~~ tls
@@ -230,9 +230,9 @@ struct {
 This component of the API allows components to make use of the HPKE key pairs
 generated by MLS. A component identified by a ComponentID can use any HPKE
 key pair for any operation defined in {{!RFC9180}}, such as encryption,
-exporting keys and the PSK mode, as long as the `info` input to `Setup<MODE>S`
+exporting keys, and the PSK mode, as long as the `info` input to `Setup<MODE>S`
 and `Setup<MODE>R` is set to ComponentOperationLabel with `component_id` set
-to the appopriate ComponentID. The `context` can be set to an arbitrary Context
+to the appropriate ComponentID. The `context` can be set to an arbitrary Context
 specified by the application designer and can be empty if not needed. For
 example, a component can use a key pair PublicKey, PrivateKey to encrypt data
 as follows:
@@ -254,7 +254,7 @@ component_id = ComponentID
 context = Context
 ~~~
 
-> TODO: Should this use EncryptWithLabel / DecryptWithLabel?  That wouldn't
+> TODO: Should this use EncryptWithLabel / DecryptWithLabel? That wouldn't
 > cover other modes / exports, but you could say "mutatis mutandis".
 
 For operations involving the secret key, ComponentID MUST be set to the
@@ -282,7 +282,6 @@ list summarizes lifetimes of MLS key pairs.
 - The init_key in a KeyPackage and the corresponding secret key. The secret key
   is known only to the owner of the KeyPackage and is deleted immediately after it
   is used to join a group.
-
 
 ## Signature Keys
 
@@ -325,7 +324,7 @@ with every operation.
 ## Exported Secrets
 
 An application component can use MLS as a group key agreement protocol by
-exporting symmetric keys.  Such keys can be exported (i.e. derived from MLS key
+exporting symmetric keys. Such keys can be exported (i.e. derived from MLS key
 material) in two phases per epoch: Either at the start of the epoch, or during
 the epoch. Derivation at the start of the epoch has the added advantage that the
 source key material is deleted after use, allowing the derived key material to
@@ -354,8 +353,8 @@ Where ExpandWithLabel is defined in {{Section 8 of RFC9420}} and where
 ComponentID MUST be set to the ComponentID of the component performing the
 export.
 
-> TODO: This section seems over-complicated to me.  Why is it not sufficient to
-> just use the `exporter_secret`?  Or the `MLS-Exporter` mechanism with a
+> TODO: This section seems over-complicated to me. Why is it not sufficient to
+> just use the `exporter_secret`? Or the `MLS-Exporter` mechanism with a
 > label structured to include the ComponentID?
 
 
@@ -376,7 +375,7 @@ members have access to and agree on a password or a shared file.
 This is achieved by creating a new epoch via a PSK proposal. Transitioning to
 the new epoch requires using the information agreed upon.
 
-To facilitate using PSKs in a safe way, this document defines a new PSKType for
+To facilitate using PSKs safely, this document defines a new PSKType for
 application components. This provides domain separation between pre-shared keys
 used by the core MLS protocol and applications, and between those used by
 different components.
@@ -401,7 +400,7 @@ struct {
 ~~~
 
 > TODO: It seems like you could also do this by structuring the `external`
-> PSKType as (component_id, psk_id).  I guess this approach separates this API
+> PSKType as (component_id, psk_id). I guess this approach separates this API
 > from other external PSKs.
 
 
@@ -409,8 +408,8 @@ struct {
 
 The MLS GroupContext, LeafNode, KeyPackage, and GroupInfo objects each have an
 `extensions` field that can carry additional data not defined by the MLS
-specification.  The `app_data_dictionary` extension provides a generic container
-that applications can use to attach application data to these messages.  Each
+specification. The `app_data_dictionary` extension provides a generic container
+that applications can use to attach application data to these messages. Each
 usage of the extension serves a slightly different purpose:
 
 * GroupContext: Confirms that all members of the group agree on the application
@@ -440,21 +439,21 @@ The entries in the `component_data` MUST be sorted by `component_id`, and there
 MUST be at most one entry for each `component_id`.
 
 An `app_data_dictionary` extension in a LeafNode, KeyPackage, or GroupInfo can
-be set when the object is created.  An `app_data_dictionary` extension in the
+be set when the object is created. An `app_data_dictionary` extension in the
 GroupContext needs to be managed using the tools available to update GroupContext extensions. The creator of the group can set extensions unilaterally. Thereafter, the AppDataUpdate proposal described in the next section is used to update the `app_data_dictionary` extension.
 
 ## Updating Application Data in the GroupContext {#appdataupdate}
 
 Updating the `app_data_dictionary` with a GroupContextExtensions proposal is
-cumbersome.  The application data needs to be transmitted in its entirety,
-along with any other extensions, whether or not they are being changed.  And a
+cumbersome. The application data needs to be transmitted in its entirety,
+along with any other extensions, whether or not they are being changed. And a
 GroupContextExtensions proposal always requires an UpdatePath, which updating
 application state never should.
 
 The AppDataUpdate proposal allows the `app_data_dictionary` extension to
-be updated without these costs.  Instead of sending the whole value of the
+be updated without these costs. Instead of sending the whole value of the
 extension, it sends only an update, which is interpreted by the application to
-provide the new content for the `app_data_dictionary` extension.  No other
+provide the new content for the `app_data_dictionary` extension. No other
 extensions are sent or updated, and no UpdatePath is required.
 
 ~~~
@@ -478,10 +477,10 @@ struct {
 
 An AppDataUpdate proposal is invalid if its `component_id` references a
 component that is not known to the application, or if it specifies the removal
-of state for a `component_id` that has no state present.  A proposal list is
+of state for a `component_id` that has no state present. A proposal list is
 invalid if it includes multiple AppDataUpdate proposals that `remove`
 state for the same `component_id`, or proposals that both `update` and `remove`
-state for the same `component_id`.  In other words, for a given `component_id`,
+state for the same `component_id`. In other words, for a given `component_id`,
 a proposal list is valid only if it contains (a) a single `remove` operation or
 (b) one or more `update` operation.
 
@@ -499,11 +498,11 @@ GroupContext extension, if it exists, is left as it was.
 
 A commit can contain a GroupContextExtensions proposal which modifies
 GroupContext extensions other than `app_data_dictionary`, and can be followed by
-zero or more AppDataUpdate proposals.  This allows modifications to both the
+zero or more AppDataUpdate proposals. This allows modifications to both the
 `app_data_dictionary` extension (via AppDataUpdate) and other extensions (via
 GroupContextExtensions) in the same Commit.
 
-A client applies AppDataUpdate proposals by component ID.  For each
+A client applies AppDataUpdate proposals by component ID. For each
 `component_id` field that appears in an AppDataUpdate proposal in the
 Commit, the client assembles a list of AppDataUpdate proposals with that
 `component_id`, in the order in which they appear in the Commit, and processes
@@ -540,18 +539,18 @@ them in the following way:
 
     * Otherwise, insert a new entry in the `component_states` vector with the
       specified `component_id` and the `data` field set to the `new_data`
-      value.  The new entry is inserted at the proper point to keep the
+      value. The new entry is inserted at the proper point to keep the
       `component_states` vector sorted by `component_id`.
 
 * Otherwise, the proposal list is invalid.
 
 > NOTE: An alternative design here would be to have the `update` operation
 > simply set the new value for the `app_data_dictionary` GCE, instead of sending a
-> diff.  This would be simpler in that the MLS stack wouldn't have to ask the
+> diff. This would be simpler in that the MLS stack wouldn't have to ask the
 > application for the new state value, and would discourage applications from
 > storing large state in the GroupContext directly (which bloats Welcome
-> messages).  It would effectively require the state in the GroupContext to be a
-> hash of the real state, to avoid large AppDataUpdate proposals.  This
+> messages). It would effectively require the state in the GroupContext to be a
+> hash of the real state, to avoid large AppDataUpdate proposals. This
 > pushes some complexity onto the application, since the application has to
 > define a hashing algorithm, and define its own scheme for initializing new
 > joiners.
@@ -568,12 +567,12 @@ an external commit or via an external proposer.
 
 The AppEphemeral proposal type allows an application component to associate
 application data to a Commit, so that the member processing the Commit knows
-that all other group members will be processing the same data.  AppEphemeral
+that all other group members will be processing the same data. AppEphemeral
 proposals are ephemeral in the sense that they do not change any persistent
 state related to MLS, aside from their appearance in the transcript hash.
 
 The content of an AppEphemeral proposal is the same as an `app_data_dictionary`
-extension.  The proposal type is set in {{iana-considerations}}.
+extension. The proposal type is set in {{iana-considerations}}.
 
 ~~~ tls-presentation
 struct {
@@ -591,7 +590,7 @@ AppEphemeral proposals MUST be processed after any default proposals (i.e.,
 those defined in {{RFC9420}}), but before any AppDataUpdate proposals.
 
 A client applies an AppEphemeral proposal by providing the contents of the
-`app_data_dictionary` field to the component identified by the `component_id`.  If
+`app_data_dictionary` field to the component identified by the `component_id`. If
 a Commit references more than one AppEphemeral proposal for the same
 `component_id` value, then they MUST be processed in the order in which they are
 specified in the Commit.
@@ -747,17 +746,17 @@ struct {
 ~~~
 
 An AppAck represents a set of messages received by the sender in the
-current epoch.  Messages are represented by the `sender` and `generation` values
-in the MLSCiphertext for the message.  Each MessageRange represents receipt of a
+current epoch. Messages are represented by the `sender` and `generation` values
+in the MLSCiphertext for the message. Each MessageRange represents receipt of a
 span of messages whose `generation` values form a continuous range from
 `first_generation` to `last_generation`, inclusive.
 
 AppAck objects are sent as a guard against the Delivery Service dropping
-application messages.  The sequential nature of the `generation` field provides
+application messages. The sequential nature of the `generation` field provides
 a degree of loss detection, since gaps in the `generation` sequence indicate
-dropped messages.  AppAck completes this story by addressing the scenario where
+dropped messages. AppAck completes this story by addressing the scenario where
 the Delivery Service drops all messages after a certain point, so that a later
-generation is never observed.  Obviously, there is a risk that AppAck messages
+generation is never observed. Obviously, there is a risk that AppAck messages
 could be suppressed as well, but their inclusion in the transcript means that if
 they are suppressed then the group cannot advance at all.
 
@@ -846,7 +845,7 @@ Targeted messages uses HPKE to encrypt the message content between two leaves.
 
 #### Sender data encryption
 
-In addition, `TargetedMessageSenderAuthData` is encrypted in a similar way to
+In addition, `TargetedMessageSenderAuthData` is encrypted similarly to
 `MLSSenderData` as described in {{Section 6.3.2 of !RFC9420}}. The
 `TargetedMessageSenderAuthData.sender_leaf_index` field is the leaf index of the
 sender. The `TargetedMessageSenderAuthData.authentication_scheme` field is the
@@ -1027,7 +1026,7 @@ described later in {{app-framing}}. This allows clients to confirm that all
 members of a group can communicate.
 
 >Note that when the membership of a group changes, or when the policy of the
- group changes, it is responsibility of the committer to insure that the
+ group changes, it is responsibility of the committer to ensure that the
  membership and policies are compatible.
 
 As clients are upgraded to support new formats they can use these extensions
@@ -1111,7 +1110,7 @@ LeafNode as described in the previous paragraph.)
 
 MLS clients SHOULD NOT add an MLS client to an MLS group with
 `content_media_types` in its GroupContext unless the MLS client advertises it
-can support all of the required MediaTypes.
+can support all the required MediaTypes.
 As an exception, a client could be preconfigured to know that certain clients
 support the required types. Likewise, an MLS client is already forbidden from
 issuing or committing a GroupContextExtensions Proposal which introduces
@@ -1140,8 +1139,8 @@ the `content_media_types` component in the GroupContext.
 The design of the MLS protocol prevents a member of
 an MLS group from removing itself immediately from the group. (To cause
 an immediate change in the group, a member must send a Commit message.
-However the sender of a Commit message knows the keying material of the
-new epoch and therefore needs to be part of the group.) Instead a member
+However, the sender of a Commit message knows the keying material of the
+new epoch and therefore needs to be part of the group.) Instead, a member
 wishing to remove itself can send a Remove Proposal and wait for another
 member to Commit its Proposal.
 
@@ -1304,13 +1303,13 @@ struct {
 } WeakMultiCredential;
 ~~~
 
-The two types of credentials are processed in exactly the same way.  The only
+The two types of credentials are processed in exactly the same way. The only
 difference is in how they are treated when evaluating support by other clients,
 as discussed below.
 
 ### Credential Bindings
 
-A multi-credential consists of a collection of "credential bindings".  Each
+A multi-credential consists of a collection of "credential bindings". Each
 credential binding is a signed statement by the holder of the credential that
 the signature key in the LeafNode belongs to the holder of that credential.
 Specifically, the signature is computed using the MLS `SignWithLabel` function,
@@ -1334,7 +1333,7 @@ with regard to support by group members discussed below.
 ### Verifying a Multi-Credential
 
 A credential binding is supported by a client if the client supports the
-credential type and cipher suite of the binding.  A credential binding is valid
+credential type and cipher suite of the binding. A credential binding is valid
 in the context of a given LeafNode if both of the following are true:
 
 * The `credential` is valid according to the MLS Authentication Service.
@@ -1347,7 +1346,7 @@ in the context of a given LeafNode if both of the following are true:
   the leaf node.
 
 A client that receives a credential of type `multi` in a LeafNode MUST verify
-that all of the following are true:
+that all the following are true:
 
 * All members of the group support credential type `multi`.
 
@@ -1359,12 +1358,12 @@ that all of the following are true:
   * The binding is valid in the context of the LeafNode.
 
 A client that receives a credential of type `weak-multi` in a LeafNode MUST verify
-that all of the following are true:
+that all the following are true:
 
 * All members of the group support credential type `weak-multi`.
 
 * Each member of the group supports at least one binding in the
-  multi-credential.  (Different members may support different subsets.)
+  multi-credential. (Different members may support different subsets.)
 
 * Every binding that this client supports is valid in the context of the
   LeafNode.
@@ -1373,7 +1372,7 @@ that all of the following are true:
 # IANA Considerations
 
 This document requests the addition of various new values under the heading
-of "Messaging Layer Security".  Each registration is organized under the
+of "Messaging Layer Security". Each registration is organized under the
 relevant registry Type.
 
 This document also requests the creation of a new MLS applications components
@@ -1538,7 +1537,7 @@ Template:
 - Reference: The document where this component is defined
 
 The restrictions noted in the "Where" column are to be enforced by the
-application.  MLS implementations MUST NOT impose restrictions on where
+application. MLS implementations MUST NOT impose restrictions on where
 component IDs are used in which parts of MLS, unless specifically directed to by
 the application.
 
@@ -1580,7 +1579,7 @@ Service (or an intermediary) dropped application messages, since gaps in the
 are accepted by the Delivery Service, but not received by some members, the
 members who have missed the corresponding AppEphemeral proposals will not be
 able to send or receive a commit message, because the proposal is included
-in the transcript hash. Likewise if AppAck objects and/or commits are sent
+in the transcript hash. Likewise, if AppAck objects and/or commits are sent
 periodically by every member, other members will be able to detect a member
 that is no longer sending on that schedule or whose handshake messages are being
 suppressed by the DS.
@@ -1592,7 +1591,7 @@ suppressed by the DS.
 > until it has been incorporated into an accepted Commit.
 
 The schedule on which AppAck objects are sent in AppEphemeral proposals is up to
-the application,and determines which cases of loss/suppression are detected.
+the application, and determines which cases of loss/suppression are detected.
 For example:
 
 - The application might have the committer include an AppAck whenever a
@@ -1600,7 +1599,7 @@ For example:
   did not reach the committer.
 
 - The application could have a client send an AppAck whenever an application
-  message is sent, covering all messages received since its last AppAck.  This
+  message is sent, covering all messages received since its last AppAck. This
   would provide a complete view of any losses experienced by active members.
 
 - The application could simply have clients send AppAck proposals on a timer, so
@@ -1608,16 +1607,16 @@ For example:
 
 An application using AppAck to guard against loss/suppression of
 application messages also needs to ensure that AppAck messages and the Commits
-that reference them are not dropped.  One way to do this is to always encrypt
+that reference them are not dropped. One way to do this is to always encrypt
 Proposal and Commit messages, to make it more difficult for the Delivery Service
-to recognize which messages contain AppAcks.  The application can also have
+to recognize which messages contain AppAcks. The application can also have
 clients enforce an AppAck schedule, reporting loss if an AppAck is not received
 at the expected time.
 
 ## Targeted Messages
 
 In addition to the sender authentication, Targeted Messages are authenticated by
-using a preshared key (PSK) between the sender and the recipient. The PSK is
+using a pre-shared key (PSK) between the sender and the recipient. The PSK is
 exported from the group key schedule using the label "targeted message psk".
 This ensures that the PSK is only valid for a specific group and epoch, and the
 Forward Secrecy and Post-Compromise Security guarantees of the group key
@@ -1742,10 +1741,10 @@ struct {
 ~~~
 
 The `ExtensionState` GroupContext extension contains data either directly (if
-`hash_or_data = data`) or inditectly via a hash (if `hash_or_data = hash`).
+`hash_or_data = data`) or indirectly via a hash (if `hash_or_data = hash`).
 
 The owning extension can read and write the state stored in an `ExtensionState`
-extension using an extension-defined proposal (see ). The semantics
+extension using an extension-defined proposal (see TODO). The semantics
 of the proposal determines how the state is changed.
 
 The `read` variable determines the permissions that other MLS extensions have
@@ -1762,7 +1761,7 @@ Storing the data directly in the `ExtensionState` means the data becomes part of
 the group state. Depending on the application design, this can be advantageous,
 because it is distributed via Welcome messages. However, it could also mean that
 the data is visible to the delivery service. Additionally, if the application
-makes use of GroupContextExtension proposals, it may be necessary to send all of
+makes use of GroupContextExtension proposals, it may be necessary to send all
 the data with each such extension.
 
 Including the data by hash only allows group members to agree on the data
