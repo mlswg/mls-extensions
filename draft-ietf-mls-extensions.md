@@ -208,7 +208,7 @@ The `base_label` field is always the fixed string "Application".  The
 
 ~~~ tls
 struct {
-  opaque base_label<V>; // = "Application"
+  opaque base_label<V>; /*= "Application" */
   ComponentID component_id;
   opaque label<V>;
 } ComponentOperationLabel;
