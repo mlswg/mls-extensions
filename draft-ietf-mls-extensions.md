@@ -315,10 +315,11 @@ forward-secure exporter for use by application components.
 The safe exporter is constructed from an Exporter Tree, tree of secrets with the
 same structure as the Secret Tree defined in {{Section 9 of RFC9420}}, with two
 differences: First, an Exporter Tree always has 2<sup>16</sup> leaves,
-corresponding to the 16 bits of a ComponentID value. Second, the root of the
-Exporter Tree is the `application_export_secret`, an additional secret derived
-from the `epoch_secret` at the beginning of the epoch in the same way as the
-other secrets listed in Table 4 of {{!RFC9420}} using the label
+corresponding to the 16 bits of a ComponentID value. (As with the Secret Tree,
+the nodes of the tree can be generated on-demand, for space-efficiency.) Second,
+the root of the Exporter Tree is the `application_export_secret`, an additional
+secret derived from the `epoch_secret` at the beginning of the epoch in the same
+way as the other secrets listed in Table 4 of {{!RFC9420}} using the label
 `"application_export"`.
 
 This tree defines one exported secret per ComponentID.  The secret for a a
