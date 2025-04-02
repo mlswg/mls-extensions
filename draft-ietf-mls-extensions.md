@@ -231,7 +231,7 @@ SafeEncryptWithLabel(PublicKey, ComponentID, Label, Context, Plaintext) =
   EncryptWithLabel(PublicKey, ComponentOperationLabel, Context, Plaintext)
 
 SafeDecryptWithLabel(PrivateKey, ComponentID, Label, Context, KEMOutput,
-  Ciphertext) = 
+  Ciphertext) =
   DecryptWithLabel(PrivateKey, ComponentOperationLabel, Context,
     KEMOutput, Ciphertext)
 ~~~
@@ -314,7 +314,7 @@ forward-secure exporter for use by application components.
 
 The safe exporter is constructed from an Exporter Tree, tree of secrets with the
 same structure as the Secret Tree defined in {{Section 9 of RFC9420}}, with two
-differences: First, an Exporter Tree always has 2<exp>16</exp> leaves,
+differences: First, an Exporter Tree always has 2<sup>16</sup> leaves,
 corresponding to the 16 bits of a ComponentID value. Second, the root of the
 Exporter Tree is the `application_export_secret`, an additional secret derived
 from the `epoch_secret` at the beginning of the epoch in the same way as the
