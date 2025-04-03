@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-04-01T00:51:08.020886+00:00",
+  "timestamp": "2025-04-03T00:43:11.112011+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -3067,6 +3067,248 @@
           "body": "",
           "createdAt": "2025-02-20T07:46:04Z",
           "updatedAt": "2025-02-20T07:46:04Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 51,
+      "id": "PR_kwDOHZoI5M6RC1Jg",
+      "title": "Fix typos using languagetool",
+      "url": "https://github.com/mlswg/mls-extensions/pull/51",
+      "state": "OPEN",
+      "author": "timokoesters",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-04-02T08:07:49Z",
+      "updatedAt": "2025-04-02T22:06:23Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "5b7b0e79d69da70392bfb2abde3856d65b60442b",
+      "headRepository": "timokoesters/mls-extensions",
+      "headRefName": "patch-1",
+      "headRefOid": "1009bca6f03603aac389518f0ccb11872fa09d9f",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Thanks @timokoesters .  Do you know if it would be practical to integrate languagetool into the CI for this doc and similar ones?  Not sure exactly what the workflow would be, since you would want humans to be able to reject suggestions from the AI.",
+          "createdAt": "2025-04-02T12:57:36Z",
+          "updatedAt": "2025-04-02T12:57:36Z"
+        },
+        {
+          "author": "timokoesters",
+          "authorAssociation": "NONE",
+          "body": "LanguageTool is pretty strict by default. Maybe you can limit the set of lints and then display them as Github PR annotations? https://github.com/marketplace/actions/pr-coverage-annotate\r\n\r\nBut I can recommend setting it up in your text editor or using the CLI ltex-cli.",
+          "createdAt": "2025-04-02T19:57:22Z",
+          "updatedAt": "2025-04-02T19:57:22Z"
+        },
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Even better, it looks like there's an action that will propose the edits so that you can just commit them: \r\nhttps://github.com/marketplace/actions/suggest-changes-action \r\n\r\nI filed an issue on the template repo: https://github.com/martinthomson/i-d-template/issues/477",
+          "createdAt": "2025-04-02T22:06:22Z",
+          "updatedAt": "2025-04-02T22:06:22Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M6jFsVM",
+          "commit": {
+            "abbreviatedOid": "1009bca"
+          },
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-04-02T12:54:31Z",
+          "updatedAt": "2025-04-02T12:54:31Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6jKVvx",
+          "commit": {
+            "abbreviatedOid": "1009bca"
+          },
+          "author": "timokoesters",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-04-02T19:45:26Z",
+          "updatedAt": "2025-04-02T19:45:27Z",
+          "comments": [
+            {
+              "originalPosition": 508,
+              "body": "There's a missing link here",
+              "createdAt": "2025-04-02T19:45:26Z",
+              "updatedAt": "2025-04-02T19:45:27Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 52,
+      "id": "PR_kwDOHZoI5M6RGXDC",
+      "title": "Fix TODOs",
+      "url": "https://github.com/mlswg/mls-extensions/pull/52",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This PR fixes the TODOs that remained in the document.  It does so by making two breaking changes:\r\n\r\n1. The HPKE and signature functions are modified to align more closely with the EncryptWithLabel / SignWithLabel functions in RFC 9420\r\n2. The exporter section is rewritten to define a forward-secure exporter.",
+      "createdAt": "2025-04-02T14:28:21Z",
+      "updatedAt": "2025-04-02T19:28:52Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "5b7b0e79d69da70392bfb2abde3856d65b60442b",
+      "headRepository": "mlswg/mls-extensions",
+      "headRefName": "todo",
+      "headRefOid": "1819894ca574e43bbc395759540507ebfad8b458",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M6jG_fM",
+          "commit": {
+            "abbreviatedOid": "8ac646a"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-04-02T14:38:11Z",
+          "updatedAt": "2025-04-02T14:38:11Z",
+          "comments": [
+            {
+              "originalPosition": 25,
+              "body": "```suggestion\r\n  opaque base_label<V>; /*= \"Application\" */\r\n```",
+              "createdAt": "2025-04-02T14:38:11Z",
+              "updatedAt": "2025-04-02T14:38:11Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6jHKVT",
+          "commit": {
+            "abbreviatedOid": "8ac646a"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-04-02T14:50:56Z",
+          "updatedAt": "2025-04-02T14:50:56Z",
+          "comments": [
+            {
+              "originalPosition": 118,
+              "body": "```suggestion\r\nnot deleted after a secret has been derived.  In this section, we define a\r\n```",
+              "createdAt": "2025-04-02T14:50:56Z",
+              "updatedAt": "2025-04-02T14:50:56Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6jHLx3",
+          "commit": {
+            "abbreviatedOid": "8ac646a"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-04-02T14:52:12Z",
+          "updatedAt": "2025-04-02T14:52:12Z",
+          "comments": [
+            {
+              "originalPosition": 28,
+              "body": "is this base_label instead of label?\r\n\r\n```suggestion\r\n  opaque base_label<V>;\r\n```",
+              "createdAt": "2025-04-02T14:52:12Z",
+              "updatedAt": "2025-04-02T14:52:12Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6jHc9r",
+          "commit": {
+            "abbreviatedOid": "8ac646a"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-04-02T15:06:30Z",
+          "updatedAt": "2025-04-02T15:06:31Z",
+          "comments": [
+            {
+              "originalPosition": 126,
+              "body": "maybe soften this to \"can have up to\" or \"conceptually has\"? ",
+              "createdAt": "2025-04-02T15:06:30Z",
+              "updatedAt": "2025-04-02T15:06:31Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6jHdsA",
+          "commit": {
+            "abbreviatedOid": "8ac646a"
+          },
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-04-02T15:07:23Z",
+          "updatedAt": "2025-04-02T15:07:35Z",
+          "comments": [
+            {
+              "originalPosition": 28,
+              "body": "No, this is the actual label.  So the whole label ends up being:\r\n\r\n```\r\nRFC9420: MLS 1.0 $label\r\nHere:    MLS 1.0 Application$component_id$label\r\n```",
+              "createdAt": "2025-04-02T15:07:23Z",
+              "updatedAt": "2025-04-02T15:07:35Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6jIQl1",
+          "commit": {
+            "abbreviatedOid": "1819894"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-04-02T16:04:31Z",
+          "updatedAt": "2025-04-02T16:04:31Z",
+          "comments": [
+            {
+              "originalPosition": 137,
+              "body": "```suggestion\r\nThis tree defines one exported secret per ComponentID.  The secret for a\r\n```",
+              "createdAt": "2025-04-02T16:04:31Z",
+              "updatedAt": "2025-04-02T16:04:32Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6jKKjo",
+          "commit": {
+            "abbreviatedOid": "1819894"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-04-02T19:28:52Z",
+          "updatedAt": "2025-04-02T19:28:52Z",
           "comments": []
         }
       ]
