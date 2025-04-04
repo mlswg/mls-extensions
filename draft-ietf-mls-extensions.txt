@@ -4,8 +4,8 @@
 
 Messaging Layer Security                                       R. Robert
 Internet-Draft                                               Phoenix R&D
-Intended status: Standards Track                            3 April 2025
-Expires: 5 October 2025
+Intended status: Standards Track                            4 April 2025
+Expires: 6 October 2025
 
 
              The Messaging Layer Security (MLS) Extensions
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 5 October 2025.
+   This Internet-Draft will expire on 6 October 2025.
 
 Copyright Notice
 
@@ -145,10 +145,10 @@ Table of Contents
    This document defines extensions to MLS [RFC9420] that are not part
    of the main protocol specification, and uses them to explain how to
    extend the core operation of the MLS protocol.  It also describes how
-   applications can safely interact with the MLS to take advantage of
+   applications can safely interact with MLS to take advantage of
    security features of MLS.
 
-   The MLS protocol is designed to be integrated into applications, in
+   The MLS protocol is designed to be integrated into applications in
    order to provide security services that the application requires.
    There are two questions to answer when designing such an integration:
 
@@ -164,7 +164,7 @@ Table of Contents
    MLS itself offers some basic functions that applications can use,
    such as the secure message encapsulation (PrivateMessage), the MLS
    exporter, and the epoch authenticator.  Current MLS applications make
-   use of these mechanisms to acheive a variety of confidentiality and
+   use of these mechanisms to achieve a variety of confidentiality and
    authentication properties.
 
    As application designers become familiar with MLS, there is interest
@@ -185,7 +185,7 @@ Table of Contents
    *  Binding of information to the GroupContext to confirm group
       agreement.
 
-   There is also interest in exposing an MLS group to multiple loosely-
+   There is also interest in exposing an MLS group to multiple loosely
    coordinated components of an application.  To accommodate such cases,
    the above mechanisms need to be exposed in such a way that the usage
    of different components do not conflict with each other, or with MLS
@@ -220,19 +220,19 @@ Table of Contents
 
 3.  Developing Extensions for the MLS Protocol
 
-   MLS is highly extensible, and was designed to be used in a variety of
+   MLS is highly extensible and was designed to be used in a variety of
    different applications.  As such, it is important to separate
    extensions that change the behavior of an MLS stack, and application
    usages of MLS that just take advantage of features of MLS or specific
-   extensions (hereafter referred to as _components_).  Furthermore it
+   extensions (hereafter referred to as _components_).  Furthermore, it
    is essential that application components do not change the security
    properties of MLS or require new security analysis of the MLS
    protocol itself.
 
 4.  The Safe Application Interface
 
-   The mechansms in this section take MLS mechanisms that are either not
-   inherently designed to be used by applications, or not inherently
+   The mechanisms in this section take MLS mechanisms that are either
+   not inherently designed to be used by applications, or not inherently
    designed to be used by multiple application components, and adds a
    domain separator that separates application usage from MLS usage, and
    application components' usage from each other:
@@ -248,7 +248,7 @@ Table of Contents
       different exported values.
 
    *  Pre-shared keys are identified as originating from a specific
-      component, so that differnet components' contributions to the MLS
+      component, so that different components' contributions to the MLS
       key schedule will not collide.
 
    *  Additional Authenticated Data (AAD) can be domain separated by
@@ -264,21 +264,22 @@ Table of Contents
    define extensions themselves:
 
    *  An app_data_dictionary extension type that associates application
-      data with MLS messages, or with the state of the group.
+      data with MLS messages or with the state of the group.
 
    *  An AppEphemeral proposal type that enables arbitrary application
-      data to be associated to a Commit.
+      data to be associated with a Commit.
 
    *  An AppDataUpdate proposal type that enables efficient updates to
       an app_data_dictionary GroupContext extension.
 
    As with the above, information carried in these proposals and
-   extension marked as belonging to a specific application component, so
-   that components can manage their information independently.
+   extensions is marked as belonging to a specific application
+   component, so that components can manage their information
+   independently.
 
-   The separation between components is acheived by the application
+   The separation between components is achieved by the application
    assigning each component a unique component ID number.  These numbers
-   are then incorporated into the appopriate calculations in the
+   are then incorporated into the appropriate calculations in the
    protocol to achieve the required separation.
 
 4.1.  Component IDs
@@ -317,9 +318,9 @@ Table of Contents
    This component of the API allows components to make use of the HPKE
    key pairs generated by MLS.  A component identified by a ComponentID
    can use any HPKE key pair for any operation defined in [RFC9180],
-   such as encryption, exporting keys and the PSK mode, as long as the
+   such as encryption, exporting keys, and the PSK mode, as long as the
    info input to Setup<MODE>S and Setup<MODE>R is set to
-   ComponentOperationLabel with component_id set to the appopriate
+   ComponentOperationLabel with component_id set to the appropriate
    ComponentID.  The context can be set to an arbitrary Context
    specified by the application designer and can be empty if not needed.
    For example, a component can use a key pair PublicKey, PrivateKey to
@@ -466,10 +467,10 @@ Table of Contents
    Transitioning to the new epoch requires using the information agreed
    upon.
 
-   To facilitate using PSKs in a safe way, this document defines a new
-   PSKType for application components.  This provides domain separation
-   between pre-shared keys used by the core MLS protocol and
-   applications, and between those used by different components.
+   To facilitate using PSKs safely, this document defines a new PSKType
+   for application components.  This provides domain separation between
+   pre-shared keys used by the core MLS protocol and applications, and
+   between those used by different components.
 
    enum {
      // ...
@@ -940,8 +941,8 @@ Table of Contents
 
 6.2.3.1.  Sender data encryption
 
-   In addition, TargetedMessageSenderAuthData is encrypted in a similar
-   way to MLSSenderData as described in Section 6.3.2 of [RFC9420].  The
+   In addition, TargetedMessageSenderAuthData is encrypted similarly to
+   MLSSenderData as described in Section 6.3.2 of [RFC9420].  The
    TargetedMessageSenderAuthData.sender_leaf_index field is the leaf
    index of the sender.  The
    TargetedMessageSenderAuthData.authentication_scheme field is the
@@ -1109,7 +1110,7 @@ Table of Contents
 
       Note that when the membership of a group changes, or when the
       policy of the group changes, it is responsibility of the committer
-      to insure that the membership and policies are compatible.
+      to ensure that the membership and policies are compatible.
 
    As clients are upgraded to support new formats they can use these
    extensions to detect when all members support a new or more efficient
@@ -1190,7 +1191,7 @@ Table of Contents
 
    MLS clients SHOULD NOT add an MLS client to an MLS group with
    content_media_types in its GroupContext unless the MLS client
-   advertises it can support all of the required MediaTypes.  As an
+   advertises it can support all the required MediaTypes.  As an
    exception, a client could be preconfigured to know that certain
    clients support the required types.  Likewise, an MLS client is
    already forbidden from issuing or committing a GroupContextExtensions
@@ -1217,11 +1218,11 @@ Table of Contents
 
    The design of the MLS protocol prevents a member of an MLS group from
    removing itself immediately from the group.  (To cause an immediate
-   change in the group, a member must send a Commit message.  However
+   change in the group, a member must send a Commit message.  However,
    the sender of a Commit message knows the keying material of the new
-   epoch and therefore needs to be part of the group.)  Instead a member
-   wishing to remove itself can send a Remove Proposal and wait for
-   another member to Commit its Proposal.
+   epoch and therefore needs to be part of the group.)  Instead, a
+   member wishing to remove itself can send a Remove Proposal and wait
+   for another member to Commit its Proposal.
 
    Unfortunately, MLS clients that join via an External Commit ignore
    pending, but otherwise valid, Remove Proposals.  The member trying to
@@ -1433,7 +1434,7 @@ Table of Contents
       value in the leaf node.
 
    A client that receives a credential of type multi in a LeafNode MUST
-   verify that all of the following are true:
+   verify that all the following are true:
 
    *  All members of the group support credential type multi.
 
@@ -1445,7 +1446,7 @@ Table of Contents
       -  The binding is valid in the context of the LeafNode.
 
    A client that receives a credential of type weak-multi in a LeafNode
-   MUST verify that all of the following are true:
+   MUST verify that all the following are true:
 
    *  All members of the group support credential type weak-multi.
 
@@ -1726,7 +1727,7 @@ Table of Contents
    received by some members, the members who have missed the
    corresponding AppEphemeral proposals will not be able to send or
    receive a commit message, because the proposal is included in the
-   transcript hash.  Likewise if AppAck objects and/or commits are sent
+   transcript hash.  Likewise, if AppAck objects and/or commits are sent
    periodically by every member, other members will be able to detect a
    member that is no longer sending on that schedule or whose handshake
    messages are being suppressed by the DS.
@@ -1739,7 +1740,7 @@ Table of Contents
       into an accepted Commit.
 
    The schedule on which AppAck objects are sent in AppEphemeral
-   proposals is up to the application,and determines which cases of
+   proposals is up to the application, and determines which cases of
    loss/suppression are detected.  For example:
 
    *  The application might have the committer include an AppAck
@@ -1766,7 +1767,7 @@ Table of Contents
 8.3.  Targeted Messages
 
    In addition to the sender authentication, Targeted Messages are
-   authenticated by using a preshared key (PSK) between the sender and
+   authenticated by using a pre-shared key (PSK) between the sender and
    the recipient.  The PSK is exported from the group key schedule using
    the label "targeted message psk".  This ensures that the PSK is only
    valid for a specific group and epoch, and the Forward Secrecy and
@@ -1956,12 +1957,13 @@ B.1.  Extension state: anchoring, storage and agreement
    } ExtensionState;
 
    The ExtensionState GroupContext extension contains data either
-   directly (if hash_or_data = data) or inditectly via a hash (if
+   directly (if hash_or_data = data) or indirectly via a hash (if
    hash_or_data = hash).
 
    The owning extension can read and write the state stored in an
-   ExtensionState extension using an extension-defined proposal (see ).
-   The semantics of the proposal determines how the state is changed.
+   ExtensionState extension using an extension-defined proposal (see
+   TODO).  The semantics of the proposal determines how the state is
+   changed.
 
    The read variable determines the permissions that other MLS
    extensions have w.r.t. the data stored within. read allows other MLS
@@ -1979,7 +1981,7 @@ B.1.1.  Direct vs. hash-based storage
    Welcome messages.  However, it could also mean that the data is
    visible to the delivery service.  Additionally, if the application
    makes use of GroupContextExtension proposals, it may be necessary to
-   send all of the data with each such extension.
+   send all the data with each such extension.
 
    Including the data by hash only allows group members to agree on the
    data indirectly, relying on the collision resistance of the

@@ -8,8 +8,8 @@
 <meta content="Raphael Robert" name="author">
 <meta content="
        The Messaging Layer Security (MLS) protocol is an asynchronous group
-authenticated key exchange protocol.  MLS provides a number of capabilities
-to applications, as well as several extension points internal to the protocol.  This
+authenticated key exchange protocol. MLS provides a number of capabilities
+to applications, as well as several extension points internal to the protocol. This
 document provides a consolidated application API, guidance for how the
 protocol's extension points should be used, and a few concrete examples of both
 core protocol extensions and uses of the application API. 
@@ -1057,7 +1057,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Robert</td>
-<td class="center">Expires 5 October 2025</td>
+<td class="center">Expires 6 October 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1070,12 +1070,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-mls-extensions-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-04-03" class="published">3 April 2025</time>
+<time datetime="2025-04-04" class="published">4 April 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-10-05">5 October 2025</time></dd>
+<dd class="expires"><time datetime="2025-10-06">6 October 2025</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1089,8 +1089,8 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
 <p id="section-abstract-1">The Messaging Layer Security (MLS) protocol is an asynchronous group
-authenticated key exchange protocol.  MLS provides a number of capabilities
-to applications, as well as several extension points internal to the protocol.  This
+authenticated key exchange protocol. MLS provides a number of capabilities
+to applications, as well as several extension points internal to the protocol. This
 document provides a consolidated application API, guidance for how the
 protocol's extension points should be used, and a few concrete examples of both
 core protocol extensions and uses of the application API.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
@@ -1130,7 +1130,7 @@ core protocol extensions and uses of the application API.<a href="#section-abstr
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 5 October 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 6 October 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1407,9 +1407,9 @@ core protocol extensions and uses of the application API.<a href="#section-abstr
 <p id="section-1-1">This document defines extensions to MLS <span>[<a href="#RFC9420" class="cite xref">RFC9420</a>]</span> that are not part of the
 main protocol specification, and uses them to explain how to extend the
 core operation of the MLS protocol. It also describes how applications can
-safely interact with the MLS to take advantage of security features of MLS.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">The MLS protocol is designed to be integrated into applications, in order to
-provide security services that the application requires.  There are two
+safely interact with MLS to take advantage of security features of MLS.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">The MLS protocol is designed to be integrated into applications in order to
+provide security services that the application requires. There are two
 questions to answer when designing such an integration:<a href="#section-1-2" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-1-3">
 <li id="section-1-3.1">
@@ -1425,7 +1425,7 @@ and Authentication Service that MLS requires. The next section of this document
 focuses on the second question.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <p id="section-1-5">MLS itself offers some basic functions that applications can use, such as the
 secure message encapsulation (PrivateMessage), the MLS exporter, and the epoch
-authenticator.  Current MLS applications make use of these mechanisms to acheive
+authenticator. Current MLS applications make use of these mechanisms to achieve
 a variety of confidentiality and authentication properties.<a href="#section-1-5" class="pilcrow">¶</a></p>
 <p id="section-1-6">As application designers become familiar with MLS, there is
 interest in leveraging other cryptographic tools that an MLS group provides:<a href="#section-1-6" class="pilcrow">¶</a></p>
@@ -1450,8 +1450,8 @@ key schedule.<a href="#section-1-7.3.1" class="pilcrow">¶</a></p>
           <p id="section-1-7.5.1">Binding of information to the GroupContext to confirm group agreement.<a href="#section-1-7.5.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-1-8">There is also interest in exposing an MLS group to multiple loosely-coordinated
-components of an application.  To accommodate such cases, the above mechanisms
+<p id="section-1-8">There is also interest in exposing an MLS group to multiple loosely coordinated
+components of an application. To accommodate such cases, the above mechanisms
 need to be exposed in such a way that the usage of different components do not
 conflict with each other, or with MLS itself.<a href="#section-1-8" class="pilcrow">¶</a></p>
 <p id="section-1-9">This document defines a set of mechanisms that application components can use to
@@ -1470,11 +1470,11 @@ group.<a href="#section-1-9" class="pilcrow">¶</a></p>
 described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
 appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
 <p id="section-2-2">This document makes heavy use of the terminology and the names of structs in the
-MLS specification <span>[<a href="#RFC9420" class="cite xref">RFC9420</a>]</span>.  In addition, we introduce the following new terms:<a href="#section-2-2" class="pilcrow">¶</a></p>
+MLS specification <span>[<a href="#RFC9420" class="cite xref">RFC9420</a>]</span>. In addition, we introduce the following new terms:<a href="#section-2-2" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlParallel" id="section-2-3">
         <dt id="section-2-3.1">Application:</dt>
         <dd style="margin-left: 1.5em" id="section-2-3.2">
-          <p id="section-2-3.2.1">The system that instantiates, manages, and uses an MLS group.  Each MLS group
+          <p id="section-2-3.2.1">The system that instantiates, manages, and uses an MLS group. Each MLS group
 is used by exactly one application, but an application may maintain multiple
 groups.<a href="#section-2-3.2.1" class="pilcrow">¶</a></p>
 </dd>
@@ -1486,7 +1486,7 @@ groups.<a href="#section-2-3.2.1" class="pilcrow">¶</a></p>
         <dd class="break"></dd>
 <dt id="section-2-3.5">Component ID:</dt>
         <dd style="margin-left: 1.5em" id="section-2-3.6">
-          <p id="section-2-3.6.1">An identifier for an application component.  These identifiers are assigned by
+          <p id="section-2-3.6.1">An identifier for an application component. These identifiers are assigned by
 the application.<a href="#section-2-3.6.1" class="pilcrow">¶</a></p>
 </dd>
       <dd class="break"></dd>
@@ -1498,10 +1498,10 @@ the application.<a href="#section-2-3.6.1" class="pilcrow">¶</a></p>
       <h2 id="name-developing-extensions-for-t">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-developing-extensions-for-t" class="section-name selfRef">Developing Extensions for the MLS Protocol</a>
       </h2>
-<p id="section-3-1">MLS is highly extensible, and was designed to be used in a variety of different
+<p id="section-3-1">MLS is highly extensible and was designed to be used in a variety of different
 applications. As such, it is important to separate extensions that change the
 behavior of an MLS stack, and application usages of MLS that just take advantage
-of features of MLS or specific extensions (hereafter referred to as <em>components</em>). Furthermore it is essential that application components do not change the security properties of MLS or require new security analysis of the MLS protocol itself.<a href="#section-3-1" class="pilcrow">¶</a></p>
+of features of MLS or specific extensions (hereafter referred to as <em>components</em>). Furthermore, it is essential that application components do not change the security properties of MLS or require new security analysis of the MLS protocol itself.<a href="#section-3-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="the-safe-application-interface">
@@ -1509,7 +1509,7 @@ of features of MLS or specific extensions (hereafter referred to as <em>componen
       <h2 id="name-the-safe-application-interf">
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-the-safe-application-interf" class="section-name selfRef">The Safe Application Interface</a>
       </h2>
-<p id="section-4-1">The mechansms in this section take MLS mechanisms that are either not
+<p id="section-4-1">The mechanisms in this section take MLS mechanisms that are either not
 inherently designed to be used by applications, or not inherently designed to be
 used by multiple application components, and adds a domain separator that
 separates application usage from MLS usage, and application components' usage
@@ -1530,7 +1530,7 @@ values.<a href="#section-4-2.3.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-4-2.4">
           <p id="section-4-2.4.1">Pre-shared keys are identified as originating from a specific component, so
-that differnet components' contributions to the MLS key schedule will not
+that different components' contributions to the MLS key schedule will not
 collide.<a href="#section-4-2.4.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-4-2.5">
@@ -1547,23 +1547,23 @@ themselves:<a href="#section-4-4" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4-5.1">
           <p id="section-4-5.1.1">An <code>app_data_dictionary</code> extension type that associates application data with
-MLS messages, or with the state of the group.<a href="#section-4-5.1.1" class="pilcrow">¶</a></p>
+MLS messages or with the state of the group.<a href="#section-4-5.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-4-5.2">
           <p id="section-4-5.2.1">An AppEphemeral proposal type that enables arbitrary application data to
-be associated to a Commit.<a href="#section-4-5.2.1" class="pilcrow">¶</a></p>
+be associated with a Commit.<a href="#section-4-5.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-4-5.3">
           <p id="section-4-5.3.1">An AppDataUpdate proposal type that enables efficient updates to
 an <code>app_data_dictionary</code> GroupContext extension.<a href="#section-4-5.3.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-4-6">As with the above, information carried in these proposals and extension marked
+<p id="section-4-6">As with the above, information carried in these proposals and extensions is marked
 as belonging to a specific application component, so that components can manage
 their information independently.<a href="#section-4-6" class="pilcrow">¶</a></p>
-<p id="section-4-7">The separation between components is acheived by the application assigning each
-component a unique component ID number.  These numbers are then incorporated
-into the appopriate calculations in the protocol to achieve the required
+<p id="section-4-7">The separation between components is achieved by the application assigning each
+component a unique component ID number. These numbers are then incorporated
+into the appropriate calculations in the protocol to achieve the required
 separation.<a href="#section-4-7" class="pilcrow">¶</a></p>
 <div id="component-ids">
 <section id="section-4.1">
@@ -1579,23 +1579,23 @@ uint32 ComponentID;
 </div>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="section-4.1-3.1">
-            <p id="section-4.1-3.1.1">TODO: What are the uniqueness requirements on these?  It seems like the more
-diversity, the better.  For example, if a ComponentID is reused across
+            <p id="section-4.1-3.1.1">TODO: What are the uniqueness requirements on these? It seems like the more
+diversity, the better. For example, if a ComponentID is reused across
 applications (e.g., via an IANA registry), then there will be a risk of replay
-across applications.  Maybe we should include a binder to the group/epoch as
+across applications. Maybe we should include a binder to the group/epoch as
 well, something derived from the key schedule.<a href="#section-4.1-3.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="section-4.1-4.1">
             <p id="section-4.1-4.1.1">TODO: It might be better to frame these in terms of "data types" instead of
-components, to avoid presuming software architecture.  Though that makes less
+components, to avoid presuming software architecture. Though that makes less
 sense for the more "active" portions of the API, e.g., signing and encryption.<a href="#section-4.1-4.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <p id="section-4.1-5">When a label is required for an operation, the following data structure is used.
-The <code>label</code> field identifies the operation being performed.  The <code>component_id</code>
-field identifies the component performing the operation.  The <code>context</code> field is
+The <code>label</code> field identifies the operation being performed. The <code>component_id</code>
+field identifies the component performing the operation. The <code>context</code> field is
 specified by the operation in question.<a href="#section-4.1-5" class="pilcrow">¶</a></p>
 <div class="lang-tls sourcecode" id="section-4.1-6">
 <pre>
@@ -1616,9 +1616,9 @@ struct {
 <p id="section-4.2-1">This component of the API allows components to make use of the HPKE key pairs
 generated by MLS. A component identified by a ComponentID can use any HPKE
 key pair for any operation defined in <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>, such as encryption,
-exporting keys and the PSK mode, as long as the <code>info</code> input to <code>Setup&lt;MODE&gt;S</code>
+exporting keys, and the PSK mode, as long as the <code>info</code> input to <code>Setup&lt;MODE&gt;S</code>
 and <code>Setup&lt;MODE&gt;R</code> is set to ComponentOperationLabel with <code>component_id</code> set
-to the appopriate ComponentID. The <code>context</code> can be set to an arbitrary Context
+to the appropriate ComponentID. The <code>context</code> can be set to an arbitrary Context
 specified by the application designer and can be empty if not needed. For
 example, a component can use a key pair PublicKey, PrivateKey to encrypt data
 as follows:<a href="#section-4.2-1" class="pilcrow">¶</a></p>
@@ -1642,7 +1642,7 @@ context = Context
 </div>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="section-4.2-5.1">
-            <p id="section-4.2-5.1.1">TODO: Should this use EncryptWithLabel / DecryptWithLabel?  That wouldn't
+            <p id="section-4.2-5.1.1">TODO: Should this use EncryptWithLabel / DecryptWithLabel? That wouldn't
 cover other modes / exports, but you could say "mutatis mutandis".<a href="#section-4.2-5.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
@@ -1726,7 +1726,7 @@ with every operation.<a href="#section-4.3-6" class="pilcrow">¶</a></p>
 <a href="#section-4.4" class="section-number selfRef">4.4. </a><a href="#name-exported-secrets" class="section-name selfRef">Exported Secrets</a>
         </h3>
 <p id="section-4.4-1">An application component can use MLS as a group key agreement protocol by
-exporting symmetric keys.  Such keys can be exported (i.e. derived from MLS key
+exporting symmetric keys. Such keys can be exported (i.e. derived from MLS key
 material) in two phases per epoch: Either at the start of the epoch, or during
 the epoch. Derivation at the start of the epoch has the added advantage that the
 source key material is deleted after use, allowing the derived key material to
@@ -1759,8 +1759,8 @@ ComponentID <span class="bcp14">MUST</span> be set to the ComponentID of the com
 export.<a href="#section-4.4-6" class="pilcrow">¶</a></p>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="section-4.4-7.1">
-            <p id="section-4.4-7.1.1">TODO: This section seems over-complicated to me.  Why is it not sufficient to
-just use the <code>exporter_secret</code>?  Or the <code>MLS-Exporter</code> mechanism with a
+            <p id="section-4.4-7.1.1">TODO: This section seems over-complicated to me. Why is it not sufficient to
+just use the <code>exporter_secret</code>? Or the <code>MLS-Exporter</code> mechanism with a
 label structured to include the ComponentID?<a href="#section-4.4-7.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
@@ -1783,7 +1783,7 @@ For example, a component can use the PSK mechanism to enforce that all group
 members have access to and agree on a password or a shared file.<a href="#section-4.5-2" class="pilcrow">¶</a></p>
 <p id="section-4.5-3">This is achieved by creating a new epoch via a PSK proposal. Transitioning to
 the new epoch requires using the information agreed upon.<a href="#section-4.5-3" class="pilcrow">¶</a></p>
-<p id="section-4.5-4">To facilitate using PSKs in a safe way, this document defines a new PSKType for
+<p id="section-4.5-4">To facilitate using PSKs safely, this document defines a new PSKType for
 application components. This provides domain separation between pre-shared keys
 used by the core MLS protocol and applications, and between those used by
 different components.<a href="#section-4.5-4" class="pilcrow">¶</a></p>
@@ -1810,7 +1810,7 @@ struct {
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="section-4.5-6.1">
             <p id="section-4.5-6.1.1">TODO: It seems like you could also do this by structuring the <code>external</code>
-PSKType as (component_id, psk_id).  I guess this approach separates this API
+PSKType as (component_id, psk_id). I guess this approach separates this API
 from other external PSKs.<a href="#section-4.5-6.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
@@ -1823,8 +1823,8 @@ from other external PSKs.<a href="#section-4.5-6.1.1" class="pilcrow">¶</a></p>
         </h3>
 <p id="section-4.6-1">The MLS GroupContext, LeafNode, KeyPackage, and GroupInfo objects each have an
 <code>extensions</code> field that can carry additional data not defined by the MLS
-specification.  The <code>app_data_dictionary</code> extension provides a generic container
-that applications can use to attach application data to these messages.  Each
+specification. The <code>app_data_dictionary</code> extension provides a generic container
+that applications can use to attach application data to these messages. Each
 usage of the extension serves a slightly different purpose:<a href="#section-4.6-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.6-2.1">
@@ -1857,7 +1857,7 @@ struct {
 <p id="section-4.6-5">The entries in the <code>component_data</code> <span class="bcp14">MUST</span> be sorted by <code>component_id</code>, and there
 <span class="bcp14">MUST</span> be at most one entry for each <code>component_id</code>.<a href="#section-4.6-5" class="pilcrow">¶</a></p>
 <p id="section-4.6-6">An <code>app_data_dictionary</code> extension in a LeafNode, KeyPackage, or GroupInfo can
-be set when the object is created.  An <code>app_data_dictionary</code> extension in the
+be set when the object is created. An <code>app_data_dictionary</code> extension in the
 GroupContext needs to be managed using the tools available to update GroupContext extensions. The creator of the group can set extensions unilaterally. Thereafter, the AppDataUpdate proposal described in the next section is used to update the <code>app_data_dictionary</code> extension.<a href="#section-4.6-6" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1867,14 +1867,14 @@ GroupContext needs to be managed using the tools available to update GroupContex
 <a href="#section-4.7" class="section-number selfRef">4.7. </a><a href="#name-updating-application-data-i" class="section-name selfRef">Updating Application Data in the GroupContext</a>
         </h3>
 <p id="section-4.7-1">Updating the <code>app_data_dictionary</code> with a GroupContextExtensions proposal is
-cumbersome.  The application data needs to be transmitted in its entirety,
-along with any other extensions, whether or not they are being changed.  And a
+cumbersome. The application data needs to be transmitted in its entirety,
+along with any other extensions, whether or not they are being changed. And a
 GroupContextExtensions proposal always requires an UpdatePath, which updating
 application state never should.<a href="#section-4.7-1" class="pilcrow">¶</a></p>
 <p id="section-4.7-2">The AppDataUpdate proposal allows the <code>app_data_dictionary</code> extension to
-be updated without these costs.  Instead of sending the whole value of the
+be updated without these costs. Instead of sending the whole value of the
 extension, it sends only an update, which is interpreted by the application to
-provide the new content for the <code>app_data_dictionary</code> extension.  No other
+provide the new content for the <code>app_data_dictionary</code> extension. No other
 extensions are sent or updated, and no UpdatePath is required.<a href="#section-4.7-2" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-4.7-3">
 <pre>
@@ -1898,10 +1898,10 @@ struct {
 </div>
 <p id="section-4.7-4">An AppDataUpdate proposal is invalid if its <code>component_id</code> references a
 component that is not known to the application, or if it specifies the removal
-of state for a <code>component_id</code> that has no state present.  A proposal list is
+of state for a <code>component_id</code> that has no state present. A proposal list is
 invalid if it includes multiple AppDataUpdate proposals that <code>remove</code>
 state for the same <code>component_id</code>, or proposals that both <code>update</code> and <code>remove</code>
-state for the same <code>component_id</code>.  In other words, for a given <code>component_id</code>,
+state for the same <code>component_id</code>. In other words, for a given <code>component_id</code>,
 a proposal list is valid only if it contains (a) a single <code>remove</code> operation or
 (b) one or more <code>update</code> operation.<a href="#section-4.7-4" class="pilcrow">¶</a></p>
 <p id="section-4.7-5">AppDataUpdate proposals are processed after any default proposals (i.e., those
@@ -1916,10 +1916,10 @@ could be sent to update some other extension(s), but the <code>app_data_dictiona
 GroupContext extension, if it exists, is left as it was.<a href="#section-4.7-6" class="pilcrow">¶</a></p>
 <p id="section-4.7-7">A commit can contain a GroupContextExtensions proposal which modifies
 GroupContext extensions other than <code>app_data_dictionary</code>, and can be followed by
-zero or more AppDataUpdate proposals.  This allows modifications to both the
+zero or more AppDataUpdate proposals. This allows modifications to both the
 <code>app_data_dictionary</code> extension (via AppDataUpdate) and other extensions (via
 GroupContextExtensions) in the same Commit.<a href="#section-4.7-7" class="pilcrow">¶</a></p>
-<p id="section-4.7-8">A client applies AppDataUpdate proposals by component ID.  For each
+<p id="section-4.7-8">A client applies AppDataUpdate proposals by component ID. For each
 <code>component_id</code> field that appears in an AppDataUpdate proposal in the
 Commit, the client assembles a list of AppDataUpdate proposals with that
 <code>component_id</code>, in the order in which they appear in the Commit, and processes
@@ -1968,7 +1968,7 @@ its <code>data</code> field to the specified <code>new_data</code>.<a href="#sec
               <li class="normal" id="section-4.7-9.2.2.6">
                 <p id="section-4.7-9.2.2.6.1">Otherwise, insert a new entry in the <code>component_states</code> vector with the
 specified <code>component_id</code> and the <code>data</code> field set to the <code>new_data</code>
-value.  The new entry is inserted at the proper point to keep the
+value. The new entry is inserted at the proper point to keep the
 <code>component_states</code> vector sorted by <code>component_id</code>.<a href="#section-4.7-9.2.2.6.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
@@ -1981,11 +1981,11 @@ value.  The new entry is inserted at the proper point to keep the
 <li class="normal ulEmpty" id="section-4.7-10.1">
             <p id="section-4.7-10.1.1">NOTE: An alternative design here would be to have the <code>update</code> operation
 simply set the new value for the <code>app_data_dictionary</code> GCE, instead of sending a
-diff.  This would be simpler in that the MLS stack wouldn't have to ask the
+diff. This would be simpler in that the MLS stack wouldn't have to ask the
 application for the new state value, and would discourage applications from
 storing large state in the GroupContext directly (which bloats Welcome
-messages).  It would effectively require the state in the GroupContext to be a
-hash of the real state, to avoid large AppDataUpdate proposals.  This
+messages). It would effectively require the state in the GroupContext to be a
+hash of the real state, to avoid large AppDataUpdate proposals. This
 pushes some complexity onto the application, since the application has to
 define a hashing algorithm, and define its own scheme for initializing new
 joiners.<a href="#section-4.7-10.1.1" class="pilcrow">¶</a></p>
@@ -2006,11 +2006,11 @@ an external commit or via an external proposer.<a href="#section-4.7-11" class="
         </h3>
 <p id="section-4.8-1">The AppEphemeral proposal type allows an application component to associate
 application data to a Commit, so that the member processing the Commit knows
-that all other group members will be processing the same data.  AppEphemeral
+that all other group members will be processing the same data. AppEphemeral
 proposals are ephemeral in the sense that they do not change any persistent
 state related to MLS, aside from their appearance in the transcript hash.<a href="#section-4.8-1" class="pilcrow">¶</a></p>
 <p id="section-4.8-2">The content of an AppEphemeral proposal is the same as an <code>app_data_dictionary</code>
-extension.  The proposal type is set in <a href="#iana-considerations" class="auto internal xref">Section 7</a>.<a href="#section-4.8-2" class="pilcrow">¶</a></p>
+extension. The proposal type is set in <a href="#iana-considerations" class="auto internal xref">Section 7</a>.<a href="#section-4.8-2" class="pilcrow">¶</a></p>
 <div class="lang-tls-presentation sourcecode" id="section-4.8-3">
 <pre>
 struct {
@@ -2026,7 +2026,7 @@ application logic registered to the indicated <code>component_id</code>.<a href=
 <p id="section-4.8-5">AppEphemeral proposals <span class="bcp14">MUST</span> be processed after any default proposals (i.e.,
 those defined in <span>[<a href="#RFC9420" class="cite xref">RFC9420</a>]</span>), but before any AppDataUpdate proposals.<a href="#section-4.8-5" class="pilcrow">¶</a></p>
 <p id="section-4.8-6">A client applies an AppEphemeral proposal by providing the contents of the
-<code>app_data_dictionary</code> field to the component identified by the <code>component_id</code>.  If
+<code>app_data_dictionary</code> field to the component identified by the <code>component_id</code>. If
 a Commit references more than one AppEphemeral proposal for the same
 <code>component_id</code> value, then they <span class="bcp14">MUST</span> be processed in the order in which they are
 specified in the Commit.<a href="#section-4.8-6" class="pilcrow">¶</a></p>
@@ -2195,16 +2195,16 @@ struct {
 </pre><a href="#section-6.1-2" class="pilcrow">¶</a>
 </div>
 <p id="section-6.1-3">An AppAck represents a set of messages received by the sender in the
-current epoch.  Messages are represented by the <code>sender</code> and <code>generation</code> values
-in the MLSCiphertext for the message.  Each MessageRange represents receipt of a
+current epoch. Messages are represented by the <code>sender</code> and <code>generation</code> values
+in the MLSCiphertext for the message. Each MessageRange represents receipt of a
 span of messages whose <code>generation</code> values form a continuous range from
 <code>first_generation</code> to <code>last_generation</code>, inclusive.<a href="#section-6.1-3" class="pilcrow">¶</a></p>
 <p id="section-6.1-4">AppAck objects are sent as a guard against the Delivery Service dropping
-application messages.  The sequential nature of the <code>generation</code> field provides
+application messages. The sequential nature of the <code>generation</code> field provides
 a degree of loss detection, since gaps in the <code>generation</code> sequence indicate
-dropped messages.  AppAck completes this story by addressing the scenario where
+dropped messages. AppAck completes this story by addressing the scenario where
 the Delivery Service drops all messages after a certain point, so that a later
-generation is never observed.  Obviously, there is a risk that AppAck messages
+generation is never observed. Obviously, there is a risk that AppAck messages
 could be suppressed as well, but their inclusion in the transcript means that if
 they are suppressed then the group cannot advance at all.<a href="#section-6.1-4" class="pilcrow">¶</a></p>
 </section>
@@ -2307,7 +2307,7 @@ struct {
             <h5 id="name-sender-data-encryption">
 <a href="#section-6.2.3.1" class="section-number selfRef">6.2.3.1. </a><a href="#name-sender-data-encryption" class="section-name selfRef">Sender data encryption</a>
             </h5>
-<p id="section-6.2.3.1-1">In addition, <code>TargetedMessageSenderAuthData</code> is encrypted in a similar way to
+<p id="section-6.2.3.1-1">In addition, <code>TargetedMessageSenderAuthData</code> is encrypted similarly to
 <code>MLSSenderData</code> as described in <span><a href="https://rfc-editor.org/rfc/rfc9420#section-6.3.2" class="relref">Section 6.3.2</a> of [<a href="#RFC9420" class="cite xref">RFC9420</a>]</span>. The
 <code>TargetedMessageSenderAuthData.sender_leaf_index</code> field is the leaf index of the
 sender. The <code>TargetedMessageSenderAuthData.authentication_scheme</code> field is the
@@ -2516,7 +2516,7 @@ members of a group can communicate.<a href="#section-6.3.1-2" class="pilcrow">¶
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="section-6.3.1-3.1">
               <p id="section-6.3.1-3.1.1">Note that when the membership of a group changes, or when the policy of the
- group changes, it is responsibility of the committer to insure that the
+ group changes, it is responsibility of the committer to ensure that the
  membership and policies are compatible.<a href="#section-6.3.1-3.1.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
@@ -2608,7 +2608,7 @@ client also includes its <code>content_media_types</code> component in its own
 LeafNode as described in the previous paragraph.)<a href="#section-6.3.3-2" class="pilcrow">¶</a></p>
 <p id="section-6.3.3-3">MLS clients <span class="bcp14">SHOULD NOT</span> add an MLS client to an MLS group with
 <code>content_media_types</code> in its GroupContext unless the MLS client advertises it
-can support all of the required MediaTypes.
+can support all the required MediaTypes.
 As an exception, a client could be preconfigured to know that certain clients
 support the required types. Likewise, an MLS client is already forbidden from
 issuing or committing a GroupContextExtensions Proposal which introduces
@@ -2647,8 +2647,8 @@ the <code>content_media_types</code> component in the GroupContext.<a href="#sec
 <p id="section-6.4-1">The design of the MLS protocol prevents a member of
 an MLS group from removing itself immediately from the group. (To cause
 an immediate change in the group, a member must send a Commit message.
-However the sender of a Commit message knows the keying material of the
-new epoch and therefore needs to be part of the group.) Instead a member
+However, the sender of a Commit message knows the keying material of the
+new epoch and therefore needs to be part of the group.) Instead, a member
 wishing to remove itself can send a Remove Proposal and wait for another
 member to Commit its Proposal.<a href="#section-6.4-1" class="pilcrow">¶</a></p>
 <p id="section-6.4-2">Unfortunately, MLS clients that join via an External Commit ignore
@@ -2822,7 +2822,7 @@ struct {
 } WeakMultiCredential;
 </pre><a href="#section-6.6-3" class="pilcrow">¶</a>
 </div>
-<p id="section-6.6-4">The two types of credentials are processed in exactly the same way.  The only
+<p id="section-6.6-4">The two types of credentials are processed in exactly the same way. The only
 difference is in how they are treated when evaluating support by other clients,
 as discussed below.<a href="#section-6.6-4" class="pilcrow">¶</a></p>
 <div id="credential-bindings">
@@ -2830,7 +2830,7 @@ as discussed below.<a href="#section-6.6-4" class="pilcrow">¶</a></p>
           <h4 id="name-credential-bindings">
 <a href="#section-6.6.1" class="section-number selfRef">6.6.1. </a><a href="#name-credential-bindings" class="section-name selfRef">Credential Bindings</a>
           </h4>
-<p id="section-6.6.1-1">A multi-credential consists of a collection of "credential bindings".  Each
+<p id="section-6.6.1-1">A multi-credential consists of a collection of "credential bindings". Each
 credential binding is a signed statement by the holder of the credential that
 the signature key in the LeafNode belongs to the holder of that credential.
 Specifically, the signature is computed using the MLS <code>SignWithLabel</code> function,
@@ -2858,7 +2858,7 @@ with regard to support by group members discussed below.<a href="#section-6.6.1-
 <a href="#section-6.6.2" class="section-number selfRef">6.6.2. </a><a href="#name-verifying-a-multi-credentia" class="section-name selfRef">Verifying a Multi-Credential</a>
           </h4>
 <p id="section-6.6.2-1">A credential binding is supported by a client if the client supports the
-credential type and cipher suite of the binding.  A credential binding is valid
+credential type and cipher suite of the binding. A credential binding is valid
 in the context of a given LeafNode if both of the following are true:<a href="#section-6.6.2-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-6.6.2-2.1">
@@ -2875,7 +2875,7 @@ the leaf node.<a href="#section-6.6.2-2.3.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 <p id="section-6.6.2-3">A client that receives a credential of type <code>multi</code> in a LeafNode <span class="bcp14">MUST</span> verify
-that all of the following are true:<a href="#section-6.6.2-3" class="pilcrow">¶</a></p>
+that all the following are true:<a href="#section-6.6.2-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-6.6.2-4.1">
               <p id="section-6.6.2-4.1.1">All members of the group support credential type <code>multi</code>.<a href="#section-6.6.2-4.1.1" class="pilcrow">¶</a></p>
@@ -2894,14 +2894,14 @@ values for the binding.<a href="#section-6.6.2-4.2.2.1.1" class="pilcrow">¶</a>
 </li>
           </ul>
 <p id="section-6.6.2-5">A client that receives a credential of type <code>weak-multi</code> in a LeafNode <span class="bcp14">MUST</span> verify
-that all of the following are true:<a href="#section-6.6.2-5" class="pilcrow">¶</a></p>
+that all the following are true:<a href="#section-6.6.2-5" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-6.6.2-6.1">
               <p id="section-6.6.2-6.1.1">All members of the group support credential type <code>weak-multi</code>.<a href="#section-6.6.2-6.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-6.6.2-6.2">
               <p id="section-6.6.2-6.2.1">Each member of the group supports at least one binding in the
-multi-credential.  (Different members may support different subsets.)<a href="#section-6.6.2-6.2.1" class="pilcrow">¶</a></p>
+multi-credential. (Different members may support different subsets.)<a href="#section-6.6.2-6.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-6.6.2-6.3">
               <p id="section-6.6.2-6.3.1">Every binding that this client supports is valid in the context of the
@@ -2920,7 +2920,7 @@ LeafNode.<a href="#section-6.6.2-6.3.1" class="pilcrow">¶</a></p>
 <a href="#section-7" class="section-number selfRef">7. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
 <p id="section-7-1">This document requests the addition of various new values under the heading
-of "Messaging Layer Security".  Each registration is organized under the
+of "Messaging Layer Security". Each registration is organized under the
 relevant registry Type.<a href="#section-7-1" class="pilcrow">¶</a></p>
 <p id="section-7-2">This document also requests the creation of a new MLS applications components
 registry as described in <a href="#iana-components" class="auto internal xref">Section 7.5</a>.<a href="#section-7-2" class="pilcrow">¶</a></p>
@@ -3273,7 +3273,7 @@ policy <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span> using the
 </li>
         </ul>
 <p id="section-7.5-4">The restrictions noted in the "Where" column are to be enforced by the
-application.  MLS implementations <span class="bcp14">MUST NOT</span> impose restrictions on where
+application. MLS implementations <span class="bcp14">MUST NOT</span> impose restrictions on where
 component IDs are used in which parts of MLS, unless specifically directed to by
 the application.<a href="#section-7.5-4" class="pilcrow">¶</a></p>
 <p id="section-7.5-5">Initial Contents:<a href="#section-7.5-5" class="pilcrow">¶</a></p>
@@ -3385,7 +3385,7 @@ Service (or an intermediary) dropped application messages, since gaps in the
 are accepted by the Delivery Service, but not received by some members, the
 members who have missed the corresponding AppEphemeral proposals will not be
 able to send or receive a commit message, because the proposal is included
-in the transcript hash. Likewise if AppAck objects and/or commits are sent
+in the transcript hash. Likewise, if AppAck objects and/or commits are sent
 periodically by every member, other members will be able to detect a member
 that is no longer sending on that schedule or whose handshake messages are being
 suppressed by the DS.<a href="#section-8.2-1" class="pilcrow">¶</a></p>
@@ -3399,7 +3399,7 @@ until it has been incorporated into an accepted Commit.<a href="#section-8.2-2.1
 </li>
         </ul>
 <p id="section-8.2-3">The schedule on which AppAck objects are sent in AppEphemeral proposals is up to
-the application,and determines which cases of loss/suppression are detected.
+the application, and determines which cases of loss/suppression are detected.
 For example:<a href="#section-8.2-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-8.2-4.1">
@@ -3409,7 +3409,7 @@ did not reach the committer.<a href="#section-8.2-4.1.1" class="pilcrow">¶</a><
 </li>
           <li class="normal" id="section-8.2-4.2">
             <p id="section-8.2-4.2.1">The application could have a client send an AppAck whenever an application
-message is sent, covering all messages received since its last AppAck.  This
+message is sent, covering all messages received since its last AppAck. This
 would provide a complete view of any losses experienced by active members.<a href="#section-8.2-4.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.2-4.3">
@@ -3419,9 +3419,9 @@ that all participants' state would be known.<a href="#section-8.2-4.3.1" class="
         </ul>
 <p id="section-8.2-5">An application using AppAck to guard against loss/suppression of
 application messages also needs to ensure that AppAck messages and the Commits
-that reference them are not dropped.  One way to do this is to always encrypt
+that reference them are not dropped. One way to do this is to always encrypt
 Proposal and Commit messages, to make it more difficult for the Delivery Service
-to recognize which messages contain AppAcks.  The application can also have
+to recognize which messages contain AppAcks. The application can also have
 clients enforce an AppAck schedule, reporting loss if an AppAck is not received
 at the expected time.<a href="#section-8.2-5" class="pilcrow">¶</a></p>
 </section>
@@ -3432,7 +3432,7 @@ at the expected time.<a href="#section-8.2-5" class="pilcrow">¶</a></p>
 <a href="#section-8.3" class="section-number selfRef">8.3. </a><a href="#name-targeted-messages-2" class="section-name selfRef">Targeted Messages</a>
         </h3>
 <p id="section-8.3-1">In addition to the sender authentication, Targeted Messages are authenticated by
-using a preshared key (PSK) between the sender and the recipient. The PSK is
+using a pre-shared key (PSK) between the sender and the recipient. The PSK is
 exported from the group key schedule using the label "targeted message psk".
 This ensures that the PSK is only valid for a specific group and epoch, and the
 Forward Secrecy and Post-Compromise Security guarantees of the group key
@@ -3668,9 +3668,9 @@ struct {
 </pre><a href="#appendix-B.1-2" class="pilcrow">¶</a>
 </div>
 <p id="appendix-B.1-3">The <code>ExtensionState</code> GroupContext extension contains data either directly (if
-<code>hash_or_data = data</code>) or inditectly via a hash (if <code>hash_or_data = hash</code>).<a href="#appendix-B.1-3" class="pilcrow">¶</a></p>
+<code>hash_or_data = data</code>) or indirectly via a hash (if <code>hash_or_data = hash</code>).<a href="#appendix-B.1-3" class="pilcrow">¶</a></p>
 <p id="appendix-B.1-4">The owning extension can read and write the state stored in an <code>ExtensionState</code>
-extension using an extension-defined proposal (see ). The semantics
+extension using an extension-defined proposal (see TODO). The semantics
 of the proposal determines how the state is changed.<a href="#appendix-B.1-4" class="pilcrow">¶</a></p>
 <p id="appendix-B.1-5">The <code>read</code> variable determines the permissions that other MLS extensions have
 w.r.t. the data stored within. <code>read</code> allows other MLS extensions to read that
@@ -3687,7 +3687,7 @@ extension.<a href="#appendix-B.1-6" class="pilcrow">¶</a></p>
 the group state. Depending on the application design, this can be advantageous,
 because it is distributed via Welcome messages. However, it could also mean that
 the data is visible to the delivery service. Additionally, if the application
-makes use of GroupContextExtension proposals, it may be necessary to send all of
+makes use of GroupContextExtension proposals, it may be necessary to send all
 the data with each such extension.<a href="#appendix-B.1.1-1" class="pilcrow">¶</a></p>
 <p id="appendix-B.1.1-2">Including the data by hash only allows group members to agree on the data
 indirectly, relying on the collision resistance of the associated hash function.
