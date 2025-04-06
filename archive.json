@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-04-03T00:43:11.112011+00:00",
+  "timestamp": "2025-04-06T00:47:21.903406+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -461,6 +461,22 @@
       "body": "MLS defines the safe-ish `SignWithLabel`, `ExpandWithLabel`, `EncryptWithLabel` etc, and the safe API relies on it:\n- `SafeSignWithLabel` uses `SignWithLabel`\n- `DeriveExtensionSecret` uses `ExpandWithLabel`\n\nHowever `SafeEncryptWithContext` doesn't use `EncryptWithLabel` and operate directly with `HPKE.SealBase`. Is there a technical reason for this?\n\nI think it should use `EncryptWithLabel` to ensure proper domain separation with HPKE uses in the MLS RFC. Otherwise, we must ensure that MLS' `EncryptContext` and Safe API's `LabeledExtensionContent` cannot be serialized to the same bytestring (to follow the secure formatting rules of the [Comparse paper](https://eprint.iacr.org/2023/1390)). The latter fact seems to hold, under the condition that `LabeledExtensionContent.label` uses a QUIC-style length encoding (which is not clear because it is written as `opaque label` and not `opaque label<V>`). Using `EncryptWithLabel` would make that fact straightforward.",
       "createdAt": "2025-02-06T09:43:09Z",
       "updatedAt": "2025-02-06T09:43:09Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 53,
+      "id": "I_kwDOHZoI5M6xCIpA",
+      "title": "There's a missing link here",
+      "url": "https://github.com/mlswg/mls-extensions/issues/53",
+      "state": "OPEN",
+      "author": "raphaelrobert",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "              There's a missing link here\r\n\r\n_Originally posted by @timokoesters in https://github.com/mlswg/mls-extensions/pull/51#discussion_r2025482736_\r\n            ",
+      "createdAt": "2025-04-03T16:25:09Z",
+      "updatedAt": "2025-04-03T16:25:09Z",
       "closedAt": null,
       "comments": []
     }
@@ -3076,24 +3092,26 @@
       "id": "PR_kwDOHZoI5M6RC1Jg",
       "title": "Fix typos using languagetool",
       "url": "https://github.com/mlswg/mls-extensions/pull/51",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "timokoesters",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2025-04-02T08:07:49Z",
-      "updatedAt": "2025-04-02T22:06:23Z",
+      "updatedAt": "2025-04-04T09:17:19Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
-      "baseRefOid": "5b7b0e79d69da70392bfb2abde3856d65b60442b",
+      "baseRefOid": "e75d5e185baeeea762e424b3427dae46deb3ae50",
       "headRepository": "timokoesters/mls-extensions",
       "headRefName": "patch-1",
-      "headRefOid": "1009bca6f03603aac389518f0ccb11872fa09d9f",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "0a0d3f0640c1c9f9a5952fcc0ba1df0946cf36e5",
+      "closedAt": "2025-04-04T09:17:19Z",
+      "mergedAt": "2025-04-04T09:17:19Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "8bfc467530c8b9ff71cd355933244093194d1b70"
+      },
       "comments": [
         {
           "author": "bifurcation",
@@ -3104,7 +3122,7 @@
         },
         {
           "author": "timokoesters",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "body": "LanguageTool is pretty strict by default. Maybe you can limit the set of lints and then display them as Github PR annotations? https://github.com/marketplace/actions/pr-coverage-annotate\r\n\r\nBut I can recommend setting it up in your text editor or using the CLI ltex-cli.",
           "createdAt": "2025-04-02T19:57:22Z",
           "updatedAt": "2025-04-02T19:57:22Z"
@@ -3115,20 +3133,41 @@
           "body": "Even better, it looks like there's an action that will propose the edits so that you can just commit them: \r\nhttps://github.com/marketplace/actions/suggest-changes-action \r\n\r\nI filed an issue on the template repo: https://github.com/martinthomson/i-d-template/issues/477",
           "createdAt": "2025-04-02T22:06:22Z",
           "updatedAt": "2025-04-02T22:06:22Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "@timokoesters can you please merge the latest main and see if the CI turns green? I can't do this on a fork unfortunately",
+          "createdAt": "2025-04-03T16:37:14Z",
+          "updatedAt": "2025-04-03T16:37:14Z"
+        },
+        {
+          "author": "timokoesters",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "GitHub allows edits from maintainers by default, even if the branch is on a fork. But I've rebased it now.",
+          "createdAt": "2025-04-03T16:54:58Z",
+          "updatedAt": "2025-04-03T16:54:58Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "> GitHub allows edits from maintainers by default, even if the branch is on a fork. But I've rebased it now.\r\n\r\nThanks. I think we are all just contributors here at best.",
+          "createdAt": "2025-04-04T09:17:02Z",
+          "updatedAt": "2025-04-04T09:17:02Z"
         }
       ],
       "reviews": [
         {
           "id": "PRR_kwDOHZoI5M6jFsVM",
           "commit": {
-            "abbreviatedOid": "1009bca"
+            "abbreviatedOid": "0a0d3f0"
           },
           "author": "bifurcation",
           "authorAssociation": "COLLABORATOR",
           "state": "APPROVED",
           "body": "",
           "createdAt": "2025-04-02T12:54:31Z",
-          "updatedAt": "2025-04-02T12:54:31Z",
+          "updatedAt": "2025-04-03T16:54:12Z",
           "comments": []
         },
         {
@@ -3137,7 +3176,7 @@
             "abbreviatedOid": "1009bca"
           },
           "author": "timokoesters",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2025-04-02T19:45:26Z",
@@ -3150,6 +3189,19 @@
               "updatedAt": "2025-04-02T19:45:27Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6jWPwo",
+          "commit": {
+            "abbreviatedOid": "0a0d3f0"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-04-03T16:25:57Z",
+          "updatedAt": "2025-04-03T16:54:12Z",
+          "comments": []
         }
       ]
     },
@@ -3312,6 +3364,34 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 54,
+      "id": "PR_kwDOHZoI5M6RSiEz",
+      "title": "Update actions",
+      "url": "https://github.com/mlswg/mls-extensions/pull/54",
+      "state": "MERGED",
+      "author": "raphaelrobert",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-04-03T16:35:03Z",
+      "updatedAt": "2025-04-03T16:35:43Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "5b7b0e79d69da70392bfb2abde3856d65b60442b",
+      "headRepository": "mlswg/mls-extensions",
+      "headRefName": "update-actions",
+      "headRefOid": "5db9eda905736d1e1150d0703fbaa076f54eccaa",
+      "closedAt": "2025-04-03T16:35:42Z",
+      "mergedAt": "2025-04-03T16:35:42Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "e75d5e185baeeea762e424b3427dae46deb3ae50"
+      },
+      "comments": [],
+      "reviews": []
     }
   ]
 }
