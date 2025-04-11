@@ -201,29 +201,18 @@ the scope of an application.
 uint32 ComponentID;
 ~~~
 
-> TODO: What are the uniqueness requirements on these? It seems like the more
-> diversity, the better. For example, if a ComponentID is reused across
-> applications (e.g., via an IANA registry), then there will be a risk of replay
-> across applications. Maybe we should include a binder to the group/epoch as
-> well, something derived from the key schedule.
-
-> TODO: It might be better to frame these in terms of "data types" instead of
-> components, to avoid presuming software architecture. Though that makes less
-> sense for the more "active" portions of the API, e.g., signing and encryption.
-
 When a label is required for an operation, the following data structure is used.
-The `label` field identifies the operation being performed. The `component_id`
-field identifies the component performing the operation. The `context` field is
-specified by the operation in question.
+The `base_label` field is always the fixed string "Application".  The
+`component_id` field identifies the component performing the operation. The
+`label` field identifies the operation being performed.
 
 ~~~ tls
 struct {
-  opaque label<V>;
+  opaque base_label<V>; /* = "Application" */
   ComponentID component_id;
-  opaque context<V>;
+  opaque label<V>;
 } ComponentOperationLabel;
 ~~~
-
 
 ## Hybrid Public Key Encryption (HPKE) Keys {#safe-hpke}
 
@@ -238,24 +227,21 @@ example, a component can use a key pair PublicKey, PrivateKey to encrypt data
 as follows:
 
 ~~~ tls
-SafeEncryptWithContext(ComponentID, PublicKey, Context, Plaintext) =
-  SealBase(PublicKey, ComponentOperationLabel, "", Plaintext)
+SafeEncryptWithLabel(PublicKey, ComponentID, Label, Context, Plaintext) =
+  EncryptWithLabel(PublicKey, ComponentOperationLabel, Context, Plaintext)
 
-SafeDecryptWithContext(ComponentID, PrivateKey, Context,
-  KEMOutput, Ciphertext) = OpenBase(KEMOutput, PrivateKey,
-                             ComponentOperationLabel, "", Ciphertext)
+SafeDecryptWithLabel(PrivateKey, ComponentID, Label, Context, KEMOutput,
+  Ciphertext) =
+  DecryptWithLabel(PrivateKey, ComponentOperationLabel, Context,
+    KEMOutput, Ciphertext)
 ~~~
 
 Where the fields of ComponentOperationLabel are set to
 
 ~~~ tls
-label = "MLS 1.0 Application"
 component_id = ComponentID
-context = Context
+label = Label
 ~~~
-
-> TODO: Should this use EncryptWithLabel / DecryptWithLabel? That wouldn't
-> cover other modes / exports, but you could say "mutatis mutandis".
 
 For operations involving the secret key, ComponentID MUST be set to the
 ComponentID of the component performing the operation, and not to the ID of
@@ -295,23 +281,20 @@ In more detail, a component identified by ComponentID should sign and verify
 using:
 
 ~~~ tls
-SafeSignWithLabel(ComponentID, SignatureKey, Label, Content) =
-   SignWithLabel(SignatureKey, "ComponentOperationLabel",
-      ComponentOperationLabel)
+SafeSignWithLabel(SignatureKey, ComponentID, Label, Content) =
+  SignWithLabel(SignatureKey, ComponentOperationLabel, Content)
 
-SafeVerifyWithLabel(ComponentID, VerificationKey, Label, Content,
-  SignatureValue) = VerifyWithLabel(VerificationKey,
-                      "ComponentOperationLabel",
-                       ComponentOperationLabel,
-                       SignatureValue)
+SafeVerifyWithLabel(VerificationKey, ComponentID, Label, Content,
+  SignatureValue) =
+  VerifyWithLabel(VerificationKey, ComponentOperationLabel, Content,
+  SignatureValue)
 ~~~
 
 Where the fields of ComponentOperationLabel are set to
 
 ~~~ tls
-label = Label
 component_id = ComponentID
-context = Content
+label = Label
 ~~~
 
 For signing operations, the ComponentID MUST be set to the ComponentID of the
@@ -323,40 +306,31 @@ with every operation.
 
 ## Exported Secrets
 
-An application component can use MLS as a group key agreement protocol by
-exporting symmetric keys. Such keys can be exported (i.e. derived from MLS key
-material) in two phases per epoch: Either at the start of the epoch, or during
-the epoch. Derivation at the start of the epoch has the added advantage that the
-source key material is deleted after use, allowing the derived key material to
-be deleted later even during the same MLS epoch to achieve forward secrecy. The
-following protocol secrets can be used to derive key from for use by application
-components:
+The MLS Exporter functionality described in {{Section 8.5 of RFC9420}} does not
+provide forward security for exported secrets, because the `exporter_secret` is
+not deleted after a secret has been derived.  In this section, we define a
+forward-secure exporter for use by application components.
 
-- `exporter_secret` at the beginning of an epoch
-- `application_export_secret` during an epoch
+The safe exporter is constructed from an Exporter Tree, tree of secrets with the
+same structure as the Secret Tree defined in {{Section 9 of RFC9420}}, with two
+differences: First, an Exporter Tree always has 2<sup>16</sup> leaves,
+corresponding to the 16 bits of a ComponentID value. (As with the Secret Tree,
+the nodes of the tree can be generated on-demand, for space-efficiency.) Second,
+the root of the Exporter Tree is the `application_export_secret`, an additional
+secret derived from the `epoch_secret` at the beginning of the epoch in the same
+way as the other secrets listed in Table 4 of {{!RFC9420}} using the label
+`"application_export"`.
 
-The `application_export_secret` is an additional secret derived from the
-`epoch_secret` at the beginning of the epoch in the same way as the other
-secrets listed in Table 4 of {{!RFC9420}} using the label "application_export".
+This tree defines one exported secret per ComponentID.  The secret for a
+ComponentID is the `tree_node_secret` at the leaf node for that ComponentID:
 
-Any derivation performed by an application component either from the
-`exporter_secret` or the `application_export_secret` has to use the following
-function:
-
-~~~ tls
-DeriveApplicationSecret(Secret, Label) =
-  ExpandWithLabel(Secret, "ApplicationExport " +
-                  ComponentID + " " + Label)
+~~~
+SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
 ~~~
 
-Where ExpandWithLabel is defined in {{Section 8 of RFC9420}} and where
-ComponentID MUST be set to the ComponentID of the component performing the
-export.
-
-> TODO: This section seems over-complicated to me. Why is it not sufficient to
-> just use the `exporter_secret`? Or the `MLS-Exporter` mechanism with a
-> label structured to include the ComponentID?
-
+Upon generating an exported secret for a component, the MLS implementation MUST
+regard that component's exported secret as "consumed", and delete any source key
+material according to the deletion schedule in {{Section 9.2 of RFC9420}}.
 
 ## Pre-Shared Keys (PSKs)
 
@@ -398,11 +372,6 @@ struct {
   opaque psk_nonce<V>;
 } PreSharedKeyID;
 ~~~
-
-> TODO: It seems like you could also do this by structuring the `external`
-> PSKType as (component_id, psk_id). I guess this approach separates this API
-> from other external PSKs.
-
 
 ## Attaching Application Data to MLS Messages
 
