@@ -1057,7 +1057,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Robert</td>
-<td class="center">Expires 6 October 2025</td>
+<td class="center">Expires 13 October 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1070,12 +1070,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-mls-extensions-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-04-04" class="published">4 April 2025</time>
+<time datetime="2025-04-11" class="published">11 April 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-10-06">6 October 2025</time></dd>
+<dd class="expires"><time datetime="2025-10-13">13 October 2025</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1130,7 +1130,7 @@ core protocol extensions and uses of the application API.<a href="#section-abstr
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 6 October 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 13 October 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1577,34 +1577,18 @@ the scope of an application.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
 uint32 ComponentID;
 </pre><a href="#section-4.1-2" class="pilcrow">¶</a>
 </div>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-4.1-3.1">
-            <p id="section-4.1-3.1.1">TODO: What are the uniqueness requirements on these? It seems like the more
-diversity, the better. For example, if a ComponentID is reused across
-applications (e.g., via an IANA registry), then there will be a risk of replay
-across applications. Maybe we should include a binder to the group/epoch as
-well, something derived from the key schedule.<a href="#section-4.1-3.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-4.1-4.1">
-            <p id="section-4.1-4.1.1">TODO: It might be better to frame these in terms of "data types" instead of
-components, to avoid presuming software architecture. Though that makes less
-sense for the more "active" portions of the API, e.g., signing and encryption.<a href="#section-4.1-4.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<p id="section-4.1-5">When a label is required for an operation, the following data structure is used.
-The <code>label</code> field identifies the operation being performed. The <code>component_id</code>
-field identifies the component performing the operation. The <code>context</code> field is
-specified by the operation in question.<a href="#section-4.1-5" class="pilcrow">¶</a></p>
-<div class="lang-tls sourcecode" id="section-4.1-6">
+<p id="section-4.1-3">When a label is required for an operation, the following data structure is used.
+The <code>base_label</code> field is always the fixed string "Application".  The
+<code>component_id</code> field identifies the component performing the operation. The
+<code>label</code> field identifies the operation being performed.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
+<div class="lang-tls sourcecode" id="section-4.1-4">
 <pre>
 struct {
-  opaque label&lt;V&gt;;
+  opaque base_label&lt;V&gt;; /* = "Application" */
   ComponentID component_id;
-  opaque context&lt;V&gt;;
+  opaque label&lt;V&gt;;
 } ComponentOperationLabel;
-</pre><a href="#section-4.1-6" class="pilcrow">¶</a>
+</pre><a href="#section-4.1-4" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -1624,57 +1608,51 @@ example, a component can use a key pair PublicKey, PrivateKey to encrypt data
 as follows:<a href="#section-4.2-1" class="pilcrow">¶</a></p>
 <div class="lang-tls sourcecode" id="section-4.2-2">
 <pre>
-SafeEncryptWithContext(ComponentID, PublicKey, Context, Plaintext) =
-  SealBase(PublicKey, ComponentOperationLabel, "", Plaintext)
+SafeEncryptWithLabel(PublicKey, ComponentID, Label, Context, Plaintext) =
+  EncryptWithLabel(PublicKey, ComponentOperationLabel, Context, Plaintext)
 
-SafeDecryptWithContext(ComponentID, PrivateKey, Context,
-  KEMOutput, Ciphertext) = OpenBase(KEMOutput, PrivateKey,
-                             ComponentOperationLabel, "", Ciphertext)
+SafeDecryptWithLabel(PrivateKey, ComponentID, Label, Context, KEMOutput,
+  Ciphertext) =
+  DecryptWithLabel(PrivateKey, ComponentOperationLabel, Context,
+    KEMOutput, Ciphertext)
 </pre><a href="#section-4.2-2" class="pilcrow">¶</a>
 </div>
 <p id="section-4.2-3">Where the fields of ComponentOperationLabel are set to<a href="#section-4.2-3" class="pilcrow">¶</a></p>
 <div class="lang-tls sourcecode" id="section-4.2-4">
 <pre>
-label = "MLS 1.0 Application"
 component_id = ComponentID
-context = Context
+label = Label
 </pre><a href="#section-4.2-4" class="pilcrow">¶</a>
 </div>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-4.2-5.1">
-            <p id="section-4.2-5.1.1">TODO: Should this use EncryptWithLabel / DecryptWithLabel? That wouldn't
-cover other modes / exports, but you could say "mutatis mutandis".<a href="#section-4.2-5.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<p id="section-4.2-6">For operations involving the secret key, ComponentID <span class="bcp14">MUST</span> be set to the
+<p id="section-4.2-5">For operations involving the secret key, ComponentID <span class="bcp14">MUST</span> be set to the
 ComponentID of the component performing the operation, and not to the ID of
 any other component. In particular, this means that a component cannot decrypt
 data meant for another component, while components can encrypt data that other
-components can decrypt.<a href="#section-4.2-6" class="pilcrow">¶</a></p>
-<p id="section-4.2-7">In general, a ciphertext encrypted with a PublicKey can be decrypted by any
+components can decrypt.<a href="#section-4.2-5" class="pilcrow">¶</a></p>
+<p id="section-4.2-6">In general, a ciphertext encrypted with a PublicKey can be decrypted by any
 entity who has the corresponding PrivateKey at a given point in time according
 to the MLS protocol (or application component). For convenience, the following
-list summarizes lifetimes of MLS key pairs.<a href="#section-4.2-7" class="pilcrow">¶</a></p>
+list summarizes lifetimes of MLS key pairs.<a href="#section-4.2-6" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-4.2-8.1">
-            <p id="section-4.2-8.1.1">The key pair of a non-blank ratchet tree node. The PrivateKey of such a key pair
+<li class="normal" id="section-4.2-7.1">
+            <p id="section-4.2-7.1.1">The key pair of a non-blank ratchet tree node. The PrivateKey of such a key pair
 is known to all members in the node’s subtree. In particular, a PrivateKey of a
 leaf node is known only to the member in that leaf. A member in the subtree
 stores the PrivateKey for a number of epochs, as long as the PublicKey does not
 change. The key pair of the root node <span class="bcp14">SHOULD NOT</span> be used, since the external key
-pair recalled below gives better security.<a href="#section-4.2-8.1.1" class="pilcrow">¶</a></p>
+pair recalled below gives better security.<a href="#section-4.2-7.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-4.2-8.2">
-            <p id="section-4.2-8.2.1">The external_priv, external_pub key pair used for external initialization. The
+          <li class="normal" id="section-4.2-7.2">
+            <p id="section-4.2-7.2.1">The external_priv, external_pub key pair used for external initialization. The
 external_priv key is known to all group members in the current epoch. A member
 stores external_priv only for the current epoch. Using this key pair gives
 better security guarantees than using the key pair of the root of the ratchet
-tree and should always be preferred.<a href="#section-4.2-8.2.1" class="pilcrow">¶</a></p>
+tree and should always be preferred.<a href="#section-4.2-7.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-4.2-8.3">
-            <p id="section-4.2-8.3.1">The init_key in a KeyPackage and the corresponding secret key. The secret key
+          <li class="normal" id="section-4.2-7.3">
+            <p id="section-4.2-7.3.1">The init_key in a KeyPackage and the corresponding secret key. The secret key
 is known only to the owner of the KeyPackage and is deleted immediately after it
-is used to join a group.<a href="#section-4.2-8.3.1" class="pilcrow">¶</a></p>
+is used to join a group.<a href="#section-4.2-7.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -1693,23 +1671,20 @@ and VerifyWithLabel.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
 using:<a href="#section-4.3-2" class="pilcrow">¶</a></p>
 <div class="lang-tls sourcecode" id="section-4.3-3">
 <pre>
-SafeSignWithLabel(ComponentID, SignatureKey, Label, Content) =
-   SignWithLabel(SignatureKey, "ComponentOperationLabel",
-      ComponentOperationLabel)
+SafeSignWithLabel(SignatureKey, ComponentID, Label, Content) =
+  SignWithLabel(SignatureKey, ComponentOperationLabel, Content)
 
-SafeVerifyWithLabel(ComponentID, VerificationKey, Label, Content,
-  SignatureValue) = VerifyWithLabel(VerificationKey,
-                      "ComponentOperationLabel",
-                       ComponentOperationLabel,
-                       SignatureValue)
+SafeVerifyWithLabel(VerificationKey, ComponentID, Label, Content,
+  SignatureValue) =
+  VerifyWithLabel(VerificationKey, ComponentOperationLabel, Content,
+  SignatureValue)
 </pre><a href="#section-4.3-3" class="pilcrow">¶</a>
 </div>
 <p id="section-4.3-4">Where the fields of ComponentOperationLabel are set to<a href="#section-4.3-4" class="pilcrow">¶</a></p>
 <div class="lang-tls sourcecode" id="section-4.3-5">
 <pre>
-label = Label
 component_id = ComponentID
-context = Content
+label = Label
 </pre><a href="#section-4.3-5" class="pilcrow">¶</a>
 </div>
 <p id="section-4.3-6">For signing operations, the ComponentID <span class="bcp14">MUST</span> be set to the ComponentID of the
@@ -1725,45 +1700,29 @@ with every operation.<a href="#section-4.3-6" class="pilcrow">¶</a></p>
         <h3 id="name-exported-secrets">
 <a href="#section-4.4" class="section-number selfRef">4.4. </a><a href="#name-exported-secrets" class="section-name selfRef">Exported Secrets</a>
         </h3>
-<p id="section-4.4-1">An application component can use MLS as a group key agreement protocol by
-exporting symmetric keys. Such keys can be exported (i.e. derived from MLS key
-material) in two phases per epoch: Either at the start of the epoch, or during
-the epoch. Derivation at the start of the epoch has the added advantage that the
-source key material is deleted after use, allowing the derived key material to
-be deleted later even during the same MLS epoch to achieve forward secrecy. The
-following protocol secrets can be used to derive key from for use by application
-components:<a href="#section-4.4-1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-4.4-2.1">
-            <p id="section-4.4-2.1.1"><code>exporter_secret</code> at the beginning of an epoch<a href="#section-4.4-2.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-4.4-2.2">
-            <p id="section-4.4-2.2.1"><code>application_export_secret</code> during an epoch<a href="#section-4.4-2.2.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<p id="section-4.4-3">The <code>application_export_secret</code> is an additional secret derived from the
-<code>epoch_secret</code> at the beginning of the epoch in the same way as the other
-secrets listed in Table 4 of <span>[<a href="#RFC9420" class="cite xref">RFC9420</a>]</span> using the label "application_export".<a href="#section-4.4-3" class="pilcrow">¶</a></p>
-<p id="section-4.4-4">Any derivation performed by an application component either from the
-<code>exporter_secret</code> or the <code>application_export_secret</code> has to use the following
-function:<a href="#section-4.4-4" class="pilcrow">¶</a></p>
-<div class="lang-tls sourcecode" id="section-4.4-5">
+<p id="section-4.4-1">The MLS Exporter functionality described in <span><a href="https://rfc-editor.org/rfc/rfc9420#section-8.5" class="relref">Section 8.5</a> of [<a href="#RFC9420" class="cite xref">RFC9420</a>]</span> does not
+provide forward security for exported secrets, because the <code>exporter_secret</code> is
+not deleted after a secret has been derived.  In this section, we define a
+forward-secure exporter for use by application components.<a href="#section-4.4-1" class="pilcrow">¶</a></p>
+<p id="section-4.4-2">The safe exporter is constructed from an Exporter Tree, tree of secrets with the
+same structure as the Secret Tree defined in <span><a href="https://rfc-editor.org/rfc/rfc9420#section-9" class="relref">Section 9</a> of [<a href="#RFC9420" class="cite xref">RFC9420</a>]</span>, with two
+differences: First, an Exporter Tree always has 2<sup>16</sup> leaves,
+corresponding to the 16 bits of a ComponentID value. (As with the Secret Tree,
+the nodes of the tree can be generated on-demand, for space-efficiency.) Second,
+the root of the Exporter Tree is the <code>application_export_secret</code>, an additional
+secret derived from the <code>epoch_secret</code> at the beginning of the epoch in the same
+way as the other secrets listed in Table 4 of <span>[<a href="#RFC9420" class="cite xref">RFC9420</a>]</span> using the label
+<code>"application_export"</code>.<a href="#section-4.4-2" class="pilcrow">¶</a></p>
+<p id="section-4.4-3">This tree defines one exported secret per ComponentID.  The secret for a
+ComponentID is the <code>tree_node_secret</code> at the leaf node for that ComponentID:<a href="#section-4.4-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.4-4">
 <pre>
-DeriveApplicationSecret(Secret, Label) =
-  ExpandWithLabel(Secret, "ApplicationExport " +
-                  ComponentID + " " + Label)
-</pre><a href="#section-4.4-5" class="pilcrow">¶</a>
+SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
+</pre><a href="#section-4.4-4" class="pilcrow">¶</a>
 </div>
-<p id="section-4.4-6">Where ExpandWithLabel is defined in <span><a href="https://rfc-editor.org/rfc/rfc9420#section-8" class="relref">Section 8</a> of [<a href="#RFC9420" class="cite xref">RFC9420</a>]</span> and where
-ComponentID <span class="bcp14">MUST</span> be set to the ComponentID of the component performing the
-export.<a href="#section-4.4-6" class="pilcrow">¶</a></p>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-4.4-7.1">
-            <p id="section-4.4-7.1.1">TODO: This section seems over-complicated to me. Why is it not sufficient to
-just use the <code>exporter_secret</code>? Or the <code>MLS-Exporter</code> mechanism with a
-label structured to include the ComponentID?<a href="#section-4.4-7.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
+<p id="section-4.4-5">Upon generating an exported secret for a component, the MLS implementation <span class="bcp14">MUST</span>
+regard that component's exported secret as "consumed", and delete any source key
+material according to the deletion schedule in <span><a href="https://rfc-editor.org/rfc/rfc9420#section-9.2" class="relref">Section 9.2</a> of [<a href="#RFC9420" class="cite xref">RFC9420</a>]</span>.<a href="#section-4.4-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="pre-shared-keys-psks">
@@ -1807,13 +1766,6 @@ struct {
 } PreSharedKeyID;
 </pre><a href="#section-4.5-5" class="pilcrow">¶</a>
 </div>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-4.5-6.1">
-            <p id="section-4.5-6.1.1">TODO: It seems like you could also do this by structuring the <code>external</code>
-PSKType as (component_id, psk_id). I guess this approach separates this API
-from other external PSKs.<a href="#section-4.5-6.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
 </section>
 </div>
 <div id="attaching-application-data-to-mls-messages">
