@@ -322,7 +322,7 @@ secret derived from the `epoch_secret` at the beginning of the epoch in the same
 way as the other secrets listed in Table 4 of {{!RFC9420}} using the label
 `"application_export"`.
 
-This tree defines one exported secret per ComponentID.  The secret for a a
+This tree defines one exported secret per ComponentID.  The secret for a
 ComponentID is the `tree_node_secret` at the leaf node for that ComponentID:
 
 ~~~
