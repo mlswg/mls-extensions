@@ -309,7 +309,7 @@ with every operation.
 
 The MLS Exporter functionality described in {{Section 8.5 of RFC9420}} does not
 provide forward security for exported secrets, because the `exporter_secret` is
-not deleted after a secret has been derived.  In this section, we defind a
+not deleted after a secret has been derived.  In this section, we define a
 forward-secure exporter for use by application components.
 
 The safe exporter is constructed from an Exporter Tree, tree of secrets with the
