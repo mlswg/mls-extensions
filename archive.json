@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-04-06T00:47:21.903406+00:00",
+  "timestamp": "2025-04-13T02:10:51.354411+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -3210,24 +3210,26 @@
       "id": "PR_kwDOHZoI5M6RGXDC",
       "title": "Fix TODOs",
       "url": "https://github.com/mlswg/mls-extensions/pull/52",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "bifurcation",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "This PR fixes the TODOs that remained in the document.  It does so by making two breaking changes:\r\n\r\n1. The HPKE and signature functions are modified to align more closely with the EncryptWithLabel / SignWithLabel functions in RFC 9420\r\n2. The exporter section is rewritten to define a forward-secure exporter.",
       "createdAt": "2025-04-02T14:28:21Z",
-      "updatedAt": "2025-04-02T19:28:52Z",
+      "updatedAt": "2025-04-11T18:34:20Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
-      "baseRefOid": "5b7b0e79d69da70392bfb2abde3856d65b60442b",
+      "baseRefOid": "8bfc467530c8b9ff71cd355933244093194d1b70",
       "headRepository": "mlswg/mls-extensions",
       "headRefName": "todo",
-      "headRefOid": "1819894ca574e43bbc395759540507ebfad8b458",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "5284792c7f939cc5bc998b4422183a8857d315d6",
+      "closedAt": "2025-04-11T18:34:20Z",
+      "mergedAt": "2025-04-11T18:34:20Z",
+      "mergedBy": "bifurcation",
+      "mergeCommit": {
+        "oid": "82af6c83b64788038d90561c50a6a250f21a01f2"
+      },
       "comments": [],
       "reviews": [
         {
@@ -3362,6 +3364,26 @@
           "createdAt": "2025-04-02T19:28:52Z",
           "updatedAt": "2025-04-02T19:28:52Z",
           "comments": []
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6klAVJ",
+          "commit": {
+            "abbreviatedOid": "a62e5ef"
+          },
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-04-11T18:02:56Z",
+          "updatedAt": "2025-04-11T18:03:01Z",
+          "comments": [
+            {
+              "originalPosition": 126,
+              "body": "Added the parenthetical afterward to address this.",
+              "createdAt": "2025-04-11T18:02:57Z",
+              "updatedAt": "2025-04-11T18:03:01Z"
+            }
+          ]
         }
       ]
     },
