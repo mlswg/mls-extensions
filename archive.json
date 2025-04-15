@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-04-13T02:10:51.354411+00:00",
+  "timestamp": "2025-04-15T00:45:05.847123+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -477,6 +477,22 @@
       "body": "              There's a missing link here\r\n\r\n_Originally posted by @timokoesters in https://github.com/mlswg/mls-extensions/pull/51#discussion_r2025482736_\r\n            ",
       "createdAt": "2025-04-03T16:25:09Z",
       "updatedAt": "2025-04-03T16:25:09Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 55,
+      "id": "I_kwDOHZoI5M6yZvuX",
+      "title": "Suggested proposal types for AppDataUpdate and SelfRemove are the same",
+      "url": "https://github.com/mlswg/mls-extensions/issues/55",
+      "state": "OPEN",
+      "author": "mulmarta",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Both proposals suggest type 8. IANA will eventually sort it out but it would be nice to sort it out now. I suggest 10 for SelfRemove",
+      "createdAt": "2025-04-14T13:31:55Z",
+      "updatedAt": "2025-04-14T13:31:55Z",
       "closedAt": null,
       "comments": []
     }
