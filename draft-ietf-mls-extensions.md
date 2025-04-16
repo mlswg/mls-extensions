@@ -1337,6 +1337,51 @@ that all the following are true:
 * Every binding that this client supports is valid in the context of the
   LeafNode.
 
+## Consolidate proposals
+
+The efficiency of an MLS group depends on the number of blanks in the tree,
+which increases as members are removed. The only way to populate blank
+leaves is to either add new members, or for existing members to perform an
+external commit. Considering the downsides of external commits (discarding most
+existing proposals and interrupting the continuity of randomness provided by the
+MLS key schedule), this leaves no practical option for groups with static
+membership to consolidate the tree after removals.
+
+The consolidate proposal brings the consolidating nature of external commits to
+regular commits without their downsides.
+
+~~~ tls-presentation
+struct {} Consolidate;
+
+struct {
+    ProposalType msg_type;
+    select (Proposal.msg_type) {
+        case add:                      Add;
+        case update:                   Update;
+        case remove:                   Remove;
+        case psk:                      PreSharedKey;
+        case reinit:                   ReInit;
+        case external_init:            ExternalInit;
+        case group_context_extensions: GroupContextExtensions;
+        case self_remove:              SelfRemove;
+        case consolidate:              Consolidate;
+    };
+} Proposal;
+~~~
+
+A commit with a Consolidate proposal requires a path, can only be committed by
+value and is valid only if after processing the Remove proposals there is a
+blank in the tree left of the sender's leaf.
+
+With a Consolidate proposal, a commit functions much like the "resync" flavor of
+an external commit. After applying all other Remove proposals, the sender is
+removed just as if a Remove proposal had been committed targeting the sender's
+index. Before procesing Add proposals, the sender's new leaf is added at the
+leftmost free leaf node (as if with an Add proposal) and the path is calculated
+relative to that leaf node.
+
+The rules for leaf node validation still apply relative to the sender's original
+leaf.
 
 # IANA Considerations
 
@@ -1452,6 +1497,17 @@ from a group more efficiently than using a `remove` proposal type, as the
 
 * Value: 0x0008 (suggested)
 * Name: self_remove
+* Recommended: Y
+* External: N
+* Path Required: Y
+
+### Consolidate Proposal
+
+The `consolidate` MLS Proposal Type is used for the committer to move into a
+blank node left of its current leaf node.
+
+* Value: 0x0009 (suggested)
+* Name: consolidate
 * Recommended: Y
 * External: N
 * Path Required: Y
