@@ -1339,16 +1339,21 @@ that all the following are true:
 
 ## Consolidate proposals
 
-The efficiency of an MLS group depends on the number of blanks in the tree,
-which increases as members are removed. The only way to populate blank
-leaves is to either add new members, or for existing members to perform an
-external commit. Considering the downsides of external commits (discarding most
-existing proposals and interrupting the continuity of randomness provided by the
-MLS key schedule), this leaves no practical option for groups with static
-membership to consolidate the tree after removals.
+The efficiency of an MLS group depends – among other things – on the number 
+of blank nodes in the tree, the number of which increases as members are removed.
+Blank nodes are repopulated when members send a Commit with an Update Path.
+External Commits have the advantage over regular Commits that the left-most free
+leaf is used for the new (or rejoining) member. This has the effect that the left part
+of the tree gets better consolidation after members have been removed.
 
 The consolidate proposal brings the consolidating nature of external commits to
-regular commits without their downsides.
+regular commits. It moves the sender of the Commit to the left-most free leaf. 
+
+In many deployment scenarios Commits happen on a regular basis and their
+frequency is higher than removing members from the group. In those scenarios,
+the left part of tree typically has little to no blank nodes, and the right part
+is as slim as needed. This increases the efficiency of Commits overall, since
+the number of KEM operations to the filtered copath is minimized.
 
 ~~~ tls-presentation
 struct {} Consolidate;
