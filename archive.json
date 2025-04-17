@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-04-15T00:45:05.847123+00:00",
+  "timestamp": "2025-04-17T00:44:14.064820+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -3429,6 +3429,40 @@
         "oid": "e75d5e185baeeea762e424b3427dae46deb3ae50"
       },
       "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 56,
+      "id": "PR_kwDOHZoI5M6S2t28",
+      "title": "Introduce consolidate proposal",
+      "url": "https://github.com/mlswg/mls-extensions/pull/56",
+      "state": "OPEN",
+      "author": "kkohbrok",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-04-16T14:56:24Z",
+      "updatedAt": "2025-04-16T21:57:28Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "82af6c83b64788038d90561c50a6a250f21a01f2",
+      "headRepository": "kkohbrok/mls-extensions",
+      "headRefName": "konrad/consolidate",
+      "headRefOid": "d2d905d591ab0694abf88295d1b2bb00782f1fa8",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "On the process: I can understand the motivation for this, but I don't think it should be folded into this document at this late stage.\r\n\r\nOn the merits: \r\n\r\nThis seems more like a \"ScootOver\" proposal than \"Consolidate\", since it only really consolidates anything if the rightmost person does it.  \r\n\r\nGiven how MLS suppresses unnecessary intermediate nodes, it seems like there's probably a more complete algorithm to identify the smallest tree that can represent all of the non-blank nodes in a given tree.  For example:\r\n\r\n```\r\nBEFORE:\r\n              X\r\n              |\r\n        .-----+-----.\r\n       /             \\\r\n      _               _\r\n      |               |\r\n    .-+-.           .-+-.\r\n   /     \\         /     \\\r\n  _       _       _       _\r\n / \\     / \\     / \\     / \\\r\nA   _   _   _   _   _   _   H\r\n\r\nAFTER:\r\n  X\r\n / \\\r\nA   H\r\n```\r\n\r\n```\r\nBEFORE:\r\n              X\r\n              |\r\n        .-----+-----.\r\n       /             \\\r\n      _               Y\r\n      |               |\r\n    .-+-.           .-+-.\r\n   /     \\         /     \\\r\n  _       _       _       _\r\n / \\     / \\     / \\     / \\\r\nA   _   _   _   E   _   _   H\r\n\r\nAFTER:\r\n      X\r\n      |\r\n    .-+-.\r\n   /     \\\r\n  _       Y\r\n / \\     / \\\r\nA   _   E   H\r\n```\r\n\r\nIt seems like that algorithm could be entirely deterministic, roughly:\r\n\r\n* Remove the blank nodes from the tree, resulting in an unbalanced binary tree\r\n* The depth of the new tree is the depth of the unbalanced tree\r\n* Place the leaf nodes at the leaves of a tree of that depth\r\n* ... as far left as possible, while still allowing for the intermediate nodes to be placed above them.\r\n\r\nSo you could just have it be done after all other modifications to the tree are done, and all members would do it consistently.\r\n\r\nIn fact, you don't really need a proposal at all -- just an extension that says to always do this at the end of Commit processing, just like you always truncate after a Remove.\r\n\r\nBut it's not clear what resource you're actually saving here.  While this is fun math, blank nodes in the tree do not take up much more space either in memory or on the wire, and they don't cause any additional cryptographic operations to be done.\r\n\r\nAll of which underscores that there's more complexity here than we should be adding at this stage.  Let's make a fresh draft.",
+          "createdAt": "2025-04-16T21:57:27Z",
+          "updatedAt": "2025-04-16T21:57:27Z"
+        }
+      ],
       "reviews": []
     }
   ]
