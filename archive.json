@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-04-17T00:44:14.064820+00:00",
+  "timestamp": "2025-04-20T00:49:22.572103+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -3443,13 +3443,13 @@
       "labels": [],
       "body": "",
       "createdAt": "2025-04-16T14:56:24Z",
-      "updatedAt": "2025-04-16T21:57:28Z",
+      "updatedAt": "2025-04-17T18:43:45Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "82af6c83b64788038d90561c50a6a250f21a01f2",
       "headRepository": "kkohbrok/mls-extensions",
       "headRefName": "konrad/consolidate",
-      "headRefOid": "d2d905d591ab0694abf88295d1b2bb00782f1fa8",
+      "headRefOid": "671ddd8684b6c13e88928d9cf0fba2409c9f39c9",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -3461,6 +3461,27 @@
           "body": "On the process: I can understand the motivation for this, but I don't think it should be folded into this document at this late stage.\r\n\r\nOn the merits: \r\n\r\nThis seems more like a \"ScootOver\" proposal than \"Consolidate\", since it only really consolidates anything if the rightmost person does it.  \r\n\r\nGiven how MLS suppresses unnecessary intermediate nodes, it seems like there's probably a more complete algorithm to identify the smallest tree that can represent all of the non-blank nodes in a given tree.  For example:\r\n\r\n```\r\nBEFORE:\r\n              X\r\n              |\r\n        .-----+-----.\r\n       /             \\\r\n      _               _\r\n      |               |\r\n    .-+-.           .-+-.\r\n   /     \\         /     \\\r\n  _       _       _       _\r\n / \\     / \\     / \\     / \\\r\nA   _   _   _   _   _   _   H\r\n\r\nAFTER:\r\n  X\r\n / \\\r\nA   H\r\n```\r\n\r\n```\r\nBEFORE:\r\n              X\r\n              |\r\n        .-----+-----.\r\n       /             \\\r\n      _               Y\r\n      |               |\r\n    .-+-.           .-+-.\r\n   /     \\         /     \\\r\n  _       _       _       _\r\n / \\     / \\     / \\     / \\\r\nA   _   _   _   E   _   _   H\r\n\r\nAFTER:\r\n      X\r\n      |\r\n    .-+-.\r\n   /     \\\r\n  _       Y\r\n / \\     / \\\r\nA   _   E   H\r\n```\r\n\r\nIt seems like that algorithm could be entirely deterministic, roughly:\r\n\r\n* Remove the blank nodes from the tree, resulting in an unbalanced binary tree\r\n* The depth of the new tree is the depth of the unbalanced tree\r\n* Place the leaf nodes at the leaves of a tree of that depth\r\n* ... as far left as possible, while still allowing for the intermediate nodes to be placed above them.\r\n\r\nSo you could just have it be done after all other modifications to the tree are done, and all members would do it consistently.\r\n\r\nIn fact, you don't really need a proposal at all -- just an extension that says to always do this at the end of Commit processing, just like you always truncate after a Remove.\r\n\r\nBut it's not clear what resource you're actually saving here.  While this is fun math, blank nodes in the tree do not take up much more space either in memory or on the wire, and they don't cause any additional cryptographic operations to be done.\r\n\r\nAll of which underscores that there's more complexity here than we should be adding at this stage.  Let's make a fresh draft.",
           "createdAt": "2025-04-16T21:57:27Z",
           "updatedAt": "2025-04-16T21:57:27Z"
+        },
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I think this paper here has analyzed this more formally (Section 3.4 in particular): https://eprint.iacr.org/2024/746\r\n\r\n~~I'm not concerned with local memory or even necessarily compute. Getting rid of blanks makes shorter paths and fewer ciphertexts, which reduce commit size especially in the PQ setting. I'll try to make that clearer in the intro.~~\r\n\r\nI agree this should probably be an extension, as we want it to happen with every commit. But then the question is whether each commit is trying to optimize for the result of that particular operation, or whether the idea is to converge towards an optimal solution eventually. I'd be in favour of the latter. After all group members should commit regularly to achieve PCS. In the \"scoot over\" case there's not much more to be added in terms of complexity.\r\n\r\nEDIT: It turns out I had misremembered how efficiently blanks are handled in the tree. It turns out that moving members to the left of the tree doesn't make as much of a difference as I thought.",
+          "createdAt": "2025-04-17T06:33:19Z",
+          "updatedAt": "2025-04-17T12:15:55Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "I think there are a few things to consider here:\r\n\r\na) It is a last-minute addition to the document. For that to be acceptable, we need to be sure about the following:\r\n - It solves a real problem (this is being debated)\r\n - It is sound and not terribly complex to implement (that's probably the case)\r\n - There's a good reason not to do it in a new draft (that reason is yet to be clearly stated)\r\n\r\nb) @bifurcation Your proposed solution sounds interesting as well. Given its complexity, it's likely out of scope for mls-extensions. I also think it wouldn't work with the existing tree hash algorithm, thus requiring even more changes.\r\n\r\nWith that in mind, we could try to give it another whirl and see if the conditions for relevance can be met. The next step should also be to discuss this on list.\r\n\r\nMy two cents on it is that it's probably good hygiene to move committers to the left. I think it comes at no cost (on average), and \u2013 on the contrary \u2013 will make for tidier trees. Ideally, running some (MC) simulations would show whether we can save on KEM operations.",
+          "createdAt": "2025-04-17T16:21:08Z",
+          "updatedAt": "2025-04-17T16:21:08Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Hi,\r\nThe idea of this Proposal (which I think of as the \"scootch\" Proposal) doesn't seem that hard to implement, but the application of it seems limited to groups where you had a very large number of members and now you have just a fraction. Otherwise I don't see a lot of value. We don't have consensus that this is actually a problem, let alone that we need a solution to it and that it needs to be in the mls-extensions draft.\r\nThanks, -r",
+          "createdAt": "2025-04-17T18:43:44Z",
+          "updatedAt": "2025-04-17T18:43:44Z"
         }
       ],
       "reviews": []
