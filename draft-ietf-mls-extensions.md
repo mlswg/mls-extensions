@@ -751,7 +751,7 @@ particular {{!RFC9180}}.
 
 ### Format
 
-This extension uses the `mls_extension_message` WireFormat, where the content is a `TargetedMessage`.
+This extension defines the `mls_targeted_message` WireFormat, where the content is a `TargetedMessage`.
 
 ~~~ tls
 struct {
@@ -830,7 +830,8 @@ used. In pseudocode, the key and nonce are derived as:
 
 ~~~ tls
 sender_auth_data_secret
-  = DeriveExtensionSecret(extension_secret, "targeted message sender auth data")
+  = DeriveSecret(epoch_secret,
+                    "targeted message sender auth data secret")
 
 ciphertext_sample = hpke_ciphertext[0..KDF.Nh-1]
 
@@ -869,7 +870,7 @@ For the PSK part of the authentication, clients export a dedicated secret:
 
 ~~~ tls
 targeted_message_psk
-  = DeriveExtensionSecret(extension_secret, "targeted message psk")
+  = DeriveSecret(epoch_secret, "targeted message psk")
 ~~~
 
 The functions `SealAuth` and `OpenAuth` defined in {{!RFC9180}} are used as
@@ -881,14 +882,13 @@ described in {{safe-hpke}} with an empty context. Other functions are defined in
 The sender MUST set the authentication scheme to
 `TargetedMessageAuthScheme.HPKEAuthPsk`.
 
-As described in {{safe-hpke}} the `hpke_context` is a LabeledExtensionContent struct
+As described in {{safe-hpke}} the `hpke_context` is an ExtensionContext struct
 with the following content, where `group_context` is the serialized context of
 the group.
 
 ~~~ tls
-label = "MLS 1.0 ExtensionData"
-extension_type = ExtensionType
-extension_data = group_context
+label = "MLS 1.0 TargetedMessageData"
+context = group_context
 ~~~
 
 
@@ -936,11 +936,11 @@ The sender then computes the following with `hpke_context` defined as in
                                         epoch)
 ~~~
 
-The signature is computed as follows, where the `extension_type` is the type of
-this extension (see {{iana-considerations}}).
+The signature is computed as follows:
 
 ~~~ tls
-signature = SafeSignWithLabel(extension_type, ., "TargetedMessageTBS", targeted_message_tbs)
+signature = SignWithLabel(sender_leaf_node_signature_private_key,
+              "TargetedMessageTBS", targeted_message_tbs)
 ~~~
 
 The recipient computes the following:
@@ -958,11 +958,10 @@ message = OpenPSK(kem_output,
 The recipient MUST verify the message authentication:
 
 ~~~ tls
-SafeVerifyWithLabel.verify(extension_type,
-                        sender_leaf_node.signature_key,
-                        "TargetedMessageTBS",
-                        targeted_message_tbs,
-                        signature)
+VerifyWithLabel.verify(sender_leaf_node.signature_key,
+                       "TargetedMessageTBS",
+                       targeted_message_tbs,
+                       signature)
 ~~~
 
 ### Guidance on authentication schemes
