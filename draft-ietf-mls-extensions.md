@@ -1450,7 +1450,7 @@ The `self_remove` MLS Proposal Type is used for a member to remove itself
 from a group more efficiently than using a `remove` proposal type, as the
 `self_remove` type is permitted in External Commits.
 
-* Value: 0x0008 (suggested)
+* Value: 0x000a (suggested)
 * Name: self_remove
 * Recommended: Y
 * External: N
