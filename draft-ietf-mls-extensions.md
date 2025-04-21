@@ -1456,13 +1456,19 @@ from a group more efficiently than using a `remove` proposal type, as the
 * Recommended: Y
 * Reference: RFC XXXX
 
-<!-- ## MLS Signature Labels
+## MLS Signature Labels
 
-### Labeled Extension Content
+### TargetedMessageTBS
 
-* Label: "LabeledExtensionContent" (suggested)
+* Label: "TargetedMessageTBS"
 * Recommended: Y
-* Reference: RFC XXXX -->
+* Reference: RFC XXXX
+
+### CredentialBindingTBS
+
+* Label: "CredentialBindingTBS"
+* Recommended: Y
+* Reference: RFC XXXX
 
 ## MLS Component Types {#iana-components}
 
