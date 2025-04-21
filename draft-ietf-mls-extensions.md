@@ -1648,6 +1648,18 @@ security of the least secure of its credential bindings.
 
 RFC EDITOR PLEASE DELETE THIS SECTION.
 
+draft-07
+- assign self_remove proposal to a non duplicate number (0x000a)
+- refactor TargetedMessage to no longer use structs removed from when it
+was a "safe extension"
+- remove the no-longer needed targeted_messages_capability (now signaled using support_wire_formats and required_wire_formats)
+- add TargetedMessageTBS and CredentialBundleTBS to MLS Signature Labels IANA
+registry
+- add GREASE values for components
+- fix safe exporter definition
+- resolve TODOs from -06
+- fix numerous typos
+
 draft-06
 
 - Integrate notion of Application API from draft-barnes-mls-appsync
