@@ -1403,21 +1403,6 @@ all MLS members of the group to support.
 * Recommended: Y
 * Reference: RFC XXXX
 
-### targeted_messages_capability MLS Extension
-
-The `targeted_messages_capability` MLS Extension Type is used in the
-`capabilities.extensions` field of LeafNodes to indicate the support for the
-Targeted Messages Extension, and in the `required_capabilities.extension_types`
-field of the GroupContext to indicate all members of the group must support it.
-The extension does not carry any payload.
-
-* Value: 0x0009 (suggested)
-* Name: targeted_messages_capability
-* Message(s): LN: This extension may appear in LeafNode objects
-              GC: This extension may appear in GroupContext objects
-* Recommended: Y
-* Reference: RFC XXXX
-
 
 ## MLS Proposal Types
 
