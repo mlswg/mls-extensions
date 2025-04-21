@@ -1476,6 +1476,19 @@ This document requests the creation of a new IANA "MLS Component Types" registry
 policy {{!RFC8126}} using the MLS Designated Experts. Assignments in the range
 0x8000 0000 to 0xFFFF FFFF are for private use.
 
+As described in {{Section 13.5 of !RFC9420}}, GREASE values are ignored by
+receivers, while a random selection of GREASE values are included in certain
+fields. This specification adds the following locations where GREASE values for
+components can be included:
+
+* LeafNode.capabilities.app_data_dictionary.safe_aad
+* LeafNode.capabilities.app_data_dictionary.app_components
+* LeafNode.extensions.app_data_dictionary
+* KeyPackage.extensions.app_data_dictionary
+* GroupInfo.extensions.app_data_dictionary
+* app_ephemeral.app_data_dictionary
+* authenticated_data.aad_items
+
 Template:
 
 - Value: The numeric value of the component ID
@@ -1510,8 +1523,26 @@ Initial Contents:
 | 0x0000 0003   | content_media_types      | LN,GC | Y | RFCXXXX |
 | 0x0000 0004   | last_resort_key_package  | KP    | Y | RFCXXXX |
 | 0x0000 0005   | app_ack                  | AE    | Y | RFCXXXX |
+| 0x0000 0a0a   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x0000 1a1a   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x0000 2a2a   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x0000 3a3a   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x0000 4a4a   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x0000 5a5a   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x0000 6a6a   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x0000 7a7a   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x0000 8a8a   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x0000 9a9a   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x0000 aaaa   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x0000 baba   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x0000 caca   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x0000 dada   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x0000 eaea   | GREASE                   | Note1 | Y | RFCXXXX |
 | 0x8000 0000 -
   0xFFFF FFFF   | Reserved for Private Use | N/A   | N | RFCXXXX |
+
+>Note1: GREASE values for components MAY be present in AD, AE, GI, KP, and LN
+>objects.
 
 
 # Security considerations
