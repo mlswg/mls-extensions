@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-04-20T00:49:22.572103+00:00",
+  "timestamp": "2025-04-22T00:44:38.834661+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -476,9 +476,17 @@
       "labels": [],
       "body": "              There's a missing link here\r\n\r\n_Originally posted by @timokoesters in https://github.com/mlswg/mls-extensions/pull/51#discussion_r2025482736_\r\n            ",
       "createdAt": "2025-04-03T16:25:09Z",
-      "updatedAt": "2025-04-03T16:25:09Z",
+      "updatedAt": "2025-04-21T20:43:54Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "This is in the appendix after the change log that contains old text from the safe extensions framework. Most of it is no longer relevant and the rest of informational. I propose we just remove the section.",
+          "createdAt": "2025-04-21T20:43:53Z",
+          "updatedAt": "2025-04-21T20:43:53Z"
+        }
+      ]
     },
     {
       "number": 55,
@@ -492,7 +500,31 @@
       "labels": [],
       "body": "Both proposals suggest type 8. IANA will eventually sort it out but it would be nice to sort it out now. I suggest 10 for SelfRemove",
       "createdAt": "2025-04-14T13:31:55Z",
-      "updatedAt": "2025-04-14T13:31:55Z",
+      "updatedAt": "2025-04-21T20:47:06Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Addressed in PR #58 ",
+          "createdAt": "2025-04-21T20:47:05Z",
+          "updatedAt": "2025-04-21T20:47:05Z"
+        }
+      ]
+    },
+    {
+      "number": 57,
+      "id": "I_kwDOHZoI5M6zXHcK",
+      "title": "Does TargetedMessage include authenticated_data in its AAD?",
+      "url": "https://github.com/mlswg/mls-extensions/issues/57",
+      "state": "OPEN",
+      "author": "rohanmahy",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-04-21T19:51:55Z",
+      "updatedAt": "2025-04-21T19:51:55Z",
       "closedAt": null,
       "comments": []
     }
@@ -3443,7 +3475,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2025-04-16T14:56:24Z",
-      "updatedAt": "2025-04-17T18:43:45Z",
+      "updatedAt": "2025-04-20T12:48:29Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "82af6c83b64788038d90561c50a6a250f21a01f2",
@@ -3482,8 +3514,41 @@
           "body": "Hi,\r\nThe idea of this Proposal (which I think of as the \"scootch\" Proposal) doesn't seem that hard to implement, but the application of it seems limited to groups where you had a very large number of members and now you have just a fraction. Otherwise I don't see a lot of value. We don't have consensus that this is actually a problem, let alone that we need a solution to it and that it needs to be in the mls-extensions draft.\r\nThanks, -r",
           "createdAt": "2025-04-17T18:43:44Z",
           "updatedAt": "2025-04-17T18:43:44Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Privacy question:\r\nDo we consider how long you have been in a group  or how often you commit to be privacy sensitive?\r\nIf the epoch is fairly large, new joiners will fill in blank nodes and so your leaf index is pretty random. With this proposal it would be much more likely a long-lived member or a frequent committer is to the left in the tree. Do we care?",
+          "createdAt": "2025-04-20T12:48:28Z",
+          "updatedAt": "2025-04-20T12:48:28Z"
         }
       ],
+      "reviews": []
+    },
+    {
+      "number": 58,
+      "id": "PR_kwDOHZoI5M6TVuGD",
+      "title": "Implementor feedback from mls-extensions",
+      "url": "https://github.com/mlswg/mls-extensions/pull/58",
+      "state": "OPEN",
+      "author": "rohanmahy",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "- AppDataUpdate and SelfRemove used the same proposal number. SelfRemove -> 0x000a\r\n- Remove the last references to safe extensions structs in TargetedMessage\r\n- targeted_messages_capability is no longer needed with supported|required_wire_formats\r\n- Register missing MLS Signature Labels to IANA section\r\n- Add GREASE values for components\r\n\r\nI could go further by adding GREASE for wire_format (in capabilities only).",
+      "createdAt": "2025-04-21T19:53:51Z",
+      "updatedAt": "2025-04-21T23:45:35Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "82af6c83b64788038d90561c50a6a250f21a01f2",
+      "headRepository": "rohanmahy/mls-extensions",
+      "headRefName": "impl-feedback",
+      "headRefOid": "f09d8b3c9866151539eb6a85239ff9f09bb8b064",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
       "reviews": []
     }
   ]
