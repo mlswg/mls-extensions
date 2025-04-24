@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-04-22T00:44:38.834661+00:00",
+  "timestamp": "2025-04-24T00:44:46.846340+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -3468,21 +3468,21 @@
       "id": "PR_kwDOHZoI5M6S2t28",
       "title": "Introduce consolidate proposal",
       "url": "https://github.com/mlswg/mls-extensions/pull/56",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "kkohbrok",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2025-04-16T14:56:24Z",
-      "updatedAt": "2025-04-20T12:48:29Z",
+      "updatedAt": "2025-04-23T11:59:17Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "82af6c83b64788038d90561c50a6a250f21a01f2",
       "headRepository": "kkohbrok/mls-extensions",
       "headRefName": "konrad/consolidate",
       "headRefOid": "671ddd8684b6c13e88928d9cf0fba2409c9f39c9",
-      "closedAt": null,
+      "closedAt": "2025-04-23T11:59:17Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
@@ -3521,6 +3521,20 @@
           "body": "Privacy question:\r\nDo we consider how long you have been in a group  or how often you commit to be privacy sensitive?\r\nIf the epoch is fairly large, new joiners will fill in blank nodes and so your leaf index is pretty random. With this proposal it would be much more likely a long-lived member or a frequent committer is to the left in the tree. Do we care?",
           "createdAt": "2025-04-20T12:48:28Z",
           "updatedAt": "2025-04-20T12:48:28Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "> Privacy question: Do we consider how long you have been in a group or how often you commit to be privacy sensitive? If the epoch is fairly large, new joiners will fill in blank nodes and so your leaf index is pretty random. With this proposal it would be much more likely a long-lived member or a frequent committer is to the left in the tree. Do we care?\r\n\r\nIn vanilla MLS we have a similar issue: When groups are relatively static, you can infer who joined in what order. I don't think this proposal would introduce anything worse. \r\nI also don't think frequent committers would be easily identifiable with this proposal. The rule is to jump into the leftmost free leaf, which might very well be on the right side of the tree.",
+          "createdAt": "2025-04-22T07:31:47Z",
+          "updatedAt": "2025-04-22T07:31:47Z"
+        },
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I'm closing this for now as the performance benefit is less pronounced as I had originally thought. As Raphael mentioned, an MC simulation would be nice to see how big the benefit would be in the end, but I don't have the capacity right now.",
+          "createdAt": "2025-04-23T11:59:17Z",
+          "updatedAt": "2025-04-23T11:59:17Z"
         }
       ],
       "reviews": []
@@ -3537,7 +3551,7 @@
       "labels": [],
       "body": "- AppDataUpdate and SelfRemove used the same proposal number. SelfRemove -> 0x000a\r\n- Remove the last references to safe extensions structs in TargetedMessage\r\n- targeted_messages_capability is no longer needed with supported|required_wire_formats\r\n- Register missing MLS Signature Labels to IANA section\r\n- Add GREASE values for components\r\n\r\nI could go further by adding GREASE for wire_format (in capabilities only).",
       "createdAt": "2025-04-21T19:53:51Z",
-      "updatedAt": "2025-04-21T23:45:35Z",
+      "updatedAt": "2025-04-23T15:04:37Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "82af6c83b64788038d90561c50a6a250f21a01f2",
@@ -3549,7 +3563,60 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M6mJU7e",
+          "commit": {
+            "abbreviatedOid": "f09d8b3"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "state": "CHANGES_REQUESTED",
+          "body": "Thanks for tackling some of the issues. I think more GREASE values would be a good thing. I marked a few things I don't agree with/don't understand.",
+          "createdAt": "2025-04-23T14:04:50Z",
+          "updatedAt": "2025-04-23T14:41:51Z",
+          "comments": [
+            {
+              "originalPosition": 15,
+              "body": "I don't think this is necessary. We could just use the normal exporter, since we don't need FS anyway. That would make it much simpler to implement.",
+              "createdAt": "2025-04-23T14:04:50Z",
+              "updatedAt": "2025-04-23T14:41:51Z"
+            },
+            {
+              "originalPosition": 33,
+              "body": "I'm not sure what an `ExtensionContext` struct is. Is that defined anywhere?\r\n\r\nI think this whole section doesn't make sense anymore. The HPKE section has changed, but also seems incomplete.",
+              "createdAt": "2025-04-23T14:12:30Z",
+              "updatedAt": "2025-04-23T14:41:51Z"
+            },
+            {
+              "originalPosition": 139,
+              "body": "I think this paragraph should use normative language.",
+              "createdAt": "2025-04-23T14:38:47Z",
+              "updatedAt": "2025-04-23T14:41:51Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6mKKwU",
+          "commit": {
+            "abbreviatedOid": "f09d8b3"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-04-23T15:04:37Z",
+          "updatedAt": "2025-04-23T15:04:37Z",
+          "comments": [
+            {
+              "originalPosition": 15,
+              "body": "Could you provide a concrete alternative syntax please for one instance? I can edit the other instance appropriately.",
+              "createdAt": "2025-04-23T15:04:37Z",
+              "updatedAt": "2025-04-23T15:06:05Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
