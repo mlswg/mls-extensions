@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-04-24T00:44:46.846340+00:00",
+  "timestamp": "2025-05-04T00:52:00.542373+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -127,7 +127,7 @@
       "labels": [],
       "body": "Now that there are IANA registries for those, we must extend them.",
       "createdAt": "2023-07-19T06:07:00Z",
-      "updatedAt": "2025-02-06T08:53:00Z",
+      "updatedAt": "2025-05-03T15:11:55Z",
       "closedAt": null,
       "comments": [
         {
@@ -143,6 +143,13 @@
           "body": "I think this issue is now out-of-date thanks to the safe extension API, because the targeted message extension now uses SafeSignWithLabel and DeriveExtensionSecret. We can probably close it with no action.",
           "createdAt": "2025-02-06T08:53:00Z",
           "updatedAt": "2025-02-06T08:53:00Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "TargetedMessage is a true extension, not an application component.",
+          "createdAt": "2025-05-03T15:11:54Z",
+          "updatedAt": "2025-05-03T15:11:54Z"
         }
       ]
     },
