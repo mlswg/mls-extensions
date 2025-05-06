@@ -829,8 +829,8 @@ length of the hpke_ciphertext is less than KDF.Nh, the whole hpke_ciphertext is
 used. In pseudocode, the key and nonce are derived as:
 
 ~~~ tls
-sender_auth_data_secret
-  = MLS-Exporter("targeted message", "sender auth data secret", KDF.Nh)
+sender_auth_data_secret =
+  MLS-Exporter("targeted message", "sender auth data secret", KDF.Nh)
 
 ciphertext_sample = hpke_ciphertext[0..KDF.Nh-1]
 
@@ -868,8 +868,8 @@ for more information.
 For the PSK part of the authentication, clients export a dedicated secret:
 
 ~~~ tls
-targeted_message_psk
-  = DeriveSecret(epoch_secret, "targeted message psk")
+targeted_message_psk =
+  MLS-Exporter("targeted message", "psk", KDF.Nh)
 ~~~
 
 The functions `SealAuth` and `OpenAuth` defined in {{!RFC9180}} are used as
@@ -881,15 +881,18 @@ described in {{safe-hpke}} with an empty context. Other functions are defined in
 The sender MUST set the authentication scheme to
 `TargetedMessageAuthScheme.HPKEAuthPsk`.
 
-As described in {{safe-hpke}} the `hpke_context` is an ExtensionContext struct
-with the following content, where `group_context` is the serialized context of
-the group.
+The `hpke_context` is an TargetedMessageContext struct with the following
+content, where `group_context` is the serialized context of the group.
 
 ~~~ tls
+struct {
+  opaque label<V>;
+  opaque context<V>;
+} TargetedMessageContext;
+
 label = "MLS 1.0 TargetedMessageData"
 context = group_context
 ~~~
-
 
 The sender then computes the following:
 
