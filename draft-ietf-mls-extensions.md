@@ -692,6 +692,31 @@ Finally, the supported and required media types (formerly called MIME types)
 are communicated in the `content_media_types` component (see
 {{content-advertisement}}).
 
+## GREASE
+
+The "Generate Random Extensions And Sustain Extensibility" (GREASE) approach is
+described in {{Section 13.5 of !RFC9420}}. Further, {{Section 7.2 of !RFC9420}}
+says that:
+
+>"As discussed in Section 13, unknown values in `capabilities` MUST be ignored,
+>and the creator of a `capabilities` field SHOULD include some random GREASE
+>values to help ensure that other clients correctly ignore unknown values."
+
+This specification adds the following locations where GREASE values for
+components can be included:
+
+* LeafNode.capabilities.app_data_dictionary.safe_aad
+* LeafNode.capabilities.app_data_dictionary.app_components
+* LeafNode.extensions.app_data_dictionary
+* KeyPackage.extensions.app_data_dictionary
+* GroupInfo.extensions.app_data_dictionary
+* app_ephemeral.app_data_dictionary
+* authenticated_data.aad_items
+
+Unknown values (including GREASE values) in any of these fields MUST be ignored
+by receivers. A random selection of GREASE values SHOULD be included in any of
+these fields that would otherwise be present.
+
 
 # Extensions
 
@@ -1477,19 +1502,6 @@ from a group more efficiently than using a `remove` proposal type, as the
 This document requests the creation of a new IANA "MLS Component Types" registry under the "Messaging Layer Security" group registry heading. Assignments to this registry in the range 0x0000 0000 to 0x7FFF FFFF are via Specification Required
 policy {{!RFC8126}} using the MLS Designated Experts. Assignments in the range
 0x8000 0000 to 0xFFFF FFFF are for private use.
-
-As described in {{Section 13.5 of !RFC9420}}, GREASE values are ignored by
-receivers, while a random selection of GREASE values are included in certain
-fields. This specification adds the following locations where GREASE values for
-components can be included:
-
-* LeafNode.capabilities.app_data_dictionary.safe_aad
-* LeafNode.capabilities.app_data_dictionary.app_components
-* LeafNode.extensions.app_data_dictionary
-* KeyPackage.extensions.app_data_dictionary
-* GroupInfo.extensions.app_data_dictionary
-* app_ephemeral.app_data_dictionary
-* authenticated_data.aad_items
 
 Template:
 
