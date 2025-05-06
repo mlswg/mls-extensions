@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-05-04T00:52:00.542373+00:00",
+  "timestamp": "2025-05-06T00:46:14.013534+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -3558,7 +3558,7 @@
       "labels": [],
       "body": "- AppDataUpdate and SelfRemove used the same proposal number. SelfRemove -> 0x000a\r\n- Remove the last references to safe extensions structs in TargetedMessage\r\n- targeted_messages_capability is no longer needed with supported|required_wire_formats\r\n- Register missing MLS Signature Labels to IANA section\r\n- Add GREASE values for components\r\n\r\nI could go further by adding GREASE for wire_format (in capabilities only).",
       "createdAt": "2025-04-21T19:53:51Z",
-      "updatedAt": "2025-04-23T15:04:37Z",
+      "updatedAt": "2025-05-05T21:01:12Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "82af6c83b64788038d90561c50a6a250f21a01f2",
@@ -3620,6 +3620,26 @@
               "body": "Could you provide a concrete alternative syntax please for one instance? I can edit the other instance appropriately.",
               "createdAt": "2025-04-23T15:04:37Z",
               "updatedAt": "2025-04-23T15:06:05Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6n2kSL",
+          "commit": {
+            "abbreviatedOid": "f09d8b3"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-05-05T21:01:11Z",
+          "updatedAt": "2025-05-05T21:01:12Z",
+          "comments": [
+            {
+              "originalPosition": 15,
+              "body": "@raphaelrobert ping ^^^",
+              "createdAt": "2025-05-05T21:01:12Z",
+              "updatedAt": "2025-05-05T21:01:12Z"
             }
           ]
         }
