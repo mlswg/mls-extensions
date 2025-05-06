@@ -830,8 +830,7 @@ used. In pseudocode, the key and nonce are derived as:
 
 ~~~ tls
 sender_auth_data_secret
-  = DeriveSecret(epoch_secret,
-                    "targeted message sender auth data secret")
+  = MLS-Exporter("targeted message", "sender auth data secret", KDF.Nh)
 
 ciphertext_sample = hpke_ciphertext[0..KDF.Nh-1]
 
