@@ -23,7 +23,7 @@ core protocol extensions and uses of the application API.
 <meta content="draft-ietf-mls-extensions-latest" name="ietf.draft">
 <!-- Generator version information:
   xml2rfc 3.28.1
-    Python 3.12.9
+    Python 3.12.10
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.1.0
@@ -1053,11 +1053,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">MLS</td>
-<td class="right">April 2025</td>
+<td class="right">May 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Robert</td>
-<td class="center">Expires 13 October 2025</td>
+<td class="center">Expires 8 November 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1070,12 +1070,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-mls-extensions-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-04-11" class="published">11 April 2025</time>
+<time datetime="2025-05-07" class="published">7 May 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-10-13">13 October 2025</time></dd>
+<dd class="expires"><time datetime="2025-11-08">8 November 2025</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1130,7 +1130,7 @@ core protocol extensions and uses of the application API.<a href="#section-abstr
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 13 October 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 8 November 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1202,6 +1202,11 @@ core protocol extensions and uses of the application API.<a href="#section-abstr
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
             <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-negotiating-extensions-and-" class="internal xref">Negotiating Extensions and Components</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-grease" class="internal xref">GREASE</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
             <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-extensions" class="internal xref">Extensions</a></p>
@@ -1301,9 +1306,6 @@ core protocol extensions and uses of the application API.<a href="#section-abstr
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2.2.3">
                     <p id="section-toc.1-1.7.2.2.2.3.1"><a href="#section-7.2.3" class="auto internal xref">7.2.3</a>.  <a href="#name-required_wire_formats-mls-e" class="internal xref">required_wire_formats MLS Extension</a></p>
 </li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2.2.4">
-                    <p id="section-toc.1-1.7.2.2.2.4.1"><a href="#section-7.2.4" class="auto internal xref">7.2.4</a>.  <a href="#name-targeted_messages_capabilit" class="internal xref">targeted_messages_capability MLS Extension</a></p>
-</li>
                 </ul>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.3">
@@ -1332,7 +1334,18 @@ core protocol extensions and uses of the application API.<a href="#section-abstr
                 </ul>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.5">
-                <p id="section-toc.1-1.7.2.5.1"><a href="#section-7.5" class="auto internal xref">7.5</a>.  <a href="#name-mls-component-types" class="internal xref">MLS Component Types</a></p>
+                <p id="section-toc.1-1.7.2.5.1"><a href="#section-7.5" class="auto internal xref">7.5</a>.  <a href="#name-mls-signature-labels" class="internal xref">MLS Signature Labels</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.5.2.1">
+                    <p id="section-toc.1-1.7.2.5.2.1.1"><a href="#section-7.5.1" class="auto internal xref">7.5.1</a>.  <a href="#name-targetedmessagetbs" class="internal xref">TargetedMessageTBS</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.5.2.2">
+                    <p id="section-toc.1-1.7.2.5.2.2.1"><a href="#section-7.5.2" class="auto internal xref">7.5.2</a>.  <a href="#name-credentialbindingtbs" class="internal xref">CredentialBindingTBS</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.6">
+                <p id="section-toc.1-1.7.2.6.1"><a href="#section-7.6" class="auto internal xref">7.6</a>.  <a href="#name-mls-component-types" class="internal xref">MLS Component Types</a></p>
 </li>
             </ul>
 </li>
@@ -1374,26 +1387,10 @@ core protocol extensions and uses of the application API.<a href="#section-abstr
             <p id="section-toc.1-1.10.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-change-log" class="internal xref">Change Log</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
-            <p id="section-toc.1-1.11.1"><a href="#appendix-B" class="auto internal xref">Appendix B</a>.  <a href="#name-old-safe-extensions-text" class="internal xref">Old Safe Extensions Text</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1">
-                <p id="section-toc.1-1.11.2.1.1"><a href="#appendix-B.1" class="auto internal xref">B.1</a>.  <a href="#name-extension-state-anchoring-s" class="internal xref">Extension state: anchoring, storage and agreement</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1.2.1">
-                    <p id="section-toc.1-1.11.2.1.2.1.1"><a href="#appendix-B.1.1" class="auto internal xref">B.1.1</a>.  <a href="#name-direct-vs-hash-based-storag" class="internal xref">Direct vs. hash-based storage</a></p>
-</li>
-                </ul>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2">
-                <p id="section-toc.1-1.11.2.2.1"><a href="#appendix-B.2" class="auto internal xref">B.2</a>.  <a href="#name-extension-design-guidance" class="internal xref">Extension Design Guidance</a></p>
-</li>
-            </ul>
+            <p id="section-toc.1-1.11.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-contributors" class="internal xref">Contributors</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#appendix-C" class="auto internal xref"></a><a href="#name-contributors" class="internal xref">Contributors</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
-            <p id="section-toc.1-1.13.1"><a href="#appendix-D" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
+            <p id="section-toc.1-1.12.1"><a href="#appendix-C" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
 </li>
         </ul>
 </nav>
@@ -2117,6 +2114,51 @@ ComponentsList app_components;
 <p id="section-5-13">Finally, the supported and required media types (formerly called MIME types)
 are communicated in the <code>content_media_types</code> component (see
 <a href="#content-advertisement" class="auto internal xref">Section 6.3</a>).<a href="#section-5-13" class="pilcrow">¶</a></p>
+<div id="grease">
+<section id="section-5.1">
+        <h3 id="name-grease">
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-grease" class="section-name selfRef">GREASE</a>
+        </h3>
+<p id="section-5.1-1">The "Generate Random Extensions And Sustain Extensibility" (GREASE) approach is
+described in <span><a href="https://rfc-editor.org/rfc/rfc9420#section-13.5" class="relref">Section 13.5</a> of [<a href="#RFC9420" class="cite xref">RFC9420</a>]</span>. Further, <span><a href="https://rfc-editor.org/rfc/rfc9420#section-7.2" class="relref">Section 7.2</a> of [<a href="#RFC9420" class="cite xref">RFC9420</a>]</span>
+says that:<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+<ul class="normal ulEmpty">
+<li class="normal ulEmpty" id="section-5.1-2.1">
+            <p id="section-5.1-2.1.1">"As discussed in Section 13, unknown values in <code>capabilities</code> <span class="bcp14">MUST</span> be ignored,
+and the creator of a <code>capabilities</code> field <span class="bcp14">SHOULD</span> include some random GREASE
+values to help ensure that other clients correctly ignore unknown values."<a href="#section-5.1-2.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-5.1-3">This specification adds the following locations where GREASE values for
+components can be included:<a href="#section-5.1-3" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.1-4.1">
+            <p id="section-5.1-4.1.1">LeafNode.capabilities.app_data_dictionary.safe_aad<a href="#section-5.1-4.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.1-4.2">
+            <p id="section-5.1-4.2.1">LeafNode.capabilities.app_data_dictionary.app_components<a href="#section-5.1-4.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.1-4.3">
+            <p id="section-5.1-4.3.1">LeafNode.extensions.app_data_dictionary<a href="#section-5.1-4.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.1-4.4">
+            <p id="section-5.1-4.4.1">KeyPackage.extensions.app_data_dictionary<a href="#section-5.1-4.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.1-4.5">
+            <p id="section-5.1-4.5.1">GroupInfo.extensions.app_data_dictionary<a href="#section-5.1-4.5.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.1-4.6">
+            <p id="section-5.1-4.6.1">app_ephemeral.app_data_dictionary<a href="#section-5.1-4.6.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.1-4.7">
+            <p id="section-5.1-4.7.1">authenticated_data.aad_items<a href="#section-5.1-4.7.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-5.1-5">Unknown values (including GREASE values) in any of these fields <span class="bcp14">MUST</span> be ignored
+by receivers. A random selection of GREASE values <span class="bcp14">SHOULD</span> be included in any of
+these fields that would otherwise be present.<a href="#section-5.1-5" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="extensions">
@@ -2190,7 +2232,7 @@ particular <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>.<a hr
           <h4 id="name-format">
 <a href="#section-6.2.2" class="section-number selfRef">6.2.2. </a><a href="#name-format" class="section-name selfRef">Format</a>
           </h4>
-<p id="section-6.2.2-1">This extension uses the <code>mls_extension_message</code> WireFormat, where the content is a <code>TargetedMessage</code>.<a href="#section-6.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-6.2.2-1">This extension defines the <code>mls_targeted_message</code> WireFormat, where the content is a <code>TargetedMessage</code>.<a href="#section-6.2.2-1" class="pilcrow">¶</a></p>
 <div class="breakable lang-tls sourcecode" id="section-6.2.2-2">
 <pre>
 struct {
@@ -2273,8 +2315,8 @@ length of the hpke_ciphertext is less than KDF.Nh, the whole hpke_ciphertext is
 used. In pseudocode, the key and nonce are derived as:<a href="#section-6.2.3.1-2" class="pilcrow">¶</a></p>
 <div class="lang-tls sourcecode" id="section-6.2.3.1-3">
 <pre>
-sender_auth_data_secret
-  = DeriveExtensionSecret(extension_secret, "targeted message sender auth data")
+sender_auth_data_secret =
+  MLS-Exporter("targeted message", "sender auth data secret", KDF.Nh)
 
 ciphertext_sample = hpke_ciphertext[0..KDF.Nh-1]
 
@@ -2322,8 +2364,8 @@ for more information.<a href="#section-6.2.4-1" class="pilcrow">¶</a></p>
 <p id="section-6.2.4-2">For the PSK part of the authentication, clients export a dedicated secret:<a href="#section-6.2.4-2" class="pilcrow">¶</a></p>
 <div class="lang-tls sourcecode" id="section-6.2.4-3">
 <pre>
-targeted_message_psk
-  = DeriveExtensionSecret(extension_secret, "targeted message psk")
+targeted_message_psk =
+  MLS-Exporter("targeted message", "psk", KDF.Nh)
 </pre><a href="#section-6.2.4-3" class="pilcrow">¶</a>
 </div>
 <p id="section-6.2.4-4">The functions <code>SealAuth</code> and <code>OpenAuth</code> defined in <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span> are used as
@@ -2336,14 +2378,17 @@ described in <a href="#safe-hpke" class="auto internal xref">Section 4.2</a> wit
             </h5>
 <p id="section-6.2.4.1-1">The sender <span class="bcp14">MUST</span> set the authentication scheme to
 <code>TargetedMessageAuthScheme.HPKEAuthPsk</code>.<a href="#section-6.2.4.1-1" class="pilcrow">¶</a></p>
-<p id="section-6.2.4.1-2">As described in <a href="#safe-hpke" class="auto internal xref">Section 4.2</a> the <code>hpke_context</code> is a LabeledExtensionContent struct
-with the following content, where <code>group_context</code> is the serialized context of
-the group.<a href="#section-6.2.4.1-2" class="pilcrow">¶</a></p>
+<p id="section-6.2.4.1-2">The <code>hpke_context</code> is an TargetedMessageContext struct with the following
+content, where <code>group_context</code> is the serialized context of the group.<a href="#section-6.2.4.1-2" class="pilcrow">¶</a></p>
 <div class="lang-tls sourcecode" id="section-6.2.4.1-3">
 <pre>
-label = "MLS 1.0 ExtensionData"
-extension_type = ExtensionType
-extension_data = group_context
+struct {
+  opaque label&lt;V&gt;;
+  opaque context&lt;V&gt;;
+} TargetedMessageContext;
+
+label = "MLS 1.0 TargetedMessageData"
+context = group_context
 </pre><a href="#section-6.2.4.1-3" class="pilcrow">¶</a>
 </div>
 <p id="section-6.2.4.1-4">The sender then computes the following:<a href="#section-6.2.4.1-4" class="pilcrow">¶</a></p>
@@ -2394,11 +2439,11 @@ scheme used in the group.<a href="#section-6.2.4.2-1" class="pilcrow">¶</a></p>
                                         epoch)
 </pre><a href="#section-6.2.4.2-3" class="pilcrow">¶</a>
 </div>
-<p id="section-6.2.4.2-4">The signature is computed as follows, where the <code>extension_type</code> is the type of
-this extension (see <a href="#iana-considerations" class="auto internal xref">Section 7</a>).<a href="#section-6.2.4.2-4" class="pilcrow">¶</a></p>
+<p id="section-6.2.4.2-4">The signature is computed as follows:<a href="#section-6.2.4.2-4" class="pilcrow">¶</a></p>
 <div class="lang-tls sourcecode" id="section-6.2.4.2-5">
 <pre>
-signature = SafeSignWithLabel(extension_type, ., "TargetedMessageTBS", targeted_message_tbs)
+signature = SignWithLabel(sender_leaf_node_signature_private_key,
+              "TargetedMessageTBS", targeted_message_tbs)
 </pre><a href="#section-6.2.4.2-5" class="pilcrow">¶</a>
 </div>
 <p id="section-6.2.4.2-6">The recipient computes the following:<a href="#section-6.2.4.2-6" class="pilcrow">¶</a></p>
@@ -2416,11 +2461,10 @@ message = OpenPSK(kem_output,
 <p id="section-6.2.4.2-8">The recipient <span class="bcp14">MUST</span> verify the message authentication:<a href="#section-6.2.4.2-8" class="pilcrow">¶</a></p>
 <div class="lang-tls sourcecode" id="section-6.2.4.2-9">
 <pre>
-SafeVerifyWithLabel.verify(extension_type,
-                        sender_leaf_node.signature_key,
-                        "TargetedMessageTBS",
-                        targeted_message_tbs,
-                        signature)
+VerifyWithLabel.verify(sender_leaf_node.signature_key,
+                       "TargetedMessageTBS",
+                       targeted_message_tbs,
+                       signature)
 </pre><a href="#section-6.2.4.2-9" class="pilcrow">¶</a>
 </div>
 </section>
@@ -2875,7 +2919,7 @@ LeafNode.<a href="#section-6.6.2-6.3.1" class="pilcrow">¶</a></p>
 of "Messaging Layer Security". Each registration is organized under the
 relevant registry Type.<a href="#section-7-1" class="pilcrow">¶</a></p>
 <p id="section-7-2">This document also requests the creation of a new MLS applications components
-registry as described in <a href="#iana-components" class="auto internal xref">Section 7.5</a>.<a href="#section-7-2" class="pilcrow">¶</a></p>
+registry as described in <a href="#iana-components" class="auto internal xref">Section 7.6</a>.<a href="#section-7-2" class="pilcrow">¶</a></p>
 <p id="section-7-3">RFC EDITOR: Please replace XXXX throughout with the RFC number assigned to
 this document<a href="#section-7-3" class="pilcrow">¶</a></p>
 <div id="mls-wire-formats">
@@ -2997,36 +3041,6 @@ all MLS members of the group to support.<a href="#section-7.2.3-1" class="pilcro
           </ul>
 </section>
 </div>
-<div id="targetedmessagescapability-mls-extension">
-<section id="section-7.2.4">
-          <h4 id="name-targeted_messages_capabilit">
-<a href="#section-7.2.4" class="section-number selfRef">7.2.4. </a><a href="#name-targeted_messages_capabilit" class="section-name selfRef">targeted_messages_capability MLS Extension</a>
-          </h4>
-<p id="section-7.2.4-1">The <code>targeted_messages_capability</code> MLS Extension Type is used in the
-<code>capabilities.extensions</code> field of LeafNodes to indicate the support for the
-Targeted Messages Extension, and in the <code>required_capabilities.extension_types</code>
-field of the GroupContext to indicate all members of the group must support it.
-The extension does not carry any payload.<a href="#section-7.2.4-1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-7.2.4-2.1">
-              <p id="section-7.2.4-2.1.1">Value: 0x0009 (suggested)<a href="#section-7.2.4-2.1.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-7.2.4-2.2">
-              <p id="section-7.2.4-2.2.1">Name: targeted_messages_capability<a href="#section-7.2.4-2.2.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-7.2.4-2.3">
-              <p id="section-7.2.4-2.3.1">Message(s): LN: This extension may appear in LeafNode objects
-            GC: This extension may appear in GroupContext objects<a href="#section-7.2.4-2.3.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-7.2.4-2.4">
-              <p id="section-7.2.4-2.4.1">Recommended: Y<a href="#section-7.2.4-2.4.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-7.2.4-2.5">
-              <p id="section-7.2.4-2.5.1">Reference: RFC XXXX<a href="#section-7.2.4-2.5.1" class="pilcrow">¶</a></p>
-</li>
-          </ul>
-</section>
-</div>
 </section>
 </div>
 <div id="mls-proposal-types">
@@ -3097,7 +3111,7 @@ from a group more efficiently than using a <code>remove</code> proposal type, as
 <code>self_remove</code> type is permitted in External Commits.<a href="#section-7.3.3-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-7.3.3-2.1">
-              <p id="section-7.3.3-2.1.1">Value: 0x0008 (suggested)<a href="#section-7.3.3-2.1.1" class="pilcrow">¶</a></p>
+              <p id="section-7.3.3-2.1.1">Value: 0x000a (suggested)<a href="#section-7.3.3-2.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-7.3.3-2.2">
               <p id="section-7.3.3-2.2.1">Name: self_remove<a href="#section-7.3.3-2.2.1" class="pilcrow">¶</a></p>
@@ -3165,70 +3179,113 @@ from a group more efficiently than using a <code>remove</code> proposal type, as
 </div>
 </section>
 </div>
-<div id="iana-components">
+<div id="mls-signature-labels">
 <section id="section-7.5">
-        <h3 id="name-mls-component-types">
-<a href="#section-7.5" class="section-number selfRef">7.5. </a><a href="#name-mls-component-types" class="section-name selfRef">MLS Component Types</a>
+        <h3 id="name-mls-signature-labels">
+<a href="#section-7.5" class="section-number selfRef">7.5. </a><a href="#name-mls-signature-labels" class="section-name selfRef">MLS Signature Labels</a>
         </h3>
-<p id="section-7.5-1">This document requests the creation of a new IANA "MLS Component Types" registry under the "Messaging Layer Security" group registry heading. Assignments to this registry in the range 0x0000 0000 to 0x7FFF FFFF are via Specification Required
+<div id="targetedmessagetbs">
+<section id="section-7.5.1">
+          <h4 id="name-targetedmessagetbs">
+<a href="#section-7.5.1" class="section-number selfRef">7.5.1. </a><a href="#name-targetedmessagetbs" class="section-name selfRef">TargetedMessageTBS</a>
+          </h4>
+<ul class="normal">
+<li class="normal" id="section-7.5.1-1.1">
+              <p id="section-7.5.1-1.1.1">Label: "TargetedMessageTBS"<a href="#section-7.5.1-1.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-7.5.1-1.2">
+              <p id="section-7.5.1-1.2.1">Recommended: Y<a href="#section-7.5.1-1.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-7.5.1-1.3">
+              <p id="section-7.5.1-1.3.1">Reference: RFC XXXX<a href="#section-7.5.1-1.3.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+</section>
+</div>
+<div id="credentialbindingtbs">
+<section id="section-7.5.2">
+          <h4 id="name-credentialbindingtbs">
+<a href="#section-7.5.2" class="section-number selfRef">7.5.2. </a><a href="#name-credentialbindingtbs" class="section-name selfRef">CredentialBindingTBS</a>
+          </h4>
+<ul class="normal">
+<li class="normal" id="section-7.5.2-1.1">
+              <p id="section-7.5.2-1.1.1">Label: "CredentialBindingTBS"<a href="#section-7.5.2-1.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-7.5.2-1.2">
+              <p id="section-7.5.2-1.2.1">Recommended: Y<a href="#section-7.5.2-1.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-7.5.2-1.3">
+              <p id="section-7.5.2-1.3.1">Reference: RFC XXXX<a href="#section-7.5.2-1.3.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+</section>
+</div>
+</section>
+</div>
+<div id="iana-components">
+<section id="section-7.6">
+        <h3 id="name-mls-component-types">
+<a href="#section-7.6" class="section-number selfRef">7.6. </a><a href="#name-mls-component-types" class="section-name selfRef">MLS Component Types</a>
+        </h3>
+<p id="section-7.6-1">This document requests the creation of a new IANA "MLS Component Types" registry under the "Messaging Layer Security" group registry heading. Assignments to this registry in the range 0x0000 0000 to 0x7FFF FFFF are via Specification Required
 policy <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span> using the MLS Designated Experts. Assignments in the range
-0x8000 0000 to 0xFFFF FFFF are for private use.<a href="#section-7.5-1" class="pilcrow">¶</a></p>
-<p id="section-7.5-2">Template:<a href="#section-7.5-2" class="pilcrow">¶</a></p>
+0x8000 0000 to 0xFFFF FFFF are for private use.<a href="#section-7.6-1" class="pilcrow">¶</a></p>
+<p id="section-7.6-2">Template:<a href="#section-7.6-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7.5-3.1">
-            <p id="section-7.5-3.1.1">Value: The numeric value of the component ID<a href="#section-7.5-3.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7.6-3.1">
+            <p id="section-7.6-3.1.1">Value: The numeric value of the component ID<a href="#section-7.6-3.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-7.5-3.2">
-            <p id="section-7.5-3.2.1">Name: The name of the component<a href="#section-7.5-3.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-7.6-3.2">
+            <p id="section-7.6-3.2.1">Name: The name of the component<a href="#section-7.6-3.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-7.5-3.3">
-            <p id="section-7.5-3.3.1">Where: The objects(s) in which the component may appear,
-       drawn from the following list:<a href="#section-7.5-3.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-7.6-3.3">
+            <p id="section-7.6-3.3.1">Where: The objects(s) in which the component may appear,
+       drawn from the following list:<a href="#section-7.6-3.3.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7.5-3.3.2.1">
-                <p id="section-7.5-3.3.2.1.1">AD: SafeAAD objects<a href="#section-7.5-3.3.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7.6-3.3.2.1">
+                <p id="section-7.6-3.3.2.1.1">AD: SafeAAD objects<a href="#section-7.6-3.3.2.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-7.5-3.3.2.2">
-                <p id="section-7.5-3.3.2.2.1">AE: AppEpheral proposals<a href="#section-7.5-3.3.2.2.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-7.6-3.3.2.2">
+                <p id="section-7.6-3.3.2.2.1">AE: AppEpheral proposals<a href="#section-7.6-3.3.2.2.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-7.5-3.3.2.3">
-                <p id="section-7.5-3.3.2.3.1">ES: Exporter Secret labels<a href="#section-7.5-3.3.2.3.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-7.6-3.3.2.3">
+                <p id="section-7.6-3.3.2.3.1">ES: Exporter Secret labels<a href="#section-7.6-3.3.2.3.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-7.5-3.3.2.4">
-                <p id="section-7.5-3.3.2.4.1">GC: GroupContext objects<a href="#section-7.5-3.3.2.4.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-7.6-3.3.2.4">
+                <p id="section-7.6-3.3.2.4.1">GC: GroupContext objects<a href="#section-7.6-3.3.2.4.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-7.5-3.3.2.5">
-                <p id="section-7.5-3.3.2.5.1">GI: GroupInfo objects<a href="#section-7.5-3.3.2.5.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-7.6-3.3.2.5">
+                <p id="section-7.6-3.3.2.5.1">GI: GroupInfo objects<a href="#section-7.6-3.3.2.5.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-7.5-3.3.2.6">
-                <p id="section-7.5-3.3.2.6.1">HP: HPKE key labels<a href="#section-7.5-3.3.2.6.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-7.6-3.3.2.6">
+                <p id="section-7.6-3.3.2.6.1">HP: HPKE key labels<a href="#section-7.6-3.3.2.6.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-7.5-3.3.2.7">
-                <p id="section-7.5-3.3.2.7.1">KP: KeyPackage objects<a href="#section-7.5-3.3.2.7.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-7.6-3.3.2.7">
+                <p id="section-7.6-3.3.2.7.1">KP: KeyPackage objects<a href="#section-7.6-3.3.2.7.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-7.5-3.3.2.8">
-                <p id="section-7.5-3.3.2.8.1">LN: LeafNode objects<a href="#section-7.5-3.3.2.8.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-7.6-3.3.2.8">
+                <p id="section-7.6-3.3.2.8.1">LN: LeafNode objects<a href="#section-7.6-3.3.2.8.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-7.5-3.3.2.9">
-                <p id="section-7.5-3.3.2.9.1">PS: PSK labels<a href="#section-7.5-3.3.2.9.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-7.6-3.3.2.9">
+                <p id="section-7.6-3.3.2.9.1">PS: PSK labels<a href="#section-7.6-3.3.2.9.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-7.5-3.3.2.10">
-                <p id="section-7.5-3.3.2.10.1">SK: Signature Key labels<a href="#section-7.5-3.3.2.10.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-7.6-3.3.2.10">
+                <p id="section-7.6-3.3.2.10.1">SK: Signature Key labels<a href="#section-7.6-3.3.2.10.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
-          <li class="normal" id="section-7.5-3.4">
-            <p id="section-7.5-3.4.1">Recommended: Same as in <span><a href="https://rfc-editor.org/rfc/rfc9420#section-17.1" class="relref">Section 17.1</a> of [<a href="#RFC9420" class="cite xref">RFC9420</a>]</span><a href="#section-7.5-3.4.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-7.6-3.4">
+            <p id="section-7.6-3.4.1">Recommended: Same as in <span><a href="https://rfc-editor.org/rfc/rfc9420#section-17.1" class="relref">Section 17.1</a> of [<a href="#RFC9420" class="cite xref">RFC9420</a>]</span><a href="#section-7.6-3.4.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-7.5-3.5">
-            <p id="section-7.5-3.5.1">Reference: The document where this component is defined<a href="#section-7.5-3.5.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-7.6-3.5">
+            <p id="section-7.6-3.5.1">Reference: The document where this component is defined<a href="#section-7.6-3.5.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-7.5-4">The restrictions noted in the "Where" column are to be enforced by the
+<p id="section-7.6-4">The restrictions noted in the "Where" column are to be enforced by the
 application. MLS implementations <span class="bcp14">MUST NOT</span> impose restrictions on where
 component IDs are used in which parts of MLS, unless specifically directed to by
-the application.<a href="#section-7.5-4" class="pilcrow">¶</a></p>
-<p id="section-7.5-5">Initial Contents:<a href="#section-7.5-5" class="pilcrow">¶</a></p>
+the application.<a href="#section-7.6-4" class="pilcrow">¶</a></p>
+<p id="section-7.6-5">Initial Contents:<a href="#section-7.6-5" class="pilcrow">¶</a></p>
 <table class="center" id="table-1">
           <caption><a href="#table-1" class="selfRef">Table 1</a></caption>
 <thead>
@@ -3284,6 +3341,111 @@ the application.<a href="#section-7.5-4" class="pilcrow">¶</a></p>
               <td class="text-left" rowspan="1" colspan="1">RFCXXXX</td>
             </tr>
             <tr>
+              <td class="text-left" rowspan="1" colspan="1">0x0000 0a0a</td>
+              <td class="text-left" rowspan="1" colspan="1">GREASE</td>
+              <td class="text-left" rowspan="1" colspan="1">Note1</td>
+              <td class="text-left" rowspan="1" colspan="1">Y</td>
+              <td class="text-left" rowspan="1" colspan="1">RFCXXXX</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">0x0000 1a1a</td>
+              <td class="text-left" rowspan="1" colspan="1">GREASE</td>
+              <td class="text-left" rowspan="1" colspan="1">Note1</td>
+              <td class="text-left" rowspan="1" colspan="1">Y</td>
+              <td class="text-left" rowspan="1" colspan="1">RFCXXXX</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">0x0000 2a2a</td>
+              <td class="text-left" rowspan="1" colspan="1">GREASE</td>
+              <td class="text-left" rowspan="1" colspan="1">Note1</td>
+              <td class="text-left" rowspan="1" colspan="1">Y</td>
+              <td class="text-left" rowspan="1" colspan="1">RFCXXXX</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">0x0000 3a3a</td>
+              <td class="text-left" rowspan="1" colspan="1">GREASE</td>
+              <td class="text-left" rowspan="1" colspan="1">Note1</td>
+              <td class="text-left" rowspan="1" colspan="1">Y</td>
+              <td class="text-left" rowspan="1" colspan="1">RFCXXXX</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">0x0000 4a4a</td>
+              <td class="text-left" rowspan="1" colspan="1">GREASE</td>
+              <td class="text-left" rowspan="1" colspan="1">Note1</td>
+              <td class="text-left" rowspan="1" colspan="1">Y</td>
+              <td class="text-left" rowspan="1" colspan="1">RFCXXXX</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">0x0000 5a5a</td>
+              <td class="text-left" rowspan="1" colspan="1">GREASE</td>
+              <td class="text-left" rowspan="1" colspan="1">Note1</td>
+              <td class="text-left" rowspan="1" colspan="1">Y</td>
+              <td class="text-left" rowspan="1" colspan="1">RFCXXXX</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">0x0000 6a6a</td>
+              <td class="text-left" rowspan="1" colspan="1">GREASE</td>
+              <td class="text-left" rowspan="1" colspan="1">Note1</td>
+              <td class="text-left" rowspan="1" colspan="1">Y</td>
+              <td class="text-left" rowspan="1" colspan="1">RFCXXXX</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">0x0000 7a7a</td>
+              <td class="text-left" rowspan="1" colspan="1">GREASE</td>
+              <td class="text-left" rowspan="1" colspan="1">Note1</td>
+              <td class="text-left" rowspan="1" colspan="1">Y</td>
+              <td class="text-left" rowspan="1" colspan="1">RFCXXXX</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">0x0000 8a8a</td>
+              <td class="text-left" rowspan="1" colspan="1">GREASE</td>
+              <td class="text-left" rowspan="1" colspan="1">Note1</td>
+              <td class="text-left" rowspan="1" colspan="1">Y</td>
+              <td class="text-left" rowspan="1" colspan="1">RFCXXXX</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">0x0000 9a9a</td>
+              <td class="text-left" rowspan="1" colspan="1">GREASE</td>
+              <td class="text-left" rowspan="1" colspan="1">Note1</td>
+              <td class="text-left" rowspan="1" colspan="1">Y</td>
+              <td class="text-left" rowspan="1" colspan="1">RFCXXXX</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">0x0000 aaaa</td>
+              <td class="text-left" rowspan="1" colspan="1">GREASE</td>
+              <td class="text-left" rowspan="1" colspan="1">Note1</td>
+              <td class="text-left" rowspan="1" colspan="1">Y</td>
+              <td class="text-left" rowspan="1" colspan="1">RFCXXXX</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">0x0000 baba</td>
+              <td class="text-left" rowspan="1" colspan="1">GREASE</td>
+              <td class="text-left" rowspan="1" colspan="1">Note1</td>
+              <td class="text-left" rowspan="1" colspan="1">Y</td>
+              <td class="text-left" rowspan="1" colspan="1">RFCXXXX</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">0x0000 caca</td>
+              <td class="text-left" rowspan="1" colspan="1">GREASE</td>
+              <td class="text-left" rowspan="1" colspan="1">Note1</td>
+              <td class="text-left" rowspan="1" colspan="1">Y</td>
+              <td class="text-left" rowspan="1" colspan="1">RFCXXXX</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">0x0000 dada</td>
+              <td class="text-left" rowspan="1" colspan="1">GREASE</td>
+              <td class="text-left" rowspan="1" colspan="1">Note1</td>
+              <td class="text-left" rowspan="1" colspan="1">Y</td>
+              <td class="text-left" rowspan="1" colspan="1">RFCXXXX</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">0x0000 eaea</td>
+              <td class="text-left" rowspan="1" colspan="1">GREASE</td>
+              <td class="text-left" rowspan="1" colspan="1">Note1</td>
+              <td class="text-left" rowspan="1" colspan="1">Y</td>
+              <td class="text-left" rowspan="1" colspan="1">RFCXXXX</td>
+            </tr>
+            <tr>
               <td class="text-left" rowspan="1" colspan="1">0x8000 0000 -</td>
               <td class="text-left" rowspan="1" colspan="1"> </td>
               <td class="text-left" rowspan="1" colspan="1"> </td>
@@ -3299,6 +3461,12 @@ the application.<a href="#section-7.5-4" class="pilcrow">¶</a></p>
             </tr>
           </tbody>
         </table>
+<ul class="normal ulEmpty">
+<li class="normal ulEmpty" id="section-7.6-7.1">
+            <p id="section-7.6-7.1.1">Note1: GREASE values for components <span class="bcp14">MAY</span> be present in AD, AE, GI, KP, and LN
+objects.<a href="#section-7.6-7.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
 </section>
 </div>
 </section>
@@ -3508,162 +3676,78 @@ security of the least secure of its credential bindings.<a href="#section-8.6-1"
 <a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-change-log" class="section-name selfRef">Change Log</a>
       </h2>
 <p id="appendix-A-1">RFC EDITOR PLEASE DELETE THIS SECTION.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
-<p id="appendix-A-2">draft-06<a href="#appendix-A-2" class="pilcrow">¶</a></p>
+<p id="appendix-A-2">draft-07
+- assign self_remove proposal to a non duplicate number (0x000a)
+- refactor TargetedMessage to no longer use structs removed from when it
+was a "safe extension"
+- remove the no-longer needed targeted_messages_capability (now signaled using support_wire_formats and required_wire_formats)
+- add TargetedMessageTBS and CredentialBundleTBS to MLS Signature Labels IANA
+registry
+- add GREASE values for components
+- fix safe exporter definition
+- resolve TODOs from -06
+- fix numerous typos<a href="#appendix-A-2" class="pilcrow">¶</a></p>
+<p id="appendix-A-3">draft-06<a href="#appendix-A-3" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="appendix-A-3.1">
-          <p id="appendix-A-3.1.1">Integrate notion of Application API from draft-barnes-mls-appsync<a href="#appendix-A-3.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-A-4.1">
+          <p id="appendix-A-4.1.1">Integrate notion of Application API from draft-barnes-mls-appsync<a href="#appendix-A-4.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="appendix-A-4">draft-05<a href="#appendix-A-4" class="pilcrow">¶</a></p>
+<p id="appendix-A-5">draft-05<a href="#appendix-A-5" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="appendix-A-5.1">
-          <p id="appendix-A-5.1.1">Include definition of ExtensionState extension<a href="#appendix-A-5.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-A-6.1">
+          <p id="appendix-A-6.1.1">Include definition of ExtensionState extension<a href="#appendix-A-6.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-A-5.2">
-          <p id="appendix-A-5.2.1">Add safe use of AAD to Safe Extensions framework<a href="#appendix-A-5.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="appendix-A-6.2">
+          <p id="appendix-A-6.2.1">Add safe use of AAD to Safe Extensions framework<a href="#appendix-A-6.2.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-A-5.3">
-          <p id="appendix-A-5.3.1">Clarify how capabilities negotiation works in Safe Extensions framework<a href="#appendix-A-5.3.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="appendix-A-6.3">
+          <p id="appendix-A-6.3.1">Clarify how capabilities negotiation works in Safe Extensions framework<a href="#appendix-A-6.3.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="appendix-A-6">draft-04<a href="#appendix-A-6" class="pilcrow">¶</a></p>
+<p id="appendix-A-7">draft-04<a href="#appendix-A-7" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="appendix-A-7.1">
-          <p id="appendix-A-7.1.1">No changes (prevent expiration)<a href="#appendix-A-7.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-A-8.1">
+          <p id="appendix-A-8.1.1">No changes (prevent expiration)<a href="#appendix-A-8.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="appendix-A-8">draft-03<a href="#appendix-A-8" class="pilcrow">¶</a></p>
+<p id="appendix-A-9">draft-03<a href="#appendix-A-9" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="appendix-A-9.1">
-          <p id="appendix-A-9.1.1">Add Last Resort KeyPackage extension<a href="#appendix-A-9.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-A-10.1">
+          <p id="appendix-A-10.1.1">Add Last Resort KeyPackage extension<a href="#appendix-A-10.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-A-9.2">
-          <p id="appendix-A-9.2.1">Add Safe Extensions framework<a href="#appendix-A-9.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="appendix-A-10.2">
+          <p id="appendix-A-10.2.1">Add Safe Extensions framework<a href="#appendix-A-10.2.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-A-9.3">
-          <p id="appendix-A-9.3.1">Add SelfRemove Proposal<a href="#appendix-A-9.3.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="appendix-A-10.3">
+          <p id="appendix-A-10.3.1">Add SelfRemove Proposal<a href="#appendix-A-10.3.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="appendix-A-10">draft-02<a href="#appendix-A-10" class="pilcrow">¶</a></p>
+<p id="appendix-A-11">draft-02<a href="#appendix-A-11" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="appendix-A-11.1">
-          <p id="appendix-A-11.1.1">No changes (prevent expiration)<a href="#appendix-A-11.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-A-12.1">
+          <p id="appendix-A-12.1.1">No changes (prevent expiration)<a href="#appendix-A-12.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="appendix-A-12">draft-01<a href="#appendix-A-12" class="pilcrow">¶</a></p>
+<p id="appendix-A-13">draft-01<a href="#appendix-A-13" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="appendix-A-13.1">
-          <p id="appendix-A-13.1.1">Add Content Advertisement extensions<a href="#appendix-A-13.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-A-14.1">
+          <p id="appendix-A-14.1.1">Add Content Advertisement extensions<a href="#appendix-A-14.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="appendix-A-14">draft-00<a href="#appendix-A-14" class="pilcrow">¶</a></p>
+<p id="appendix-A-15">draft-00<a href="#appendix-A-15" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="appendix-A-15.1">
-          <p id="appendix-A-15.1.1">Initial adoption of draft-robert-mls-protocol-00 as a WG item.<a href="#appendix-A-15.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-A-16.1">
+          <p id="appendix-A-16.1.1">Initial adoption of draft-robert-mls-protocol-00 as a WG item.<a href="#appendix-A-16.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-A-15.2">
-          <p id="appendix-A-15.2.1">Add Targeted Messages extension (*)<a href="#appendix-A-15.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="appendix-A-16.2">
+          <p id="appendix-A-16.2.1">Add Targeted Messages extension (*)<a href="#appendix-A-16.2.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-</section>
-</div>
-<div id="old-safe-extensions-text">
-<section id="appendix-B">
-      <h2 id="name-old-safe-extensions-text">
-<a href="#appendix-B" class="section-number selfRef">Appendix B. </a><a href="#name-old-safe-extensions-text" class="section-name selfRef">Old Safe Extensions Text</a>
-      </h2>
-<p id="appendix-B-1">The MLS specification is extensible in a variety of ways (see <span><a href="https://rfc-editor.org/rfc/rfc9420#section-13" class="relref">Section 13</a> of [<a href="#RFC9420" class="cite xref">RFC9420</a>]</span>) and describes the negotiation and other handling of extensions and
-their data within the protocol. However, it does not provide guidance on how
-extensions can or should safely interact with the base MLS protocol. The goal of
-this section is to simplify the task of developing MLS extensions.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
-<div id="extension-state-anchoring-storage-and-agreement">
-<section id="appendix-B.1">
-        <h3 id="name-extension-state-anchoring-s">
-<a href="#appendix-B.1" class="section-number selfRef">B.1. </a><a href="#name-extension-state-anchoring-s" class="section-name selfRef">Extension state: anchoring, storage and agreement</a>
-        </h3>
-<p id="appendix-B.1-1">The safe extension framework can help an MLS extension ensure that all group
-members agree on a piece of extension-specific state by using the
-<code>ExtensionState</code> GroupContext extension. The ownership of an <code>ExtensionState</code>
-extension in the context of the safe extension framework is determined by the
-<code>extension_type</code> field. The extension with a matching <code>extension_type</code> is called
-the owning extension.<a href="#appendix-B.1-1" class="pilcrow">¶</a></p>
-<div class="lang-tls sourcecode" id="appendix-B.1-2">
-<pre>
-enum {
-  reserved(0),
-  read(1),
-  none(2),
- (255)
-} Permissions;
-
-enum {
-  reserved(0),
-  hash(1),
-  data(2),
-} HashOrData;
-
-struct {
-  HashOrData hash_or_data;
-  select(hash_or_data) {
-    case hash:
-      HashReference state_hash;
-    case data:
-      opaque state&lt;V&gt;;
-  }
-} ExtensionPayload;
-
-struct {
-  extensionType extension_type;
-  Permissions read;
-  ExtensionPayload payload;
-} ExtensionState;
-</pre><a href="#appendix-B.1-2" class="pilcrow">¶</a>
-</div>
-<p id="appendix-B.1-3">The <code>ExtensionState</code> GroupContext extension contains data either directly (if
-<code>hash_or_data = data</code>) or indirectly via a hash (if <code>hash_or_data = hash</code>).<a href="#appendix-B.1-3" class="pilcrow">¶</a></p>
-<p id="appendix-B.1-4">The owning extension can read and write the state stored in an <code>ExtensionState</code>
-extension using an extension-defined proposal (see TODO). The semantics
-of the proposal determines how the state is changed.<a href="#appendix-B.1-4" class="pilcrow">¶</a></p>
-<p id="appendix-B.1-5">The <code>read</code> variable determines the permissions that other MLS extensions have
-w.r.t. the data stored within. <code>read</code> allows other MLS extensions to read that
-data via their own proposals, while <code>none</code> marks the data as private to the
-owning MLS extension.<a href="#appendix-B.1-5" class="pilcrow">¶</a></p>
-<p id="appendix-B.1-6">Other extensions may never write to the <code>ExtensionState</code> of the owning MLS
-extension.<a href="#appendix-B.1-6" class="pilcrow">¶</a></p>
-<div id="direct-vs-hash-based-storage">
-<section id="appendix-B.1.1">
-          <h4 id="name-direct-vs-hash-based-storag">
-<a href="#appendix-B.1.1" class="section-number selfRef">B.1.1. </a><a href="#name-direct-vs-hash-based-storag" class="section-name selfRef">Direct vs. hash-based storage</a>
-          </h4>
-<p id="appendix-B.1.1-1">Storing the data directly in the <code>ExtensionState</code> means the data becomes part of
-the group state. Depending on the application design, this can be advantageous,
-because it is distributed via Welcome messages. However, it could also mean that
-the data is visible to the delivery service. Additionally, if the application
-makes use of GroupContextExtension proposals, it may be necessary to send all
-the data with each such extension.<a href="#appendix-B.1.1-1" class="pilcrow">¶</a></p>
-<p id="appendix-B.1.1-2">Including the data by hash only allows group members to agree on the data
-indirectly, relying on the collision resistance of the associated hash function.
-The data itself, however, may have to be transmitted out-of-band to new joiners.<a href="#appendix-B.1.1-2" class="pilcrow">¶</a></p>
-</section>
-</div>
-</section>
-</div>
-<div id="extension-design-guidance">
-<section id="appendix-B.2">
-        <h3 id="name-extension-design-guidance">
-<a href="#appendix-B.2" class="section-number selfRef">B.2. </a><a href="#name-extension-design-guidance" class="section-name selfRef">Extension Design Guidance</a>
-        </h3>
-<p id="appendix-B.2-1">While extensions can modify the protocol flow of MLS and the associated
-properties in arbitrary ways, the base MLS protocol already enables a number of
-functionalities that extensions can use without modifying MLS itself. Extension
-authors should consider using these built-in mechanisms before employing more
-intrusive changes to the protocol.<a href="#appendix-B.2-1" class="pilcrow">¶</a></p>
-</section>
-</div>
 </section>
 </div>
 <div id="contributors">
-<section id="appendix-C">
+<section id="appendix-B">
       <h2 id="name-contributors">
 <a href="#name-contributors" class="section-name selfRef">Contributors</a>
       </h2>
@@ -3710,7 +3794,7 @@ intrusive changes to the protocol.<a href="#appendix-B.2-1" class="pilcrow">¶</
 </section>
 </div>
 <div id="authors-addresses">
-<section id="appendix-D">
+<section id="appendix-C">
       <h2 id="name-authors-address">
 <a href="#name-authors-address" class="section-name selfRef">Author's Address</a>
       </h2>
