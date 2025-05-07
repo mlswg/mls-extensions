@@ -692,6 +692,31 @@ Finally, the supported and required media types (formerly called MIME types)
 are communicated in the `content_media_types` component (see
 {{content-advertisement}}).
 
+## GREASE
+
+The "Generate Random Extensions And Sustain Extensibility" (GREASE) approach is
+described in {{Section 13.5 of !RFC9420}}. Further, {{Section 7.2 of !RFC9420}}
+says that:
+
+>"As discussed in Section 13, unknown values in `capabilities` MUST be ignored,
+>and the creator of a `capabilities` field SHOULD include some random GREASE
+>values to help ensure that other clients correctly ignore unknown values."
+
+This specification adds the following locations where GREASE values for
+components can be included:
+
+* LeafNode.capabilities.app_data_dictionary.safe_aad
+* LeafNode.capabilities.app_data_dictionary.app_components
+* LeafNode.extensions.app_data_dictionary
+* KeyPackage.extensions.app_data_dictionary
+* GroupInfo.extensions.app_data_dictionary
+* app_ephemeral.app_data_dictionary
+* authenticated_data.aad_items
+
+Unknown values (including GREASE values) in any of these fields MUST be ignored
+by receivers. A random selection of GREASE values SHOULD be included in any of
+these fields that would otherwise be present.
+
 
 # Extensions
 
@@ -751,7 +776,7 @@ particular {{!RFC9180}}.
 
 ### Format
 
-This extension uses the `mls_extension_message` WireFormat, where the content is a `TargetedMessage`.
+This extension defines the `mls_targeted_message` WireFormat, where the content is a `TargetedMessage`.
 
 ~~~ tls
 struct {
@@ -829,8 +854,8 @@ length of the hpke_ciphertext is less than KDF.Nh, the whole hpke_ciphertext is
 used. In pseudocode, the key and nonce are derived as:
 
 ~~~ tls
-sender_auth_data_secret
-  = DeriveExtensionSecret(extension_secret, "targeted message sender auth data")
+sender_auth_data_secret =
+  MLS-Exporter("targeted message", "sender auth data secret", KDF.Nh)
 
 ciphertext_sample = hpke_ciphertext[0..KDF.Nh-1]
 
@@ -868,8 +893,8 @@ for more information.
 For the PSK part of the authentication, clients export a dedicated secret:
 
 ~~~ tls
-targeted_message_psk
-  = DeriveExtensionSecret(extension_secret, "targeted message psk")
+targeted_message_psk =
+  MLS-Exporter("targeted message", "psk", KDF.Nh)
 ~~~
 
 The functions `SealAuth` and `OpenAuth` defined in {{!RFC9180}} are used as
@@ -881,16 +906,18 @@ described in {{safe-hpke}} with an empty context. Other functions are defined in
 The sender MUST set the authentication scheme to
 `TargetedMessageAuthScheme.HPKEAuthPsk`.
 
-As described in {{safe-hpke}} the `hpke_context` is a LabeledExtensionContent struct
-with the following content, where `group_context` is the serialized context of
-the group.
+The `hpke_context` is an TargetedMessageContext struct with the following
+content, where `group_context` is the serialized context of the group.
 
 ~~~ tls
-label = "MLS 1.0 ExtensionData"
-extension_type = ExtensionType
-extension_data = group_context
-~~~
+struct {
+  opaque label<V>;
+  opaque context<V>;
+} TargetedMessageContext;
 
+label = "MLS 1.0 TargetedMessageData"
+context = group_context
+~~~
 
 The sender then computes the following:
 
@@ -936,11 +963,11 @@ The sender then computes the following with `hpke_context` defined as in
                                         epoch)
 ~~~
 
-The signature is computed as follows, where the `extension_type` is the type of
-this extension (see {{iana-considerations}}).
+The signature is computed as follows:
 
 ~~~ tls
-signature = SafeSignWithLabel(extension_type, ., "TargetedMessageTBS", targeted_message_tbs)
+signature = SignWithLabel(sender_leaf_node_signature_private_key,
+              "TargetedMessageTBS", targeted_message_tbs)
 ~~~
 
 The recipient computes the following:
@@ -958,11 +985,10 @@ message = OpenPSK(kem_output,
 The recipient MUST verify the message authentication:
 
 ~~~ tls
-SafeVerifyWithLabel.verify(extension_type,
-                        sender_leaf_node.signature_key,
-                        "TargetedMessageTBS",
-                        targeted_message_tbs,
-                        signature)
+VerifyWithLabel.verify(sender_leaf_node.signature_key,
+                       "TargetedMessageTBS",
+                       targeted_message_tbs,
+                       signature)
 ~~~
 
 ### Guidance on authentication schemes
@@ -1404,21 +1430,6 @@ all MLS members of the group to support.
 * Recommended: Y
 * Reference: RFC XXXX
 
-### targeted_messages_capability MLS Extension
-
-The `targeted_messages_capability` MLS Extension Type is used in the
-`capabilities.extensions` field of LeafNodes to indicate the support for the
-Targeted Messages Extension, and in the `required_capabilities.extension_types`
-field of the GroupContext to indicate all members of the group must support it.
-The extension does not carry any payload.
-
-* Value: 0x0009 (suggested)
-* Name: targeted_messages_capability
-* Message(s): LN: This extension may appear in LeafNode objects
-              GC: This extension may appear in GroupContext objects
-* Recommended: Y
-* Reference: RFC XXXX
-
 
 ## MLS Proposal Types
 
@@ -1450,7 +1461,7 @@ The `self_remove` MLS Proposal Type is used for a member to remove itself
 from a group more efficiently than using a `remove` proposal type, as the
 `self_remove` type is permitted in External Commits.
 
-* Value: 0x0008 (suggested)
+* Value: 0x000a (suggested)
 * Name: self_remove
 * Recommended: Y
 * External: N
@@ -1472,13 +1483,19 @@ from a group more efficiently than using a `remove` proposal type, as the
 * Recommended: Y
 * Reference: RFC XXXX
 
-<!-- ## MLS Signature Labels
+## MLS Signature Labels
 
-### Labeled Extension Content
+### TargetedMessageTBS
 
-* Label: "LabeledExtensionContent" (suggested)
+* Label: "TargetedMessageTBS"
 * Recommended: Y
-* Reference: RFC XXXX -->
+* Reference: RFC XXXX
+
+### CredentialBindingTBS
+
+* Label: "CredentialBindingTBS"
+* Recommended: Y
+* Reference: RFC XXXX
 
 ## MLS Component Types {#iana-components}
 
@@ -1520,8 +1537,26 @@ Initial Contents:
 | 0x0000 0003   | content_media_types      | LN,GC | Y | RFCXXXX |
 | 0x0000 0004   | last_resort_key_package  | KP    | Y | RFCXXXX |
 | 0x0000 0005   | app_ack                  | AE    | Y | RFCXXXX |
+| 0x0000 0a0a   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x0000 1a1a   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x0000 2a2a   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x0000 3a3a   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x0000 4a4a   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x0000 5a5a   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x0000 6a6a   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x0000 7a7a   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x0000 8a8a   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x0000 9a9a   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x0000 aaaa   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x0000 baba   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x0000 caca   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x0000 dada   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x0000 eaea   | GREASE                   | Note1 | Y | RFCXXXX |
 | 0x8000 0000 -
   0xFFFF FFFF   | Reserved for Private Use | N/A   | N | RFCXXXX |
+
+>Note1: GREASE values for components MAY be present in AD, AE, GI, KP, and LN
+>objects.
 
 
 # Security considerations
@@ -1627,6 +1662,18 @@ security of the least secure of its credential bindings.
 
 RFC EDITOR PLEASE DELETE THIS SECTION.
 
+draft-07
+- assign self_remove proposal to a non duplicate number (0x000a)
+- refactor TargetedMessage to no longer use structs removed from when it
+was a "safe extension"
+- remove the no-longer needed targeted_messages_capability (now signaled using support_wire_formats and required_wire_formats)
+- add TargetedMessageTBS and CredentialBundleTBS to MLS Signature Labels IANA
+registry
+- add GREASE values for components
+- fix safe exporter definition
+- resolve TODOs from -06
+- fix numerous typos
+
 draft-06
 
 - Integrate notion of Application API from draft-barnes-mls-appsync
@@ -1659,88 +1706,3 @@ draft-00
 
 - Initial adoption of draft-robert-mls-protocol-00 as a WG item.
 - Add Targeted Messages extension (\*)
-
-# Old Safe Extensions Text
-
-The MLS specification is extensible in a variety of ways (see {{Section 13 of
-!RFC9420}}) and describes the negotiation and other handling of extensions and
-their data within the protocol. However, it does not provide guidance on how
-extensions can or should safely interact with the base MLS protocol. The goal of
-this section is to simplify the task of developing MLS extensions.
-
-
-## Extension state: anchoring, storage and agreement
-
-The safe extension framework can help an MLS extension ensure that all group
-members agree on a piece of extension-specific state by using the
-`ExtensionState` GroupContext extension. The ownership of an `ExtensionState`
-extension in the context of the safe extension framework is determined by the
-`extension_type` field. The extension with a matching `extension_type` is called
-the owning extension.
-
-~~~tls
-enum {
-  reserved(0),
-  read(1),
-  none(2),
- (255)
-} Permissions;
-
-enum {
-  reserved(0),
-  hash(1),
-  data(2),
-} HashOrData;
-
-struct {
-  HashOrData hash_or_data;
-  select(hash_or_data) {
-    case hash:
-      HashReference state_hash;
-    case data:
-      opaque state<V>;
-  }
-} ExtensionPayload;
-
-struct {
-  extensionType extension_type;
-  Permissions read;
-  ExtensionPayload payload;
-} ExtensionState;
-~~~
-
-The `ExtensionState` GroupContext extension contains data either directly (if
-`hash_or_data = data`) or indirectly via a hash (if `hash_or_data = hash`).
-
-The owning extension can read and write the state stored in an `ExtensionState`
-extension using an extension-defined proposal (see TODO). The semantics
-of the proposal determines how the state is changed.
-
-The `read` variable determines the permissions that other MLS extensions have
-w.r.t. the data stored within. `read` allows other MLS extensions to read that
-data via their own proposals, while `none` marks the data as private to the
-owning MLS extension.
-
-Other extensions may never write to the `ExtensionState` of the owning MLS
-extension.
-
-### Direct vs. hash-based storage
-
-Storing the data directly in the `ExtensionState` means the data becomes part of
-the group state. Depending on the application design, this can be advantageous,
-because it is distributed via Welcome messages. However, it could also mean that
-the data is visible to the delivery service. Additionally, if the application
-makes use of GroupContextExtension proposals, it may be necessary to send all
-the data with each such extension.
-
-Including the data by hash only allows group members to agree on the data
-indirectly, relying on the collision resistance of the associated hash function.
-The data itself, however, may have to be transmitted out-of-band to new joiners.
-
-## Extension Design Guidance
-
-While extensions can modify the protocol flow of MLS and the associated
-properties in arbitrary ways, the base MLS protocol already enables a number of
-functionalities that extensions can use without modifying MLS itself. Extension
-authors should consider using these built-in mechanisms before employing more
-intrusive changes to the protocol.
