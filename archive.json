@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-05-06T00:46:14.013534+00:00",
+  "timestamp": "2025-05-08T00:46:45.079507+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -3551,25 +3551,49 @@
       "id": "PR_kwDOHZoI5M6TVuGD",
       "title": "Implementor feedback from mls-extensions",
       "url": "https://github.com/mlswg/mls-extensions/pull/58",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "rohanmahy",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "- AppDataUpdate and SelfRemove used the same proposal number. SelfRemove -> 0x000a\r\n- Remove the last references to safe extensions structs in TargetedMessage\r\n- targeted_messages_capability is no longer needed with supported|required_wire_formats\r\n- Register missing MLS Signature Labels to IANA section\r\n- Add GREASE values for components\r\n\r\nI could go further by adding GREASE for wire_format (in capabilities only).",
       "createdAt": "2025-04-21T19:53:51Z",
-      "updatedAt": "2025-05-05T21:01:12Z",
+      "updatedAt": "2025-05-07T20:22:57Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "82af6c83b64788038d90561c50a6a250f21a01f2",
       "headRepository": "rohanmahy/mls-extensions",
       "headRefName": "impl-feedback",
-      "headRefOid": "f09d8b3c9866151539eb6a85239ff9f09bb8b064",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
+      "headRefOid": "8dca30010d15ccf0ac9e512b83db78452d2a4e16",
+      "closedAt": "2025-05-07T20:22:57Z",
+      "mergedAt": "2025-05-07T20:22:57Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "0a94173da465dc5d8e718c144a076f7feb964fee"
+      },
+      "comments": [
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I think I have addressed all comments received so far. @raphaelrobert @bifurcation please have a look.\r\n\r\nI wish github had a \"propose resolved\" button.",
+          "createdAt": "2025-05-06T21:07:09Z",
+          "updatedAt": "2025-05-06T21:07:09Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@raphaelrobert please go ahead and merge. I don't have permission to in this repo.",
+          "createdAt": "2025-05-07T12:46:52Z",
+          "updatedAt": "2025-05-07T12:46:52Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "> I wish github had a \"propose resolved\" button.\r\n\r\nYou can always just request a review, if that's what you meant.\r\n\r\n",
+          "createdAt": "2025-05-07T20:22:48Z",
+          "updatedAt": "2025-05-07T20:22:48Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOHZoI5M6mJU7e",
@@ -3642,6 +3666,123 @@
               "updatedAt": "2025-05-05T21:01:12Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6n96IG",
+          "commit": {
+            "abbreviatedOid": "f09d8b3"
+          },
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-05-06T12:09:35Z",
+          "updatedAt": "2025-05-06T12:21:39Z",
+          "comments": [
+            {
+              "originalPosition": 15,
+              "body": "```suggestion\r\n  = MLS-Exporter(\"targeted message\", \"sender auth data secret\", KDF.Nh)\r\n```",
+              "createdAt": "2025-05-06T12:09:35Z",
+              "updatedAt": "2025-05-06T12:21:39Z"
+            },
+            {
+              "originalPosition": 24,
+              "body": "MLS-Exporter(\"targeted message\", \"psk\", KDF.Nh)",
+              "createdAt": "2025-05-06T12:10:08Z",
+              "updatedAt": "2025-05-06T12:21:39Z"
+            },
+            {
+              "originalPosition": 33,
+              "body": "@raphaelrobert Are you saying the HPKE section seems incomplete?  Because it only covers the Base mode?  Seems like a discussion for another issue.\r\n\r\nI agree that this section needs to either get removed or be refactored to refer to the safe HPKE interface as it is now defined.  I would probably argue for the former, since Auth/AuthPSK modes don't work with any PQ KEMs.",
+              "createdAt": "2025-05-06T12:17:22Z",
+              "updatedAt": "2025-05-06T12:21:39Z"
+            },
+            {
+              "originalPosition": 73,
+              "body": "This should be SafeVerifyWithLabel, we just need to change the `extension_type` to a `component_id`, presumably for some fixed component ID that identifies this targeted messages mechanism.",
+              "createdAt": "2025-05-06T12:18:44Z",
+              "updatedAt": "2025-05-06T12:21:39Z"
+            },
+            {
+              "originalPosition": 139,
+              "body": "I agree with with normative language.  I would suggest that GREASE SHOULD be added to these fields _if present_.  To emphasize that you don't need to add these fields just to send GREASE.",
+              "createdAt": "2025-05-06T12:20:41Z",
+              "updatedAt": "2025-05-06T12:21:39Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6oDUgU",
+          "commit": {
+            "abbreviatedOid": "f09d8b3"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-05-06T19:51:04Z",
+          "updatedAt": "2025-05-06T19:51:04Z",
+          "comments": [
+            {
+              "originalPosition": 15,
+              "body": "Thanks, that's exactly what I meant",
+              "createdAt": "2025-05-06T19:51:04Z",
+              "updatedAt": "2025-05-06T19:51:04Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6oDXkb",
+          "commit": {
+            "abbreviatedOid": "f09d8b3"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-05-06T19:57:18Z",
+          "updatedAt": "2025-05-06T19:57:18Z",
+          "comments": [
+            {
+              "originalPosition": 33,
+              "body": "I hadn't realized the auth mode wasn't exposed. I'm fine dropping it, it would streamline targeted messages. \r\nThe fact that the AuthPSK mode is not exposed is however problematic. It was used for channel binding, so that targeted messages required the recipient to be a full group member and not just the owner of the private key that corresponds to HPKE public key of a leaf.\r\n\r\nFor the sake of progress, I propose to revert the change above and do a separate PR that aligns targeted messages with the safe API, provided we find a solution to the PSK injection.",
+              "createdAt": "2025-05-06T19:57:18Z",
+              "updatedAt": "2025-05-06T19:57:18Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6oH0nE",
+          "commit": {
+            "abbreviatedOid": "8dca300"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-05-07T07:13:28Z",
+          "updatedAt": "2025-05-07T07:13:29Z",
+          "comments": [
+            {
+              "originalPosition": 84,
+              "body": "This should likely change, but I'll do a follow-up PR. The group context is public, meaning you don't have to be a member to know it. I'll try to see if we can replace the AuthPSK mode with that, but I'm not sure yet.\r\n\r\nAnyway, we can merge this, and I'll rewrite it later.",
+              "createdAt": "2025-05-07T07:13:29Z",
+              "updatedAt": "2025-05-07T07:13:29Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6oH0yG",
+          "commit": {
+            "abbreviatedOid": "8dca300"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-05-07T07:13:46Z",
+          "updatedAt": "2025-05-07T07:13:46Z",
+          "comments": []
         }
       ]
     }
