@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-05-08T00:46:45.079507+00:00",
+  "timestamp": "2025-05-13T00:46:57.453634+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -167,7 +167,7 @@
       "labels": [],
       "body": "To be more future-proof, similarly to `EncryptWithLabel`, I guess we could design a similar function for the HPKE AuthPSK mode?\r\nThis would help ensuring future extensions that would be using the AuthPSK mode with leaf HPKE keys don't interfere with each other.",
       "createdAt": "2023-07-19T06:10:49Z",
-      "updatedAt": "2025-02-06T08:56:26Z",
+      "updatedAt": "2025-05-12T15:32:47Z",
       "closedAt": null,
       "comments": [
         {
@@ -183,6 +183,34 @@
           "body": "It looks like this point has been addressed with the safe extensions API. However, Targeted Messages re-define a safe API for SealAuthPSK, this could be moved in the safe extension API.",
           "createdAt": "2025-02-06T08:56:25Z",
           "updatedAt": "2025-02-06T08:56:25Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I'm not going to comment about if the specific construction is safe or not, however TargetedMessage is now a true extension. It's not supposed to use the Safe Applications API because it isn't a component. It does need to use a reasonable set of labels, but these can be hardcoded and IANA registered.",
+          "createdAt": "2025-05-12T09:50:23Z",
+          "updatedAt": "2025-05-12T09:50:23Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "\n\n> It looks like this point has been addressed with the safe extensions API. However, Targeted Messages re-define a safe API for SealAuthPSK, this could be moved in the safe extension API.\n\nThe issue with that proposal is that the safe HPKE API uses `EncryptWithLabel` from RFC9420 that uses `SealBase` and there is no counterpart for `SealAuthPSK`. If there was, we could probably make targeted messages a component rather than an extension.\n\n",
+          "createdAt": "2025-05-12T12:42:58Z",
+          "updatedAt": "2025-05-12T12:42:58Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@raphaelrobert \n>we could probably make targeted messages a component rather than an extension.\n\nNo. under the current definition, there is no way that a new proposal or a new wireformat can be a component. That's why there is no subsection on them under Section 4. So it is really no loss.\n\nAs Richard mentioned, if we make a generic `EncryptWithAuthPSKLabel`, it will not work with PQ ciphersuites, so that's unfortunate.",
+          "createdAt": "2025-05-12T13:56:40Z",
+          "updatedAt": "2025-05-12T13:56:40Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "> > we could probably make targeted messages a component rather than an extension.\n> \n> No. under the current definition, there is no way that a new proposal or a new wireformat can be a component. That's why there is no subsection on them under Section 4. So it is really no loss.\n\nIf that's the definition of a component, I guess we are good.\n\n> As Richard mentioned, if we make a generic `EncryptWithAuthPSKLabel`, it will not work with PQ ciphersuites, so that's unfortunate.\n\nThis is not what Richard said and it's also not true. The authentication using an asymmetric key is what doesn't work with KEMs. The authentication with a PSK still works with KEMs, so the point still stands.\n\n",
+          "createdAt": "2025-05-12T15:32:45Z",
+          "updatedAt": "2025-05-12T15:32:45Z"
         }
       ]
     },
@@ -408,7 +436,7 @@
       "labels": [],
       "body": "The section about Safe Additional Authenticated Data (AAD) discuss about the `authenticated_data` field of `PrivateContentAAD`.\n\nIt seems to me that this field is defined to be identical to `authenticated_data` in `FramedContent`. Shouldn't we frame this section about `FramedContent` then?",
       "createdAt": "2025-02-04T21:08:53Z",
-      "updatedAt": "2025-02-21T14:28:20Z",
+      "updatedAt": "2025-05-12T12:38:56Z",
       "closedAt": null,
       "comments": [
         {
@@ -452,6 +480,13 @@
           "body": "Sorry, I guess I just think of it as the first A in AAD. All the data in a PublicMessage is authenticated data. It doesn't have any different properties in the authenticated_data field than it would elsewhere in the message (in application_data for example).\nBy \"no place to put it\" I just meant that there is no AEAD algorithm we are putting the **_A_** AD into.\n\nI suppose it is perfectly OK to still call this AAD, it's just a different definition. Do you think having application-defined content in authenticated_data is useful in a PublicMessage?",
           "createdAt": "2025-02-21T14:28:18Z",
           "updatedAt": "2025-02-21T14:28:18Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "The current text is\n\n```\nAn MLS PrivateMessage can contain arbitrary additional application-specific AAD. The corresponding authenticated_data field appears in several MLS structs: FramedContent (used indirectly to generate the message signature and tags), PrivateContentAAD (used as the AAD input to the PrivateMessage.ciphertext), and PrivateMessage (to convey the AAD).\n```\n\nI agree with @TWal that it sounds confusing. The AAD in question appears in two places: the `authenticated_data` field of `PrivateMessage` and `PublicMessage`. `FramedContent` and `PrivateContentAAD` are helper structs for both the spec and implementations. \nThe text should be changed accordingly.\n\n",
+          "createdAt": "2025-05-12T12:37:54Z",
+          "updatedAt": "2025-05-12T12:38:56Z"
         }
       ]
     },
@@ -460,31 +495,39 @@
       "id": "I_kwDOHZoI5M6o-xse",
       "title": "`SafeEncryptWithContext` should use `EncryptWithLabel`",
       "url": "https://github.com/mlswg/mls-extensions/issues/48",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "TWal",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "MLS defines the safe-ish `SignWithLabel`, `ExpandWithLabel`, `EncryptWithLabel` etc, and the safe API relies on it:\n- `SafeSignWithLabel` uses `SignWithLabel`\n- `DeriveExtensionSecret` uses `ExpandWithLabel`\n\nHowever `SafeEncryptWithContext` doesn't use `EncryptWithLabel` and operate directly with `HPKE.SealBase`. Is there a technical reason for this?\n\nI think it should use `EncryptWithLabel` to ensure proper domain separation with HPKE uses in the MLS RFC. Otherwise, we must ensure that MLS' `EncryptContext` and Safe API's `LabeledExtensionContent` cannot be serialized to the same bytestring (to follow the secure formatting rules of the [Comparse paper](https://eprint.iacr.org/2023/1390)). The latter fact seems to hold, under the condition that `LabeledExtensionContent.label` uses a QUIC-style length encoding (which is not clear because it is written as `opaque label` and not `opaque label<V>`). Using `EncryptWithLabel` would make that fact straightforward.",
       "createdAt": "2025-02-06T09:43:09Z",
-      "updatedAt": "2025-02-06T09:43:09Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2025-05-12T12:24:48Z",
+      "closedAt": "2025-05-12T12:24:47Z",
+      "comments": [
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "We use `EncryptWithLabel` now.",
+          "createdAt": "2025-05-12T12:24:47Z",
+          "updatedAt": "2025-05-12T12:24:47Z"
+        }
+      ]
     },
     {
       "number": 53,
       "id": "I_kwDOHZoI5M6xCIpA",
       "title": "There's a missing link here",
       "url": "https://github.com/mlswg/mls-extensions/issues/53",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "raphaelrobert",
       "authorAssociation": "MEMBER",
       "assignees": [],
       "labels": [],
       "body": "              There's a missing link here\r\n\r\n_Originally posted by @timokoesters in https://github.com/mlswg/mls-extensions/pull/51#discussion_r2025482736_\r\n            ",
       "createdAt": "2025-04-03T16:25:09Z",
-      "updatedAt": "2025-04-21T20:43:54Z",
-      "closedAt": null,
+      "updatedAt": "2025-05-12T12:23:29Z",
+      "closedAt": "2025-05-12T12:23:29Z",
       "comments": [
         {
           "author": "rohanmahy",
@@ -492,6 +535,13 @@
           "body": "This is in the appendix after the change log that contains old text from the safe extensions framework. Most of it is no longer relevant and the rest of informational. I propose we just remove the section.",
           "createdAt": "2025-04-21T20:43:53Z",
           "updatedAt": "2025-04-21T20:43:53Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "section removed in #58 . @raphaelrobert please close",
+          "createdAt": "2025-05-12T09:47:25Z",
+          "updatedAt": "2025-05-12T09:47:25Z"
         }
       ]
     },
@@ -500,15 +550,15 @@
       "id": "I_kwDOHZoI5M6yZvuX",
       "title": "Suggested proposal types for AppDataUpdate and SelfRemove are the same",
       "url": "https://github.com/mlswg/mls-extensions/issues/55",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "mulmarta",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "Both proposals suggest type 8. IANA will eventually sort it out but it would be nice to sort it out now. I suggest 10 for SelfRemove",
       "createdAt": "2025-04-14T13:31:55Z",
-      "updatedAt": "2025-04-21T20:47:06Z",
-      "closedAt": null,
+      "updatedAt": "2025-05-12T12:23:18Z",
+      "closedAt": "2025-05-12T12:23:18Z",
       "comments": [
         {
           "author": "rohanmahy",
@@ -516,6 +566,13 @@
           "body": "Addressed in PR #58 ",
           "createdAt": "2025-04-21T20:47:05Z",
           "updatedAt": "2025-04-21T20:47:05Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "fixed. @raphaelrobert please close",
+          "createdAt": "2025-05-12T09:46:39Z",
+          "updatedAt": "2025-05-12T09:46:39Z"
         }
       ]
     },
@@ -531,9 +588,48 @@
       "labels": [],
       "body": "",
       "createdAt": "2025-04-21T19:51:55Z",
-      "updatedAt": "2025-04-21T19:51:55Z",
+      "updatedAt": "2025-05-12T13:58:05Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "\"authenticated data\" and \"additional authenticated data\" or \"AAD\" are pretty equivalent terms, which makes the question trivial. Can you rephrase the question?",
+          "createdAt": "2025-05-12T12:52:11Z",
+          "updatedAt": "2025-05-12T12:52:11Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "`authenticated_data`, which is the user provided AAD (currently supported by PublicMessage, PrivateMessage, and SemiPrivateMessage).",
+          "createdAt": "2025-05-12T13:58:04Z",
+          "updatedAt": "2025-05-12T13:58:04Z"
+        }
+      ]
+    },
+    {
+      "number": 59,
+      "id": "I_kwDOHZoI5M62PU7p",
+      "title": "Better explain what the \"message\" is in targeted messages",
+      "url": "https://github.com/mlswg/mls-extensions/issues/59",
+      "state": "OPEN",
+      "author": "raphaelrobert",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "Make it clearer that `message` is a byte array, just like with application messages in the base draft.",
+      "createdAt": "2025-05-12T16:09:54Z",
+      "updatedAt": "2025-05-12T16:31:44Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Maybe use something like this to borrow as much structure as possible from PrivateMessage:\n\n```\nstruct {\n   /* there is no need to have a TargetedMessage.content_type, */\n   /* because it is always `application` */\n   opaque application_data<V>;\n\n   /* you could trivially add padding here */\n} TargetedMessageContent;\n\nstruct {\n  opaque group_id<V>;\n  uint64 epoch;\n  uint32 recipient_leaf_index;\n  opaque authenticated_data<V>;\n} TargetedMessageAAD;\n\nhpke_ciphertext = SealBase(target_public_key, TargetedMessageContext, TargetedMessageAAD, TargetedMessageContent)\n```\n\n",
+          "createdAt": "2025-05-12T16:31:42Z",
+          "updatedAt": "2025-05-12T16:31:42Z"
+        }
+      ]
     }
   ],
   "pulls": [
