@@ -4,8 +4,8 @@
 
 Messaging Layer Security                                       R. Robert
 Internet-Draft                                               Phoenix R&D
-Intended status: Standards Track                           11 April 2025
-Expires: 13 October 2025
+Intended status: Standards Track                             19 May 2025
+Expires: 20 November 2025
 
 
              The Messaging Layer Security (MLS) Extensions
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 13 October 2025.
+   This Internet-Draft will expire on 20 November 2025.
 
 Copyright Notice
 
@@ -85,6 +85,7 @@ Table of Contents
      4.8.  Attaching Application Data to a Commit
      4.9.  Safe Additional Authenticated Data (AAD)
    5.  Negotiating Extensions and Components
+     5.1.  GREASE
    6.  Extensions
      6.1.  AppAck
      6.2.  Targeted messages
@@ -113,7 +114,6 @@ Table of Contents
        7.2.1.  app_data_dictionary MLS Extension
        7.2.2.  supported_wire_formats MLS Extension
        7.2.3.  required_wire_formats MLS Extension
-       7.2.4.  targeted_messages_capability MLS Extension
      7.3.  MLS Proposal Types
        7.3.1.  AppDataUpdate Proposal
        7.3.2.  AppEphemeral Proposal
@@ -121,7 +121,10 @@ Table of Contents
      7.4.  MLS Credential Types
        7.4.1.  Multi Credential
        7.4.2.  Weak Multi Credential
-     7.5.  MLS Component Types
+     7.5.  MLS Signature Labels
+       7.5.1.  TargetedMessageTBS
+       7.5.2.  CredentialBindingTBS
+     7.6.  MLS Component Types
    8.  Security considerations
      8.1.  Safe Application API
      8.2.  AppAck
@@ -133,10 +136,6 @@ Table of Contents
      9.1.  Normative References
      9.2.  Informative References
    Appendix A.  Change Log
-   Appendix B.  Old Safe Extensions Text
-     B.1.  Extension state: anchoring, storage and agreement
-       B.1.1.  Direct vs. hash-based storage
-     B.2.  Extension Design Guidance
    Contributors
    Author's Address
 
@@ -715,9 +714,11 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
 
    MLS defines a Capabilities struct for LeafNodes (in turn used in
    KeyPackages), which describes which extensions are supported by the
-   associated node.  However, that struct (defined in Section 7.2 of
-   [RFC9420]) only has fields for a subset of the extensions possible in
-   MLS, as reproduced below.
+   associated node.
+
+   However, that struct (defined in Section 7.2 of [RFC9420]) only has
+   fields for a subset of the extensions possible in MLS, as reproduced
+   below.
 
    struct {
        ProtocolVersion versions<V>;
@@ -789,6 +790,38 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    types) are communicated in the content_media_types component (see
    Section 6.3).
 
+5.1.  GREASE
+
+   The "Generate Random Extensions And Sustain Extensibility" (GREASE)
+   approach is described in Section 13.5 of [RFC9420].  Further,
+   Section 7.2 of [RFC9420] says that:
+
+      "As discussed in Section 13, unknown values in capabilities MUST
+      be ignored, and the creator of a capabilities field SHOULD include
+      some random GREASE values to help ensure that other clients
+      correctly ignore unknown values."
+
+   This specification adds the following locations where GREASE values
+   for components can be included:
+
+   *  LeafNode.capabilities.app_data_dictionary.safe_aad
+
+   *  LeafNode.capabilities.app_data_dictionary.app_components
+
+   *  LeafNode.extensions.app_data_dictionary
+
+   *  KeyPackage.extensions.app_data_dictionary
+
+   *  GroupInfo.extensions.app_data_dictionary
+
+   *  app_ephemeral.app_data_dictionary
+
+   *  authenticated_data.aad_items
+
+   Unknown values (including GREASE values) in any of these fields MUST
+   be ignored by receivers.  A random selection of GREASE values SHOULD
+   be included in any of these fields that would otherwise be present.
+
 6.  Extensions
 
 6.1.  AppAck
@@ -848,7 +881,7 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
 
 6.2.2.  Format
 
-   This extension uses the mls_extension_message WireFormat, where the
+   This extension defines the mls_targeted_message WireFormat, where the
    content is a TargetedMessage.
 
    struct {
@@ -928,8 +961,8 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    the whole hpke_ciphertext is used.  In pseudocode, the key and nonce
    are derived as:
 
-   sender_auth_data_secret
-     = DeriveExtensionSecret(extension_secret, "targeted message sender auth data")
+   sender_auth_data_secret =
+     MLS-Exporter("targeted message", "sender auth data secret", KDF.Nh)
 
    ciphertext_sample = hpke_ciphertext[0..KDF.Nh-1]
 
@@ -964,8 +997,8 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    For the PSK part of the authentication, clients export a dedicated
    secret:
 
-   targeted_message_psk
-     = DeriveExtensionSecret(extension_secret, "targeted message psk")
+   targeted_message_psk =
+     MLS-Exporter("targeted message", "psk", KDF.Nh)
 
    The functions SealAuth and OpenAuth defined in [RFC9180] are used as
    described in Section 4.2 with an empty context.  Other functions are
@@ -976,13 +1009,17 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    The sender MUST set the authentication scheme to
    TargetedMessageAuthScheme.HPKEAuthPsk.
 
-   As described in Section 4.2 the hpke_context is a
-   LabeledExtensionContent struct with the following content, where
-   group_context is the serialized context of the group.
+   The hpke_context is an TargetedMessageContext struct with the
+   following content, where group_context is the serialized context of
+   the group.
 
-   label = "MLS 1.0 ExtensionData"
-   extension_type = ExtensionType
-   extension_data = group_context
+   struct {
+     opaque label<V>;
+     opaque context<V>;
+   } TargetedMessageContext;
+
+   label = "MLS 1.0 TargetedMessageData"
+   context = group_context
 
    The sender then computes the following:
 
@@ -1022,10 +1059,10 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
                                            targeted_message_psk,
                                            epoch)
 
-   The signature is computed as follows, where the extension_type is the
-   type of this extension (see Section 7).
+   The signature is computed as follows:
 
-   signature = SafeSignWithLabel(extension_type, ., "TargetedMessageTBS", targeted_message_tbs)
+   signature = SignWithLabel(sender_leaf_node_signature_private_key,
+                 "TargetedMessageTBS", targeted_message_tbs)
 
    The recipient computes the following:
 
@@ -1039,11 +1076,10 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
 
    The recipient MUST verify the message authentication:
 
-   SafeVerifyWithLabel.verify(extension_type,
-                           sender_leaf_node.signature_key,
-                           "TargetedMessageTBS",
-                           targeted_message_tbs,
-                           signature)
+   VerifyWithLabel.verify(sender_leaf_node.signature_key,
+                          "TargetedMessageTBS",
+                          targeted_message_tbs,
+                          signature)
 
 6.2.5.  Guidance on authentication schemes
 
@@ -1434,7 +1470,7 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    organized under the relevant registry Type.
 
    This document also requests the creation of a new MLS applications
-   components registry as described in Section 7.5.
+   components registry as described in Section 7.6.
 
    RFC EDITOR: Please replace XXXX throughout with the RFC number
    assigned to this document
@@ -1508,26 +1544,6 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
 
    *  Reference: RFC XXXX
 
-7.2.4.  targeted_messages_capability MLS Extension
-
-   The targeted_messages_capability MLS Extension Type is used in the
-   capabilities.extensions field of LeafNodes to indicate the support
-   for the Targeted Messages Extension, and in the
-   required_capabilities.extension_types field of the GroupContext to
-   indicate all members of the group must support it.  The extension
-   does not carry any payload.
-
-   *  Value: 0x0009 (suggested)
-
-   *  Name: targeted_messages_capability
-
-   *  Message(s): LN: This extension may appear in LeafNode objects GC:
-      This extension may appear in GroupContext objects
-
-   *  Recommended: Y
-
-   *  Reference: RFC XXXX
-
 7.3.  MLS Proposal Types
 
 7.3.1.  AppDataUpdate Proposal
@@ -1568,7 +1584,7 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    itself from a group more efficiently than using a remove proposal
    type, as the self_remove type is permitted in External Commits.
 
-   *  Value: 0x0008 (suggested)
+   *  Value: 0x000a (suggested)
 
    *  Name: self_remove
 
@@ -1600,7 +1616,25 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
 
    *  Reference: RFC XXXX
 
-7.5.  MLS Component Types
+7.5.  MLS Signature Labels
+
+7.5.1.  TargetedMessageTBS
+
+   *  Label: "TargetedMessageTBS"
+
+   *  Recommended: Y
+
+   *  Reference: RFC XXXX
+
+7.5.2.  CredentialBindingTBS
+
+   *  Label: "CredentialBindingTBS"
+
+   *  Recommended: Y
+
+   *  Reference: RFC XXXX
+
+7.6.  MLS Component Types
 
    This document requests the creation of a new IANA "MLS Component
    Types" registry under the "Messaging Layer Security" group registry
@@ -1664,12 +1698,45 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
     +---------------+--------------------------+-------+---+---------+
     | 0x0000 0005   | app_ack                  | AE    | Y | RFCXXXX |
     +---------------+--------------------------+-------+---+---------+
+    | 0x0000 0a0a   | GREASE                   | Note1 | Y | RFCXXXX |
+    +---------------+--------------------------+-------+---+---------+
+    | 0x0000 1a1a   | GREASE                   | Note1 | Y | RFCXXXX |
+    +---------------+--------------------------+-------+---+---------+
+    | 0x0000 2a2a   | GREASE                   | Note1 | Y | RFCXXXX |
+    +---------------+--------------------------+-------+---+---------+
+    | 0x0000 3a3a   | GREASE                   | Note1 | Y | RFCXXXX |
+    +---------------+--------------------------+-------+---+---------+
+    | 0x0000 4a4a   | GREASE                   | Note1 | Y | RFCXXXX |
+    +---------------+--------------------------+-------+---+---------+
+    | 0x0000 5a5a   | GREASE                   | Note1 | Y | RFCXXXX |
+    +---------------+--------------------------+-------+---+---------+
+    | 0x0000 6a6a   | GREASE                   | Note1 | Y | RFCXXXX |
+    +---------------+--------------------------+-------+---+---------+
+    | 0x0000 7a7a   | GREASE                   | Note1 | Y | RFCXXXX |
+    +---------------+--------------------------+-------+---+---------+
+    | 0x0000 8a8a   | GREASE                   | Note1 | Y | RFCXXXX |
+    +---------------+--------------------------+-------+---+---------+
+    | 0x0000 9a9a   | GREASE                   | Note1 | Y | RFCXXXX |
+    +---------------+--------------------------+-------+---+---------+
+    | 0x0000 aaaa   | GREASE                   | Note1 | Y | RFCXXXX |
+    +---------------+--------------------------+-------+---+---------+
+    | 0x0000 baba   | GREASE                   | Note1 | Y | RFCXXXX |
+    +---------------+--------------------------+-------+---+---------+
+    | 0x0000 caca   | GREASE                   | Note1 | Y | RFCXXXX |
+    +---------------+--------------------------+-------+---+---------+
+    | 0x0000 dada   | GREASE                   | Note1 | Y | RFCXXXX |
+    +---------------+--------------------------+-------+---+---------+
+    | 0x0000 eaea   | GREASE                   | Note1 | Y | RFCXXXX |
+    +---------------+--------------------------+-------+---+---------+
     | 0x8000 0000 - |                          |       |   |         |
     +---------------+--------------------------+-------+---+---------+
     | 0xFFFF FFFF   | Reserved for Private Use | N/A   | N | RFCXXXX |
     +---------------+--------------------------+-------+---+---------+
 
                                  Table 1
+
+      Note1: GREASE values for components MAY be present in AD, AE, GI,
+      KP, and LN objects.
 
 8.  Security considerations
 
@@ -1840,6 +1907,15 @@ Appendix A.  Change Log
 
    RFC EDITOR PLEASE DELETE THIS SECTION.
 
+   draft-07 - assign self_remove proposal to a non duplicate number
+   (0x000a) - refactor TargetedMessage to no longer use structs removed
+   from when it was a "safe extension" - remove the no-longer needed
+   targeted_messages_capability (now signaled using support_wire_formats
+   and required_wire_formats) - add TargetedMessageTBS and
+   CredentialBundleTBS to MLS Signature Labels IANA registry - add
+   GREASE values for components - fix safe exporter definition - resolve
+   TODOs from -06 - fix numerous typos
+
    draft-06
 
    *  Integrate notion of Application API from draft-barnes-mls-appsync
@@ -1878,94 +1954,6 @@ Appendix A.  Change Log
    *  Initial adoption of draft-robert-mls-protocol-00 as a WG item.
 
    *  Add Targeted Messages extension (*)
-
-Appendix B.  Old Safe Extensions Text
-
-   The MLS specification is extensible in a variety of ways (see
-   Section 13 of [RFC9420]) and describes the negotiation and other
-   handling of extensions and their data within the protocol.  However,
-   it does not provide guidance on how extensions can or should safely
-   interact with the base MLS protocol.  The goal of this section is to
-   simplify the task of developing MLS extensions.
-
-B.1.  Extension state: anchoring, storage and agreement
-
-   The safe extension framework can help an MLS extension ensure that
-   all group members agree on a piece of extension-specific state by
-   using the ExtensionState GroupContext extension.  The ownership of an
-   ExtensionState extension in the context of the safe extension
-   framework is determined by the extension_type field.  The extension
-   with a matching extension_type is called the owning extension.
-
-   enum {
-     reserved(0),
-     read(1),
-     none(2),
-    (255)
-   } Permissions;
-
-   enum {
-     reserved(0),
-     hash(1),
-     data(2),
-   } HashOrData;
-
-   struct {
-     HashOrData hash_or_data;
-     select(hash_or_data) {
-       case hash:
-         HashReference state_hash;
-       case data:
-         opaque state<V>;
-     }
-   } ExtensionPayload;
-
-   struct {
-     extensionType extension_type;
-     Permissions read;
-     ExtensionPayload payload;
-   } ExtensionState;
-
-   The ExtensionState GroupContext extension contains data either
-   directly (if hash_or_data = data) or indirectly via a hash (if
-   hash_or_data = hash).
-
-   The owning extension can read and write the state stored in an
-   ExtensionState extension using an extension-defined proposal (see
-   TODO).  The semantics of the proposal determines how the state is
-   changed.
-
-   The read variable determines the permissions that other MLS
-   extensions have w.r.t. the data stored within. read allows other MLS
-   extensions to read that data via their own proposals, while none
-   marks the data as private to the owning MLS extension.
-
-   Other extensions may never write to the ExtensionState of the owning
-   MLS extension.
-
-B.1.1.  Direct vs. hash-based storage
-
-   Storing the data directly in the ExtensionState means the data
-   becomes part of the group state.  Depending on the application
-   design, this can be advantageous, because it is distributed via
-   Welcome messages.  However, it could also mean that the data is
-   visible to the delivery service.  Additionally, if the application
-   makes use of GroupContextExtension proposals, it may be necessary to
-   send all the data with each such extension.
-
-   Including the data by hash only allows group members to agree on the
-   data indirectly, relying on the collision resistance of the
-   associated hash function.  The data itself, however, may have to be
-   transmitted out-of-band to new joiners.
-
-B.2.  Extension Design Guidance
-
-   While extensions can modify the protocol flow of MLS and the
-   associated properties in arbitrary ways, the base MLS protocol
-   already enables a number of functionalities that extensions can use
-   without modifying MLS itself.  Extension authors should consider
-   using these built-in mechanisms before employing more intrusive
-   changes to the protocol.
 
 Contributors
 
