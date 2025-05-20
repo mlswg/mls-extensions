@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-05-13T00:46:57.453634+00:00",
+  "timestamp": "2025-05-20T00:48:40.199470+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -3881,6 +3881,32 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 60,
+      "id": "PR_kwDOHZoI5M6WwzaI",
+      "title": "Paragraph formatting",
+      "url": "https://github.com/mlswg/mls-extensions/pull/60",
+      "state": "OPEN",
+      "author": "raphaelrobert",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "This PR only formats paragraphs and does not change the content.",
+      "createdAt": "2025-05-19T17:31:00Z",
+      "updatedAt": "2025-05-19T17:31:01Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "0a94173da465dc5d8e718c144a076f7feb964fee",
+      "headRepository": "mlswg/mls-extensions",
+      "headRefName": "paragraph-formatting",
+      "headRefOid": "376f1a33f21b6bfea109777e606988b5d7cef35e",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
