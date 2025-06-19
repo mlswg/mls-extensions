@@ -8,13 +8,13 @@
 <meta content="Raphael Robert" name="author">
 <meta content="
        The Messaging Layer Security (MLS) protocol is an asynchronous group
-authenticated key exchange protocol. MLS provides a number of capabilities
-to applications, as well as several extension points internal to the protocol. This
+authenticated key exchange protocol. MLS provides a number of capabilities to
+applications, as well as several extension points internal to the protocol. This
 document provides a consolidated application API, guidance for how the
 protocol's extension points should be used, and a few concrete examples of both
 core protocol extensions and uses of the application API. 
     " name="description">
-<meta content="xml2rfc 3.28.1" name="generator">
+<meta content="xml2rfc 3.29.0" name="generator">
 <meta content="messaging layer security" name="keyword">
 <meta content="end-to-end encryption" name="keyword">
 <meta content="application api" name="keyword">
@@ -22,18 +22,18 @@ core protocol extensions and uses of the application API.
 <meta content="extensibility" name="keyword">
 <meta content="draft-ietf-mls-extensions-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.28.1
-    Python 3.12.10
+  xml2rfc 3.29.0
+    Python 3.12.11
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.1.0
     Jinja2 3.1.6
-    lxml 5.3.0
-    platformdirs 4.3.7
+    lxml 5.3.1
+    platformdirs 4.3.8
     pycountry 24.6.1
     PyYAML 6.0.2
-    requests 2.32.3
-    setuptools 70.3.0
+    requests 2.32.4
+    setuptools 80.9.0
     wcwidth 0.2.13
 -->
 <link href="draft-ietf-mls-extensions.xml" rel="alternate" type="application/rfc+xml">
@@ -1053,11 +1053,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">MLS</td>
-<td class="right">May 2025</td>
+<td class="right">June 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Robert</td>
-<td class="center">Expires 8 November 2025</td>
+<td class="center">Expires 21 December 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1070,12 +1070,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-mls-extensions-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-05-07" class="published">7 May 2025</time>
+<time datetime="2025-06-19" class="published">19 June 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-11-08">8 November 2025</time></dd>
+<dd class="expires"><time datetime="2025-12-21">21 December 2025</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1089,8 +1089,8 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
 <p id="section-abstract-1">The Messaging Layer Security (MLS) protocol is an asynchronous group
-authenticated key exchange protocol. MLS provides a number of capabilities
-to applications, as well as several extension points internal to the protocol. This
+authenticated key exchange protocol. MLS provides a number of capabilities to
+applications, as well as several extension points internal to the protocol. This
 document provides a consolidated application API, guidance for how the
 protocol's extension points should be used, and a few concrete examples of both
 core protocol extensions and uses of the application API.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
@@ -1130,7 +1130,7 @@ core protocol extensions and uses of the application API.<a href="#section-abstr
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 8 November 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 21 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1402,9 +1402,9 @@ core protocol extensions and uses of the application API.<a href="#section-abstr
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
 <p id="section-1-1">This document defines extensions to MLS <span>[<a href="#RFC9420" class="cite xref">RFC9420</a>]</span> that are not part of the
-main protocol specification, and uses them to explain how to extend the
-core operation of the MLS protocol. It also describes how applications can
-safely interact with MLS to take advantage of security features of MLS.<a href="#section-1-1" class="pilcrow">¶</a></p>
+main protocol specification, and uses them to explain how to extend the core
+operation of the MLS protocol. It also describes how applications can safely
+interact with MLS to take advantage of security features of MLS.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">The MLS protocol is designed to be integrated into applications in order to
 provide security services that the application requires. There are two
 questions to answer when designing such an integration:<a href="#section-1-2" class="pilcrow">¶</a></p>
@@ -1424,8 +1424,8 @@ focuses on the second question.<a href="#section-1-4" class="pilcrow">¶</a></p>
 secure message encapsulation (PrivateMessage), the MLS exporter, and the epoch
 authenticator. Current MLS applications make use of these mechanisms to achieve
 a variety of confidentiality and authentication properties.<a href="#section-1-5" class="pilcrow">¶</a></p>
-<p id="section-1-6">As application designers become familiar with MLS, there is
-interest in leveraging other cryptographic tools that an MLS group provides:<a href="#section-1-6" class="pilcrow">¶</a></p>
+<p id="section-1-6">As application designers become familiar with MLS, there is interest in
+leveraging other cryptographic tools that an MLS group provides:<a href="#section-1-6" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-1-7.1">
           <p id="section-1-7.1.1">HPKE (Hybrid Public Key Encryption <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>) and signature key pairs for
@@ -1467,7 +1467,8 @@ group.<a href="#section-1-9" class="pilcrow">¶</a></p>
 described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
 appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
 <p id="section-2-2">This document makes heavy use of the terminology and the names of structs in the
-MLS specification <span>[<a href="#RFC9420" class="cite xref">RFC9420</a>]</span>. In addition, we introduce the following new terms:<a href="#section-2-2" class="pilcrow">¶</a></p>
+MLS specification <span>[<a href="#RFC9420" class="cite xref">RFC9420</a>]</span>. In addition, we introduce the following new
+terms:<a href="#section-2-2" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlParallel" id="section-2-3">
         <dt id="section-2-3.1">Application:</dt>
         <dd style="margin-left: 1.5em" id="section-2-3.2">
@@ -1498,7 +1499,10 @@ the application.<a href="#section-2-3.6.1" class="pilcrow">¶</a></p>
 <p id="section-3-1">MLS is highly extensible and was designed to be used in a variety of different
 applications. As such, it is important to separate extensions that change the
 behavior of an MLS stack, and application usages of MLS that just take advantage
-of features of MLS or specific extensions (hereafter referred to as <em>components</em>). Furthermore, it is essential that application components do not change the security properties of MLS or require new security analysis of the MLS protocol itself.<a href="#section-3-1" class="pilcrow">¶</a></p>
+of features of MLS or specific extensions (hereafter referred to as
+<em>components</em>). Furthermore, it is essential that application components do not
+change the security properties of MLS or require new security analysis of the
+MLS protocol itself.<a href="#section-3-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="the-safe-application-interface">
@@ -1555,13 +1559,12 @@ be associated with a Commit.<a href="#section-4-5.2.1" class="pilcrow">¶</a></p
 an <code>app_data_dictionary</code> GroupContext extension.<a href="#section-4-5.3.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-4-6">As with the above, information carried in these proposals and extensions is marked
-as belonging to a specific application component, so that components can manage
-their information independently.<a href="#section-4-6" class="pilcrow">¶</a></p>
+<p id="section-4-6">As with the above, information carried in these proposals and extensions is
+marked as belonging to a specific application component, so that components can
+manage their information independently.<a href="#section-4-6" class="pilcrow">¶</a></p>
 <p id="section-4-7">The separation between components is achieved by the application assigning each
-component a unique component ID number. These numbers are then incorporated
-into the appropriate calculations in the protocol to achieve the required
-separation.<a href="#section-4-7" class="pilcrow">¶</a></p>
+component a unique component ID number. These numbers are then incorporated into
+the appropriate calculations in the protocol to achieve the required separation.<a href="#section-4-7" class="pilcrow">¶</a></p>
 <div id="component-ids">
 <section id="section-4.1">
         <h3 id="name-component-ids">
@@ -1595,14 +1598,14 @@ struct {
 <a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-hybrid-public-key-encryptio" class="section-name selfRef">Hybrid Public Key Encryption (HPKE) Keys</a>
         </h3>
 <p id="section-4.2-1">This component of the API allows components to make use of the HPKE key pairs
-generated by MLS. A component identified by a ComponentID can use any HPKE
-key pair for any operation defined in <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>, such as encryption,
-exporting keys, and the PSK mode, as long as the <code>info</code> input to <code>Setup&lt;MODE&gt;S</code>
-and <code>Setup&lt;MODE&gt;R</code> is set to ComponentOperationLabel with <code>component_id</code> set
-to the appropriate ComponentID. The <code>context</code> can be set to an arbitrary Context
+generated by MLS. A component identified by a ComponentID can use any HPKE key
+pair for any operation defined in <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>, such as encryption, exporting
+keys, and the PSK mode, as long as the <code>info</code> input to <code>Setup&lt;MODE&gt;S</code> and
+<code>Setup&lt;MODE&gt;R</code> is set to ComponentOperationLabel with <code>component_id</code> set to the
+appropriate ComponentID. The <code>context</code> can be set to an arbitrary Context
 specified by the application designer and can be empty if not needed. For
-example, a component can use a key pair PublicKey, PrivateKey to encrypt data
-as follows:<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+example, a component can use a key pair PublicKey, PrivateKey to encrypt data as
+follows:<a href="#section-4.2-1" class="pilcrow">¶</a></p>
 <div class="lang-tls sourcecode" id="section-4.2-2">
 <pre>
 SafeEncryptWithLabel(PublicKey, ComponentID, Label, Context, Plaintext) =
@@ -1622,9 +1625,9 @@ label = Label
 </pre><a href="#section-4.2-4" class="pilcrow">¶</a>
 </div>
 <p id="section-4.2-5">For operations involving the secret key, ComponentID <span class="bcp14">MUST</span> be set to the
-ComponentID of the component performing the operation, and not to the ID of
-any other component. In particular, this means that a component cannot decrypt
-data meant for another component, while components can encrypt data that other
+ComponentID of the component performing the operation, and not to the ID of any
+other component. In particular, this means that a component cannot decrypt data
+meant for another component, while components can encrypt data that other
 components can decrypt.<a href="#section-4.2-5" class="pilcrow">¶</a></p>
 <p id="section-4.2-6">In general, a ciphertext encrypted with a PublicKey can be decrypted by any
 entity who has the corresponding PrivateKey at a given point in time according
@@ -1632,12 +1635,12 @@ to the MLS protocol (or application component). For convenience, the following
 list summarizes lifetimes of MLS key pairs.<a href="#section-4.2-6" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.2-7.1">
-            <p id="section-4.2-7.1.1">The key pair of a non-blank ratchet tree node. The PrivateKey of such a key pair
-is known to all members in the node’s subtree. In particular, a PrivateKey of a
-leaf node is known only to the member in that leaf. A member in the subtree
-stores the PrivateKey for a number of epochs, as long as the PublicKey does not
-change. The key pair of the root node <span class="bcp14">SHOULD NOT</span> be used, since the external key
-pair recalled below gives better security.<a href="#section-4.2-7.1.1" class="pilcrow">¶</a></p>
+            <p id="section-4.2-7.1.1">The key pair of a non-blank ratchet tree node. The PrivateKey of such a key
+pair is known to all members in the node’s subtree. In particular, a
+PrivateKey of a leaf node is known only to the member in that leaf. A member
+in the subtree stores the PrivateKey for a number of epochs, as long as the
+PublicKey does not change. The key pair of the root node <span class="bcp14">SHOULD NOT</span> be used,
+since the external key pair recalled below gives better security.<a href="#section-4.2-7.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.2-7.2">
             <p id="section-4.2-7.2.1">The external_priv, external_pub key pair used for external initialization. The
@@ -1648,8 +1651,8 @@ tree and should always be preferred.<a href="#section-4.2-7.2.1" class="pilcrow"
 </li>
           <li class="normal" id="section-4.2-7.3">
             <p id="section-4.2-7.3.1">The init_key in a KeyPackage and the corresponding secret key. The secret key
-is known only to the owner of the KeyPackage and is deleted immediately after it
-is used to join a group.<a href="#section-4.2-7.3.1" class="pilcrow">¶</a></p>
+is known only to the owner of the KeyPackage and is deleted immediately after
+it is used to join a group.<a href="#section-4.2-7.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -1807,7 +1810,10 @@ struct {
 <span class="bcp14">MUST</span> be at most one entry for each <code>component_id</code>.<a href="#section-4.6-5" class="pilcrow">¶</a></p>
 <p id="section-4.6-6">An <code>app_data_dictionary</code> extension in a LeafNode, KeyPackage, or GroupInfo can
 be set when the object is created. An <code>app_data_dictionary</code> extension in the
-GroupContext needs to be managed using the tools available to update GroupContext extensions. The creator of the group can set extensions unilaterally. Thereafter, the AppDataUpdate proposal described in the next section is used to update the <code>app_data_dictionary</code> extension.<a href="#section-4.6-6" class="pilcrow">¶</a></p>
+GroupContext needs to be managed using the tools available to update
+GroupContext extensions. The creator of the group can set extensions
+unilaterally. Thereafter, the AppDataUpdate proposal described in the next
+section is used to update the <code>app_data_dictionary</code> extension.<a href="#section-4.6-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="appdataupdate">
@@ -1816,12 +1822,12 @@ GroupContext needs to be managed using the tools available to update GroupContex
 <a href="#section-4.7" class="section-number selfRef">4.7. </a><a href="#name-updating-application-data-i" class="section-name selfRef">Updating Application Data in the GroupContext</a>
         </h3>
 <p id="section-4.7-1">Updating the <code>app_data_dictionary</code> with a GroupContextExtensions proposal is
-cumbersome. The application data needs to be transmitted in its entirety,
-along with any other extensions, whether or not they are being changed. And a
+cumbersome. The application data needs to be transmitted in its entirety, along
+with any other extensions, whether or not they are being changed. And a
 GroupContextExtensions proposal always requires an UpdatePath, which updating
 application state never should.<a href="#section-4.7-1" class="pilcrow">¶</a></p>
-<p id="section-4.7-2">The AppDataUpdate proposal allows the <code>app_data_dictionary</code> extension to
-be updated without these costs. Instead of sending the whole value of the
+<p id="section-4.7-2">The AppDataUpdate proposal allows the <code>app_data_dictionary</code> extension to be
+updated without these costs. Instead of sending the whole value of the
 extension, it sends only an update, which is interpreted by the application to
 provide the new content for the <code>app_data_dictionary</code> extension. No other
 extensions are sent or updated, and no UpdatePath is required.<a href="#section-4.7-2" class="pilcrow">¶</a></p>
@@ -1848,31 +1854,31 @@ struct {
 <p id="section-4.7-4">An AppDataUpdate proposal is invalid if its <code>component_id</code> references a
 component that is not known to the application, or if it specifies the removal
 of state for a <code>component_id</code> that has no state present. A proposal list is
-invalid if it includes multiple AppDataUpdate proposals that <code>remove</code>
-state for the same <code>component_id</code>, or proposals that both <code>update</code> and <code>remove</code>
-state for the same <code>component_id</code>. In other words, for a given <code>component_id</code>,
-a proposal list is valid only if it contains (a) a single <code>remove</code> operation or
-(b) one or more <code>update</code> operation.<a href="#section-4.7-4" class="pilcrow">¶</a></p>
+invalid if it includes multiple AppDataUpdate proposals that <code>remove</code> state for
+the same <code>component_id</code>, or proposals that both <code>update</code> and <code>remove</code> state for
+the same <code>component_id</code>. In other words, for a given <code>component_id</code>, a proposal
+list is valid only if it contains (a) a single <code>remove</code> operation or (b) one or
+more <code>update</code> operation.<a href="#section-4.7-4" class="pilcrow">¶</a></p>
 <p id="section-4.7-5">AppDataUpdate proposals are processed after any default proposals (i.e., those
 defined in <span>[<a href="#RFC9420" class="cite xref">RFC9420</a>]</span>), and any AppEphemeral proposals (defined in
 <a href="#app-ephemeral" class="auto internal xref">Section 4.8</a>).<a href="#section-4.7-5" class="pilcrow">¶</a></p>
 <p id="section-4.7-6">When an MLS group contains the AppDataUpdate proposal type in the
 <code>proposal_types</code> list in the group's <code>required_capabilities</code> extension, a
 GroupContextExtensions proposal <span class="bcp14">MUST NOT</span> add, remove, or modify the
-<code>app_data_dictionary</code> GroupContext extension. In other words, when every member of
-the group supports the AppDataUpdate proposal, a GroupContextExtensions proposal
-could be sent to update some other extension(s), but the <code>app_data_dictionary</code>
-GroupContext extension, if it exists, is left as it was.<a href="#section-4.7-6" class="pilcrow">¶</a></p>
+<code>app_data_dictionary</code> GroupContext extension. In other words, when every member
+of the group supports the AppDataUpdate proposal, a GroupContextExtensions
+proposal could be sent to update some other extension(s), but the
+<code>app_data_dictionary</code> GroupContext extension, if it exists, is left as it was.<a href="#section-4.7-6" class="pilcrow">¶</a></p>
 <p id="section-4.7-7">A commit can contain a GroupContextExtensions proposal which modifies
 GroupContext extensions other than <code>app_data_dictionary</code>, and can be followed by
 zero or more AppDataUpdate proposals. This allows modifications to both the
 <code>app_data_dictionary</code> extension (via AppDataUpdate) and other extensions (via
 GroupContextExtensions) in the same Commit.<a href="#section-4.7-7" class="pilcrow">¶</a></p>
 <p id="section-4.7-8">A client applies AppDataUpdate proposals by component ID. For each
-<code>component_id</code> field that appears in an AppDataUpdate proposal in the
-Commit, the client assembles a list of AppDataUpdate proposals with that
-<code>component_id</code>, in the order in which they appear in the Commit, and processes
-them in the following way:<a href="#section-4.7-8" class="pilcrow">¶</a></p>
+<code>component_id</code> field that appears in an AppDataUpdate proposal in the Commit,
+the client assembles a list of AppDataUpdate proposals with that <code>component_id</code>,
+in the order in which they appear in the Commit, and processes them in the
+following way:<a href="#section-4.7-8" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.7-9.1">
             <p id="section-4.7-9.1.1">If the list comprises a single proposal with the <code>op</code> field set to <code>remove</code>:<a href="#section-4.7-9.1.1" class="pilcrow">¶</a></p>
@@ -1897,8 +1903,8 @@ the content of the <code>update</code> field from each proposal, in the order
 specified.<a href="#section-4.7-9.2.2.1.1" class="pilcrow">¶</a></p>
 </li>
               <li class="normal" id="section-4.7-9.2.2.2">
-                <p id="section-4.7-9.2.2.2.1">The application logic returns either an opaque value <code>new_data</code> that will be
-stored as the new application data for this component, or else an
+                <p id="section-4.7-9.2.2.2.1">The application logic returns either an opaque value <code>new_data</code> that will
+be stored as the new application data for this component, or else an
 indication that it considers this update invalid.<a href="#section-4.7-9.2.2.2.1" class="pilcrow">¶</a></p>
 </li>
               <li class="normal" id="section-4.7-9.2.2.3">
@@ -1906,18 +1912,18 @@ indication that it considers this update invalid.<a href="#section-4.7-9.2.2.2.1
 consider the proposal list invalid.<a href="#section-4.7-9.2.2.3.1" class="pilcrow">¶</a></p>
 </li>
               <li class="normal" id="section-4.7-9.2.2.4">
-                <p id="section-4.7-9.2.2.4.1">If no <code>app_data_dictionary</code> extension is present in the GroupContext, add one
-to the end of the <code>extensions</code> list in the GroupContext.<a href="#section-4.7-9.2.2.4.1" class="pilcrow">¶</a></p>
+                <p id="section-4.7-9.2.2.4.1">If no <code>app_data_dictionary</code> extension is present in the GroupContext, add
+one to the end of the <code>extensions</code> list in the GroupContext.<a href="#section-4.7-9.2.2.4.1" class="pilcrow">¶</a></p>
 </li>
               <li class="normal" id="section-4.7-9.2.2.5">
                 <p id="section-4.7-9.2.2.5.1">If there is an entry in the <code>component_data</code> vector in the
-<code>app_data_dictionary</code> extension with the specified <code>component_id</code>, then set
-its <code>data</code> field to the specified <code>new_data</code>.<a href="#section-4.7-9.2.2.5.1" class="pilcrow">¶</a></p>
+<code>app_data_dictionary</code> extension with the specified <code>component_id</code>, then
+set its <code>data</code> field to the specified <code>new_data</code>.<a href="#section-4.7-9.2.2.5.1" class="pilcrow">¶</a></p>
 </li>
               <li class="normal" id="section-4.7-9.2.2.6">
                 <p id="section-4.7-9.2.2.6.1">Otherwise, insert a new entry in the <code>component_states</code> vector with the
-specified <code>component_id</code> and the <code>data</code> field set to the <code>new_data</code>
-value. The new entry is inserted at the proper point to keep the
+specified <code>component_id</code> and the <code>data</code> field set to the <code>new_data</code> value.
+The new entry is inserted at the proper point to keep the
 <code>component_states</code> vector sorted by <code>component_id</code>.<a href="#section-4.7-9.2.2.6.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
@@ -1940,12 +1946,12 @@ define a hashing algorithm, and define its own scheme for initializing new
 joiners.<a href="#section-4.7-10.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-4.7-11">AppDataUpdate proposals do not require an UpdatePath.
-An AppDataUpdate proposal can be sent by an external sender. Likewise,
-AppDataUpdate proposals can be included in an external commit. Applications
-can make more restrictive validity rules for the update of their components,
-such that some components would not be valid at the application when sent in
-an external commit or via an external proposer.<a href="#section-4.7-11" class="pilcrow">¶</a></p>
+<p id="section-4.7-11">AppDataUpdate proposals do not require an UpdatePath. An AppDataUpdate proposal
+can be sent by an external sender. Likewise, AppDataUpdate proposals can be
+included in an external commit. Applications can make more restrictive validity
+rules for the update of their components, such that some components would not be
+valid at the application when sent in an external commit or via an external
+proposer.<a href="#section-4.7-11" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="app-ephemeral">
@@ -1975,16 +1981,16 @@ application logic registered to the indicated <code>component_id</code>.<a href=
 <p id="section-4.8-5">AppEphemeral proposals <span class="bcp14">MUST</span> be processed after any default proposals (i.e.,
 those defined in <span>[<a href="#RFC9420" class="cite xref">RFC9420</a>]</span>), but before any AppDataUpdate proposals.<a href="#section-4.8-5" class="pilcrow">¶</a></p>
 <p id="section-4.8-6">A client applies an AppEphemeral proposal by providing the contents of the
-<code>app_data_dictionary</code> field to the component identified by the <code>component_id</code>. If
-a Commit references more than one AppEphemeral proposal for the same
+<code>app_data_dictionary</code> field to the component identified by the <code>component_id</code>.
+If a Commit references more than one AppEphemeral proposal for the same
 <code>component_id</code> value, then they <span class="bcp14">MUST</span> be processed in the order in which they are
 specified in the Commit.<a href="#section-4.8-6" class="pilcrow">¶</a></p>
-<p id="section-4.8-7">AppEphemeral proposals do not require an UpdatePath.
-An AppEphemeral proposal can be sent by an external sender. Likewise,
-AppEphemeral proposals can be included in an external commit. Applications
-can make more restrictive validity rules for ephemeral updates of their
-components, such that some components would not be valid at the application when
-sent in an external commit or via an external proposer.<a href="#section-4.8-7" class="pilcrow">¶</a></p>
+<p id="section-4.8-7">AppEphemeral proposals do not require an UpdatePath. An AppEphemeral proposal
+can be sent by an external sender. Likewise, AppEphemeral proposals can be
+included in an external commit. Applications can make more restrictive validity
+rules for ephemeral updates of their components, such that some components would
+not be valid at the application when sent in an external commit or via an
+external proposer.<a href="#section-4.8-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="safe-aad">
@@ -1992,19 +1998,17 @@ sent in an external commit or via an external proposer.<a href="#section-4.8-7" 
         <h3 id="name-safe-additional-authenticat">
 <a href="#section-4.9" class="section-number selfRef">4.9. </a><a href="#name-safe-additional-authenticat" class="section-name selfRef">Safe Additional Authenticated Data (AAD)</a>
         </h3>
-<p id="section-4.9-1">An MLS PrivateMessage can contain arbitrary additional application-specific
-AAD. The corresponding <code>authenticated_data</code> field appears in several MLS
-structs: <code>FramedContent</code> (used indirectly to generate the message signature
-and tags), <code>PrivateContentAAD</code> (used as the AAD input to the
-<code>PrivateMessage.ciphertext</code>), and <code>PrivateMessage</code> (to convey the AAD).<a href="#section-4.9-1" class="pilcrow">¶</a></p>
-<p id="section-4.9-2">The Safe AAD API defines a framing used to allow multiple application
-components to add AAD safely to the <code>authenticated_data</code> without conflicts or
-ambiguity.<a href="#section-4.9-2" class="pilcrow">¶</a></p>
-<p id="section-4.9-3">When any AAD safe extension is included in the <code>authenticated_data</code> field,
-the "safe" AAD items <span class="bcp14">MUST</span> come before any non-safe data in the
-<code>authenticated_data</code> field. Safe AAD items are framed using the <code>SafeAAD</code>
-struct and are sorted in increasing numerical order of the <code>component_id</code>.
-The struct is described below:<a href="#section-4.9-3" class="pilcrow">¶</a></p>
+<p id="section-4.9-1">An MLS PrivateMessage can contain arbitrary additional application-specific AAD.
+The corresponding <code>authenticated_data</code> field appears in several MLS structs:
+<code>FramedContent</code> (used indirectly to generate the message signature and tags),
+<code>PrivateContentAAD</code> (used as the AAD input to the <code>PrivateMessage.ciphertext</code>),
+and <code>PrivateMessage</code> (to convey the AAD).<a href="#section-4.9-1" class="pilcrow">¶</a></p>
+<p id="section-4.9-2">The Safe AAD API defines a framing used to allow multiple application components
+to add AAD safely to the <code>authenticated_data</code> without conflicts or ambiguity.<a href="#section-4.9-2" class="pilcrow">¶</a></p>
+<p id="section-4.9-3">When any AAD safe extension is included in the <code>authenticated_data</code> field, the
+"safe" AAD items <span class="bcp14">MUST</span> come before any non-safe data in the <code>authenticated_data</code>
+field. Safe AAD items are framed using the <code>SafeAAD</code> struct and are sorted in
+increasing numerical order of the <code>component_id</code>. The struct is described below:<a href="#section-4.9-3" class="pilcrow">¶</a></p>
 <div class="lang-tls-presentation sourcecode" id="section-4.9-4">
 <pre>
 struct {
@@ -2019,8 +2023,8 @@ struct {
 </div>
 <p id="section-4.9-5">If the <code>SafeAAD</code> is present or not in the <code>authenticated_data</code> is determined by
 the presence of the <code>safe_aad</code> component in the <code>app_data_dictionary</code> extension
-in the GroupContext (see <a href="#negotiation" class="auto internal xref">Section 5</a>). If <code>safe_aad</code> is present, but none
-of the "safe" AAD components have data to send in a particular message, the
+in the GroupContext (see <a href="#negotiation" class="auto internal xref">Section 5</a>). If <code>safe_aad</code> is present, but none of
+the "safe" AAD components have data to send in a particular message, the
 <code>aad_items</code> is a zero-length vector.<a href="#section-4.9-5" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2033,10 +2037,10 @@ of the "safe" AAD components have data to send in a particular message, the
       </h2>
 <p id="section-5-1">MLS defines a <code>Capabilities</code> struct for LeafNodes (in turn used in
 KeyPackages), which describes which extensions are supported by the
-associated node.
-However, that struct (defined in <span><a href="https://rfc-editor.org/rfc/rfc9420#section-7.2" class="relref">Section 7.2</a> of [<a href="#RFC9420" class="cite xref">RFC9420</a>]</span>) only has
-fields for a subset of the extensions possible in MLS, as reproduced below.<a href="#section-5-1" class="pilcrow">¶</a></p>
-<div class="lang-tls-presentation sourcecode" id="section-5-2">
+associated node.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-2">However, that struct (defined in <span><a href="https://rfc-editor.org/rfc/rfc9420#section-7.2" class="relref">Section 7.2</a> of [<a href="#RFC9420" class="cite xref">RFC9420</a>]</span>) only has
+fields for a subset of the extensions possible in MLS, as reproduced below.<a href="#section-5-2" class="pilcrow">¶</a></p>
+<div class="lang-tls-presentation sourcecode" id="section-5-3">
 <pre>
 struct {
     ProtocolVersion versions&lt;V&gt;;
@@ -2045,34 +2049,35 @@ struct {
     ProposalType proposals&lt;V&gt;;
     CredentialType credentials&lt;V&gt;;
 } Capabilities;
-</pre><a href="#section-5-2" class="pilcrow">¶</a>
+</pre><a href="#section-5-3" class="pilcrow">¶</a>
 </div>
 <ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-5-3.1">
-          <p id="section-5-3.1.1">The "MLS Extensions Types" registry represents extensibility of four
+<li class="normal ulEmpty" id="section-5-4.1">
+          <p id="section-5-4.1.1">The "MLS Extensions Types" registry represents extensibility of four
   core structs (<code>GroupContext</code>, <code>GroupInfo</code>, <code>KeyPackage</code>, and <code>LeafNode</code>)
   that have far reaching effects on the use of the protocol. The majority of
-  MLS extensions in <span>[<a href="#RFC9420" class="cite xref">RFC9420</a>]</span> extend one or more of these core structs.<a href="#section-5-3.1.1" class="pilcrow">¶</a></p>
+  MLS extensions in <span>[<a href="#RFC9420" class="cite xref">RFC9420</a>]</span> extend one or more of these core structs.<a href="#section-5-4.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-5-4">Likewise, the <code>required_capabilities</code> GroupContext extension (defined
-in <span><a href="https://rfc-editor.org/rfc/rfc9420#section-11.1" class="relref">Section 11.1</a> of [<a href="#RFC9420" class="cite xref">RFC9420</a>]</span> and reproduced below) contains all
-mandatory to support non-default extensions in its <code>extension_types</code> vector.
-Its <code>proposal_types</code> vector contains any mandatory to support Proposals.
-Its <code>credential_types</code> vector contains any mandatory credential types.<a href="#section-5-4" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5-5">
+<p id="section-5-5">Likewise, the <code>required_capabilities</code> GroupContext extension (defined in
+<span><a href="https://rfc-editor.org/rfc/rfc9420#section-11.1" class="relref">Section 11.1</a> of [<a href="#RFC9420" class="cite xref">RFC9420</a>]</span> and reproduced below) contains all mandatory to
+support non-default extensions in its <code>extension_types</code> vector. Its
+<code>proposal_types</code> vector contains any mandatory to support Proposals. Its
+<code>credential_types</code> vector contains any mandatory credential types.<a href="#section-5-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5-6">
 <pre>
 struct {
    ExtensionType extension_types&lt;V&gt;;
    ProposalType proposal_types&lt;V&gt;;
    CredentialType credential_types&lt;V&gt;;
 } RequiredCapabilities;
-</pre><a href="#section-5-5" class="pilcrow">¶</a>
+</pre><a href="#section-5-6" class="pilcrow">¶</a>
 </div>
-<p id="section-5-6">Due to an oversight in <span>[<a href="#RFC9420" class="cite xref">RFC9420</a>]</span>, the Capabilities struct does not include
-MLS Wire Formats. Instead, this document defines two extensions: <code>supported_wire_formats</code> (which can appear in LeafNodes), and
-<code>required_wire_formats</code> (which can appear in the GroupContext).<a href="#section-5-6" class="pilcrow">¶</a></p>
-<div class="lang-tls-presentation sourcecode" id="section-5-7">
+<p id="section-5-7">Due to an oversight in <span>[<a href="#RFC9420" class="cite xref">RFC9420</a>]</span>, the Capabilities struct does not include
+MLS Wire Formats. Instead, this document defines two extensions:
+<code>supported_wire_formats</code> (which can appear in LeafNodes), and
+<code>required_wire_formats</code> (which can appear in the GroupContext).<a href="#section-5-7" class="pilcrow">¶</a></p>
+<div class="lang-tls-presentation sourcecode" id="section-5-8">
 <pre>
 struct {
    WireFormat wire_formats&lt;V&gt;;
@@ -2080,11 +2085,11 @@ struct {
 
 WireFormats supported_wire_formats;
 WireFormats requires_wire_formats;
-</pre><a href="#section-5-7" class="pilcrow">¶</a>
+</pre><a href="#section-5-8" class="pilcrow">¶</a>
 </div>
-<p id="section-5-8">This document also defines new components of the <code>app_data_dictionary</code>
-extension for supported and required Safe AAD, media types, and components.<a href="#section-5-8" class="pilcrow">¶</a></p>
-<p id="section-5-9">The <code>safe_aad</code> component contains a list of components IDs. When present (in an
+<p id="section-5-9">This document also defines new components of the <code>app_data_dictionary</code> extension
+for supported and required Safe AAD, media types, and components.<a href="#section-5-9" class="pilcrow">¶</a></p>
+<p id="section-5-10">The <code>safe_aad</code> component contains a list of components IDs. When present (in an
 <code>app_data_dictionary</code> extension) in a LeafNode, the semantic is the list of
 supported components that use Safe AAD. When present (in an
 <code>app_data_dictionary</code> extension) in the GroupContext, the semantic is the list
@@ -2092,28 +2097,28 @@ of required Safe AAD components (those that must be understood by the entire
 group). If the <code>safe_aad</code> component is present, even with an empty list, (in the
 <code>app_data_dictionary</code> extension) in the GroupContext, then the
 <code>authenticated_data</code> field always starts with the SafeAAD struct defined in
-<a href="#safe-aad" class="auto internal xref">Section 4.9</a>.<a href="#section-5-9" class="pilcrow">¶</a></p>
-<div class="lang-tls-presentation sourcecode" id="section-5-10">
+<a href="#safe-aad" class="auto internal xref">Section 4.9</a>.<a href="#section-5-10" class="pilcrow">¶</a></p>
+<div class="lang-tls-presentation sourcecode" id="section-5-11">
 <pre>
 struct {
     ComponentID component_ids&lt;V&gt;;
 } ComponentsList;
 
 ComponentsList safe_aad;
-</pre><a href="#section-5-10" class="pilcrow">¶</a>
+</pre><a href="#section-5-11" class="pilcrow">¶</a>
 </div>
-<p id="section-5-11">The list of required and supported components follows the same model with the
+<p id="section-5-12">The list of required and supported components follows the same model with the
 new component <code>app_components</code>. When present in a LeafNode, the semantic is the
 list of supported components. When present in the GroupContext, the semantic is
-the list of required components.<a href="#section-5-11" class="pilcrow">¶</a></p>
-<div class="lang-tls-presentation sourcecode" id="section-5-12">
+the list of required components.<a href="#section-5-12" class="pilcrow">¶</a></p>
+<div class="lang-tls-presentation sourcecode" id="section-5-13">
 <pre>
 ComponentsList app_components;
-</pre><a href="#section-5-12" class="pilcrow">¶</a>
+</pre><a href="#section-5-13" class="pilcrow">¶</a>
 </div>
-<p id="section-5-13">Finally, the supported and required media types (formerly called MIME types)
-are communicated in the <code>content_media_types</code> component (see
-<a href="#content-advertisement" class="auto internal xref">Section 6.3</a>).<a href="#section-5-13" class="pilcrow">¶</a></p>
+<p id="section-5-14">Finally, the supported and required media types (formerly called MIME types) are
+communicated in the <code>content_media_types</code> component (see
+<a href="#content-advertisement" class="auto internal xref">Section 6.3</a>).<a href="#section-5-14" class="pilcrow">¶</a></p>
 <div id="grease">
 <section id="section-5.1">
         <h3 id="name-grease">
@@ -2171,10 +2176,10 @@ these fields that would otherwise be present.<a href="#section-5.1-5" class="pil
         <h3 id="name-appack">
 <a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-appack" class="section-name selfRef">AppAck</a>
         </h3>
-<p id="section-6.1-1">An AppAck object is used to acknowledge receipt of application messages.
-Though this information implies no change to the group, it is conveyed inside
-an AppEphermeral Proposal with a component ID <code>app_ack</code>, so that it is included
-in the group's transcript by being included in Commit messages.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
+<p id="section-6.1-1">An AppAck object is used to acknowledge receipt of application messages. Though
+this information implies no change to the group, it is conveyed inside an
+AppEphermeral Proposal with a component ID <code>app_ack</code>, so that it is included in
+the group's transcript by being included in Commit messages.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
 <div class="lang-tls sourcecode" id="section-6.1-2">
 <pre>
 struct {
@@ -2188,14 +2193,14 @@ struct {
 } AppAck;
 </pre><a href="#section-6.1-2" class="pilcrow">¶</a>
 </div>
-<p id="section-6.1-3">An AppAck represents a set of messages received by the sender in the
-current epoch. Messages are represented by the <code>sender</code> and <code>generation</code> values
-in the MLSCiphertext for the message. Each MessageRange represents receipt of a
-span of messages whose <code>generation</code> values form a continuous range from
+<p id="section-6.1-3">An AppAck represents a set of messages received by the sender in the current
+epoch. Messages are represented by the <code>sender</code> and <code>generation</code> values in the
+MLSCiphertext for the message. Each MessageRange represents receipt of a span of
+messages whose <code>generation</code> values form a continuous range from
 <code>first_generation</code> to <code>last_generation</code>, inclusive.<a href="#section-6.1-3" class="pilcrow">¶</a></p>
 <p id="section-6.1-4">AppAck objects are sent as a guard against the Delivery Service dropping
-application messages. The sequential nature of the <code>generation</code> field provides
-a degree of loss detection, since gaps in the <code>generation</code> sequence indicate
+application messages. The sequential nature of the <code>generation</code> field provides a
+degree of loss detection, since gaps in the <code>generation</code> sequence indicate
 dropped messages. AppAck completes this story by addressing the scenario where
 the Delivery Service drops all messages after a certain point, so that a later
 generation is never observed. Obviously, there is a risk that AppAck messages
@@ -2232,7 +2237,8 @@ particular <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>.<a hr
           <h4 id="name-format">
 <a href="#section-6.2.2" class="section-number selfRef">6.2.2. </a><a href="#name-format" class="section-name selfRef">Format</a>
           </h4>
-<p id="section-6.2.2-1">This extension defines the <code>mls_targeted_message</code> WireFormat, where the content is a <code>TargetedMessage</code>.<a href="#section-6.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-6.2.2-1">This extension defines the <code>mls_targeted_message</code> WireFormat, where the content
+is a <code>TargetedMessage</code>.<a href="#section-6.2.2-1" class="pilcrow">¶</a></p>
 <div class="breakable lang-tls sourcecode" id="section-6.2.2-2">
 <pre>
 struct {
@@ -2480,8 +2486,7 @@ VerifyWithLabel.verify(sender_leaf_node.signature_key,
 implementations <span class="bcp14">MUST</span> choose <code>TargetedMessageAuthScheme.SignatureHPKEPsk</code>.<a href="#section-6.2.5-1" class="pilcrow">¶</a></p>
 <p id="section-6.2.5-2">If the group’s ciphersuite does support HPKE <code>mode_auth_psk</code>, implementations
 CAN choose <code>TargetedMessageAuthScheme.HPKEAuthPsk</code> if better efficiency and/or
-repudiability is desired. Implementations <span class="bcp14">SHOULD</span> consult
-<span><a href="https://rfc-editor.org/rfc/rfc9180#section-9.1.1" class="relref">Section 9.1.1</a> of [<a href="#RFC9180" class="cite xref">RFC9180</a>]</span> beforehand.<a href="#section-6.2.5-2" class="pilcrow">¶</a></p>
+repudiability is desired. Implementations <span class="bcp14">SHOULD</span> consult <span><a href="https://rfc-editor.org/rfc/rfc9180#section-9.1.1" class="relref">Section 9.1.1</a> of [<a href="#RFC9180" class="cite xref">RFC9180</a>]</span> beforehand.<a href="#section-6.2.5-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2496,19 +2501,20 @@ repudiability is desired. Implementations <span class="bcp14">SHOULD</span> cons
           <h4 id="name-description-2">
 <a href="#section-6.3.1" class="section-number selfRef">6.3.1. </a><a href="#name-description-2" class="section-name selfRef">Description</a>
           </h4>
-<p id="section-6.3.1-1">This section defines a minimal framing format so MLS clients can signal
-which media type is being sent inside the MLS <code>application_data</code> object when
-multiple formats are permitted in the same group.<a href="#section-6.3.1-1" class="pilcrow">¶</a></p>
-<p id="section-6.3.1-2">It also defines a new <code>content_media_types</code> application component which is used to indicate support for specific formats, using the extensive IANA Media Types
+<p id="section-6.3.1-1">This section defines a minimal framing format so MLS clients can signal which
+media type is being sent inside the MLS <code>application_data</code> object when multiple
+formats are permitted in the same group.<a href="#section-6.3.1-1" class="pilcrow">¶</a></p>
+<p id="section-6.3.1-2">It also defines a new <code>content_media_types</code> application component which is used
+to indicate support for specific formats, using the extensive IANA Media Types
 registry (formerly called MIME Types). When the <code>content_media_types</code> component
 is present (in the <code>app_data_dictionary</code> extension) in a LeafNode, it indicates
 that node's support for a particular (non-empty) list of media types. When the
 <code>content_media_types</code> component is present (in the <code>app_data_dictionary</code>
 extension) in the GroupContext, it indicates a (non-empty) list of media types
 that need to be supported by all members of that MLS group, <em>and</em> that the
-<code>application_data</code> will be framed using the application framing format
-described later in <a href="#app-framing" class="auto internal xref">Section 6.3.4</a>. This allows clients to confirm that all
-members of a group can communicate.<a href="#section-6.3.1-2" class="pilcrow">¶</a></p>
+<code>application_data</code> will be framed using the application framing format described
+later in <a href="#app-framing" class="auto internal xref">Section 6.3.4</a>. This allows clients to confirm that all members of a
+group can communicate.<a href="#section-6.3.1-2" class="pilcrow">¶</a></p>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="section-6.3.1-3.1">
               <p id="section-6.3.1-3.1.1">Note that when the membership of a group changes, or when the policy of the
@@ -2516,9 +2522,9 @@ members of a group can communicate.<a href="#section-6.3.1-2" class="pilcrow">¶
  membership and policies are compatible.<a href="#section-6.3.1-3.1.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-6.3.1-4">As clients are upgraded to support new formats they can use these extensions
-to detect when all members support a new or more efficient encoding, or select
-the relevant format or formats to send.<a href="#section-6.3.1-4" class="pilcrow">¶</a></p>
+<p id="section-6.3.1-4">As clients are upgraded to support new formats they can use these extensions to
+detect when all members support a new or more efficient encoding, or select the
+relevant format or formats to send.<a href="#section-6.3.1-4" class="pilcrow">¶</a></p>
 <p id="section-6.3.1-5">Vendor-specific media subtypes starting with <code>vnd.</code> can be registered with IANA
 without standards action as described in <span>[<a href="#RFC6838" class="cite xref">RFC6838</a>]</span>. Implementations which
 wish to send multiple formats in a single application message, may be interested
@@ -2539,12 +2545,12 @@ Language syntax <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span>)
 <a href="#section-6.3.2" class="section-number selfRef">6.3.2. </a><a href="#name-syntax" class="section-name selfRef">Syntax</a>
           </h4>
 <p id="section-6.3.2-1">MediaType is a TLS encoding of a single IANA media type (including top-level
-type and subtype) and any of its parameters. Even if the <code>parameter_value</code>
-would have required formatting as a <code>quoted-string</code> in a text encoding, only
-the contents inside the <code>quoted-string</code> are included in <code>parameter_value</code>.
-Likewise, only the second character of a <code>quoted-pair</code> is included in
-<code>parameter_value</code>; the first escaping backslash ("") is omitted.
-MediaTypeList is an ordered list of MediaType objects.<a href="#section-6.3.2-1" class="pilcrow">¶</a></p>
+type and subtype) and any of its parameters. Even if the <code>parameter_value</code> would
+have required formatting as a <code>quoted-string</code> in a text encoding, only the
+contents inside the <code>quoted-string</code> are included in <code>parameter_value</code>. Likewise,
+only the second character of a <code>quoted-pair</code> is included in <code>parameter_value</code>;
+the first escaping backslash ("") is omitted. MediaTypeList is an ordered list
+of MediaType objects.<a href="#section-6.3.2-1" class="pilcrow">¶</a></p>
 <div class="lang-tls sourcecode" id="section-6.3.2-2">
 <pre>
 struct {
@@ -2580,9 +2586,9 @@ MediaTypeList content_media_types;
   application/vnd.example.msgbus+cbor
 </pre><a href="#section-6.3.2-4" class="pilcrow">¶</a>
 </div>
-<p id="section-6.3.2-5">For the example media type for <code>text/plain</code>, the <code>media_type</code> field
-would be <code>text/plain</code>, <code>parameters</code> would contain a single Parameter
-with a <code>parameter_name</code> of <code>charset</code> and a <code>parameter_value</code> of <code>UTF-8</code>.<a href="#section-6.3.2-5" class="pilcrow">¶</a></p>
+<p id="section-6.3.2-5">For the example media type for <code>text/plain</code>, the <code>media_type</code> field would be
+<code>text/plain</code>, <code>parameters</code> would contain a single Parameter with a
+<code>parameter_name</code> of <code>charset</code> and a <code>parameter_value</code> of <code>UTF-8</code>.<a href="#section-6.3.2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="expected-behavior">
@@ -2591,25 +2597,24 @@ with a <code>parameter_name</code> of <code>charset</code> and a <code>parameter
 <a href="#section-6.3.3" class="section-number selfRef">6.3.3. </a><a href="#name-expected-behavior" class="section-name selfRef">Expected Behavior</a>
           </h4>
 <p id="section-6.3.3-1">An MLS client which implements this section <span class="bcp14">SHOULD</span> include the
-<code>content_media_types</code> component (in the <code>app_data_dictionary</code> extension)
-in its LeafNodes, listing all the media types it can receive. As usual, the
-client also includes <code>content_media_types</code> in the <code>app_components</code> list (in the
+<code>content_media_types</code> component (in the <code>app_data_dictionary</code> extension) in its
+LeafNodes, listing all the media types it can receive. As usual, the client also
+includes <code>content_media_types</code> in the <code>app_components</code> list (in the
 <code>app_data_dictionary</code> extension) and support for the <code>app_data_dictionary</code>
-extension in its <code>capabilities.extensions</code> field in its LeafNodes (including
-in LeafNodes inside its KeyPackages).<a href="#section-6.3.3-1" class="pilcrow">¶</a></p>
-<p id="section-6.3.3-2">When creating a new MLS group for an application using this specification,
-the group <span class="bcp14">MAY</span> include a <code>content_media_types</code> component (in the
-<code>app_data_dictionary</code> extension) in the GroupContext. (The creating
-client also includes its <code>content_media_types</code> component in its own
-LeafNode as described in the previous paragraph.)<a href="#section-6.3.3-2" class="pilcrow">¶</a></p>
+extension in its <code>capabilities.extensions</code> field in its LeafNodes (including in
+LeafNodes inside its KeyPackages).<a href="#section-6.3.3-1" class="pilcrow">¶</a></p>
+<p id="section-6.3.3-2">When creating a new MLS group for an application using this specification, the
+group <span class="bcp14">MAY</span> include a <code>content_media_types</code> component (in the
+<code>app_data_dictionary</code> extension) in the GroupContext. (The creating client also
+includes its <code>content_media_types</code> component in its own LeafNode as described in
+the previous paragraph.)<a href="#section-6.3.3-2" class="pilcrow">¶</a></p>
 <p id="section-6.3.3-3">MLS clients <span class="bcp14">SHOULD NOT</span> add an MLS client to an MLS group with
 <code>content_media_types</code> in its GroupContext unless the MLS client advertises it
-can support all the required MediaTypes.
-As an exception, a client could be preconfigured to know that certain clients
-support the required types. Likewise, an MLS client is already forbidden from
-issuing or committing a GroupContextExtensions Proposal which introduces
-required extensions which are not supported by all members in the resulting
-epoch.<a href="#section-6.3.3-3" class="pilcrow">¶</a></p>
+can support all the required MediaTypes. As an exception, a client could be
+preconfigured to know that certain clients support the required types. Likewise,
+an MLS client is already forbidden from issuing or committing a
+GroupContextExtensions Proposal which introduces required extensions which are
+not supported by all members in the resulting epoch.<a href="#section-6.3.3-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="app-framing">
@@ -2629,8 +2634,8 @@ sent in that group is interpreted as <code>ApplicationFraming</code> as defined 
 </pre><a href="#section-6.3.4-2" class="pilcrow">¶</a>
 </div>
 <p id="section-6.3.4-3">The <code>media_type</code> <span class="bcp14">MAY</span> be zero length, in which case, the media type of the
-<code>application_content</code> is interpreted as the first MediaType specified in
-the <code>content_media_types</code> component in the GroupContext.<a href="#section-6.3.4-3" class="pilcrow">¶</a></p>
+<code>application_content</code> is interpreted as the first MediaType specified in the
+<code>content_media_types</code> component in the GroupContext.<a href="#section-6.3.4-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2640,22 +2645,20 @@ the <code>content_media_types</code> component in the GroupContext.<a href="#sec
         <h3 id="name-selfremove-proposal">
 <a href="#section-6.4" class="section-number selfRef">6.4. </a><a href="#name-selfremove-proposal" class="section-name selfRef">SelfRemove Proposal</a>
         </h3>
-<p id="section-6.4-1">The design of the MLS protocol prevents a member of
-an MLS group from removing itself immediately from the group. (To cause
-an immediate change in the group, a member must send a Commit message.
-However, the sender of a Commit message knows the keying material of the
-new epoch and therefore needs to be part of the group.) Instead, a member
-wishing to remove itself can send a Remove Proposal and wait for another
-member to Commit its Proposal.<a href="#section-6.4-1" class="pilcrow">¶</a></p>
-<p id="section-6.4-2">Unfortunately, MLS clients that join via an External Commit ignore
-pending, but otherwise valid, Remove Proposals. The member trying to remove
-itself has to monitor the group and send a new Remove Proposal in every new
-epoch until the member is removed. In a
-group with a burst of external joiners, a member connected over a
-high-latency link (or one that is merely unlucky) might have to wait
-several epochs to remove itself. A real-world situation in which this happens
-is a member trying to remove itself from a conference call as several dozen
-new participants are trying to join (often on the hour).<a href="#section-6.4-2" class="pilcrow">¶</a></p>
+<p id="section-6.4-1">The design of the MLS protocol prevents a member of an MLS group from removing
+itself immediately from the group. (To cause an immediate change in the group, a
+member must send a Commit message. However, the sender of a Commit message knows
+the keying material of the new epoch and therefore needs to be part of the
+group.) Instead, a member wishing to remove itself can send a Remove Proposal
+and wait for another member to Commit its Proposal.<a href="#section-6.4-1" class="pilcrow">¶</a></p>
+<p id="section-6.4-2">Unfortunately, MLS clients that join via an External Commit ignore pending, but
+otherwise valid, Remove Proposals. The member trying to remove itself has to
+monitor the group and send a new Remove Proposal in every new epoch until the
+member is removed. In a group with a burst of external joiners, a member
+connected over a high-latency link (or one that is merely unlucky) might have to
+wait several epochs to remove itself. A real-world situation in which this
+happens is a member trying to remove itself from a conference call as several
+dozen new participants are trying to join (often on the hour).<a href="#section-6.4-2" class="pilcrow">¶</a></p>
 <p id="section-6.4-3">This section describes a new <code>SelfRemove</code> Proposal extension type. It is
 designed to be included in External Commits.<a href="#section-6.4-3" class="pilcrow">¶</a></p>
 <div id="extension-description">
@@ -2665,9 +2668,9 @@ designed to be included in External Commits.<a href="#section-6.4-3" class="pilc
           </h4>
 <p id="section-6.4.1-1">This document specifies a new MLS Proposal type called <code>SelfRemove</code>. Its syntax
 is described using the TLS Presentation Language <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span> below (its content
-is an empty struct). It is allowed in External Commits and requires an UpdatePath.
-SelfRemove proposals are only allowed in a Commit by reference. SelfRemove
-cannot be sent as an external proposal.<a href="#section-6.4.1-1" class="pilcrow">¶</a></p>
+is an empty struct). It is allowed in External Commits and requires an
+UpdatePath. SelfRemove proposals are only allowed in a Commit by reference.
+SelfRemove cannot be sent as an external proposal.<a href="#section-6.4.1-1" class="pilcrow">¶</a></p>
 <div class="lang-tls-presentation sourcecode" id="section-6.4.1-2">
 <pre>
 struct {} SelfRemove;
@@ -2687,42 +2690,40 @@ struct {
 } Proposal;
 </pre><a href="#section-6.4.1-2" class="pilcrow">¶</a>
 </div>
-<p id="section-6.4.1-3">The description of behavior below only applies if all the
-members of a group support this extension in their
-capabilities; such a group is a "self-remove-capable group".<a href="#section-6.4.1-3" class="pilcrow">¶</a></p>
-<p id="section-6.4.1-4">An MLS client which supports this extension can send a
-SelfRemove Proposal whenever it would like to remove itself
-from a self-remove-capable group. Because the point of a
-SelfRemove Proposal is to be available to external joiners
-(which are not yet members), these proposals <span class="bcp14">MUST</span> be sent
-in an MLS PublicMessage.<a href="#section-6.4.1-4" class="pilcrow">¶</a></p>
-<p id="section-6.4.1-5">Whenever a member receives a SelfRemove Proposal, it includes
-it along with any other pending Propsals when sending a Commit.
-It already <span class="bcp14">MUST</span> send a Commit of pending Proposals before sending
-new application messages.<a href="#section-6.4.1-5" class="pilcrow">¶</a></p>
-<p id="section-6.4.1-6">When a member receives a Commit referencing one or more SelfRemove Proposals,
-it treats the proposal like a Remove Proposal, except the leaf node to remove
-is determined by looking in the Sender <code>leaf_index</code> of the original Proposal.
-The member is able to verify that the Sender was a member.<a href="#section-6.4.1-6" class="pilcrow">¶</a></p>
+<p id="section-6.4.1-3">The description of behavior below only applies if all the members of a group
+support this extension in their capabilities; such a group is a
+"self-remove-capable group".<a href="#section-6.4.1-3" class="pilcrow">¶</a></p>
+<p id="section-6.4.1-4">An MLS client which supports this extension can send a SelfRemove Proposal
+whenever it would like to remove itself from a self-remove-capable group.
+Because the point of a SelfRemove Proposal is to be available to external
+joiners (which are not yet members), these proposals <span class="bcp14">MUST</span> be sent in an MLS
+PublicMessage.<a href="#section-6.4.1-4" class="pilcrow">¶</a></p>
+<p id="section-6.4.1-5">Whenever a member receives a SelfRemove Proposal, it includes it along with any
+other pending Propsals when sending a Commit. It already <span class="bcp14">MUST</span> send a Commit of
+pending Proposals before sending new application messages.<a href="#section-6.4.1-5" class="pilcrow">¶</a></p>
+<p id="section-6.4.1-6">When a member receives a Commit referencing one or more SelfRemove Proposals, it
+treats the proposal like a Remove Proposal, except the leaf node to remove is
+determined by looking in the Sender <code>leaf_index</code> of the original Proposal. The
+member is able to verify that the Sender was a member.<a href="#section-6.4.1-6" class="pilcrow">¶</a></p>
 <p id="section-6.4.1-7">Whenever a new joiner is about to join a self-remove-capable group with an
 External Commit, the new joiner <span class="bcp14">MUST</span> fetch any pending SelfRemove Proposals
-along with the GroupInfo object, and include the SelfRemove Proposals
-in its External Commit by reference. (An ExternalCommit can contain zero or
-more SelfRemove proposals). The new joiner <span class="bcp14">MUST</span> validate the SelfRemove
-Proposal before including it by reference, except that it skips the validation
-of the <code>membership_tag</code> because a non-member cannot verify membership.<a href="#section-6.4.1-7" class="pilcrow">¶</a></p>
-<p id="section-6.4.1-8">During validation, SelfRemove proposals are processed after Update proposals
-and before Remove proposals. If there is a pending SelfRemove proposal for a specific
-leaf node and a pending Remove proposal for the same leaf node, the Remove proposal is
-invalid. A client <span class="bcp14">MUST NOT</span> issue more than one SelfRemove proposal per epoch.<a href="#section-6.4.1-8" class="pilcrow">¶</a></p>
-<p id="section-6.4.1-9">The MLS Delivery Service (DS) needs to validate SelfRemove Proposals it
-receives (except that it cannot validate the <code>membership_tag</code>). If the DS
-provides a GroupInfo object to an external joiner, the DS <span class="bcp14">SHOULD</span> attach any
-SelfRemove proposals known to the DS to the GroupInfo object.<a href="#section-6.4.1-9" class="pilcrow">¶</a></p>
-<p id="section-6.4.1-10">As with Remove proposals, clients need to be able to receive a Commit
-message which removes them from the group via a SelfRemove. If the DS does
-not forward a Commit to a removed client, it needs to inform the removed
-client out-of-band.<a href="#section-6.4.1-10" class="pilcrow">¶</a></p>
+along with the GroupInfo object, and include the SelfRemove Proposals in its
+External Commit by reference. (An ExternalCommit can contain zero or more
+SelfRemove proposals). The new joiner <span class="bcp14">MUST</span> validate the SelfRemove Proposal
+before including it by reference, except that it skips the validation of the
+<code>membership_tag</code> because a non-member cannot verify membership.<a href="#section-6.4.1-7" class="pilcrow">¶</a></p>
+<p id="section-6.4.1-8">During validation, SelfRemove proposals are processed after Update proposals and
+before Remove proposals. If there is a pending SelfRemove proposal for a
+specific leaf node and a pending Remove proposal for the same leaf node, the
+Remove proposal is invalid. A client <span class="bcp14">MUST NOT</span> issue more than one SelfRemove
+proposal per epoch.<a href="#section-6.4.1-8" class="pilcrow">¶</a></p>
+<p id="section-6.4.1-9">The MLS Delivery Service (DS) needs to validate SelfRemove Proposals it receives
+(except that it cannot validate the <code>membership_tag</code>). If the DS provides a
+GroupInfo object to an external joiner, the DS <span class="bcp14">SHOULD</span> attach any SelfRemove
+proposals known to the DS to the GroupInfo object.<a href="#section-6.4.1-9" class="pilcrow">¶</a></p>
+<p id="section-6.4.1-10">As with Remove proposals, clients need to be able to receive a Commit message
+which removes them from the group via a SelfRemove. If the DS does not forward a
+Commit to a removed client, it needs to inform the removed client out-of-band.<a href="#section-6.4.1-10" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2739,8 +2740,8 @@ client out-of-band.<a href="#section-6.4.1-10" class="pilcrow">¶</a></p>
 <a href="#section-6.5.1" class="section-number selfRef">6.5.1. </a><a href="#name-description-3" class="section-name selfRef">Description</a>
           </h4>
 <p id="section-6.5.1-1"><span><a href="https://rfc-editor.org/rfc/rfc9420#section-10" class="relref">Section 10</a> of [<a href="#RFC9420" class="cite xref">RFC9420</a>]</span> details that clients are required to pre-publish
-KeyPackages so that other clients can add them to groups asynchronously. It
-also states that they should not be re-used:<a href="#section-6.5.1-1" class="pilcrow">¶</a></p>
+KeyPackages so that other clients can add them to groups asynchronously. It also
+states that they should not be re-used:<a href="#section-6.5.1-1" class="pilcrow">¶</a></p>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="section-6.5.1-2.1">
               <p id="section-6.5.1-2.1.1">KeyPackages are intended to be used only once and <span class="bcp14">SHOULD NOT</span> be reused except
@@ -2758,7 +2759,8 @@ prevent denial-of-service attacks.<a href="#section-6.5.1-4.1.1" class="pilcrow"
           </ul>
 <p id="section-6.5.1-5">However, <span>[<a href="#RFC9420" class="cite xref">RFC9420</a>]</span> does not specify how to distinguish regular KeyPackages
 from last-resort ones. The last_resort_key_package KeyPackage application
-component defined in this section fills this gap and allows clients to specifically mark KeyPackages as KeyPackages of last resort that <span class="bcp14">MAY</span> be used
+component defined in this section fills this gap and allows clients to
+specifically mark KeyPackages as KeyPackages of last resort that <span class="bcp14">MAY</span> be used
 more than once in scenarios where all other KeyPackages have already been used.<a href="#section-6.5.1-5" class="pilcrow">¶</a></p>
 <p id="section-6.5.1-6">The component allows clients that pre-publish KeyPackages to signal to the
 Delivery Service which KeyPackage(s) are meant to be used as last resort
@@ -2787,17 +2789,17 @@ which means it carries no additional data.<a href="#section-6.5.2-1" class="pilc
         <h3 id="name-multi-credentials">
 <a href="#section-6.6" class="section-number selfRef">6.6. </a><a href="#name-multi-credentials" class="section-name selfRef">Multi-Credentials</a>
         </h3>
-<p id="section-6.6-1">Multi-credentials address use cases where there might not be a single
-credential that captures all of a client's authenticated attributes. For
-example, an enterprise messaging client may wish to provide attributes both
-from its messaging service, to prove that its user has a given handle in
-that service, and from its corporate owner, to prove that its user is an
-employee of the corporation. Multi-credentials can also be used in migration
-scenarios, where some clients in a group might wish to rely on a newer type
-of credential, but other clients haven't yet been upgraded.<a href="#section-6.6-1" class="pilcrow">¶</a></p>
-<p id="section-6.6-2">New credential types <code>MultiCredential</code> and <code>WeakMultiCredential</code> are
-defined as shown below. These credential types are indicated with
-the values <code>multi</code> and <code>weak-multi</code> (see <a href="#iana-creds" class="auto internal xref">Section 7.4</a>).<a href="#section-6.6-2" class="pilcrow">¶</a></p>
+<p id="section-6.6-1">Multi-credentials address use cases where there might not be a single credential
+that captures all of a client's authenticated attributes. For example, an
+enterprise messaging client may wish to provide attributes both from its
+messaging service, to prove that its user has a given handle in that service,
+and from its corporate owner, to prove that its user is an employee of the
+corporation. Multi-credentials can also be used in migration scenarios, where
+some clients in a group might wish to rely on a newer type of credential, but
+other clients haven't yet been upgraded.<a href="#section-6.6-1" class="pilcrow">¶</a></p>
+<p id="section-6.6-2">New credential types <code>MultiCredential</code> and <code>WeakMultiCredential</code> are defined as
+shown below. These credential types are indicated with the values <code>multi</code> and
+<code>weak-multi</code> (see <a href="#iana-creds" class="auto internal xref">Section 7.4</a>).<a href="#section-6.6-2" class="pilcrow">¶</a></p>
 <div class="lang-tls-presentation sourcecode" id="section-6.6-3">
 <pre>
 struct {
@@ -2889,8 +2891,8 @@ values for the binding.<a href="#section-6.6.2-4.2.2.1.1" class="pilcrow">¶</a>
               </ul>
 </li>
           </ul>
-<p id="section-6.6.2-5">A client that receives a credential of type <code>weak-multi</code> in a LeafNode <span class="bcp14">MUST</span> verify
-that all the following are true:<a href="#section-6.6.2-5" class="pilcrow">¶</a></p>
+<p id="section-6.6.2-5">A client that receives a credential of type <code>weak-multi</code> in a LeafNode <span class="bcp14">MUST</span>
+verify that all the following are true:<a href="#section-6.6.2-5" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-6.6.2-6.1">
               <p id="section-6.6.2-6.1.1">All members of the group support credential type <code>weak-multi</code>.<a href="#section-6.6.2-6.1.1" class="pilcrow">¶</a></p>
@@ -2915,13 +2917,13 @@ LeafNode.<a href="#section-6.6.2-6.3.1" class="pilcrow">¶</a></p>
       <h2 id="name-iana-considerations">
 <a href="#section-7" class="section-number selfRef">7. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
-<p id="section-7-1">This document requests the addition of various new values under the heading
-of "Messaging Layer Security". Each registration is organized under the
-relevant registry Type.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-7-1">This document requests the addition of various new values under the heading of
+"Messaging Layer Security". Each registration is organized under the relevant
+registry Type.<a href="#section-7-1" class="pilcrow">¶</a></p>
 <p id="section-7-2">This document also requests the creation of a new MLS applications components
 registry as described in <a href="#iana-components" class="auto internal xref">Section 7.6</a>.<a href="#section-7-2" class="pilcrow">¶</a></p>
-<p id="section-7-3">RFC EDITOR: Please replace XXXX throughout with the RFC number assigned to
-this document<a href="#section-7-3" class="pilcrow">¶</a></p>
+<p id="section-7-3">RFC EDITOR: Please replace XXXX throughout with the RFC number assigned to this
+document<a href="#section-7-3" class="pilcrow">¶</a></p>
 <div id="mls-wire-formats">
 <section id="section-7.1">
         <h3 id="name-mls-wire-formats">
@@ -2932,8 +2934,8 @@ this document<a href="#section-7-3" class="pilcrow">¶</a></p>
           <h4 id="name-mls-targeted-message">
 <a href="#section-7.1.1" class="section-number selfRef">7.1.1. </a><a href="#name-mls-targeted-message" class="section-name selfRef">MLS Targeted Message</a>
           </h4>
-<p id="section-7.1.1-1">The <code>mls_targeted_message</code> MLS Wire Format is used to send a message
-to a subset of members of an MLS group.<a href="#section-7.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-7.1.1-1">The <code>mls_targeted_message</code> MLS Wire Format is used to send a message to a subset
+of members of an MLS group.<a href="#section-7.1.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-7.1.1-2.1">
               <p id="section-7.1.1-2.1.1">Value: 0x0006 (suggested)<a href="#section-7.1.1-2.1.1" class="pilcrow">¶</a></p>
@@ -2992,9 +2994,8 @@ application component data objects (at most one per component).<a href="#section
           <h4 id="name-supported_wire_formats-mls-">
 <a href="#section-7.2.2" class="section-number selfRef">7.2.2. </a><a href="#name-supported_wire_formats-mls-" class="section-name selfRef">supported_wire_formats MLS Extension</a>
           </h4>
-<p id="section-7.2.2-1">The <code>supported_wire_formats</code> MLS Extension Type is used inside LeafNode
-objects. It contains a list of non-default Wire Formats supported by the
-client node.<a href="#section-7.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-7.2.2-1">The <code>supported_wire_formats</code> MLS Extension Type is used inside LeafNode objects.
+It contains a list of non-default Wire Formats supported by the client node.<a href="#section-7.2.2-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-7.2.2-2.1">
               <p id="section-7.2.2-2.1.1">Value: 0x0007 (suggested)<a href="#section-7.2.2-2.1.1" class="pilcrow">¶</a></p>
@@ -3106,9 +3107,9 @@ extension.<a href="#section-7.3.1-1" class="pilcrow">¶</a></p>
           <h4 id="name-selfremove-proposal-2">
 <a href="#section-7.3.3" class="section-number selfRef">7.3.3. </a><a href="#name-selfremove-proposal-2" class="section-name selfRef">SelfRemove Proposal</a>
           </h4>
-<p id="section-7.3.3-1">The <code>self_remove</code> MLS Proposal Type is used for a member to remove itself
-from a group more efficiently than using a <code>remove</code> proposal type, as the
-<code>self_remove</code> type is permitted in External Commits.<a href="#section-7.3.3-1" class="pilcrow">¶</a></p>
+<p id="section-7.3.3-1">The <code>self_remove</code> MLS Proposal Type is used for a member to remove itself from a
+group more efficiently than using a <code>remove</code> proposal type, as the <code>self_remove</code>
+type is permitted in External Commits.<a href="#section-7.3.3-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-7.3.3-2.1">
               <p id="section-7.3.3-2.1.1">Value: 0x000a (suggested)<a href="#section-7.3.3-2.1.1" class="pilcrow">¶</a></p>
@@ -3227,7 +3228,9 @@ from a group more efficiently than using a <code>remove</code> proposal type, as
         <h3 id="name-mls-component-types">
 <a href="#section-7.6" class="section-number selfRef">7.6. </a><a href="#name-mls-component-types" class="section-name selfRef">MLS Component Types</a>
         </h3>
-<p id="section-7.6-1">This document requests the creation of a new IANA "MLS Component Types" registry under the "Messaging Layer Security" group registry heading. Assignments to this registry in the range 0x0000 0000 to 0x7FFF FFFF are via Specification Required
+<p id="section-7.6-1">This document requests the creation of a new IANA "MLS Component Types" registry
+under the "Messaging Layer Security" group registry heading. Assignments to this
+registry in the range 0x0000 0000 to 0x7FFF FFFF are via Specification Required
 policy <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span> using the MLS Designated Experts. Assignments in the range
 0x8000 0000 to 0xFFFF FFFF are for private use.<a href="#section-7.6-1" class="pilcrow">¶</a></p>
 <p id="section-7.6-2">Template:<a href="#section-7.6-2" class="pilcrow">¶</a></p>
@@ -3282,9 +3285,9 @@ policy <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span> using the
 </li>
         </ul>
 <p id="section-7.6-4">The restrictions noted in the "Where" column are to be enforced by the
-application. MLS implementations <span class="bcp14">MUST NOT</span> impose restrictions on where
-component IDs are used in which parts of MLS, unless specifically directed to by
-the application.<a href="#section-7.6-4" class="pilcrow">¶</a></p>
+application. MLS implementations <span class="bcp14">MUST NOT</span> impose restrictions on where component
+IDs are used in which parts of MLS, unless specifically directed to by the
+application.<a href="#section-7.6-4" class="pilcrow">¶</a></p>
 <p id="section-7.6-5">Initial Contents:<a href="#section-7.6-5" class="pilcrow">¶</a></p>
 <table class="center" id="table-1">
           <caption><a href="#table-1" class="selfRef">Table 1</a></caption>
@@ -3482,8 +3485,8 @@ objects.<a href="#section-7.6-7.1.1" class="pilcrow">¶</a></p>
 <a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-safe-application-api" class="section-name selfRef">Safe Application API</a>
         </h3>
 <p id="section-8.1-1">The Safe Application API provides the following security guarantee: If an
-application uses MLS with application components, the security guarantees of
-the base MLS protocol and the security guarantees of each application component
+application uses MLS with application components, the security guarantees of the
+base MLS protocol and the security guarantees of each application component
 analyzed in isolation, still hold for the composed application of the MLS
 protocol. In other words, the Safe Application API protects applications from
 careless component developers. It is not possible that a combination of
@@ -3501,13 +3504,13 @@ implementation.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
         </h3>
 <p id="section-8.2-1">When AppAck objects are received, they allow clients to detect if the Delivery
 Service (or an intermediary) dropped application messages, since gaps in the
-<code>generation</code> sequence indicate dropped messages. When AppAck messages
-are accepted by the Delivery Service, but not received by some members, the
-members who have missed the corresponding AppEphemeral proposals will not be
-able to send or receive a commit message, because the proposal is included
-in the transcript hash. Likewise, if AppAck objects and/or commits are sent
-periodically by every member, other members will be able to detect a member
-that is no longer sending on that schedule or whose handshake messages are being
+<code>generation</code> sequence indicate dropped messages. When AppAck messages are
+accepted by the Delivery Service, but not received by some members, the members
+who have missed the corresponding AppEphemeral proposals will not be able to
+send or receive a commit message, because the proposal is included in the
+transcript hash. Likewise, if AppAck objects and/or commits are sent
+periodically by every member, other members will be able to detect a member that
+is no longer sending on that schedule or whose handshake messages are being
 suppressed by the DS.<a href="#section-8.2-1" class="pilcrow">¶</a></p>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="section-8.2-2.1">
@@ -3523,9 +3526,9 @@ the application, and determines which cases of loss/suppression are detected.
 For example:<a href="#section-8.2-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-8.2-4.1">
-            <p id="section-8.2-4.1.1">The application might have the committer include an AppAck whenever a
-Commit is sent, so that other members could know when one of their messages
-did not reach the committer.<a href="#section-8.2-4.1.1" class="pilcrow">¶</a></p>
+            <p id="section-8.2-4.1.1">The application might have the committer include an AppAck whenever a Commit
+is sent, so that other members could know when one of their messages did not
+reach the committer.<a href="#section-8.2-4.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.2-4.2">
             <p id="section-8.2-4.2.1">The application could have a client send an AppAck whenever an application
@@ -3537,13 +3540,13 @@ would provide a complete view of any losses experienced by active members.<a hre
 that all participants' state would be known.<a href="#section-8.2-4.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-8.2-5">An application using AppAck to guard against loss/suppression of
-application messages also needs to ensure that AppAck messages and the Commits
-that reference them are not dropped. One way to do this is to always encrypt
-Proposal and Commit messages, to make it more difficult for the Delivery Service
-to recognize which messages contain AppAcks. The application can also have
-clients enforce an AppAck schedule, reporting loss if an AppAck is not received
-at the expected time.<a href="#section-8.2-5" class="pilcrow">¶</a></p>
+<p id="section-8.2-5">An application using AppAck to guard against loss/suppression of application
+messages also needs to ensure that AppAck messages and the Commits that
+reference them are not dropped. One way to do this is to always encrypt Proposal
+and Commit messages, to make it more difficult for the Delivery Service to
+recognize which messages contain AppAcks. The application can also have clients
+enforce an AppAck schedule, reporting loss if an AppAck is not received at the
+expected time.<a href="#section-8.2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="targeted-messages-1">
@@ -3583,11 +3586,11 @@ quoted in <span>[<a href="#RFC5322" class="cite xref">RFC5322</a>]</span>.<a hre
 <a href="#section-8.5" class="section-number selfRef">8.5. </a><a href="#name-selfremove" class="section-name selfRef">SelfRemove</a>
         </h3>
 <p id="section-8.5-1">An external recipient of a SelfRemove Proposal cannot verify the
-<code>membership_tag</code>. However, an external joiner also has no way to
-completely validate a GroupInfo object that it receives. An insider
-can prevent an External Join by providing either an invalid GroupInfo object
-or an invalid SelfRemove Proposal. The security properties of external joins
-does not change with the addition of this proposal type.<a href="#section-8.5-1" class="pilcrow">¶</a></p>
+<code>membership_tag</code>. However, an external joiner also has no way to completely
+validate a GroupInfo object that it receives. An insider can prevent an External
+Join by providing either an invalid GroupInfo object or an invalid SelfRemove
+Proposal. The security properties of external joins does not change with the
+addition of this proposal type.<a href="#section-8.5-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="multi-credentials-1">
@@ -3680,9 +3683,10 @@ security of the least secure of its credential bindings.<a href="#section-8.6-1"
 - assign self_remove proposal to a non duplicate number (0x000a)
 - refactor TargetedMessage to no longer use structs removed from when it
 was a "safe extension"
-- remove the no-longer needed targeted_messages_capability (now signaled using support_wire_formats and required_wire_formats)
+- remove the no-longer needed targeted_messages_capability (now signaled using
+  support_wire_formats and required_wire_formats)
 - add TargetedMessageTBS and CredentialBundleTBS to MLS Signature Labels IANA
-registry
+  registry
 - add GREASE values for components
 - fix safe exporter definition
 - resolve TODOs from -06

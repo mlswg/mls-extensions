@@ -4,8 +4,8 @@
 
 Messaging Layer Security                                       R. Robert
 Internet-Draft                                               Phoenix R&D
-Intended status: Standards Track                              7 May 2025
-Expires: 8 November 2025
+Intended status: Standards Track                            19 June 2025
+Expires: 21 December 2025
 
 
              The Messaging Layer Security (MLS) Extensions
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 8 November 2025.
+   This Internet-Draft will expire on 21 December 2025.
 
 Copyright Notice
 
@@ -714,9 +714,11 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
 
    MLS defines a Capabilities struct for LeafNodes (in turn used in
    KeyPackages), which describes which extensions are supported by the
-   associated node.  However, that struct (defined in Section 7.2 of
-   [RFC9420]) only has fields for a subset of the extensions possible in
-   MLS, as reproduced below.
+   associated node.
+
+   However, that struct (defined in Section 7.2 of [RFC9420]) only has
+   fields for a subset of the extensions possible in MLS, as reproduced
+   below.
 
    struct {
        ProtocolVersion versions<V>;
