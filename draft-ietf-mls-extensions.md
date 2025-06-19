@@ -760,7 +760,6 @@ generation is never observed. Obviously, there is a risk that AppAck messages
 could be suppressed as well, but their inclusion in the transcript means that if
 they are suppressed then the group cannot advance at all.
 
-
 ## Targeted messages
 
 ### Description
@@ -778,7 +777,8 @@ that group.
 
 The goal is to provide a one-shot messaging mechanism that provides
 confidentiality and authentication, reusing mechanisms from {{!RFC9420}}, in
-particular {{!RFC9180}}.
+particular {{!RFC9180}}. Targeted messages can be used as a building block
+for more complex messaging protocols.
 
 ### Format
 
@@ -792,22 +792,12 @@ struct {
   uint32 recipient_leaf_index;
   opaque authenticated_data<V>;
   opaque encrypted_sender_auth_data<V>;
-  opaque hpke_ciphertext<V>;
+  opaque ciphertext<V>;
 } TargetedMessage;
-
-enum {
-  hpke_auth_psk(0),
-  signature_hpke_psk(1),
-} TargetedMessageAuthScheme;
 
 struct {
   uint32 sender_leaf_index;
-  TargetedMessageAuthScheme authentication_scheme;
-  select (authentication_scheme) {
-    case HPKEAuthPsk:
-    case SignatureHPKEPsk:
-      opaque signature<V>;
-  }
+  opaque signature<V>;
   opaque kem_output<V>;
 } TargetedMessageSenderAuthData;
 
@@ -825,9 +815,8 @@ struct {
   uint32 recipient_leaf_index;
   opaque authenticated_data<V>;
   uint32 sender_leaf_index;
-  TargetedMessageAuthScheme authentication_scheme;
   opaque kem_output<V>;
-  opaque hpke_ciphertext<V>;
+  opaque ciphertext<V>;
 } TargetedMessageTBS;
 
 struct {
@@ -835,36 +824,80 @@ struct {
   uint64 epoch;
   opaque label<V> = "MLS 1.0 targeted message psk";
 } PSKId;
+
+struct {
+   opaque application_data<V>;
+   opaque padding[length_of_padding];
+} TargetedMessageContent;
 ~~~
 
-Note that `TargetedMessageTBS` is only used with the
-`TargetedMessageAuthScheme.SignatureHPKEPsk` authentication mode.
+### Authentication
+
+Targeted messages are autheticated using a preshared key (PSK), exported through
+the MLS exporter for the epoch specified in SenderAuthDataAAD.epoch:
+
+~~~ tls
+targeted_message_psk =
+  MLS-Exporter("targeted message", "psk", KDF.Nh)
+~~~
+
+In addition, and for non-repudiation, the sender signs the message using the
+signature key of the sender's `LeafNode`. The signature scheme used is the
+signature scheme specified in the cipher suite of the MLS group. The signature
+is computed over the serialized `TargetedMessageTBS` struct and is included in
+the `TargetedMessageSenderAuthData.signature` field:
+
+~~~ tls
+signature = SignWithLabel(sender_leaf_node_signature_private_key,
+              "TargetedMessageTBS", targeted_message_tbs)
+~~~
+
+The recipient MUST verify the signature:
+
+~~~ tls
+VerifyWithLabel.verify(sender_leaf_node.signature_key,
+                       "TargetedMessageTBS",
+                       targeted_message_tbs,
+                       signature)
+~~~
 
 ### Encryption
 
 Targeted messages uses HPKE to encrypt the message content between two leaves.
+
+#### Padding
+
+The TargetedMessageContent.padding field is set by the sender, by first encoding
+the application data and then appending the chosen number of zero bytes. A
+receiver identifies the padding field in a plaintext decoded from
+TargetedMessage.ciphertext by first decoding the application data; then the
+padding field comprises any remaining octets of plaintext. The padding field
+MUST be filled with all zero bytes. A receiver MUST verify that there are no
+non-zero bytes in the padding field, and if this check fails, the enclosing
+TargetedMessage MUST be rejected as malformed. This check ensures that the
+padding process is deterministic, so that, for example, padding cannot be used
+as a covert channel.
 
 #### Sender data encryption
 
 In addition, `TargetedMessageSenderAuthData` is encrypted similarly to
 `MLSSenderData` as described in {{Section 6.3.2 of !RFC9420}}. The
 `TargetedMessageSenderAuthData.sender_leaf_index` field is the leaf index of the
-sender. The `TargetedMessageSenderAuthData.authentication_scheme` field is the
-authentication scheme used to authenticate the sender. The
-`TargetedMessageSenderAuthData.signature` field is the signature of the
-`TargetedMessageTBS` structure. The `TargetedMessageSenderAuthData.kem_output`
-field is the KEM output of the HPKE encryption.
+sender. The `TargetedMessageSenderAuthData.signature` field is the signature of
+the `TargetedMessageTBS` structure. The
+`TargetedMessageSenderAuthData.kem_output` field is the KEM output of the HPKE
+encryption.
 
 The key and nonce provided to the AEAD are computed as the KDF of the first
-KDF.Nh bytes of the `hpke_ciphertext` generated in the following section. If the
-length of the hpke_ciphertext is less than KDF.Nh, the whole hpke_ciphertext is
+KDF.Nh bytes of the `ciphertext` generated in the following section. If the
+length of the ciphertext is less than KDF.Nh, the whole ciphertext is
 used. In pseudocode, the key and nonce are derived as:
 
 ~~~ tls
 sender_auth_data_secret =
   MLS-Exporter("targeted message", "sender auth data secret", KDF.Nh)
 
-ciphertext_sample = hpke_ciphertext[0..KDF.Nh-1]
+ciphertext_sample = ciphertext[0..KDF.Nh-1]
 
 sender_data_key = ExpandWithLabel(sender_auth_data_secret, "key",
                       ciphertext_sample, AEAD.Nk)
@@ -883,38 +916,17 @@ struct {
 } SenderAuthDataAAD;
 ~~~
 
-#### Padding
+#### Application data encryption
 
-The `TargetedMessage` structure does not include a padding field. It is the
-responsibility of the sender to add padding to the `message` as used in the next
-section.
+The `TargetedMessageContent` struct contains the application data to be sent
+to the recipient. The `application_data` field contains the application data
+to be sent, and the `padding` field contains padding bytes to ensure that the
+ciphertext is of a length that is a multiple of the AEAD tag length.
 
-### Authentication
-
-For ciphersuites that support it, HPKE `mode_auth_psk` is used for
-authentication. For other ciphersuites, HPKE `mode_psk` is used along with a
-signature. The authentication scheme is indicated by the `authentication_scheme`
-field in `TargetedMessageContent`. See {{guidance-on-authentication-schemes}}
-for more information.
-
-For the PSK part of the authentication, clients export a dedicated secret:
-
-~~~ tls
-targeted_message_psk =
-  MLS-Exporter("targeted message", "psk", KDF.Nh)
-~~~
-
-The functions `SealAuth` and `OpenAuth` defined in {{!RFC9180}} are used as
-described in {{safe-hpke}} with an empty context. Other functions are defined in
-{{!RFC9420}}.
-
-#### Authentication with HPKE
-
-The sender MUST set the authentication scheme to
-`TargetedMessageAuthScheme.HPKEAuthPsk`.
-
-The `hpke_context` is an TargetedMessageContext struct with the following
-content, where `group_context` is the serialized context of the group.
+The `TargetedMessageContent` struct is serialized and then encrypted
+using HPKE. The HPKE context is a TargetedMessageContext struct with the
+following content, where `group_context` is the serialized context of the MLS
+group:
 
 ~~~ tls
 struct {
@@ -926,87 +938,34 @@ label = "MLS 1.0 TargetedMessageData"
 context = group_context
 ~~~
 
-The sender then computes the following:
+The TargetedMessageContext struct is serialized as hpke_context and is used by
+both the sender and the recipient.
+
+The sender computes `TargetedMessageSenderAuthData.kem_output and
+`TargetedMessage.ciphertext`:
 
 ~~~ tls
-(kem_output, hpke_ciphertext) = SealAuthPSK(receiver_node_public_key,
-                                            hpke_context,
-                                            targeted_message_tbm,
-                                            message,
-                                            targeted_message_psk,
-                                            psk_id,
-                                            sender_node_private_key)
-~~~
-
-The recipient computes the following:
-
-~~~ tls
-message = OpenAuthPSK(kem_output,
-                      receiver_node_private_key,
-                      hpke_context,
-                      targeted_message_tbm,
-                      hpke_ciphertext,
-                      targeted_message_psk,
-                      psk_id,
-                      sender_node_public_key)
-~~~
-
-#### Authentication with signatures
-
-The sender MUST set the authentication scheme to
-`TargetedMessageAuthScheme.SignatureHPKEPsk`. The signature is done using the
-`signature_key` of the sender's `LeafNode` and the corresponding signature
-scheme used in the group.
-
-The sender then computes the following with `hpke_context` defined as in
-{{authentication-with-hpke}}:
-
-~~~ tls
-(kem_output, hpke_ciphertext) = SealPSK(receiver_node_public_key,
+(kem_output, ciphertext) = SealPSK(receiver_node_public_key,
                                         hpke_context,
                                         targeted_message_tbm,
-                                        message,
+                                        targeted_message_content,
                                         targeted_message_psk,
                                         epoch)
 ~~~
 
-The signature is computed as follows:
+The recipient decrypts the content as follows:
 
 ~~~ tls
-signature = SignWithLabel(sender_leaf_node_signature_private_key,
-              "TargetedMessageTBS", targeted_message_tbs)
-~~~
-
-The recipient computes the following:
-
-~~~ tls
-message = OpenPSK(kem_output,
+targeted_message_content = OpenPSK(kem_output,
                   receiver_node_private_key,
                   hpke_context,
                   targeted_message_tbm,
-                  hpke_ciphertext,
+                  ciphertext,
                   targeted_message_psk,
                   epoch)
 ~~~
 
-The recipient MUST verify the message authentication:
-
-~~~ tls
-VerifyWithLabel.verify(sender_leaf_node.signature_key,
-                       "TargetedMessageTBS",
-                       targeted_message_tbs,
-                       signature)
-~~~
-
-### Guidance on authentication schemes
-
-If the group’s ciphersuite does not support HPKE `mode_auth_psk`,
-implementations MUST choose `TargetedMessageAuthScheme.SignatureHPKEPsk`.
-
-If the group’s ciphersuite does support HPKE `mode_auth_psk`, implementations
-CAN choose `TargetedMessageAuthScheme.HPKEAuthPsk` if better efficiency and/or
-repudiability is desired. Implementations SHOULD consult {{Section 9.1.1 of
-!RFC9180}} beforehand.
+The functions `SealPSK` and `OpenPSK` are defined in {{!RFC9180}}.
 
 ## Content Advertisement
 
