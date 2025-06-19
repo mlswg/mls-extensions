@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-06-01T00:58:47.752565+00:00",
+  "timestamp": "2025-06-19T00:49:06.980030+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -3894,7 +3894,7 @@
       "labels": [],
       "body": "This PR only formats paragraphs and does not change the content.",
       "createdAt": "2025-05-19T17:31:00Z",
-      "updatedAt": "2025-05-29T15:36:04Z",
+      "updatedAt": "2025-06-18T12:29:33Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "0a94173da465dc5d8e718c144a076f7feb964fee",
@@ -3918,6 +3918,19 @@
           "body": "",
           "createdAt": "2025-05-29T15:36:04Z",
           "updatedAt": "2025-05-29T15:36:04Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6vLcD7",
+          "commit": {
+            "abbreviatedOid": "376f1a3"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "Maybe it would be easier if we just place each sentence on its own line and soft wrap?",
+          "createdAt": "2025-06-18T12:29:33Z",
+          "updatedAt": "2025-06-18T12:29:33Z",
           "comments": []
         }
       ]
