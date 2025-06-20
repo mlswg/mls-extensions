@@ -4,8 +4,8 @@
 
 Messaging Layer Security                                       R. Robert
 Internet-Draft                                               Phoenix R&D
-Intended status: Standards Track                            19 June 2025
-Expires: 21 December 2025
+Intended status: Standards Track                            20 June 2025
+Expires: 22 December 2025
 
 
              The Messaging Layer Security (MLS) Extensions
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 December 2025.
+   This Internet-Draft will expire on 22 December 2025.
 
 Copyright Notice
 
@@ -930,7 +930,7 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
 
 6.2.3.  Authentication
 
-   Targeted messages are autheticated using a preshared key (PSK),
+   Targeted messages are authenticated using a preshared key (PSK),
    exported through the MLS exporter for the epoch specified in
    SenderAuthDataAAD.epoch:
 
