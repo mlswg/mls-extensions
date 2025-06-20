@@ -864,6 +864,14 @@ targeted_message_psk =
 
 The pre-shared key is then used as an input to the HPKE encryption.
 
+#### Additional Authenticated Data (AAD)
+
+Targeted messages can include additional authenticated data (AAD) in the
+`TargetedMessage.authenticated_data` field. This field is used to carry
+application-specific data that is authenticated but not encrypted. The AAD is
+included in the `TargetedMessagesTBM` struct, which in turn is serialized and is
+used as the `info` parameter for the HPKE handshake..
+
 ### Encryption
 
 Targeted messages uses HPKE to encrypt the message content between two leaves.
@@ -969,6 +977,8 @@ targeted_message_content = OpenPSK(kem_output,
 ~~~
 
 The functions `SealPSK` and `OpenPSK` are defined in {{!RFC9180}}.
+The parameters named `targeted_message_*` are the serialized representations of
+the corresponding structs named `TargetedMessage*` defined above.
 
 ## Content Advertisement
 
