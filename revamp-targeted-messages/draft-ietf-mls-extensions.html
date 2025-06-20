@@ -2321,6 +2321,18 @@ targeted_message_psk =
 </pre><a href="#section-6.2.3-6" class="pilcrow">¶</a>
 </div>
 <p id="section-6.2.3-7">The pre-shared key is then used as an input to the HPKE encryption.<a href="#section-6.2.3-7" class="pilcrow">¶</a></p>
+<div id="additional-authenticated-data-aad">
+<section id="section-6.2.3.1">
+            <h5 id="name-additional-authenticated-da">
+<a href="#section-6.2.3.1" class="section-number selfRef">6.2.3.1. </a><a href="#name-additional-authenticated-da" class="section-name selfRef">Additional Authenticated Data (AAD)</a>
+            </h5>
+<p id="section-6.2.3.1-1">Targeted messages can include additional authenticated data (AAD) in the
+<code>TargetedMessage.authenticated_data</code> field. This field is used to carry
+application-specific data that is authenticated but not encrypted. The AAD is
+included in the <code>TargetedMessagesTBM</code> struct, which in turn is serialized and is
+used as the <code>info</code> parameter for the HPKE handshake..<a href="#section-6.2.3.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="encryption">
@@ -2438,7 +2450,9 @@ targeted_message_content = OpenPSK(kem_output,
                   epoch)
 </pre><a href="#section-6.2.4.3-8" class="pilcrow">¶</a>
 </div>
-<p id="section-6.2.4.3-9">The functions <code>SealPSK</code> and <code>OpenPSK</code> are defined in <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>.<a href="#section-6.2.4.3-9" class="pilcrow">¶</a></p>
+<p id="section-6.2.4.3-9">The functions <code>SealPSK</code> and <code>OpenPSK</code> are defined in <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>.
+The parameters named <code>targeted_message_*</code> are the serialized representations of
+the corresponding structs named <code>TargetedMessage*</code> defined above.<a href="#section-6.2.4.3-9" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
