@@ -833,16 +833,8 @@ struct {
 
 ### Authentication
 
-Targeted messages are authenticated using a preshared key (PSK), exported through
-the MLS exporter for the epoch specified in SenderAuthDataAAD.epoch:
-
-~~~ tls
-targeted_message_psk =
-  MLS-Exporter("targeted message", "psk", KDF.Nh)
-~~~
-
-In addition, and for non-repudiation, the sender signs the message using the
-signature key of the sender's `LeafNode`. The signature scheme used is the
+A targeted message is authenticated by the sender's signature. The sender uses
+the signature key of the its `LeafNode`. The signature scheme used is the
 signature scheme specified in the cipher suite of the MLS group. The signature
 is computed over the serialized `TargetedMessageTBS` struct and is included in
 the `TargetedMessageSenderAuthData.signature` field:
@@ -860,6 +852,17 @@ VerifyWithLabel.verify(sender_leaf_node.signature_key,
                        targeted_message_tbs,
                        signature)
 ~~~
+
+In addition, targeted messages are authenticated using a pre-shared key (PSK),
+exported through the MLS exporter for the epoch specified in
+SenderAuthDataAAD.epoch:
+
+~~~ tls
+targeted_message_psk =
+  MLS-Exporter("targeted message", "psk", KDF.Nh)
+~~~
+
+The pre-shared key is then used as an input to the HPKE encryption.
 
 ### Encryption
 
@@ -988,7 +991,7 @@ later in {{app-framing}}. This allows clients to confirm that all members of a
 group can communicate.
 
 >Note that when the membership of a group changes, or when the policy of the
- group changes, it is responsibility of the committer to ensure that the
+ group changes, it is the responsibility of the committer to ensure that the
  membership and policies are compatible.
 
 As clients are upgraded to support new formats they can use these extensions to
