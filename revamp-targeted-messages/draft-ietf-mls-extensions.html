@@ -2291,34 +2291,36 @@ struct {
           <h4 id="name-authentication">
 <a href="#section-6.2.3" class="section-number selfRef">6.2.3. </a><a href="#name-authentication" class="section-name selfRef">Authentication</a>
           </h4>
-<p id="section-6.2.3-1">Targeted messages are authenticated using a preshared key (PSK), exported through
-the MLS exporter for the epoch specified in SenderAuthDataAAD.epoch:<a href="#section-6.2.3-1" class="pilcrow">¶</a></p>
-<div class="lang-tls sourcecode" id="section-6.2.3-2">
-<pre>
-targeted_message_psk =
-  MLS-Exporter("targeted message", "psk", KDF.Nh)
-</pre><a href="#section-6.2.3-2" class="pilcrow">¶</a>
-</div>
-<p id="section-6.2.3-3">In addition, and for non-repudiation, the sender signs the message using the
-signature key of the sender's <code>LeafNode</code>. The signature scheme used is the
+<p id="section-6.2.3-1">A targeted message is authenticated by the sender's signature. The sender uses
+the signature key of the its <code>LeafNode</code>. The signature scheme used is the
 signature scheme specified in the cipher suite of the MLS group. The signature
 is computed over the serialized <code>TargetedMessageTBS</code> struct and is included in
-the <code>TargetedMessageSenderAuthData.signature</code> field:<a href="#section-6.2.3-3" class="pilcrow">¶</a></p>
-<div class="lang-tls sourcecode" id="section-6.2.3-4">
+the <code>TargetedMessageSenderAuthData.signature</code> field:<a href="#section-6.2.3-1" class="pilcrow">¶</a></p>
+<div class="lang-tls sourcecode" id="section-6.2.3-2">
 <pre>
 signature = SignWithLabel(sender_leaf_node_signature_private_key,
               "TargetedMessageTBS", targeted_message_tbs)
-</pre><a href="#section-6.2.3-4" class="pilcrow">¶</a>
+</pre><a href="#section-6.2.3-2" class="pilcrow">¶</a>
 </div>
-<p id="section-6.2.3-5">The recipient <span class="bcp14">MUST</span> verify the signature:<a href="#section-6.2.3-5" class="pilcrow">¶</a></p>
-<div class="lang-tls sourcecode" id="section-6.2.3-6">
+<p id="section-6.2.3-3">The recipient <span class="bcp14">MUST</span> verify the signature:<a href="#section-6.2.3-3" class="pilcrow">¶</a></p>
+<div class="lang-tls sourcecode" id="section-6.2.3-4">
 <pre>
 VerifyWithLabel.verify(sender_leaf_node.signature_key,
                        "TargetedMessageTBS",
                        targeted_message_tbs,
                        signature)
+</pre><a href="#section-6.2.3-4" class="pilcrow">¶</a>
+</div>
+<p id="section-6.2.3-5">In addition, targeted messages are authenticated using a pre-shared key (PSK),
+exported through the MLS exporter for the epoch specified in
+SenderAuthDataAAD.epoch:<a href="#section-6.2.3-5" class="pilcrow">¶</a></p>
+<div class="lang-tls sourcecode" id="section-6.2.3-6">
+<pre>
+targeted_message_psk =
+  MLS-Exporter("targeted message", "psk", KDF.Nh)
 </pre><a href="#section-6.2.3-6" class="pilcrow">¶</a>
 </div>
+<p id="section-6.2.3-7">The pre-shared key is then used as an input to the HPKE encryption.<a href="#section-6.2.3-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="encryption">
@@ -2470,7 +2472,7 @@ group can communicate.<a href="#section-6.3.1-2" class="pilcrow">¶</a></p>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="section-6.3.1-3.1">
               <p id="section-6.3.1-3.1.1">Note that when the membership of a group changes, or when the policy of the
- group changes, it is responsibility of the committer to ensure that the
+ group changes, it is the responsibility of the committer to ensure that the
  membership and policies are compatible.<a href="#section-6.3.1-3.1.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
