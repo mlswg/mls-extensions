@@ -862,15 +862,15 @@ targeted_message_psk =
   MLS-Exporter("targeted message", "psk", KDF.Nh)
 ~~~
 
-The pre-shared key is then used as an input to the HPKE encryption.
+The `targeted_message_psk` is used as the `psk` parameter to the HPKE encryption.
+The corresponding `psk_id` parameter is the serialized `PSKId` struct.
 
 #### Additional Authenticated Data (AAD)
 
 Targeted messages can include additional authenticated data (AAD) in the
 `TargetedMessage.authenticated_data` field. This field is used to carry
 application-specific data that is authenticated but not encrypted. The AAD is
-included in the `TargetedMessagesTBM` struct, which in turn is serialized and is
-used as the `info` parameter for the HPKE handshake..
+included in the `TargetedMessagesTBM` struct.
 
 ### Encryption
 
@@ -935,7 +935,9 @@ to be sent, and the `padding` field contains padding bytes to ensure that the
 ciphertext is of a length that is a multiple of the AEAD tag length.
 
 The `TargetedMessageContent` struct is serialized and then encrypted
-using HPKE. The HPKE context is a TargetedMessageContext struct with the
+using HPKE. 
+
+The HPKE context is a TargetedMessageContext struct with the
 following content, where `group_context` is the serialized context of the MLS
 group:
 
@@ -950,18 +952,30 @@ context = group_context
 ~~~
 
 The TargetedMessageContext struct is serialized as hpke_context and is used by
-both the sender and the recipient.
+both the sender and the recipient. The recipient's leaf node HPKE encryption key
+from the MLS group is used as the recipient's public key
+`recipient_node_public_key` for the HPKE encryption.
+
+The `TargetedMessageTBM` struct is serialized as `targeted_message_tbm`, an is
+used as the `aad` parameter for the HPKE encryption.
 
 The sender computes `TargetedMessageSenderAuthData.kem_output and
 `TargetedMessage.ciphertext`:
 
 ~~~ tls
-(kem_output, ciphertext) = SealPSK(receiver_node_public_key,
+(kem_output, ciphertext) = SealPSK(
+                                        /* pkR */
+                                        recipient_node_public_key,
+                                        /* info */
                                         hpke_context,
+                                        /* aad */
                                         targeted_message_tbm,
+                                        /* pt */
                                         targeted_message_content,
+                                        /* psk */
                                         targeted_message_psk,
-                                        epoch)
+                                        /* psk_id */
+                                        psk_id)
 ~~~
 
 The recipient decrypts the content as follows:
@@ -973,12 +987,10 @@ targeted_message_content = OpenPSK(kem_output,
                   targeted_message_tbm,
                   ciphertext,
                   targeted_message_psk,
-                  epoch)
+                  psk_id)
 ~~~
 
 The functions `SealPSK` and `OpenPSK` are defined in {{!RFC9180}}.
-The parameters named `targeted_message_*` are the serialized representations of
-the corresponding structs named `TargetedMessage*` defined above.
 
 ## Content Advertisement
 
@@ -1534,6 +1546,15 @@ Initial Contents:
 
 >Note1: GREASE values for components MAY be present in AD, AE, GI, KP, and LN
 >objects.
+
+## MLS Exporter labels
+
+This document requests the addition of the following labels to the MLS Exporter
+labels registry:
+
+| Label                        | Recommended | Reference |
+|------------------------------|-------------|-----------|
+| targeted message             | Y           | RFC XXXX  |
 
 
 # Security considerations
