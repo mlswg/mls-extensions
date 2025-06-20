@@ -1344,6 +1344,9 @@ core protocol extensions and uses of the application API.<a href="#section-abstr
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.6">
                 <p id="section-toc.1-1.7.2.6.1"><a href="#section-7.6" class="auto internal xref">7.6</a>.  <a href="#name-mls-component-types" class="internal xref">MLS Component Types</a></p>
 </li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.7">
+                <p id="section-toc.1-1.7.2.7.1"><a href="#section-7.7" class="auto internal xref">7.7</a>.  <a href="#name-mls-exporter-labels" class="internal xref">MLS Exporter labels</a></p>
+</li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
@@ -2320,7 +2323,8 @@ targeted_message_psk =
   MLS-Exporter("targeted message", "psk", KDF.Nh)
 </pre><a href="#section-6.2.3-6" class="pilcrow">¶</a>
 </div>
-<p id="section-6.2.3-7">The pre-shared key is then used as an input to the HPKE encryption.<a href="#section-6.2.3-7" class="pilcrow">¶</a></p>
+<p id="section-6.2.3-7">The <code>targeted_message_psk</code> is used as the <code>psk</code> parameter to the HPKE encryption.
+The corresponding <code>psk_id</code> parameter is the serialized <code>PSKId</code> struct.<a href="#section-6.2.3-7" class="pilcrow">¶</a></p>
 <div id="additional-authenticated-data-aad">
 <section id="section-6.2.3.1">
             <h5 id="name-additional-authenticated-da">
@@ -2329,8 +2333,7 @@ targeted_message_psk =
 <p id="section-6.2.3.1-1">Targeted messages can include additional authenticated data (AAD) in the
 <code>TargetedMessage.authenticated_data</code> field. This field is used to carry
 application-specific data that is authenticated but not encrypted. The AAD is
-included in the <code>TargetedMessagesTBM</code> struct, which in turn is serialized and is
-used as the <code>info</code> parameter for the HPKE handshake..<a href="#section-6.2.3.1-1" class="pilcrow">¶</a></p>
+included in the <code>TargetedMessagesTBM</code> struct.<a href="#section-6.2.3.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2410,10 +2413,11 @@ to the recipient. The <code>application_data</code> field contains the applicati
 to be sent, and the <code>padding</code> field contains padding bytes to ensure that the
 ciphertext is of a length that is a multiple of the AEAD tag length.<a href="#section-6.2.4.3-1" class="pilcrow">¶</a></p>
 <p id="section-6.2.4.3-2">The <code>TargetedMessageContent</code> struct is serialized and then encrypted
-using HPKE. The HPKE context is a TargetedMessageContext struct with the
+using HPKE.<a href="#section-6.2.4.3-2" class="pilcrow">¶</a></p>
+<p id="section-6.2.4.3-3">The HPKE context is a TargetedMessageContext struct with the
 following content, where <code>group_context</code> is the serialized context of the MLS
-group:<a href="#section-6.2.4.3-2" class="pilcrow">¶</a></p>
-<div class="lang-tls sourcecode" id="section-6.2.4.3-3">
+group:<a href="#section-6.2.4.3-3" class="pilcrow">¶</a></p>
+<div class="lang-tls sourcecode" id="section-6.2.4.3-4">
 <pre>
 struct {
   opaque label&lt;V&gt;;
@@ -2422,24 +2426,35 @@ struct {
 
 label = "MLS 1.0 TargetedMessageData"
 context = group_context
-</pre><a href="#section-6.2.4.3-3" class="pilcrow">¶</a>
+</pre><a href="#section-6.2.4.3-4" class="pilcrow">¶</a>
 </div>
-<p id="section-6.2.4.3-4">The TargetedMessageContext struct is serialized as hpke_context and is used by
-both the sender and the recipient.<a href="#section-6.2.4.3-4" class="pilcrow">¶</a></p>
-<p id="section-6.2.4.3-5">The sender computes <code>TargetedMessageSenderAuthData.kem_output and
-</code>TargetedMessage.ciphertext`:<a href="#section-6.2.4.3-5" class="pilcrow">¶</a></p>
-<div class="lang-tls sourcecode" id="section-6.2.4.3-6">
-<pre>
-(kem_output, ciphertext) = SealPSK(receiver_node_public_key,
-                                        hpke_context,
-                                        targeted_message_tbm,
-                                        targeted_message_content,
-                                        targeted_message_psk,
-                                        epoch)
-</pre><a href="#section-6.2.4.3-6" class="pilcrow">¶</a>
-</div>
-<p id="section-6.2.4.3-7">The recipient decrypts the content as follows:<a href="#section-6.2.4.3-7" class="pilcrow">¶</a></p>
+<p id="section-6.2.4.3-5">The TargetedMessageContext struct is serialized as hpke_context and is used by
+both the sender and the recipient. The recipient's leaf node HPKE encryption key
+from the MLS group is used as the recipient's public key
+<code>recipient_node_public_key</code> for the HPKE encryption.<a href="#section-6.2.4.3-5" class="pilcrow">¶</a></p>
+<p id="section-6.2.4.3-6">The <code>TargetedMessageTBM</code> struct is serialized as <code>targeted_message_tbm</code>, an is
+used as the <code>aad</code> parameter for the HPKE encryption.<a href="#section-6.2.4.3-6" class="pilcrow">¶</a></p>
+<p id="section-6.2.4.3-7">The sender computes <code>TargetedMessageSenderAuthData.kem_output and
+</code>TargetedMessage.ciphertext`:<a href="#section-6.2.4.3-7" class="pilcrow">¶</a></p>
 <div class="lang-tls sourcecode" id="section-6.2.4.3-8">
+<pre>
+(kem_output, ciphertext) = SealPSK(
+                                        /* pkR */
+                                        recipient_node_public_key,
+                                        /* info */
+                                        hpke_context,
+                                        /* aad */
+                                        targeted_message_tbm,
+                                        /* pt */
+                                        targeted_message_content,
+                                        /* psk */
+                                        targeted_message_psk,
+                                        /* psk_id */
+                                        psk_id)
+</pre><a href="#section-6.2.4.3-8" class="pilcrow">¶</a>
+</div>
+<p id="section-6.2.4.3-9">The recipient decrypts the content as follows:<a href="#section-6.2.4.3-9" class="pilcrow">¶</a></p>
+<div class="lang-tls sourcecode" id="section-6.2.4.3-10">
 <pre>
 targeted_message_content = OpenPSK(kem_output,
                   receiver_node_private_key,
@@ -2447,12 +2462,10 @@ targeted_message_content = OpenPSK(kem_output,
                   targeted_message_tbm,
                   ciphertext,
                   targeted_message_psk,
-                  epoch)
-</pre><a href="#section-6.2.4.3-8" class="pilcrow">¶</a>
+                  psk_id)
+</pre><a href="#section-6.2.4.3-10" class="pilcrow">¶</a>
 </div>
-<p id="section-6.2.4.3-9">The functions <code>SealPSK</code> and <code>OpenPSK</code> are defined in <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>.
-The parameters named <code>targeted_message_*</code> are the serialized representations of
-the corresponding structs named <code>TargetedMessage*</code> defined above.<a href="#section-6.2.4.3-9" class="pilcrow">¶</a></p>
+<p id="section-6.2.4.3-11">The functions <code>SealPSK</code> and <code>OpenPSK</code> are defined in <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>.<a href="#section-6.2.4.3-11" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -3438,6 +3451,32 @@ application.<a href="#section-7.6-4" class="pilcrow">¶</a></p>
 objects.<a href="#section-7.6-7.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
+</section>
+</div>
+<div id="mls-exporter-labels">
+<section id="section-7.7">
+        <h3 id="name-mls-exporter-labels">
+<a href="#section-7.7" class="section-number selfRef">7.7. </a><a href="#name-mls-exporter-labels" class="section-name selfRef">MLS Exporter labels</a>
+        </h3>
+<p id="section-7.7-1">This document requests the addition of the following labels to the MLS Exporter
+labels registry:<a href="#section-7.7-1" class="pilcrow">¶</a></p>
+<table class="center" id="table-2">
+          <caption><a href="#table-2" class="selfRef">Table 2</a></caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Label</th>
+              <th class="text-left" rowspan="1" colspan="1">Recommended</th>
+              <th class="text-left" rowspan="1" colspan="1">Reference</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">targeted message</td>
+              <td class="text-left" rowspan="1" colspan="1">Y</td>
+              <td class="text-left" rowspan="1" colspan="1">RFC XXXX</td>
+            </tr>
+          </tbody>
+        </table>
 </section>
 </div>
 </section>
