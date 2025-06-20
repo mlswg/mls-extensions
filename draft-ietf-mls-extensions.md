@@ -935,7 +935,7 @@ to be sent, and the `padding` field contains padding bytes to ensure that the
 ciphertext is of a length that is a multiple of the AEAD tag length.
 
 The `TargetedMessageContent` struct is serialized and then encrypted
-using HPKE. 
+using HPKE.
 
 The HPKE context is a TargetedMessageContext struct with the
 following content, where `group_context` is the serialized context of the MLS
