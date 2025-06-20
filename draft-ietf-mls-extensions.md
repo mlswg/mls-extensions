@@ -833,7 +833,7 @@ struct {
 
 ### Authentication
 
-Targeted messages are autheticated using a preshared key (PSK), exported through
+Targeted messages are authenticated using a preshared key (PSK), exported through
 the MLS exporter for the epoch specified in SenderAuthDataAAD.epoch:
 
 ~~~ tls
