@@ -580,11 +580,16 @@ external proposer.
 
 ## Safe Additional Authenticated Data (AAD) {#safe-aad}
 
-An MLS PrivateMessage can contain arbitrary additional application-specific AAD.
-The corresponding `authenticated_data` field appears in several MLS structs:
-`FramedContent` (used indirectly to generate the message signature and tags),
-`PrivateContentAAD` (used as the AAD input to the `PrivateMessage.ciphertext`),
-and `PrivateMessage` (to convey the AAD).
+Both MLS `PublicMessage` and `PrivateMessage` messages can contain arbitrary
+additional application-specific data. The corresponding `authenticated_data`
+field that conveys this application-specific data appears in the
+`FramedContent` struct for `PublicMessage` and directly in the `PrivateMessage`
+struct.
+
+In an MLS `PrivateMessage`, the `application_data` is also present in
+intermediary structs: in the `FramedContent`, which is used to generate the
+message signature and tags, and in the `PrivateContentAAD`, which is used as
+the AAD input to the `PrivateMessage.ciphertext`.
 
 The Safe AAD API defines a framing used to allow multiple application components
 to add AAD safely to the `authenticated_data` without conflicts or ambiguity.
