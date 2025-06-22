@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-06-19T00:49:06.980030+00:00",
+  "timestamp": "2025-06-22T00:54:14.957338+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -158,7 +158,7 @@
       "id": "I_kwDOHZoI5M5r9R-P",
       "title": "Targeted message: use `AuthPSKEncryptWithLabel`?",
       "url": "https://github.com/mlswg/mls-extensions/issues/16",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "TWal",
       "authorAssociation": "NONE",
       "assignees": [
@@ -167,8 +167,8 @@
       "labels": [],
       "body": "To be more future-proof, similarly to `EncryptWithLabel`, I guess we could design a similar function for the HPKE AuthPSK mode?\r\nThis would help ensuring future extensions that would be using the AuthPSK mode with leaf HPKE keys don't interfere with each other.",
       "createdAt": "2023-07-19T06:10:49Z",
-      "updatedAt": "2025-05-12T15:32:47Z",
-      "closedAt": null,
+      "updatedAt": "2025-06-20T15:52:33Z",
+      "closedAt": "2025-06-20T15:52:33Z",
       "comments": [
         {
           "author": "seanturner",
@@ -211,6 +211,13 @@
           "body": "> > we could probably make targeted messages a component rather than an extension.\n> \n> No. under the current definition, there is no way that a new proposal or a new wireformat can be a component. That's why there is no subsection on them under Section 4. So it is really no loss.\n\nIf that's the definition of a component, I guess we are good.\n\n> As Richard mentioned, if we make a generic `EncryptWithAuthPSKLabel`, it will not work with PQ ciphersuites, so that's unfortunate.\n\nThis is not what Richard said and it's also not true. The authentication using an asymmetric key is what doesn't work with KEMs. The authentication with a PSK still works with KEMs, so the point still stands.\n\n",
           "createdAt": "2025-05-12T15:32:45Z",
           "updatedAt": "2025-05-12T15:32:45Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "There's nothing else to be done here, since Targeted Messages is indeed a true extension.",
+          "createdAt": "2025-06-20T15:52:33Z",
+          "updatedAt": "2025-06-20T15:52:33Z"
         }
       ]
     },
@@ -436,7 +443,7 @@
       "labels": [],
       "body": "The section about Safe Additional Authenticated Data (AAD) discuss about the `authenticated_data` field of `PrivateContentAAD`.\n\nIt seems to me that this field is defined to be identical to `authenticated_data` in `FramedContent`. Shouldn't we frame this section about `FramedContent` then?",
       "createdAt": "2025-02-04T21:08:53Z",
-      "updatedAt": "2025-05-12T12:38:56Z",
+      "updatedAt": "2025-06-21T08:41:20Z",
       "closedAt": null,
       "comments": [
         {
@@ -487,6 +494,20 @@
           "body": "The current text is\n\n```\nAn MLS PrivateMessage can contain arbitrary additional application-specific AAD. The corresponding authenticated_data field appears in several MLS structs: FramedContent (used indirectly to generate the message signature and tags), PrivateContentAAD (used as the AAD input to the PrivateMessage.ciphertext), and PrivateMessage (to convey the AAD).\n```\n\nI agree with @TWal that it sounds confusing. The AAD in question appears in two places: the `authenticated_data` field of `PrivateMessage` and `PublicMessage`. `FramedContent` and `PrivateContentAAD` are helper structs for both the spec and implementations. \nThe text should be changed accordingly.\n\n",
           "createdAt": "2025-05-12T12:37:54Z",
           "updatedAt": "2025-05-12T12:38:56Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "@TWal @rohanmahy let me know if the fix in #63 works for you.",
+          "createdAt": "2025-06-20T15:50:38Z",
+          "updatedAt": "2025-06-20T15:50:38Z"
+        },
+        {
+          "author": "TWal",
+          "authorAssociation": "NONE",
+          "body": "Works for me!",
+          "createdAt": "2025-06-21T08:41:20Z",
+          "updatedAt": "2025-06-21T08:41:20Z"
         }
       ]
     },
@@ -630,6 +651,22 @@
           "updatedAt": "2025-05-12T16:31:42Z"
         }
       ]
+    },
+    {
+      "number": 62,
+      "id": "I_kwDOHZoI5M68g-IO",
+      "title": "Another issue that we should discuss are replay attacks. (Regular) ApplicationMessages have some protection in that recipients delete the keys and nonces necessary to decrypt them. That's not the case here.",
+      "url": "https://github.com/mlswg/mls-extensions/issues/62",
+      "state": "OPEN",
+      "author": "raphaelrobert",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "Another issue that we should discuss are replay attacks. (Regular) ApplicationMessages have some protection in that recipients delete the keys and nonces necessary to decrypt them. That's not the case here.\r\n\r\n_Originally posted by @kkohbrok in https://github.com/mlswg/mls-extensions/pull/61#pullrequestreview-2945476230_\r\n            ",
+      "createdAt": "2025-06-20T10:24:15Z",
+      "updatedAt": "2025-06-20T10:24:15Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -3887,24 +3924,26 @@
       "id": "PR_kwDOHZoI5M6WwzaI",
       "title": "Paragraph formatting",
       "url": "https://github.com/mlswg/mls-extensions/pull/60",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "raphaelrobert",
       "authorAssociation": "MEMBER",
       "assignees": [],
       "labels": [],
       "body": "This PR only formats paragraphs and does not change the content.",
       "createdAt": "2025-05-19T17:31:00Z",
-      "updatedAt": "2025-06-18T12:29:33Z",
+      "updatedAt": "2025-06-19T10:17:20Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "0a94173da465dc5d8e718c144a076f7feb964fee",
       "headRepository": "mlswg/mls-extensions",
       "headRefName": "paragraph-formatting",
       "headRefOid": "376f1a33f21b6bfea109777e606988b5d7cef35e",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-06-19T10:17:20Z",
+      "mergedAt": "2025-06-19T10:17:20Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "b27fb69c4e7248c43130ef7753d52ecdc47505f2"
+      },
       "comments": [],
       "reviews": [
         {
@@ -3932,6 +3971,220 @@
           "createdAt": "2025-06-18T12:29:33Z",
           "updatedAt": "2025-06-18T12:29:33Z",
           "comments": []
+        }
+      ]
+    },
+    {
+      "number": 61,
+      "id": "PR_kwDOHZoI5M6bQ1LJ",
+      "title": "Streamline targeted messages",
+      "url": "https://github.com/mlswg/mls-extensions/pull/61",
+      "state": "OPEN",
+      "author": "raphaelrobert",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "Simplifies targeted messages by eliminating the HPKE Auth mode and introduces padding.\r\n\r\nFixes #15, #57, #59.",
+      "createdAt": "2025-06-19T13:42:20Z",
+      "updatedAt": "2025-06-21T23:33:40Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "b27fb69c4e7248c43130ef7753d52ecdc47505f2",
+      "headRepository": "mlswg/mls-extensions",
+      "headRefName": "revamp-targeted-messages",
+      "headRefOid": "4e2f3224865df8ab277ae44d5257d47e80a8eba2",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Without looking at the substance -- Doing this level of work on the document doesn't seem consistent with getting it out the door.  I would propose we remove this section to a new document and publish the remainder.  (I thought that was what we had discussed before?)",
+          "createdAt": "2025-06-19T13:54:54Z",
+          "updatedAt": "2025-06-19T13:54:54Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "> Without looking at the substance -- Doing this level of work on the document doesn't seem consistent with getting it out the door. I would propose we remove this section to a new document and publish the remainder. (I thought that was what we had discussed before?)\r\n\r\nBy \"this section\", I assume you mean the entire targeted messages extension? We did discuss that, and no one seemed to have strong opinions either way. We can still yank it out if we think this section slows down the document more than the others. I'd just like to avoid the sometimes painful adoption process, especially since we already once had agreement this extension is useful.\r\nThat consideration aside, I was hoping to finalize the extension and this PR really just gets rid of the HPKE auth mode (we discussed this offline anyway) and introduces a padding field. The rest is really just editorial. \r\nI'm also working on an implementation, which is something we don't have for the other sections yet.",
+          "createdAt": "2025-06-20T13:47:25Z",
+          "updatedAt": "2025-06-20T13:47:25Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Since the kem_output and ciphertext are far apart in the argument list,\r\nthey don't need to be combined.\r\n-r\r\n\r\nOn Sat, Jun 21, 2025, 11:41 raphaelrobert ***@***.***> wrote:\r\n\r\n> ***@***.**** commented on this pull request.\r\n> ------------------------------\r\n>\r\n> In draft-ietf-mls-extensions.md\r\n> <https://github.com/mlswg/mls-extensions/pull/61#discussion_r2160115376>:\r\n>\r\n> >                    receiver_node_private_key,\r\n>                    hpke_context,\r\n>                    targeted_message_tbm,\r\n> -                  hpke_ciphertext,\r\n> +                  ciphertext,\r\n>\r\n> The API defines a tuple, but I can change it back to hpke_ciphertext\r\n>\r\n> \u2014\r\n> Reply to this email directly, view it on GitHub\r\n> <https://github.com/mlswg/mls-extensions/pull/61#discussion_r2160115376>,\r\n> or unsubscribe\r\n> <https://github.com/notifications/unsubscribe-auth/AADSQPSB7URHJ34GZZG5QFD3EWRNTAVCNFSM6AAAAAB7V7C5R6VHI2DSMVQWIX3LMV43YUDVNRWFEZLROVSXG5CSMV3GSZLXHMZDSNBXHEZTENJQGM>\r\n> .\r\n> You are receiving this because you commented.Message ID:\r\n> ***@***.***>\r\n>\r\n",
+          "createdAt": "2025-06-21T23:33:40Z",
+          "updatedAt": "2025-06-21T23:33:40Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M6vbFEV",
+          "commit": {
+            "abbreviatedOid": "59581be"
+          },
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-06-19T13:48:49Z",
+          "updatedAt": "2025-06-19T13:52:54Z",
+          "comments": [
+            {
+              "originalPosition": 67,
+              "body": "```suggestion\r\nTargeted messages are authenticated using a preshared key (PSK), exported through\r\n```",
+              "createdAt": "2025-06-19T13:48:49Z",
+              "updatedAt": "2025-06-19T13:52:54Z"
+            },
+            {
+              "originalPosition": 75,
+              "body": "It might make sense to lead with the signature authentication as it's more meaningful/specific to the sender than the PSK one.",
+              "createdAt": "2025-06-19T13:49:53Z",
+              "updatedAt": "2025-06-19T13:52:54Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6vkGaG",
+          "commit": {
+            "abbreviatedOid": "59581be"
+          },
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "Another issue that we should discuss are replay attacks. (Regular) ApplicationMessages have some protection in that recipients delete the keys and nonces necessary to decrypt them. That's not the case here.",
+          "createdAt": "2025-06-20T10:23:29Z",
+          "updatedAt": "2025-06-20T10:23:29Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6vs33B",
+          "commit": {
+            "abbreviatedOid": "4e2f322"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "This is a pretty big change (for the better, for sure). If we don't get substantial review of this portion of the draft and a couple of implementations, I'd say we should remove it.\r\n",
+          "createdAt": "2025-06-21T13:59:57Z",
+          "updatedAt": "2025-06-21T14:08:20Z",
+          "comments": [
+            {
+              "originalPosition": 336,
+              "body": "shouldn't this have an underbar instead of a space?",
+              "createdAt": "2025-06-21T13:59:57Z",
+              "updatedAt": "2025-06-21T14:08:20Z"
+            },
+            {
+              "originalPosition": 288,
+              "body": "maybe it would be clearer to use `hpke_ciphertext.kem_output` and `hpke_ciphertext.ciphertext` throughout?\r\n\r\n",
+              "createdAt": "2025-06-21T14:04:14Z",
+              "updatedAt": "2025-06-21T14:08:20Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6vteB7",
+          "commit": {
+            "abbreviatedOid": "4e2f322"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-06-21T18:40:26Z",
+          "updatedAt": "2025-06-21T18:40:26Z",
+          "comments": [
+            {
+              "originalPosition": 336,
+              "body": "Good question about what the rules are for labels. Since they are strings, a space should work, but maybe an underscore is less ambiguous.",
+              "createdAt": "2025-06-21T18:40:26Z",
+              "updatedAt": "2025-06-21T18:40:26Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6vteFX",
+          "commit": {
+            "abbreviatedOid": "4e2f322"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-06-21T18:41:07Z",
+          "updatedAt": "2025-06-21T18:41:07Z",
+          "comments": [
+            {
+              "originalPosition": 288,
+              "body": "The API defines a tuple, but I can change it back to `hpke_ciphertext`",
+              "createdAt": "2025-06-21T18:41:07Z",
+              "updatedAt": "2025-06-21T18:41:07Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 63,
+      "id": "PR_kwDOHZoI5M6bcRS2",
+      "title": "Adapt safe AAD scope",
+      "url": "https://github.com/mlswg/mls-extensions/pull/63",
+      "state": "OPEN",
+      "author": "raphaelrobert",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "Proposed fix #47.",
+      "createdAt": "2025-06-20T15:50:08Z",
+      "updatedAt": "2025-06-21T18:38:38Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "b27fb69c4e7248c43130ef7753d52ecdc47505f2",
+      "headRepository": "mlswg/mls-extensions",
+      "headRefName": "adapt-safe-aad-scope",
+      "headRefOid": "aab14c2001e5ecf1fd3189df2a23449857474239",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M6vsmzX",
+          "commit": {
+            "abbreviatedOid": "45312cc"
+          },
+          "author": "TWal",
+          "authorAssociation": "NONE",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-06-21T08:41:02Z",
+          "updatedAt": "2025-06-21T08:41:02Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6vs3IV",
+          "commit": {
+            "abbreviatedOid": "45312cc"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "CHANGES_REQUESTED",
+          "body": "",
+          "createdAt": "2025-06-21T13:53:38Z",
+          "updatedAt": "2025-06-21T13:53:48Z",
+          "comments": [
+            {
+              "originalPosition": 12,
+              "body": "```suggestion\r\nBoth MLS `PublicMessage` and `PrivateMessage` messages can contain arbitrary\r\nadditional application-specific data. The corresponding `authenticated_data`\r\nfield that conveys this application-specific data appears in the\r\n`FramedContent` struct for `PublicMessage` and directly in the `PrivateMessage`\r\nstruct.\r\n\r\nIn an MLS `PrivateMessage`, the `application_data` is also present in\r\nintermediary structs: in the `FramedContent`, which is used to generate the\r\nmessage signature and tags, and in the `PrivateContentAAD`, which is used as\r\nthe AAD input to the `PrivateMessage.ciphertext`.\r\n```",
+              "createdAt": "2025-06-21T13:53:38Z",
+              "updatedAt": "2025-06-21T13:54:34Z"
+            }
+          ]
         }
       ]
     }
