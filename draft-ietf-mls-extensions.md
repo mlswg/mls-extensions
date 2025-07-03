@@ -1475,6 +1475,17 @@ type is permitted in External Commits.
 * External: N
 * Path Required: Y
 
+### AppAck Proposal
+
+The `app_ack` MLS Proposal Type can be used by group members to acknowledge the
+receipt of application messages.
+
+* Value: 0x000b (suggested)
+* Name: app_ack
+* Recommended: Y
+* External: N
+* Path Required: N
+
 ## MLS Credential Types {#iana-creds}
 
 ### Multi Credential
