@@ -118,6 +118,7 @@ Table of Contents
        7.3.1.  AppDataUpdate Proposal
        7.3.2.  AppEphemeral Proposal
        7.3.3.  SelfRemove Proposal
+       7.3.4.  AppAck Proposal
      7.4.  MLS Credential Types
        7.4.1.  Multi Credential
        7.4.2.  Weak Multi Credential
@@ -1597,6 +1598,21 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    *  External: N
 
    *  Path Required: Y
+
+7.3.4.  AppAck Proposal
+
+   The app_ack MLS Proposal Type can be used by group members to
+   acknowledge the receipt of application messages.
+
+   *  Value: 0x000b (suggested)
+
+   *  Name: app_ack
+
+   *  Recommended: Y
+
+   *  External: N
+
+   *  Path Required: N
 
 7.4.  MLS Credential Types
 
