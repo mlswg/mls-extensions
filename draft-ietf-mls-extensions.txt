@@ -88,28 +88,21 @@ Table of Contents
      5.1.  GREASE
    6.  Extensions
      6.1.  AppAck
-     6.2.  Targeted messages
+     6.2.  Content Advertisement
        6.2.1.  Description
-       6.2.2.  Format
-       6.2.3.  Encryption
-       6.2.4.  Authentication
-       6.2.5.  Guidance on authentication schemes
-     6.3.  Content Advertisement
-       6.3.1.  Description
-       6.3.2.  Syntax
-       6.3.3.  Expected Behavior
-       6.3.4.  Framing of application_data
-     6.4.  SelfRemove Proposal
-       6.4.1.  Extension Description
-     6.5.  Last resort KeyPackages
-       6.5.1.  Description
-       6.5.2.  Format
-     6.6.  Multi-Credentials
-       6.6.1.  Credential Bindings
-       6.6.2.  Verifying a Multi-Credential
+       6.2.2.  Syntax
+       6.2.3.  Expected Behavior
+       6.2.4.  Framing of application_data
+     6.3.  SelfRemove Proposal
+       6.3.1.  Extension Description
+     6.4.  Last resort KeyPackages
+       6.4.1.  Description
+       6.4.2.  Format
+     6.5.  Multi-Credentials
+       6.5.1.  Credential Bindings
+       6.5.2.  Verifying a Multi-Credential
    7.  IANA Considerations
      7.1.  MLS Wire Formats
-       7.1.1.  MLS Targeted Message
      7.2.  MLS Extension Types
        7.2.1.  app_data_dictionary MLS Extension
        7.2.2.  supported_wire_formats MLS Extension
@@ -122,17 +115,14 @@ Table of Contents
      7.4.  MLS Credential Types
        7.4.1.  Multi Credential
        7.4.2.  Weak Multi Credential
-     7.5.  MLS Signature Labels
-       7.5.1.  TargetedMessageTBS
-       7.5.2.  CredentialBindingTBS
-     7.6.  MLS Component Types
+       7.4.3.  CredentialBindingTBS
+     7.5.  MLS Component Types
    8.  Security considerations
      8.1.  Safe Application API
      8.2.  AppAck
-     8.3.  Targeted Messages
-     8.4.  Content Advertisement
-     8.5.  SelfRemove
-     8.6.  Multi Credentials
+     8.3.  Content Advertisement
+     8.4.  SelfRemove
+     8.5.  Multi Credentials
    9.  References
      9.1.  Normative References
      9.2.  Informative References
@@ -257,7 +247,7 @@ Table of Contents
    Similarly, the content of application messages (application_data) can
    be distinguished and routed to different parts of an application
    according to the media type of that content using the content
-   negotiation mechanism defined in Section 6.3.
+   negotiation mechanism defined in Section 6.2.
 
    We also define new general mechanisms that allow applications to take
    advantage of the extensibility mechanisms of MLS without having to
@@ -793,7 +783,7 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
 
    Finally, the supported and required media types (formerly called MIME
    types) are communicated in the content_media_types component (see
-   Section 6.3).
+   Section 6.2).
 
 5.1.  GREASE
 
@@ -865,241 +855,9 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    means that if they are suppressed then the group cannot advance at
    all.
 
-6.2.  Targeted messages
+6.2.  Content Advertisement
 
 6.2.1.  Description
-
-   MLS application messages make sending encrypted messages to all group
-   members easy and efficient.  Sometimes application protocols mandate
-   that messages are only sent to specific group members, either for
-   privacy or for efficiency reasons.
-
-   Targeted messages are a way to achieve this without having to create
-   a new group with the sender and the specific recipients – which might
-   not be possible or desired.  Instead, targeted messages define the
-   format and encryption of a message that is sent from a member of an
-   existing group to another member of that group.
-
-   The goal is to provide a one-shot messaging mechanism that provides
-   confidentiality and authentication, reusing mechanisms from
-   [RFC9420], in particular [RFC9180].
-
-6.2.2.  Format
-
-   This extension defines the mls_targeted_message WireFormat, where the
-   content is a TargetedMessage.
-
-   struct {
-     opaque group_id<V>;
-     uint64 epoch;
-     uint32 recipient_leaf_index;
-     opaque authenticated_data<V>;
-     opaque encrypted_sender_auth_data<V>;
-     opaque hpke_ciphertext<V>;
-   } TargetedMessage;
-
-   enum {
-     hpke_auth_psk(0),
-     signature_hpke_psk(1),
-   } TargetedMessageAuthScheme;
-
-   struct {
-     uint32 sender_leaf_index;
-     TargetedMessageAuthScheme authentication_scheme;
-     select (authentication_scheme) {
-       case HPKEAuthPsk:
-       case SignatureHPKEPsk:
-         opaque signature<V>;
-     }
-     opaque kem_output<V>;
-   } TargetedMessageSenderAuthData;
-
-   struct {
-     opaque group_id<V>;
-     uint64 epoch;
-     uint32 recipient_leaf_index;
-     opaque authenticated_data<V>;
-     TargetedMessageSenderAuthData sender_auth_data;
-   } TargetedMessageTBM;
-
-   struct {
-     opaque group_id<V>;
-     uint64 epoch;
-     uint32 recipient_leaf_index;
-     opaque authenticated_data<V>;
-     uint32 sender_leaf_index;
-     TargetedMessageAuthScheme authentication_scheme;
-     opaque kem_output<V>;
-     opaque hpke_ciphertext<V>;
-   } TargetedMessageTBS;
-
-   struct {
-     opaque group_id<V>;
-     uint64 epoch;
-     opaque label<V> = "MLS 1.0 targeted message psk";
-   } PSKId;
-
-   Note that TargetedMessageTBS is only used with the
-   TargetedMessageAuthScheme.SignatureHPKEPsk authentication mode.
-
-6.2.3.  Encryption
-
-   Targeted messages uses HPKE to encrypt the message content between
-   two leaves.
-
-6.2.3.1.  Sender data encryption
-
-   In addition, TargetedMessageSenderAuthData is encrypted similarly to
-   MLSSenderData as described in Section 6.3.2 of [RFC9420].  The
-   TargetedMessageSenderAuthData.sender_leaf_index field is the leaf
-   index of the sender.  The
-   TargetedMessageSenderAuthData.authentication_scheme field is the
-   authentication scheme used to authenticate the sender.  The
-   TargetedMessageSenderAuthData.signature field is the signature of the
-   TargetedMessageTBS structure.  The
-   TargetedMessageSenderAuthData.kem_output field is the KEM output of
-   the HPKE encryption.
-
-   The key and nonce provided to the AEAD are computed as the KDF of the
-   first KDF.Nh bytes of the hpke_ciphertext generated in the following
-   section.  If the length of the hpke_ciphertext is less than KDF.Nh,
-   the whole hpke_ciphertext is used.  In pseudocode, the key and nonce
-   are derived as:
-
-   sender_auth_data_secret =
-     MLS-Exporter("targeted message", "sender auth data secret", KDF.Nh)
-
-   ciphertext_sample = hpke_ciphertext[0..KDF.Nh-1]
-
-   sender_data_key = ExpandWithLabel(sender_auth_data_secret, "key",
-                         ciphertext_sample, AEAD.Nk)
-   sender_data_nonce = ExpandWithLabel(sender_auth_data_secret, "nonce",
-                         ciphertext_sample, AEAD.Nn)
-
-   The Additional Authenticated Data (AAD) for the SenderAuthData
-   ciphertext is the first three fields of TargetedMessage:
-
-   struct {
-     opaque group_id<V>;
-     uint64 epoch;
-     uint32 recipient_leaf_index;
-   } SenderAuthDataAAD;
-
-6.2.3.2.  Padding
-
-   The TargetedMessage structure does not include a padding field.  It
-   is the responsibility of the sender to add padding to the message as
-   used in the next section.
-
-6.2.4.  Authentication
-
-   For ciphersuites that support it, HPKE mode_auth_psk is used for
-   authentication.  For other ciphersuites, HPKE mode_psk is used along
-   with a signature.  The authentication scheme is indicated by the
-   authentication_scheme field in TargetedMessageContent.  See
-   Section 6.2.5 for more information.
-
-   For the PSK part of the authentication, clients export a dedicated
-   secret:
-
-   targeted_message_psk =
-     MLS-Exporter("targeted message", "psk", KDF.Nh)
-
-   The functions SealAuth and OpenAuth defined in [RFC9180] are used as
-   described in Section 4.2 with an empty context.  Other functions are
-   defined in [RFC9420].
-
-6.2.4.1.  Authentication with HPKE
-
-   The sender MUST set the authentication scheme to
-   TargetedMessageAuthScheme.HPKEAuthPsk.
-
-   The hpke_context is an TargetedMessageContext struct with the
-   following content, where group_context is the serialized context of
-   the group.
-
-   struct {
-     opaque label<V>;
-     opaque context<V>;
-   } TargetedMessageContext;
-
-   label = "MLS 1.0 TargetedMessageData"
-   context = group_context
-
-   The sender then computes the following:
-
-   (kem_output, hpke_ciphertext) = SealAuthPSK(receiver_node_public_key,
-                                               hpke_context,
-                                               targeted_message_tbm,
-                                               message,
-                                               targeted_message_psk,
-                                               psk_id,
-                                               sender_node_private_key)
-
-   The recipient computes the following:
-
-   message = OpenAuthPSK(kem_output,
-                         receiver_node_private_key,
-                         hpke_context,
-                         targeted_message_tbm,
-                         hpke_ciphertext,
-                         targeted_message_psk,
-                         psk_id,
-                         sender_node_public_key)
-
-6.2.4.2.  Authentication with signatures
-
-   The sender MUST set the authentication scheme to
-   TargetedMessageAuthScheme.SignatureHPKEPsk.  The signature is done
-   using the signature_key of the sender's LeafNode and the
-   corresponding signature scheme used in the group.
-
-   The sender then computes the following with hpke_context defined as
-   in Section 6.2.4.1:
-
-   (kem_output, hpke_ciphertext) = SealPSK(receiver_node_public_key,
-                                           hpke_context,
-                                           targeted_message_tbm,
-                                           message,
-                                           targeted_message_psk,
-                                           epoch)
-
-   The signature is computed as follows:
-
-   signature = SignWithLabel(sender_leaf_node_signature_private_key,
-                 "TargetedMessageTBS", targeted_message_tbs)
-
-   The recipient computes the following:
-
-   message = OpenPSK(kem_output,
-                     receiver_node_private_key,
-                     hpke_context,
-                     targeted_message_tbm,
-                     hpke_ciphertext,
-                     targeted_message_psk,
-                     epoch)
-
-   The recipient MUST verify the message authentication:
-
-   VerifyWithLabel.verify(sender_leaf_node.signature_key,
-                          "TargetedMessageTBS",
-                          targeted_message_tbs,
-                          signature)
-
-6.2.5.  Guidance on authentication schemes
-
-   If the group’s ciphersuite does not support HPKE mode_auth_psk,
-   implementations MUST choose
-   TargetedMessageAuthScheme.SignatureHPKEPsk.
-
-   If the group’s ciphersuite does support HPKE mode_auth_psk,
-   implementations CAN choose TargetedMessageAuthScheme.HPKEAuthPsk if
-   better efficiency and/or repudiability is desired.  Implementations
-   SHOULD consult Section 9.1.1 of [RFC9180] beforehand.
-
-6.3.  Content Advertisement
-
-6.3.1.  Description
 
    This section defines a minimal framing format so MLS clients can
    signal which media type is being sent inside the MLS application_data
@@ -1115,7 +873,7 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    extension) in the GroupContext, it indicates a (non-empty) list of
    media types that need to be supported by all members of that MLS
    group, _and_ that the application_data will be framed using the
-   application framing format described later in Section 6.3.4.  This
+   application framing format described later in Section 6.2.4.  This
    allows clients to confirm that all members of a group can
    communicate.
 
@@ -1138,7 +896,7 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
       Note that the usage of IANA media types in general does not imply
       the usage of MIME Headers [RFC2045] for framing.
 
-6.3.2.  Syntax
+6.2.2.  Syntax
 
    MediaType is a TLS encoding of a single IANA media type (including
    top-level type and subtype) and any of its parameters.  Even if the
@@ -1183,7 +941,7 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    be text/plain, parameters would contain a single Parameter with a
    parameter_name of charset and a parameter_value of UTF-8.
 
-6.3.3.  Expected Behavior
+6.2.3.  Expected Behavior
 
    An MLS client which implements this section SHOULD include the
    content_media_types component (in the app_data_dictionary extension)
@@ -1209,7 +967,7 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    Proposal which introduces required extensions which are not supported
    by all members in the resulting epoch.
 
-6.3.4.  Framing of application_data
+6.2.4.  Framing of application_data
 
    When an MLS group contains the content_media_types component (in the
    app_data_dictionary extension) in its GroupContext, the
@@ -1225,7 +983,7 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    the application_content is interpreted as the first MediaType
    specified in the content_media_types component in the GroupContext.
 
-6.4.  SelfRemove Proposal
+6.3.  SelfRemove Proposal
 
    The design of the MLS protocol prevents a member of an MLS group from
    removing itself immediately from the group.  (To cause an immediate
@@ -1249,7 +1007,7 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    This section describes a new SelfRemove Proposal extension type.  It
    is designed to be included in External Commits.
 
-6.4.1.  Extension Description
+6.3.1.  Extension Description
 
    This document specifies a new MLS Proposal type called SelfRemove.
    Its syntax is described using the TLS Presentation Language [RFC8446]
@@ -1321,11 +1079,11 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    DS does not forward a Commit to a removed client, it needs to inform
    the removed client out-of-band.
 
-6.5.  Last resort KeyPackages
+6.4.  Last resort KeyPackages
 
    Type: KeyPackage extension
 
-6.5.1.  Description
+6.4.1.  Description
 
    Section 10 of [RFC9420] details that clients are required to pre-
    publish KeyPackages so that other clients can add them to groups
@@ -1359,7 +1117,7 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    authenticate that a KeyPackage is a last-resort KeyPackage and MAY
    make policy decisions based on that information.
 
-6.5.2.  Format
+6.4.2.  Format
 
    The purpose of the application component is simply to mark a given
    KeyPackage, which means it carries no additional data.
@@ -1367,7 +1125,7 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    As a result, a LastResort Extension contains the component_id with an
    empty data field.
 
-6.6.  Multi-Credentials
+6.5.  Multi-Credentials
 
    Multi-credentials address use cases where there might not be a single
    credential that captures all of a client's authenticated attributes.
@@ -1404,7 +1162,7 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    The only difference is in how they are treated when evaluating
    support by other clients, as discussed below.
 
-6.6.1.  Credential Bindings
+6.5.1.  Credential Bindings
 
    A multi-credential consists of a collection of "credential bindings".
    Each credential binding is a signed statement by the holder of the
@@ -1427,7 +1185,7 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    support requirements with regard to support by group members
    discussed below.
 
-6.6.2.  Verifying a Multi-Credential
+6.5.2.  Verifying a Multi-Credential
 
    A credential binding is supported by a client if the client supports
    the credential type and cipher suite of the binding.  A credential
@@ -1475,25 +1233,12 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    organized under the relevant registry Type.
 
    This document also requests the creation of a new MLS applications
-   components registry as described in Section 7.6.
+   components registry as described in Section 7.5.
 
    RFC EDITOR: Please replace XXXX throughout with the RFC number
    assigned to this document
 
 7.1.  MLS Wire Formats
-
-7.1.1.  MLS Targeted Message
-
-   The mls_targeted_message MLS Wire Format is used to send a message to
-   a subset of members of an MLS group.
-
-   *  Value: 0x0006 (suggested)
-
-   *  Name: mls_targeted_message
-
-   *  Recommended: Y
-
-   *  Reference: RFC XXXX
 
 7.2.  MLS Extension Types
 
@@ -1636,17 +1381,7 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
 
    *  Reference: RFC XXXX
 
-7.5.  MLS Signature Labels
-
-7.5.1.  TargetedMessageTBS
-
-   *  Label: "TargetedMessageTBS"
-
-   *  Recommended: Y
-
-   *  Reference: RFC XXXX
-
-7.5.2.  CredentialBindingTBS
+7.4.3.  CredentialBindingTBS
 
    *  Label: "CredentialBindingTBS"
 
@@ -1654,7 +1389,7 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
 
    *  Reference: RFC XXXX
 
-7.6.  MLS Component Types
+7.5.  MLS Component Types
 
    This document requests the creation of a new IANA "MLS Component
    Types" registry under the "Messaging Layer Security" group registry
@@ -1821,21 +1556,7 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    AppAck schedule, reporting loss if an AppAck is not received at the
    expected time.
 
-8.3.  Targeted Messages
-
-   In addition to the sender authentication, Targeted Messages are
-   authenticated by using a pre-shared key (PSK) between the sender and
-   the recipient.  The PSK is exported from the group key schedule using
-   the label "targeted message psk".  This ensures that the PSK is only
-   valid for a specific group and epoch, and the Forward Secrecy and
-   Post-Compromise Security guarantees of the group key schedule apply
-   to the targeted messages as well.  The PSK also ensures that an
-   attacker needs access to the private group state in addition to the
-   HPKE/signature's private keys.  This improves confidentiality
-   guarantees against passive attackers and authentication guarantees
-   against active attackers.
-
-8.4.  Content Advertisement
+8.3.  Content Advertisement
 
    Use of the content_media_types component could leak some private
    information visible in KeyPackages and inside an MLS group.  This
@@ -1848,7 +1569,7 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    long parameter lists, potentially containing characters which would
    be escaped or quoted in [RFC5322].
 
-8.5.  SelfRemove
+8.4.  SelfRemove
 
    An external recipient of a SelfRemove Proposal cannot verify the
    membership_tag.  However, an external joiner also has no way to
@@ -1858,7 +1579,7 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    external joins does not change with the addition of this proposal
    type.
 
-8.6.  Multi Credentials
+8.5.  Multi Credentials
 
    Using a Weak Multi Credential reduces the overall credential security
    to the security of the least secure of its credential bindings.
@@ -1927,14 +1648,15 @@ Appendix A.  Change Log
 
    RFC EDITOR PLEASE DELETE THIS SECTION.
 
-   draft-07 - assign self_remove proposal to a non duplicate number
-   (0x000a) - refactor TargetedMessage to no longer use structs removed
-   from when it was a "safe extension" - remove the no-longer needed
-   targeted_messages_capability (now signaled using support_wire_formats
-   and required_wire_formats) - add TargetedMessageTBS and
-   CredentialBundleTBS to MLS Signature Labels IANA registry - add
-   GREASE values for components - fix safe exporter definition - resolve
-   TODOs from -06 - fix numerous typos
+   draft-07 - remove targeted messages altogether with intention to
+   publish it as a separate document - assign self_remove proposal to a
+   non duplicate number (0x000a) - refactor TargetedMessage to no longer
+   use structs removed from when it was a "safe extension" - remove the
+   no-longer needed targeted_messages_capability (now signaled using
+   support_wire_formats and required_wire_formats) - add
+   TargetedMessageTBS and CredentialBundleTBS to MLS Signature Labels
+   IANA registry - add GREASE values for components - fix safe exporter
+   definition - resolve TODOs from -06 - fix numerous typos
 
    draft-06
 
