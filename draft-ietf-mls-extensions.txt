@@ -1648,11 +1648,12 @@ Appendix A.  Change Log
 
    RFC EDITOR PLEASE DELETE THIS SECTION.
 
-   draft-07 - remove targeted messages altogether with intention to
-   publish it as a separate document - assign self_remove proposal to a
-   non duplicate number (0x000a) - refactor TargetedMessage to no longer
-   use structs removed from when it was a "safe extension" - remove the
-   no-longer needed targeted_messages_capability (now signaled using
+   draft-07 - add AppAck to IANA considerations - adapt Safe AAD scope -
+   remove targeted messages altogether with intention to publish it as a
+   separate document - assign self_remove proposal to a non duplicate
+   number (0x000a) - refactor TargetedMessage to no longer use structs
+   removed from when it was a "safe extension" - remove the no-longer
+   needed targeted_messages_capability (now signaled using
    support_wire_formats and required_wire_formats) - add
    TargetedMessageTBS and CredentialBundleTBS to MLS Signature Labels
    IANA registry - add GREASE values for components - fix safe exporter
