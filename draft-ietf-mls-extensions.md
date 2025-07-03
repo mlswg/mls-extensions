@@ -1405,6 +1405,8 @@ security of the least secure of its credential bindings.
 RFC EDITOR PLEASE DELETE THIS SECTION.
 
 draft-07
+- add AppAck to IANA considerations
+- adapt Safe AAD scope
 - remove targeted messages altogether with intention to publish it as a
   separate document
 - assign self_remove proposal to a non duplicate number (0x000a)
