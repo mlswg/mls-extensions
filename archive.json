@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-03T00:49:36.292640+00:00",
+  "timestamp": "2025-07-06T00:54:50.582438+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -118,7 +118,7 @@
       "id": "I_kwDOHZoI5M5r9Qz8",
       "title": "Targeted message: add IANA entries for signature labels / exporter labels",
       "url": "https://github.com/mlswg/mls-extensions/issues/15",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "TWal",
       "authorAssociation": "NONE",
       "assignees": [
@@ -127,8 +127,8 @@
       "labels": [],
       "body": "Now that there are IANA registries for those, we must extend them.",
       "createdAt": "2023-07-19T06:07:00Z",
-      "updatedAt": "2025-05-03T15:11:55Z",
-      "closedAt": null,
+      "updatedAt": "2025-07-03T10:06:38Z",
+      "closedAt": "2025-07-03T10:06:38Z",
       "comments": [
         {
           "author": "seanturner",
@@ -436,15 +436,15 @@
       "id": "I_kwDOHZoI5M6owkSZ",
       "title": "Re-frame \"Safe Additional Authenticated Data (AAD)\"",
       "url": "https://github.com/mlswg/mls-extensions/issues/47",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "TWal",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "The section about Safe Additional Authenticated Data (AAD) discuss about the `authenticated_data` field of `PrivateContentAAD`.\n\nIt seems to me that this field is defined to be identical to `authenticated_data` in `FramedContent`. Shouldn't we frame this section about `FramedContent` then?",
       "createdAt": "2025-02-04T21:08:53Z",
-      "updatedAt": "2025-06-21T08:41:20Z",
-      "closedAt": null,
+      "updatedAt": "2025-07-03T10:03:39Z",
+      "closedAt": "2025-07-03T10:03:39Z",
       "comments": [
         {
           "author": "rohanmahy",
@@ -602,15 +602,15 @@
       "id": "I_kwDOHZoI5M6zXHcK",
       "title": "Does TargetedMessage include authenticated_data in its AAD?",
       "url": "https://github.com/mlswg/mls-extensions/issues/57",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "rohanmahy",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2025-04-21T19:51:55Z",
-      "updatedAt": "2025-05-12T13:58:05Z",
-      "closedAt": null,
+      "updatedAt": "2025-07-03T10:06:38Z",
+      "closedAt": "2025-07-03T10:06:38Z",
       "comments": [
         {
           "author": "raphaelrobert",
@@ -633,15 +633,15 @@
       "id": "I_kwDOHZoI5M62PU7p",
       "title": "Better explain what the \"message\" is in targeted messages",
       "url": "https://github.com/mlswg/mls-extensions/issues/59",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "raphaelrobert",
       "authorAssociation": "MEMBER",
       "assignees": [],
       "labels": [],
       "body": "Make it clearer that `message` is a byte array, just like with application messages in the base draft.",
       "createdAt": "2025-05-12T16:09:54Z",
-      "updatedAt": "2025-05-12T16:31:44Z",
-      "closedAt": null,
+      "updatedAt": "2025-07-03T10:06:38Z",
+      "closedAt": "2025-07-03T10:06:38Z",
       "comments": [
         {
           "author": "rohanmahy",
@@ -657,15 +657,15 @@
       "id": "I_kwDOHZoI5M68g-IO",
       "title": "Another issue that we should discuss are replay attacks. (Regular) ApplicationMessages have some protection in that recipients delete the keys and nonces necessary to decrypt them. That's not the case here.",
       "url": "https://github.com/mlswg/mls-extensions/issues/62",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "raphaelrobert",
       "authorAssociation": "MEMBER",
       "assignees": [],
       "labels": [],
       "body": "Another issue that we should discuss are replay attacks. (Regular) ApplicationMessages have some protection in that recipients delete the keys and nonces necessary to decrypt them. That's not the case here.\r\n\r\n_Originally posted by @kkohbrok in https://github.com/mlswg/mls-extensions/pull/61#pullrequestreview-2945476230_\r\n            ",
       "createdAt": "2025-06-20T10:24:15Z",
-      "updatedAt": "2025-06-20T10:24:15Z",
-      "closedAt": null,
+      "updatedAt": "2025-07-03T10:06:39Z",
+      "closedAt": "2025-07-03T10:06:39Z",
       "comments": []
     }
   ],
@@ -3979,21 +3979,21 @@
       "id": "PR_kwDOHZoI5M6bQ1LJ",
       "title": "Streamline targeted messages",
       "url": "https://github.com/mlswg/mls-extensions/pull/61",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "raphaelrobert",
       "authorAssociation": "MEMBER",
       "assignees": [],
       "labels": [],
       "body": "Simplifies targeted messages by eliminating the HPKE Auth mode and introduces padding.\r\n\r\nFixes #15, #57, #59.",
       "createdAt": "2025-06-19T13:42:20Z",
-      "updatedAt": "2025-06-21T23:33:40Z",
+      "updatedAt": "2025-07-03T10:05:07Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "b27fb69c4e7248c43130ef7753d52ecdc47505f2",
       "headRepository": "mlswg/mls-extensions",
       "headRefName": "revamp-targeted-messages",
       "headRefOid": "4e2f3224865df8ab277ae44d5257d47e80a8eba2",
-      "closedAt": null,
+      "closedAt": "2025-07-03T10:05:07Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
@@ -4018,6 +4018,13 @@
           "body": "Since the kem_output and ciphertext are far apart in the argument list,\r\nthey don't need to be combined.\r\n-r\r\n\r\nOn Sat, Jun 21, 2025, 11:41 raphaelrobert ***@***.***> wrote:\r\n\r\n> ***@***.**** commented on this pull request.\r\n> ------------------------------\r\n>\r\n> In draft-ietf-mls-extensions.md\r\n> <https://github.com/mlswg/mls-extensions/pull/61#discussion_r2160115376>:\r\n>\r\n> >                    receiver_node_private_key,\r\n>                    hpke_context,\r\n>                    targeted_message_tbm,\r\n> -                  hpke_ciphertext,\r\n> +                  ciphertext,\r\n>\r\n> The API defines a tuple, but I can change it back to hpke_ciphertext\r\n>\r\n> \u2014\r\n> Reply to this email directly, view it on GitHub\r\n> <https://github.com/mlswg/mls-extensions/pull/61#discussion_r2160115376>,\r\n> or unsubscribe\r\n> <https://github.com/notifications/unsubscribe-auth/AADSQPSB7URHJ34GZZG5QFD3EWRNTAVCNFSM6AAAAAB7V7C5R6VHI2DSMVQWIX3LMV43YUDVNRWFEZLROVSXG5CSMV3GSZLXHMZDSNBXHEZTENJQGM>\r\n> .\r\n> You are receiving this because you commented.Message ID:\r\n> ***@***.***>\r\n>\r\n",
           "createdAt": "2025-06-21T23:33:40Z",
           "updatedAt": "2025-06-21T23:33:40Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "Closing in favor of #65.",
+          "createdAt": "2025-07-03T10:05:07Z",
+          "updatedAt": "2025-07-03T10:05:07Z"
         }
       ],
       "reviews": [
@@ -4133,24 +4140,26 @@
       "id": "PR_kwDOHZoI5M6bcRS2",
       "title": "Adapt safe AAD scope",
       "url": "https://github.com/mlswg/mls-extensions/pull/63",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "raphaelrobert",
       "authorAssociation": "MEMBER",
       "assignees": [],
       "labels": [],
       "body": "Proposed fix #47.",
       "createdAt": "2025-06-20T15:50:08Z",
-      "updatedAt": "2025-06-21T18:38:38Z",
+      "updatedAt": "2025-07-03T10:03:38Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "b27fb69c4e7248c43130ef7753d52ecdc47505f2",
       "headRepository": "mlswg/mls-extensions",
       "headRefName": "adapt-safe-aad-scope",
       "headRefOid": "aab14c2001e5ecf1fd3189df2a23449857474239",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-07-03T10:03:37Z",
+      "mergedAt": "2025-07-03T10:03:37Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "9eba91ca8b447401734a87b144c84378f41b6278"
+      },
       "comments": [],
       "reviews": [
         {
@@ -4193,24 +4202,26 @@
       "id": "PR_kwDOHZoI5M6dFJAl",
       "title": "add AppAck to IANA considerations",
       "url": "https://github.com/mlswg/mls-extensions/pull/64",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "kkohbrok",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2025-07-02T12:53:45Z",
-      "updatedAt": "2025-07-02T15:06:18Z",
+      "updatedAt": "2025-07-03T10:04:19Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "b27fb69c4e7248c43130ef7753d52ecdc47505f2",
       "headRepository": "kkohbrok/mls-extensions",
       "headRefName": "konrad/app_ack_iana",
       "headRefOid": "5abdf6f9f7bb88c57f6aade74aafb333ebe53866",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-07-03T10:04:19Z",
+      "mergedAt": "2025-07-03T10:04:19Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "05e51ff72035acc97cad9d2825140c3aae125ae6"
+      },
       "comments": [],
       "reviews": [
         {
@@ -4227,6 +4238,64 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 65,
+      "id": "PR_kwDOHZoI5M6dPSdW",
+      "title": "Remove targeted messages",
+      "url": "https://github.com/mlswg/mls-extensions/pull/65",
+      "state": "MERGED",
+      "author": "raphaelrobert",
+      "authorAssociation": "MEMBER",
+      "assignees": [
+        "raphaelrobert"
+      ],
+      "labels": [],
+      "body": "Following the discussion in #61 and the discussion at the last IETF meeting, targeted messages will be published as a separate document. The new document will be based on #61, therefore this PR will close all issues related to targeted messages.\r\n\r\nFixes #15.\r\nFixes #57.\r\nFixes #59.\r\nFixes #62.",
+      "createdAt": "2025-07-03T10:02:57Z",
+      "updatedAt": "2025-07-03T10:06:37Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "b27fb69c4e7248c43130ef7753d52ecdc47505f2",
+      "headRepository": "mlswg/mls-extensions",
+      "headRefName": "remove-targeted-messages",
+      "headRefOid": "848a7e62e184912c0dee0ac230615cace7118e48",
+      "closedAt": "2025-07-03T10:06:37Z",
+      "mergedAt": "2025-07-03T10:06:37Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "7493290a9b46700bd64ab8052268e0a4a8ab4dd3"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 66,
+      "id": "PR_kwDOHZoI5M6dPbST",
+      "title": "Update changelog",
+      "url": "https://github.com/mlswg/mls-extensions/pull/66",
+      "state": "MERGED",
+      "author": "raphaelrobert",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-07-03T10:16:44Z",
+      "updatedAt": "2025-07-03T12:18:50Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "7493290a9b46700bd64ab8052268e0a4a8ab4dd3",
+      "headRepository": "mlswg/mls-extensions",
+      "headRefName": "update-changelog-draft-07",
+      "headRefOid": "af300ea84de72d0e048453a4ec1f8fa518b8dbce",
+      "closedAt": "2025-07-03T12:18:50Z",
+      "mergedAt": "2025-07-03T12:18:50Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "7b1a9fad5c97449ad87aa8d686baa03863974b2c"
+      },
+      "comments": [],
+      "reviews": []
     }
   ]
 }
