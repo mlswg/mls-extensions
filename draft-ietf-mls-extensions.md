@@ -911,10 +911,10 @@ wait several epochs to remove itself. A real-world situation in which this
 happens is a member trying to remove itself from a conference call as several
 dozen new participants are trying to join (often on the hour).
 
-This section describes a new `SelfRemove` Proposal extension type. It is
-designed to be included in External Commits.
+This section describes a new `SelfRemove` proposal type. It is designed to be
+included in External Commits.
 
-### Extension Description
+### Proposal Description
 
 This document specifies a new MLS Proposal type called `SelfRemove`. Its syntax
 is described using the TLS Presentation Language {{!RFC8446}} below (its content
@@ -941,10 +941,10 @@ struct {
 ~~~
 
 The description of behavior below only applies if all the members of a group
-support this extension in their capabilities; such a group is a
+support this proposal in their capabilities; such a group is a
 "self-remove-capable group".
 
-An MLS client which supports this extension can send a SelfRemove Proposal
+An MLS client which supports this proposal can send a SelfRemove Proposal
 whenever it would like to remove itself from a self-remove-capable group.
 Because the point of a SelfRemove Proposal is to be available to external
 joiners (which are not yet members), these proposals MUST be sent in an MLS
