@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-10T00:50:12.367758+00:00",
+  "timestamp": "2025-07-13T00:56:24.735747+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -680,9 +680,24 @@
       "labels": [],
       "body": "The text describing SelfRemove mentions a SelfRemove extension and a SelfRemove proposal in different places, but while the SelfRemove proposal is defined (as an empty struct) and mentioned in the IANA considerations, the extension is not. The first question is thus: Is there meant to be an extension?\n\nTL;DR: No, I think we should just remove mentions of an extension and stick with the proposal only. (See #68)\n\nThe second question is whether the needs to be an extension. On one hand Section [12.4.3.2](https://www.rfc-editor.org/rfc/rfc9420.html#section-12.4.3.2) of RFC9420 says that an external commit MUST NOT contain proposals by reference, so the use of SelfRemove proposals effectively needs to change the protocol. On the other hand Section [12.2](https://www.rfc-editor.org/rfc/rfc9420.html#section-12.2) says that new proposals definitions can update the validation logic.\n\nWhile the MUST NOT in Section 12.4.3.2 is technically not covered by the exception made for new proposal definitions in 12.2, I think it's totally fine for new proposals to define whether they're allowed in external commits by reference. Clients need to signal support for the proposal anyway, so there shouldn't be a problem with interop here and groups that don't want to allow SelfRemoves because they can't be validated fully in external commits can just forbid them by policy.\n",
       "createdAt": "2025-07-09T06:20:12Z",
-      "updatedAt": "2025-07-09T06:21:13Z",
+      "updatedAt": "2025-07-10T15:01:30Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "seanturner",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "PTAL at this issue and PR. We would like to decide whether to merge or close the PR by July 18th. Please see this [email](https://mailarchive.ietf.org/arch/msg/mls/iE7LcClGOXzQKWaTRfc54TBPpCI/).",
+          "createdAt": "2025-07-10T13:42:13Z",
+          "updatedAt": "2025-07-10T13:42:13Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Agreed that we should merge #68 and close this issue. SelfRemove is a proposal type. ",
+          "createdAt": "2025-07-10T15:01:30Z",
+          "updatedAt": "2025-07-10T15:01:30Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -4325,7 +4340,7 @@
       "labels": [],
       "body": "See #67 for a discussion on why I think this change makes sense.\r\n\r\nFixes #67.",
       "createdAt": "2025-07-09T06:20:53Z",
-      "updatedAt": "2025-07-09T06:20:54Z",
+      "updatedAt": "2025-07-10T15:01:00Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "7b1a9fad5c97449ad87aa8d686baa03863974b2c",
@@ -4337,7 +4352,21 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M6zLg2T",
+          "commit": {
+            "abbreviatedOid": "903e9ef"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "These changes are correct",
+          "createdAt": "2025-07-10T15:01:00Z",
+          "updatedAt": "2025-07-10T15:01:00Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
