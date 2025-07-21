@@ -4,8 +4,8 @@
 
 Messaging Layer Security                                       R. Robert
 Internet-Draft                                               Phoenix R&D
-Intended status: Standards Track                             3 July 2025
-Expires: 4 January 2026
+Intended status: Standards Track                            21 July 2025
+Expires: 22 January 2026
 
 
              The Messaging Layer Security (MLS) Extensions
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 4 January 2026.
+   This Internet-Draft will expire on 22 January 2026.
 
 Copyright Notice
 
@@ -94,7 +94,7 @@ Table of Contents
        6.2.3.  Expected Behavior
        6.2.4.  Framing of application_data
      6.3.  SelfRemove Proposal
-       6.3.1.  Extension Description
+       6.3.1.  Proposal Description
      6.4.  Last resort KeyPackages
        6.4.1.  Description
        6.4.2.  Format
@@ -1004,10 +1004,10 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    several dozen new participants are trying to join (often on the
    hour).
 
-   This section describes a new SelfRemove Proposal extension type.  It
-   is designed to be included in External Commits.
+   This section describes a new SelfRemove proposal type.  It is
+   designed to be included in External Commits.
 
-6.3.1.  Extension Description
+6.3.1.  Proposal Description
 
    This document specifies a new MLS Proposal type called SelfRemove.
    Its syntax is described using the TLS Presentation Language [RFC8446]
@@ -1033,10 +1033,10 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    } Proposal;
 
    The description of behavior below only applies if all the members of
-   a group support this extension in their capabilities; such a group is
+   a group support this proposal in their capabilities; such a group is
    a "self-remove-capable group".
 
-   An MLS client which supports this extension can send a SelfRemove
+   An MLS client which supports this proposal can send a SelfRemove
    Proposal whenever it would like to remove itself from a self-remove-
    capable group.  Because the point of a SelfRemove Proposal is to be
    available to external joiners (which are not yet members), these
