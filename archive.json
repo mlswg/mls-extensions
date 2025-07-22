@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-17T00:52:31.968387+00:00",
+  "timestamp": "2025-07-22T00:52:19.392819+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -673,15 +673,15 @@
       "id": "I_kwDOHZoI5M6_m8O2",
       "title": "SelfRemove: Extension and Proposal?",
       "url": "https://github.com/mlswg/mls-extensions/issues/67",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "kkohbrok",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "The text describing SelfRemove mentions a SelfRemove extension and a SelfRemove proposal in different places, but while the SelfRemove proposal is defined (as an empty struct) and mentioned in the IANA considerations, the extension is not. The first question is thus: Is there meant to be an extension?\n\nTL;DR: No, I think we should just remove mentions of an extension and stick with the proposal only. (See #68)\n\nThe second question is whether the needs to be an extension. On one hand Section [12.4.3.2](https://www.rfc-editor.org/rfc/rfc9420.html#section-12.4.3.2) of RFC9420 says that an external commit MUST NOT contain proposals by reference, so the use of SelfRemove proposals effectively needs to change the protocol. On the other hand Section [12.2](https://www.rfc-editor.org/rfc/rfc9420.html#section-12.2) says that new proposals definitions can update the validation logic.\n\nWhile the MUST NOT in Section 12.4.3.2 is technically not covered by the exception made for new proposal definitions in 12.2, I think it's totally fine for new proposals to define whether they're allowed in external commits by reference. Clients need to signal support for the proposal anyway, so there shouldn't be a problem with interop here and groups that don't want to allow SelfRemoves because they can't be validated fully in external commits can just forbid them by policy.\n",
       "createdAt": "2025-07-09T06:20:12Z",
-      "updatedAt": "2025-07-10T15:01:30Z",
-      "closedAt": null,
+      "updatedAt": "2025-07-21T15:42:12Z",
+      "closedAt": "2025-07-21T15:42:12Z",
       "comments": [
         {
           "author": "seanturner",
@@ -4333,24 +4333,26 @@
       "id": "PR_kwDOHZoI5M6eDvNL",
       "title": "Remove mentions of a SelfRemove extension",
       "url": "https://github.com/mlswg/mls-extensions/pull/68",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "kkohbrok",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "See #67 for a discussion on why I think this change makes sense.\r\n\r\nFixes #67.",
       "createdAt": "2025-07-09T06:20:53Z",
-      "updatedAt": "2025-07-15T22:10:57Z",
+      "updatedAt": "2025-07-21T15:42:11Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "7b1a9fad5c97449ad87aa8d686baa03863974b2c",
       "headRepository": "kkohbrok/mls-extensions",
       "headRefName": "konrad/self-remove-clarifications",
       "headRefOid": "903e9ef95a64042b288409ba4360bbeca44d9b3f",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-07-21T15:42:11Z",
+      "mergedAt": "2025-07-21T15:42:11Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "bfd258ac3b3af2338c4c335803eb44e4ccd54834"
+      },
       "comments": [],
       "reviews": [
         {
