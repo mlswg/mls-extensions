@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-22T00:52:19.392819+00:00",
+  "timestamp": "2025-07-31T00:53:23.834061+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -698,6 +698,22 @@
           "updatedAt": "2025-07-10T15:01:30Z"
         }
       ]
+    },
+    {
+      "number": 69,
+      "id": "I_kwDOHZoI5M7DRia8",
+      "title": "Is Component Type (ComponentID) a u16 or u32?",
+      "url": "https://github.com/mlswg/mls-extensions/issues/69",
+      "state": "OPEN",
+      "author": "kkohbrok",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "[Section 4.4.](https://www.ietf.org/archive/id/draft-ietf-mls-extensions-08.html#section-4.4) says ComponentID is a u16, while the IANA table lists values in the range of a u32. \n\nOne notable consequence of which we go for is the size of the PPRF described in Section 4.4. If we go with a u16, the PPRF has 2^16 leaves, which means that after one query, it has a size of ~650kB (16 nodes in a path with 32 bytes plus an index for each node). Following queries add first 15 nodes, then 14, etc, roughly doubling the size each time. If we go with a u32, the size roughly doubles, starting from ~1,3kB after the first query, then again almost doubling with each subsequent one.\n\nI don't have a strong opinion here, just wanted to note that it's a little inconsistent and that the choice comes with a slight trade-off in group state size.",
+      "createdAt": "2025-07-30T08:30:33Z",
+      "updatedAt": "2025-07-30T08:30:33Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
