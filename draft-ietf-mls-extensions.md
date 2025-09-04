@@ -765,6 +765,36 @@ generation is never observed. Obviously, there is a risk that AppAck messages
 could be suppressed as well, but their inclusion in the transcript means that if
 they are suppressed then the group cannot advance at all.
 
+## Transport Layer Security Compatibility Extensions 
+
+In instances where MLS is used as an alternative to Transport Layer Security (TLS), the functionalities that TLS extensions provide must be similarly provided by MLS. Mandatory extensions that describe TLS inherent session parameters (e.g., supported version, supported groups, etc.) are already analogously covered by the existing data inside MLS `GroupInfo`. However, extrinsic parameter negotiations that piggy-back on the TLS handshake, such as Application Layer Protocol Negotiation (APLN), transport parameter selection, and Server Name Indication (SNI) are not supported by MLS. These extensions require adaptations in the group setting for support by MLS.  
+
+Generically, we can do this for protocols above and below MLS that use MLS for key agreement. 
+
+### Application-Layer Protocol Agreement (ALPA)
+
+Application-Layer Protocol Agreement (ALPA) allows for the selection of an application layer protocol within the process to join an MLS group. This is analogous to Application-Layer Protocol Negociation (ALPN) from TLS which is a negotiation process as opposed to ALPA's selection process. ALPA is useful when another protocol (e.g. draft-tian-quic-quicmls) only uses MLS for key agreement and retains its own secure channel functions for application messaging.
+
+With ALPA, a group's required application layer protocols are presented as a non-zero length vector by the `app_layer_protocol` object within the `app_data_dictionary` in the GroupContext. When a new member is being added to the group, their KeyPackage must contain at least the required application protocols of the group. This list is either equal to or a superset of the ones in the GroupContext. The full list of supported application protocols are recorded in that member's LeafNode `Capabilities` struct after they join the group. The structure of the `app_layer_protocol` is as follows: 
+
+~~~ tls
+opaque ProtocolName<1..2^8-1>; 
+
+struct {
+    ProtocolName protocol_names<V>; 
+} ProtocolNameList; 
+~~~
+
+In the Welcome-based flow for adding a new member, when the member receives their Welcome message they are prescribed the application layer protocol(s) to use. In the External Join flow (described in {{?RFC9420}}), the joining client downloads the GroupInfo object which advertises the required application protocols of the group to the joiner.
+
+
+### Transport Layer Parameters Advertisement 
+Rather than establishing transport layer parameters out-of-band, protocols like QUIC require them to be authenticated by the cryptographic handshake. To support this, MLS provides Transport Layer Parameter Advertisement (TLPA) as part of the `SafeAAD` as an `aad_item`. When included, this allows for group channel transport parameter agreement as well as individualized member transport parameter advertisement. In 1-many and many-many communications, consistency provided by authenticated group channel transport parameter agreement can allow participants to pick optimal group-wide defaults (which may evolve) instead of relying on trial-and-error. In 1-1 or many-1 communications, individual transport parameter adverstisement allow participants choose a more tailored setting appropriate for the recipient. 
+
+
+### TODO: Server Name Indication?
+
+
 ## Content Advertisement
 
 ### Description
