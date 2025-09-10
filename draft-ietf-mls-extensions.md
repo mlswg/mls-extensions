@@ -126,7 +126,8 @@ terms:
 Application:
 : The system that instantiates, manages, and uses an MLS group. Each MLS group
 is used by exactly one application, but an application may maintain multiple
-groups. An application is not limited to just the application-layer.
+groups. An application for the purposes of this document may refer to 
+non-application layer systems.
 
 Application component:
 : A subsystem of an application that has access to an MLS group.
