@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-31T00:53:23.834061+00:00",
+  "timestamp": "2025-09-11T00:43:32.268877+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -712,6 +712,38 @@
       "body": "[Section 4.4.](https://www.ietf.org/archive/id/draft-ietf-mls-extensions-08.html#section-4.4) says ComponentID is a u16, while the IANA table lists values in the range of a u32. \n\nOne notable consequence of which we go for is the size of the PPRF described in Section 4.4. If we go with a u16, the PPRF has 2^16 leaves, which means that after one query, it has a size of ~650kB (16 nodes in a path with 32 bytes plus an index for each node). Following queries add first 15 nodes, then 14, etc, roughly doubling the size each time. If we go with a u32, the size roughly doubles, starting from ~1,3kB after the first query, then again almost doubling with each subsequent one.\n\nI don't have a strong opinion here, just wanted to note that it's a little inconsistent and that the choice comes with a slight trade-off in group state size.",
       "createdAt": "2025-07-30T08:30:33Z",
       "updatedAt": "2025-07-30T08:30:33Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 70,
+      "id": "I_kwDOHZoI5M7KqLNJ",
+      "title": "Cross-layer support",
+      "url": "https://github.com/mlswg/mls-extensions/issues/70",
+      "state": "OPEN",
+      "author": "xisentian",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "The current scoping of the extensions document restricts content advertisement to support only the application layer - specifically particular media types. The MLS Application is defined within this document as \"the system that instantiates, manages, and uses an MLS group\" which implies if other protocol layers used MLS, then they should be able to utilize the Safe Application Interface to agree on layer-specific content. Thus, components within Safe API should be generalized further to support protocol layers other than application. ",
+      "createdAt": "2025-09-09T21:38:37Z",
+      "updatedAt": "2025-09-09T21:38:37Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 71,
+      "id": "I_kwDOHZoI5M7KzSrF",
+      "title": "App data dictionary in GroupContext",
+      "url": "https://github.com/mlswg/mls-extensions/issues/71",
+      "state": "OPEN",
+      "author": "franziskuskiefer",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Putting a lot of data into an app data dictionary in the group context, in order to ensure everyone agrees on it, has a negative impact on performance. Not only on the size of the `Welcome` message, but on the performance of computing messages and commits. The group context is part of the `FramedContentTBS`, key schedule, and the path secret encryption.\n\nThe text on Sec 4.7 currently [suggests](https://datatracker.ietf.org/doc/html/draft-ietf-mls-extensions#section-4.7-10.1.1) that requiring the application to handle the application state is not what we want in the draft. But I think it needs more guidance on how this should be used. This is primarily an issue for the group context extension. Putting a lot of data into the extension in other cases does not hurt MLS performance as much.\n\n**Suggestion**\n\nProvide some more guidance on usage of app data dictionary such as\n- Only small app data dictionaries should be put into the group context.\n- Large amounts of app data should be stored outside of the group context and linked back only with a commitment (hash).\n\nDefine an additional way of storing app data in the group context that performs the hashing with the hash from the ciphersuite, to avoid putting this burden onto the application.",
+      "createdAt": "2025-09-10T13:12:51Z",
+      "updatedAt": "2025-09-10T13:12:51Z",
       "closedAt": null,
       "comments": []
     }
@@ -4398,6 +4430,32 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 72,
+      "id": "PR_kwDOHZoI5M6n4VF8",
+      "title": "Cross layer support ",
+      "url": "https://github.com/mlswg/mls-extensions/pull/72",
+      "state": "OPEN",
+      "author": "xisentian",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "RE: Cross Layer Support Issue #70 ",
+      "createdAt": "2025-09-10T19:10:46Z",
+      "updatedAt": "2025-09-10T19:10:47Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "bfd258ac3b3af2338c4c335803eb44e4ccd54834",
+      "headRepository": "xisentian/mls-extensions-cross-layer-support",
+      "headRefName": "pr-draft",
+      "headRefOid": "6ab1fff97e49ef0b4c88084e024bfcc31a8111f2",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
