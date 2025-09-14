@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-09-11T00:43:32.268877+00:00",
+  "timestamp": "2025-09-14T00:46:54.174402+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -4443,19 +4443,85 @@
       "labels": [],
       "body": "RE: Cross Layer Support Issue #70 ",
       "createdAt": "2025-09-10T19:10:46Z",
-      "updatedAt": "2025-09-10T19:10:47Z",
+      "updatedAt": "2025-09-11T16:38:28Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "bfd258ac3b3af2338c4c335803eb44e4ccd54834",
       "headRepository": "xisentian/mls-extensions-cross-layer-support",
       "headRefName": "pr-draft",
-      "headRefOid": "6ab1fff97e49ef0b4c88084e024bfcc31a8111f2",
+      "headRefOid": "f5137967f4690c74e44b51d00022879738502c00",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M6_S0UH",
+          "commit": {
+            "abbreviatedOid": "6ab1fff"
+          },
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "CHANGES_REQUESTED",
+          "body": "Looks good to me with three suggestions. ",
+          "createdAt": "2025-09-11T07:14:06Z",
+          "updatedAt": "2025-09-11T07:22:56Z",
+          "comments": [
+            {
+              "originalPosition": 48,
+              "body": "```suggestion\r\nThe `ComponentData` within the `app_data_dictionary` and the use of `SafeAAD` within messages can be used to provide cross-layer support for applications that use MLS but also influence one or more other protocol layers. Application components can store group configurations within the `ComponentData` struct and use the `SafeAAD` struct to communicate between one another. Furthermore, additional capabilities and attributes outside the group-agreed configuration can also be conveyed through the `app_data_dictionary` extension in the `LeafNode` or `KeyPackage`. This section provides some examples of cross-layer support functionalities that may be achieved through the `app_data_dictionary` usage.\r\n```",
+              "createdAt": "2025-09-11T07:14:06Z",
+              "updatedAt": "2025-09-11T07:22:56Z"
+            },
+            {
+              "originalPosition": 55,
+              "body": "```suggestion\r\nAn ALPA component could be implemented as follows: A group's required application-layer protocols are listed in the `data` vector of the `ComponentData` struct within the `app_data_dictionary` in the `GroupContext`. When a new member is being added to the group, their `KeyPackage` must contain at least the required application protocols of the group. This list is either equal to or a superset of the aforementioned list in the `GroupContext`. A member's full list of supported application protocols is recorded in that member's `app_data_dictionary` in their `LeafNode` `Capabilities` struct.\r\n```",
+              "createdAt": "2025-09-11T07:16:21Z",
+              "updatedAt": "2025-09-11T07:22:56Z"
+            },
+            {
+              "originalPosition": 6,
+              "body": "Saying a non-application layer system is a bit contradictory. We should either move away from the term \"application\" or be more specific by what we mean by non-application layer system. Maybe explain that \"application\" in \"non-application layer systems\" refers to the OSI definition of the term?",
+              "createdAt": "2025-09-11T07:22:41Z",
+              "updatedAt": "2025-09-11T07:22:56Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6_fbQu",
+          "commit": {
+            "abbreviatedOid": "6ab1fff"
+          },
+          "author": "xisentian",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-09-11T16:30:23Z",
+          "updatedAt": "2025-09-11T16:30:23Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "```suggestion\r\nnon-application layer systems. Specifically, this refers to the OSI definition of applications that categorizes them according to their specific function within the communications stack. \r\n```",
+              "createdAt": "2025-09-11T16:30:23Z",
+              "updatedAt": "2025-09-11T16:30:23Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M6_fh-8",
+          "commit": {
+            "abbreviatedOid": "f513796"
+          },
+          "author": "xisentian",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "incorporated suggestions and clarifications ",
+          "createdAt": "2025-09-11T16:38:28Z",
+          "updatedAt": "2025-09-11T16:38:28Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
