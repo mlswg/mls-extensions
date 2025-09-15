@@ -885,13 +885,13 @@ sent in that group is interpreted as `ApplicationFraming` as defined below:
 ~~~ tls
   struct {
       MediaType media_type;
-      opaque<V> application_content;
+      opaque<V> inner_application_content;
   } ApplicationFraming;
 ~~~
 
 The `media_type` MAY be zero length, in which case, the media type of the
-`application_content` is interpreted as the first MediaType specified in the
-`content_media_types` component in the GroupContext.
+`inner_application_content` is interpreted as the first MediaType specified in
+the `content_media_types` component in the GroupContext.
 
 ## SelfRemove Proposal
 
