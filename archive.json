@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-09-14T00:46:54.174402+00:00",
+  "timestamp": "2025-09-16T00:42:07.208459+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -4522,6 +4522,32 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 73,
+      "id": "PR_kwDOHZoI5M6omTN_",
+      "title": "Make inner application_content unambiguous",
+      "url": "https://github.com/mlswg/mls-extensions/pull/73",
+      "state": "OPEN",
+      "author": "rohanmahy",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Currently application_content is used both as the content both inside and outside the ApplicationFraming for content negotiation.",
+      "createdAt": "2025-09-15T10:04:09Z",
+      "updatedAt": "2025-09-15T10:04:10Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "bfd258ac3b3af2338c4c335803eb44e4ccd54834",
+      "headRepository": "rohanmahy/mls-extensions",
+      "headRefName": "patch-2",
+      "headRefOid": "2825cc7ddca7fa51acedaffba3974fd6f239d95a",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
