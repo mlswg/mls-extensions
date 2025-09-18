@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-09-16T00:42:07.208459+00:00",
+  "timestamp": "2025-09-18T00:42:16.905857+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -711,9 +711,17 @@
       "labels": [],
       "body": "[Section 4.4.](https://www.ietf.org/archive/id/draft-ietf-mls-extensions-08.html#section-4.4) says ComponentID is a u16, while the IANA table lists values in the range of a u32. \n\nOne notable consequence of which we go for is the size of the PPRF described in Section 4.4. If we go with a u16, the PPRF has 2^16 leaves, which means that after one query, it has a size of ~650kB (16 nodes in a path with 32 bytes plus an index for each node). Following queries add first 15 nodes, then 14, etc, roughly doubling the size each time. If we go with a u32, the size roughly doubles, starting from ~1,3kB after the first query, then again almost doubling with each subsequent one.\n\nI don't have a strong opinion here, just wanted to note that it's a little inconsistent and that the choice comes with a slight trade-off in group state size.",
       "createdAt": "2025-07-30T08:30:33Z",
-      "updatedAt": "2025-07-30T08:30:33Z",
+      "updatedAt": "2025-09-17T16:49:45Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "It is currently a u32, but I'd be happy to make it a u16.",
+          "createdAt": "2025-09-17T16:49:45Z",
+          "updatedAt": "2025-09-17T16:49:45Z"
+        }
+      ]
     },
     {
       "number": 70,
