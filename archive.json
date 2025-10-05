@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-09-18T00:42:16.905857+00:00",
+  "timestamp": "2025-10-05T00:48:31.854487+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -735,9 +735,24 @@
       "labels": [],
       "body": "The current scoping of the extensions document restricts content advertisement to support only the application layer - specifically particular media types. The MLS Application is defined within this document as \"the system that instantiates, manages, and uses an MLS group\" which implies if other protocol layers used MLS, then they should be able to utilize the Safe Application Interface to agree on layer-specific content. Thus, components within Safe API should be generalized further to support protocol layers other than application. ",
       "createdAt": "2025-09-09T21:38:37Z",
-      "updatedAt": "2025-09-09T21:38:37Z",
+      "updatedAt": "2025-10-02T16:08:13Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Xisen, could you elaborate on some examples of content that could not be represented using media types? Or is the issue that it would be clumsy to represent the supported types of content?",
+          "createdAt": "2025-10-02T09:57:34Z",
+          "updatedAt": "2025-10-02T09:57:34Z"
+        },
+        {
+          "author": "xisentian",
+          "authorAssociation": "NONE",
+          "body": "@rohanmahy, the structure of the media types is sufficient, in my opinion, for the content we were _originally_ thinking of: group supported application protocols, transport layer parameters, server name indication.To your other point though, it does seem clumsy to represent them under media-types which is why I proposed to represent the content in their own categorized base-layer types. This expansion of the base-label accommodates other TCP/IP layers that may want to utilize MLS group context agreement (i.e. cross layer support). ",
+          "createdAt": "2025-10-02T16:08:13Z",
+          "updatedAt": "2025-10-02T16:08:13Z"
+        }
+      ]
     },
     {
       "number": 71,
@@ -751,9 +766,17 @@
       "labels": [],
       "body": "Putting a lot of data into an app data dictionary in the group context, in order to ensure everyone agrees on it, has a negative impact on performance. Not only on the size of the `Welcome` message, but on the performance of computing messages and commits. The group context is part of the `FramedContentTBS`, key schedule, and the path secret encryption.\n\nThe text on Sec 4.7 currently [suggests](https://datatracker.ietf.org/doc/html/draft-ietf-mls-extensions#section-4.7-10.1.1) that requiring the application to handle the application state is not what we want in the draft. But I think it needs more guidance on how this should be used. This is primarily an issue for the group context extension. Putting a lot of data into the extension in other cases does not hurt MLS performance as much.\n\n**Suggestion**\n\nProvide some more guidance on usage of app data dictionary such as\n- Only small app data dictionaries should be put into the group context.\n- Large amounts of app data should be stored outside of the group context and linked back only with a commitment (hash).\n\nDefine an additional way of storing app data in the group context that performs the hashing with the hash from the ciphersuite, to avoid putting this burden onto the application.",
       "createdAt": "2025-09-10T13:12:51Z",
-      "updatedAt": "2025-09-10T13:12:51Z",
+      "updatedAt": "2025-10-02T10:16:04Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I hope to have some performance numbers by the end of the year on large dictionaries in GroupContext.\n\nThe GroupContext is only included on signatures of external commits right?\n\n```\nstruct {\n    ProtocolVersion version = mls10;\n    WireFormat wire_format;\n    FramedContent content;\n    select (FramedContentTBS.content.sender.sender_type) {\n        case member:\n        case new_member_commit:\n            GroupContext context;\n        case external:\n        case new_member_proposal:\n            struct{};\n    };\n} FramedContentTBS;\n```\n\nIn terms of concrete action, it sounds like you are proposing:\n- add text and maybe guidelines _in this document_ about the negative effects of very large dictionaries (worse in GroupContext)\n- mention _in this document_ the idea of using hashes instead of data if the data can be stored elsewhere.\n- write a new extension describing how to synchronize external data with hashes in the GroupContext (\u00e0 la an external ratchet_tree)\n",
+          "createdAt": "2025-10-02T10:16:04Z",
+          "updatedAt": "2025-10-02T10:16:04Z"
+        }
+      ]
     }
   ],
   "pulls": [
