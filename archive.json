@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-10-09T00:43:57.564862+00:00",
+  "timestamp": "2025-10-12T00:45:49.428815+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -797,9 +797,17 @@
       "labels": [],
       "body": "We're having a small discussion on how to interpret the document over in the [mls-combiner repo](https://github.com/mlswg/mls-combiner/issues/6) on how to interpret this draft.\n\nThe question is on what the level of granularity is with which the `app_data_dictionary` can be updated. More concretely, what is the content of an AppDataUpdate proposal? Is it some information that the application/component then uses to update the state of the component in the `app_data_dictionary`? Or must it be the complete new content of the components entry in the `app_data_dictionary`, which then just replaces the old content?\n\n@bitbltr please chime in here if I didn't present your side of the argument correctly.",
       "createdAt": "2025-10-08T06:17:15Z",
-      "updatedAt": "2025-10-08T06:17:15Z",
+      "updatedAt": "2025-10-11T04:14:28Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "bitbltr",
+          "authorAssociation": "NONE",
+          "body": "Thanks @kkohbrok . To be clear, the way I interpreted the draft is the app_data_dictionary is a collection of entries organized by Component ID, and the AppDataUpdate is a way to replace or remove the complete entry associated with an individual Component ID instead of having to send the entire dictionary collection over the wire. Is that correct, or is there a finer level of granularity intended (i.e. sub-entries within the entry)",
+          "createdAt": "2025-10-11T04:14:28Z",
+          "updatedAt": "2025-10-11T04:14:28Z"
+        }
+      ]
     }
   ],
   "pulls": [
