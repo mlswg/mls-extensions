@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-10-12T00:45:49.428815+00:00",
+  "timestamp": "2025-10-16T00:44:39.425907+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -797,7 +797,7 @@
       "labels": [],
       "body": "We're having a small discussion on how to interpret the document over in the [mls-combiner repo](https://github.com/mlswg/mls-combiner/issues/6) on how to interpret this draft.\n\nThe question is on what the level of granularity is with which the `app_data_dictionary` can be updated. More concretely, what is the content of an AppDataUpdate proposal? Is it some information that the application/component then uses to update the state of the component in the `app_data_dictionary`? Or must it be the complete new content of the components entry in the `app_data_dictionary`, which then just replaces the old content?\n\n@bitbltr please chime in here if I didn't present your side of the argument correctly.",
       "createdAt": "2025-10-08T06:17:15Z",
-      "updatedAt": "2025-10-11T04:14:28Z",
+      "updatedAt": "2025-10-15T14:47:50Z",
       "closedAt": null,
       "comments": [
         {
@@ -806,6 +806,41 @@
           "body": "Thanks @kkohbrok . To be clear, the way I interpreted the draft is the app_data_dictionary is a collection of entries organized by Component ID, and the AppDataUpdate is a way to replace or remove the complete entry associated with an individual Component ID instead of having to send the entire dictionary collection over the wire. Is that correct, or is there a finer level of granularity intended (i.e. sub-entries within the entry)",
           "createdAt": "2025-10-11T04:14:28Z",
           "updatedAt": "2025-10-11T04:14:28Z"
+        },
+        {
+          "author": "keks",
+          "authorAssociation": "NONE",
+          "body": "@bitbltr That is not how I read it. From [4.7](https://www.ietf.org/archive/id/draft-ietf-mls-extensions-08.html#section-4.7-9.2.1):\n\n> If the list comprises one or more proposals, all with op field set to update:\n> - Provide the application logic registered to the `component_id` value with the content of the update field from each proposal, in the order specified.\n> - The application logic returns either an opaque value `new_data` that will be stored as the new application data for this component, or else an indication that it considers this update invalid.\n> - ...\n\nAccording to the text, `new_data` is returned by the application logic, and I don't see any indication that is the same as the content of the update field.\n\nThe application data could replace the entry verbatim, have some \"sub-entry\" logic or implement a diff/patch/CRDT algorithm. It's not specified.",
+          "createdAt": "2025-10-14T16:17:39Z",
+          "updatedAt": "2025-10-14T16:19:46Z"
+        },
+        {
+          "author": "bitbltr",
+          "authorAssociation": "NONE",
+          "body": "@keks @kkohbrok I'm starting to see your perspective, especially with the following note in the draft:\n\n> NOTE: An alternative design here would be to have the update operation simply set the new value for the app_data_dictionary GCE, instead of sending a diff.  This would be simpler in that the MLS stack wouldn't have to ask the application for the new state value, and would discourage applications from storing large state in the GroupContext directly...\n\nMy personal take on the issue is that opaque value updates is the only practical technique for the app_data_dictionary GCE in an environment that contains heterogeneous clients. If one client in the group doesn't understand how to update the value for a component ID and considers the update invalid, now the Group Context state cannot be agreed upon across all clients",
+          "createdAt": "2025-10-14T20:44:23Z",
+          "updatedAt": "2025-10-14T20:45:32Z"
+        },
+        {
+          "author": "keks",
+          "authorAssociation": "NONE",
+          "body": "This already is a problem for core protocol functionality like adding new members to a group. The application defines the policies, and all clients must agree on these (not just in spirit, but also in implementation behaviour). If they don't, the group state may fork. To me, this is just an extension of that.",
+          "createdAt": "2025-10-15T07:48:12Z",
+          "updatedAt": "2025-10-15T07:48:12Z"
+        },
+        {
+          "author": "bitbltr",
+          "authorAssociation": "NONE",
+          "body": "I think it's a much bigger problem than the one you describe regarding adding members to a group. It's one thing to agree on policy, it's another thing to allow the context to get out of sync because some vendor adds a new component ID. I think this is a huge hole in the proposal with far reaching implications and should be implemented as an opaque update.",
+          "createdAt": "2025-10-15T10:05:06Z",
+          "updatedAt": "2025-10-15T10:08:30Z"
+        },
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "My understanding was that if you want to be able to use a component in the group contect (i.e. update it via proposal), the group must require support that component via entry in the `app_components` entry in the `app_data_dictionary`.\n\nGranted, that's not stated in the document currently, but I think it should be. I don't think it's a good idea to have components on the GroupContext level that are not supported by every group member.",
+          "createdAt": "2025-10-15T14:47:49Z",
+          "updatedAt": "2025-10-15T14:47:49Z"
         }
       ]
     }
