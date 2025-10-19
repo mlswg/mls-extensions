@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-10-16T00:44:39.425907+00:00",
+  "timestamp": "2025-10-19T00:51:11.993099+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -797,7 +797,7 @@
       "labels": [],
       "body": "We're having a small discussion on how to interpret the document over in the [mls-combiner repo](https://github.com/mlswg/mls-combiner/issues/6) on how to interpret this draft.\n\nThe question is on what the level of granularity is with which the `app_data_dictionary` can be updated. More concretely, what is the content of an AppDataUpdate proposal? Is it some information that the application/component then uses to update the state of the component in the `app_data_dictionary`? Or must it be the complete new content of the components entry in the `app_data_dictionary`, which then just replaces the old content?\n\n@bitbltr please chime in here if I didn't present your side of the argument correctly.",
       "createdAt": "2025-10-08T06:17:15Z",
-      "updatedAt": "2025-10-15T14:47:50Z",
+      "updatedAt": "2025-10-17T08:48:50Z",
       "closedAt": null,
       "comments": [
         {
@@ -841,6 +841,34 @@
           "body": "My understanding was that if you want to be able to use a component in the group contect (i.e. update it via proposal), the group must require support that component via entry in the `app_components` entry in the `app_data_dictionary`.\n\nGranted, that's not stated in the document currently, but I think it should be. I don't think it's a good idea to have components on the GroupContext level that are not supported by every group member.",
           "createdAt": "2025-10-15T14:47:49Z",
           "updatedAt": "2025-10-15T14:47:49Z"
+        },
+        {
+          "author": "bitbltr",
+          "authorAssociation": "NONE",
+          "body": "@kkohbrok If it were specified somewhere that all required Component IDs must be enumerated in order to join the group, then that would make sense. But I still see caveats:\n\n1. The space is 2^32. That is potentially a huge number of Component IDs to enumerate\n2. Half the ID space is reserved for private vendor use (0x80000000 - 0xFFFFFFFF). Perhaps the vendor has custom logic only for their clients and there is no way for another vendor's clients to support those IDs. Now the group can never converge.\n\nI keep circling back to opaque updates is the way to go.",
+          "createdAt": "2025-10-16T20:01:47Z",
+          "updatedAt": "2025-10-16T20:01:47Z"
+        },
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I don't understand the concern about the space of component IDs. Do you expect that such a large number of component IDs will be in use that they bloat the group context? If a vendor has custom logic that's fine, but that means that logic can't be used when interoperating with other clients. Specifically, such an ID should only be used in the `app_data_dictionary` if all clients are from the same vendor.\n\nI'm still having trouble imagining where we run into trouble when we use non-opaque app-controlled updates to `app_data_dictionary`. Can you maybe sketch a concrete scenario that you expect to be relevant in practice?",
+          "createdAt": "2025-10-17T06:24:32Z",
+          "updatedAt": "2025-10-17T06:24:32Z"
+        },
+        {
+          "author": "bitbltr",
+          "authorAssociation": "NONE",
+          "body": "I think what it really comes down to is are there only required components or can there be optional components. If there is such a thing as optional components, then the group needs to be able to process group context updates without understanding the content of the app data entries for the optional components.\n\nBut if the intention is all clients must support a list of components and there are no optional components, then your technique is valid.\n\nI don't like this result however. From my experience designing APIs, I think you're ensuring vendor fragmentation and non-interoperable clients especially because of the space reserved for private vendor use. It would be different if only IETF-approved components were allowed.",
+          "createdAt": "2025-10-17T08:40:24Z",
+          "updatedAt": "2025-10-17T08:40:24Z"
+        },
+        {
+          "author": "bitbltr",
+          "authorAssociation": "NONE",
+          "body": "Thinking about it more, perhaps private vendor components could be barred from use in group context and leaf nodes. Perhaps only things like AppEphemeral proposals.",
+          "createdAt": "2025-10-17T08:48:50Z",
+          "updatedAt": "2025-10-17T08:48:50Z"
         }
       ]
     }
