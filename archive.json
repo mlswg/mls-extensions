@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-10-19T00:51:11.993099+00:00",
+  "timestamp": "2025-10-23T00:45:01.796244+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -797,7 +797,7 @@
       "labels": [],
       "body": "We're having a small discussion on how to interpret the document over in the [mls-combiner repo](https://github.com/mlswg/mls-combiner/issues/6) on how to interpret this draft.\n\nThe question is on what the level of granularity is with which the `app_data_dictionary` can be updated. More concretely, what is the content of an AppDataUpdate proposal? Is it some information that the application/component then uses to update the state of the component in the `app_data_dictionary`? Or must it be the complete new content of the components entry in the `app_data_dictionary`, which then just replaces the old content?\n\n@bitbltr please chime in here if I didn't present your side of the argument correctly.",
       "createdAt": "2025-10-08T06:17:15Z",
-      "updatedAt": "2025-10-17T08:48:50Z",
+      "updatedAt": "2025-10-22T23:56:28Z",
       "closedAt": null,
       "comments": [
         {
@@ -869,6 +869,48 @@
           "body": "Thinking about it more, perhaps private vendor components could be barred from use in group context and leaf nodes. Perhaps only things like AppEphemeral proposals.",
           "createdAt": "2025-10-17T08:48:50Z",
           "updatedAt": "2025-10-17T08:48:50Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "The contents of `update` are defined by each component. It could be a complete replacement (as in [MIMI room metadata](https://www.ietf.org/archive/id/draft-ietf-mimi-protocol-05.html#name-room-metadata)) or a patch (as in [MIMI participant lists](https://www.ietf.org/archive/id/draft-ietf-mimi-protocol-05.html#name-participant-list)).",
+          "createdAt": "2025-10-21T10:07:16Z",
+          "updatedAt": "2025-10-21T10:07:16Z"
+        },
+        {
+          "author": "bitbltr",
+          "authorAssociation": "NONE",
+          "body": "@rohanmahy Thank you for clarification. However if that is the intent, then clients can only join sessions that have Component IDs they understand, otherwise they will not be able to keep the group state synchronized (because they do not have the application logic to handle patches). So there needs to be an advertisement as to what Component IDs are required by the group context (in addition to the AppDataUpdate proposal type in the proposal_types list in the group's required_capabilities extension). That way the client can effectively say \"I don't understand that Component ID, so therefore I cannot join.\"\n\nPersonally, I think this design is fatally flawed for future compatibility, especially since vendors can add their own Component IDs.",
+          "createdAt": "2025-10-22T07:12:29Z",
+          "updatedAt": "2025-10-22T07:12:56Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Hi,\r\nIf you read the second to las\r\nt paragraph of\r\nhttps://www.ietf.org/archive/id/draft-ietf-mls-extensions-08.html#name-negotiating-extensions-and-\r\n\r\nyou will see that the negotiation of specific components is there. For the\r\nprevious 4 IETF meetings, it was a requirement and design goal to be able\r\nto partially update some components.\r\n\r\nIf you think the existing text is not clear, please raise an issue, but it\r\nseems that all of your questions have answers in section 4 or section 5 of\r\nthe document.\r\nthanks,\r\n-rohan\r\n\r\nOn Wed, 22 Oct 2025, 09:12 bitbltr, ***@***.***> wrote:\r\n\r\n> *bitbltr* left a comment (mlswg/mls-extensions#74)\r\n> <https://github.com/mlswg/mls-extensions/issues/74#issuecomment-3430784169>\r\n>\r\n> @rohanmahy <https://github.com/rohanmahy> Thank you for clarification.\r\n> However if that is the intent, then clients can only join sessions that\r\n> have Component IDs they understand, otherwise they will not be able to keep\r\n> the group state synchronized (because they do not have the application\r\n> logic to handle patches). So there needs to be an advertisement as to what\r\n> Component IDs are supported by the group context (in addition to the\r\n> AppDataUpdate proposal type in the proposal_types list in the group's\r\n> required_capabilities extension). That way the client can effectively say\r\n> \"I don't understand that Component ID, so therefore I cannot join.\"\r\n>\r\n> Personally, I think this design is fatally flawed for future\r\n> compatibility, especially since vendors can add their own Component IDs.\r\n>\r\n> \u2014\r\n> Reply to this email directly, view it on GitHub\r\n> <https://github.com/mlswg/mls-extensions/issues/74#issuecomment-3430784169>,\r\n> or unsubscribe\r\n> <https://github.com/notifications/unsubscribe-auth/AADSQPRZRYXN47JQRUB33IL3Y4U7JAVCNFSM6AAAAACISZS2NWVHI2DSMVQWIX3LMV43OSLTON2WKQ3PNVWWK3TUHMZTIMZQG44DIMJWHE>\r\n> .\r\n> You are receiving this because you were mentioned.Message ID:\r\n> ***@***.***>\r\n>\r\n",
+          "createdAt": "2025-10-22T08:26:56Z",
+          "updatedAt": "2025-10-22T08:26:56Z"
+        },
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "You're right that vendors can add their own component IDs and they can use them within groups where all clients support those IDs. Note that they can always use those IDs in leaf nodes components regardless of other client support. Is there a concrete use case where a vendor might want to store some data in the group context of a group where not all clients actually know what the data in that group context is?",
+          "createdAt": "2025-10-22T10:02:50Z",
+          "updatedAt": "2025-10-22T10:02:50Z"
+        },
+        {
+          "author": "bitbltr",
+          "authorAssociation": "NONE",
+          "body": "I think the language in the draft is insufficient. The leaves can declare what component IDs they support, but the group context decides the *only* component IDs that can be used. They're not just required, they are exclusive to all other component IDs. So perhaps something more like \"When present in a LeafNode, the semantic is the list of supported components. When present in the GroupContext, the semantic is the list of components that are required and no other components may be used.\" That way, there is no concept of optional components in the GC.\n\nWhile that may clarify the current thinking, I still believe this will render vendor extensibility useless. It is unreasonable to expect that every client can support every vendor extension. It would be like forcing Gmail and Outlook to support the same features. Or more likely, a vendor releases a component, but no other client has had time to implement the app logic for it, so now they can't join the group.\n\nIt doesn't matter the specific use case. The fact that the mechanism exists at all means that clients will get out of sync and only the vendors with the most resources to keep up with random vendor extensions will be able to move forward. No developer can anticipate supporting app logic from every other developer around the world for the lifetime of their product.\n\nI think a better mechanism would be components listed as required by the GC will support opaque and patch updates. Optional components outside of the required components can be used, but they must be opaque updates. That way all clients can at least join the group and maintain the GC state.",
+          "createdAt": "2025-10-22T23:35:36Z",
+          "updatedAt": "2025-10-22T23:35:36Z"
+        },
+        {
+          "author": "bitbltr",
+          "authorAssociation": "NONE",
+          "body": "Taking it even further, it could be used nefariously. Say a few years from now, the largest client vendor creates a component and does not publish the application logic to support it, but now requires it for any MLS group they create. They've effectively locked out every other client from participating.",
+          "createdAt": "2025-10-22T23:55:55Z",
+          "updatedAt": "2025-10-22T23:56:28Z"
         }
       ]
     }
