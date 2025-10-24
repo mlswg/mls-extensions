@@ -4,8 +4,8 @@
 
 Messaging Layer Security                                       R. Robert
 Internet-Draft                                               Phoenix R&D
-Intended status: Standards Track                            21 July 2025
-Expires: 22 January 2026
+Intended status: Standards Track                         24 October 2025
+Expires: 27 April 2026
 
 
              The Messaging Layer Security (MLS) Extensions
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 22 January 2026.
+   This Internet-Draft will expire on 27 April 2026.
 
 Copyright Notice
 
@@ -976,11 +976,11 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
 
      struct {
          MediaType media_type;
-         opaque<V> application_content;
+         opaque<V> inner_application_content;
      } ApplicationFraming;
 
    The media_type MAY be zero length, in which case, the media type of
-   the application_content is interpreted as the first MediaType
+   the inner_application_content is interpreted as the first MediaType
    specified in the content_media_types component in the GroupContext.
 
 6.3.  SelfRemove Proposal

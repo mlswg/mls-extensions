@@ -14,7 +14,7 @@ document provides a consolidated application API, guidance for how the
 protocol's extension points should be used, and a few concrete examples of both
 core protocol extensions and uses of the application API. 
     " name="description">
-<meta content="xml2rfc 3.30.0" name="generator">
+<meta content="xml2rfc 3.31.0" name="generator">
 <meta content="messaging layer security" name="keyword">
 <meta content="end-to-end encryption" name="keyword">
 <meta content="application api" name="keyword">
@@ -22,19 +22,18 @@ core protocol extensions and uses of the application API.
 <meta content="extensibility" name="keyword">
 <meta content="draft-ietf-mls-extensions-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.30.0
-    Python 3.12.11
+  xml2rfc 3.31.0
+    Python 3.12.12
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.1.0
     Jinja2 3.1.6
     lxml 5.3.1
-    platformdirs 4.3.8
+    platformdirs 4.5.0
     pycountry 24.6.1
     PyYAML 6.0.2
-    requests 2.32.4
-    setuptools 80.9.0
-    wcwidth 0.2.13
+    requests 2.32.5
+    wcwidth 0.2.14
 -->
 <link href="draft-ietf-mls-extensions.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1053,11 +1052,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">MLS</td>
-<td class="right">July 2025</td>
+<td class="right">October 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Robert</td>
-<td class="center">Expires 22 January 2026</td>
+<td class="center">Expires 27 April 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1070,12 +1069,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-mls-extensions-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-07-21" class="published">21 July 2025</time>
+<time datetime="2025-10-24" class="published">24 October 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-01-22">22 January 2026</time></dd>
+<dd class="expires"><time datetime="2026-04-27">27 April 2026</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1130,7 +1129,7 @@ core protocol extensions and uses of the application API.<a href="#section-abstr
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 22 January 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 27 April 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -2317,13 +2316,13 @@ sent in that group is interpreted as <code>ApplicationFraming</code> as defined 
 <pre>
   struct {
       MediaType media_type;
-      opaque&lt;V&gt; application_content;
+      opaque&lt;V&gt; inner_application_content;
   } ApplicationFraming;
 </pre><a href="#section-6.2.4-2" class="pilcrow">¶</a>
 </div>
 <p id="section-6.2.4-3">The <code>media_type</code> <span class="bcp14">MAY</span> be zero length, in which case, the media type of the
-<code>application_content</code> is interpreted as the first MediaType specified in the
-<code>content_media_types</code> component in the GroupContext.<a href="#section-6.2.4-3" class="pilcrow">¶</a></p>
+<code>inner_application_content</code> is interpreted as the first MediaType specified in
+the <code>content_media_types</code> component in the GroupContext.<a href="#section-6.2.4-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
