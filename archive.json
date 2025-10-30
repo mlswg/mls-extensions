@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-10-26T00:49:18.538728+00:00",
+  "timestamp": "2025-10-30T00:47:47.974581+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -4806,6 +4806,46 @@
           "body": "",
           "createdAt": "2025-10-24T09:34:17Z",
           "updatedAt": "2025-10-24T09:34:17Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 75,
+      "id": "PR_kwDOHZoI5M6wNPwP",
+      "title": "Make Component Type (ComponentID) a u16",
+      "url": "https://github.com/mlswg/mls-extensions/pull/75",
+      "state": "OPEN",
+      "author": "seanturner",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #69.",
+      "createdAt": "2025-10-28T18:11:43Z",
+      "updatedAt": "2025-10-29T08:30:50Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "77379fa9e808b064794da2c61d4ad0f59723d64e",
+      "headRepository": "mlswg/mls-extensions",
+      "headRefName": "seanturner-69",
+      "headRefOid": "2d0708bd0206800c7152b6dc9d117cab7e17f68d",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M7KMI-O",
+          "commit": {
+            "abbreviatedOid": "2d0708b"
+          },
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-10-29T08:30:50Z",
+          "updatedAt": "2025-10-29T08:30:50Z",
           "comments": []
         }
       ]
