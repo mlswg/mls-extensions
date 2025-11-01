@@ -4,8 +4,8 @@
 
 Messaging Layer Security                                       R. Robert
 Internet-Draft                                               Phoenix R&D
-Intended status: Standards Track                         24 October 2025
-Expires: 27 April 2026
+Intended status: Standards Track                         1 November 2025
+Expires: 5 May 2026
 
 
              The Messaging Layer Security (MLS) Extensions
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 27 April 2026.
+   This Internet-Draft will expire on 5 May 2026.
 
 Copyright Notice
 
@@ -277,7 +277,7 @@ Table of Contents
    A component ID is a four-byte value that uniquely identifies a
    component within the scope of an application.
 
-   uint32 ComponentID;
+   uint16 ComponentID;
 
    When a label is required for an operation, the following data
    structure is used.  The base_label field is always the fixed string
