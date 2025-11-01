@@ -201,7 +201,7 @@ A component ID is a four-byte value that uniquely identifies a component within
 the scope of an application.
 
 ~~~
-uint32 ComponentID;
+uint16 ComponentID;
 ~~~
 
 When a label is required for an operation, the following data structure is used.
