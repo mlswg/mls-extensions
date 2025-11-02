@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-10-30T00:47:47.974581+00:00",
+  "timestamp": "2025-11-02T00:50:51.705746+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -704,15 +704,15 @@
       "id": "I_kwDOHZoI5M7DRia8",
       "title": "Is Component Type (ComponentID) a u16 or u32?",
       "url": "https://github.com/mlswg/mls-extensions/issues/69",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "kkohbrok",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "[Section 4.4.](https://www.ietf.org/archive/id/draft-ietf-mls-extensions-08.html#section-4.4) says ComponentID is a u16, while the IANA table lists values in the range of a u32. \n\nOne notable consequence of which we go for is the size of the PPRF described in Section 4.4. If we go with a u16, the PPRF has 2^16 leaves, which means that after one query, it has a size of ~650kB (16 nodes in a path with 32 bytes plus an index for each node). Following queries add first 15 nodes, then 14, etc, roughly doubling the size each time. If we go with a u32, the size roughly doubles, starting from ~1,3kB after the first query, then again almost doubling with each subsequent one.\n\nI don't have a strong opinion here, just wanted to note that it's a little inconsistent and that the choice comes with a slight trade-off in group state size.",
       "createdAt": "2025-07-30T08:30:33Z",
-      "updatedAt": "2025-10-24T09:38:14Z",
-      "closedAt": null,
+      "updatedAt": "2025-11-01T21:37:29Z",
+      "closedAt": "2025-11-01T21:37:29Z",
       "comments": [
         {
           "author": "rohanmahy",
@@ -4815,24 +4815,26 @@
       "id": "PR_kwDOHZoI5M6wNPwP",
       "title": "Make Component Type (ComponentID) a u16",
       "url": "https://github.com/mlswg/mls-extensions/pull/75",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "seanturner",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Closes #69.",
       "createdAt": "2025-10-28T18:11:43Z",
-      "updatedAt": "2025-10-29T08:30:50Z",
+      "updatedAt": "2025-11-01T21:37:28Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "77379fa9e808b064794da2c61d4ad0f59723d64e",
       "headRepository": "mlswg/mls-extensions",
       "headRefName": "seanturner-69",
       "headRefOid": "2d0708bd0206800c7152b6dc9d117cab7e17f68d",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-11-01T21:37:28Z",
+      "mergedAt": "2025-11-01T21:37:28Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "099b42ea5df3ebd2bd936278efdd2eea81ba27e3"
+      },
       "comments": [],
       "reviews": [
         {
