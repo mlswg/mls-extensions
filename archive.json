@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-11-02T00:50:51.705746+00:00",
+  "timestamp": "2025-11-06T00:46:52.716711+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -773,7 +773,7 @@
       "labels": [],
       "body": "Putting a lot of data into an app data dictionary in the group context, in order to ensure everyone agrees on it, has a negative impact on performance. Not only on the size of the `Welcome` message, but on the performance of computing messages and commits. The group context is part of the `FramedContentTBS`, key schedule, and the path secret encryption.\n\nThe text on Sec 4.7 currently [suggests](https://datatracker.ietf.org/doc/html/draft-ietf-mls-extensions#section-4.7-10.1.1) that requiring the application to handle the application state is not what we want in the draft. But I think it needs more guidance on how this should be used. This is primarily an issue for the group context extension. Putting a lot of data into the extension in other cases does not hurt MLS performance as much.\n\n**Suggestion**\n\nProvide some more guidance on usage of app data dictionary such as\n- Only small app data dictionaries should be put into the group context.\n- Large amounts of app data should be stored outside of the group context and linked back only with a commitment (hash).\n\nDefine an additional way of storing app data in the group context that performs the hashing with the hash from the ciphersuite, to avoid putting this burden onto the application.",
       "createdAt": "2025-09-10T13:12:51Z",
-      "updatedAt": "2025-10-06T08:57:14Z",
+      "updatedAt": "2025-11-04T19:21:33Z",
       "closedAt": null,
       "comments": [
         {
@@ -789,6 +789,13 @@
           "body": "> The GroupContext is only included on signatures of external commits right?\n\nNo, it's members and external commits (select cases fall through).\n\nFor OpenMLS the numbers look as follows. OpenMLS currently doesn't optimise anything here. So this could be better if some values would be cached. But not all values can be cached.\n\nbytes | ms\n-- | --\n128 | 0.492167\n512 | 0.447209\n1024 | 0.454916\n10240 | 1.526167\n102400 | 7.1805\n\n> In terms of concrete action\n\nYes, I think in this document we should at least add text about the negative impact and advice to using hashes for larger blobs.\n\nI'm not sure what this document should say about storing of the values outside of the group context and linking it into the group only with a digest. I agree with the text in the document right now that this adds significant complexity onto the application.\n\nBut I think we could integrate the option of storing only the hashed app data dictionary in the group context into this document with very little text. Right now the `AppDataUpdate` proposal is interpreted by the application already. The [processing step](https://messaginglayersecurity.rocks/mls-extensions/draft-ietf-mls-extensions.html#section-4.7-9.2.2.2.1) (\"The application logic returns either an opaque value new_data that will be stored as the new application data for this component, or else an indication that it considers this update invalid.\") could be updated to allow setting a flag to hash the value instead of storing it.",
           "createdAt": "2025-10-06T08:57:14Z",
           "updatedAt": "2025-10-06T08:57:14Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "@franziskuskiefer @rohanmahy Can you please sync on this and propose a PR?\nAlso, does this relate to `draft-mahy-mls-new-framed-content-tbs`?",
+          "createdAt": "2025-11-04T19:21:33Z",
+          "updatedAt": "2025-11-04T19:21:33Z"
         }
       ]
     },
@@ -946,6 +953,30 @@
           "body": "\n>What if the app_data_dictionary in the GroupContext were allowed to contain\ncomponents that were not \"required\", provided the update was always a full\nstate replacement? Would that mitigate your concern on the MLS side?\n\nThat's exactly what I proposed in https://github.com/mlswg/mls-extensions/issues/74#issuecomment-3434557224\n\n> I think a better mechanism would be components listed as required by the GC will support opaque and patch updates. Optional components outside of the required components can be used, but they must be opaque updates. That way all clients can at least join the group and maintain the GC state.\n\nI see what you're saying about vendor ranges being an application concern. I believe that implementing something like the above addresses most of my concerns, but I think it might be prudent for MIMI to be more restrictive. Perhaps I'll bring it up there. Thanks!",
           "createdAt": "2025-10-24T03:09:31Z",
           "updatedAt": "2025-10-24T03:11:47Z"
+        }
+      ]
+    },
+    {
+      "number": 76,
+      "id": "I_kwDOHZoI5M7VwNlO",
+      "title": "AppEphemeral struct and description is inconsistent",
+      "url": "https://github.com/mlswg/mls-extensions/issues/76",
+      "state": "OPEN",
+      "author": "franziskuskiefer",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Unless I misunderstand something here, the text and proposal struct don't work together here.\n\nThe text first says\n\nhttps://github.com/mlswg/mls-extensions/blob/099b42ea5df3ebd2bd936278efdd2eea81ba27e3/draft-ietf-mls-extensions.md?plain=1#L549-L550\n\nbut then defines the proposal as\n\n\nhttps://github.com/mlswg/mls-extensions/blob/099b42ea5df3ebd2bd936278efdd2eea81ba27e3/draft-ietf-mls-extensions.md?plain=1#L553-L556\n\nIt then goes on to talk about `ComponentData` and `app_data_dictionary`.\n\nhttps://github.com/mlswg/mls-extensions/blob/099b42ea5df3ebd2bd936278efdd2eea81ba27e3/draft-ietf-mls-extensions.md?plain=1#L559-L562\n\nIs the intention that\n1. the proposal really is equivalent to the `AppDataDictionary` struct? Then the `AppEphemeral` struct needs to be changed to this.\n2. or is the `AppEphemeral` struct correct, and the text should get updated?\n\nEither would be fine, but option 2 makes more sense to me.",
+      "createdAt": "2025-11-04T11:37:02Z",
+      "updatedAt": "2025-11-04T18:35:19Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "Can you please file a PR for this?",
+          "createdAt": "2025-11-04T18:35:19Z",
+          "updatedAt": "2025-11-04T18:35:19Z"
         }
       ]
     }
