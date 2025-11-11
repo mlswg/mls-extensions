@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-11-06T00:46:52.716711+00:00",
+  "timestamp": "2025-11-11T00:48:19.120193+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -773,7 +773,7 @@
       "labels": [],
       "body": "Putting a lot of data into an app data dictionary in the group context, in order to ensure everyone agrees on it, has a negative impact on performance. Not only on the size of the `Welcome` message, but on the performance of computing messages and commits. The group context is part of the `FramedContentTBS`, key schedule, and the path secret encryption.\n\nThe text on Sec 4.7 currently [suggests](https://datatracker.ietf.org/doc/html/draft-ietf-mls-extensions#section-4.7-10.1.1) that requiring the application to handle the application state is not what we want in the draft. But I think it needs more guidance on how this should be used. This is primarily an issue for the group context extension. Putting a lot of data into the extension in other cases does not hurt MLS performance as much.\n\n**Suggestion**\n\nProvide some more guidance on usage of app data dictionary such as\n- Only small app data dictionaries should be put into the group context.\n- Large amounts of app data should be stored outside of the group context and linked back only with a commitment (hash).\n\nDefine an additional way of storing app data in the group context that performs the hashing with the hash from the ciphersuite, to avoid putting this burden onto the application.",
       "createdAt": "2025-09-10T13:12:51Z",
-      "updatedAt": "2025-11-04T19:21:33Z",
+      "updatedAt": "2025-11-10T16:35:39Z",
       "closedAt": null,
       "comments": [
         {
@@ -796,6 +796,13 @@
           "body": "@franziskuskiefer @rohanmahy Can you please sync on this and propose a PR?\nAlso, does this relate to `draft-mahy-mls-new-framed-content-tbs`?",
           "createdAt": "2025-11-04T19:21:33Z",
           "updatedAt": "2025-11-04T19:21:33Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> [@franziskuskiefer](https://github.com/franziskuskiefer) [@rohanmahy](https://github.com/rohanmahy) Can you please sync on this and propose a PR? Also, does this relate to `draft-mahy-mls-new-framed-content-tbs`?\n\nThe draft above is an attempt to improve performance generating and verifying MLS messages in general, especially as the GC gets large. \n\nRegardless  MIMI is adding participant lists to the GroupContext, which can get big. (one MIMI URI and one integer per participant).",
+          "createdAt": "2025-11-10T16:35:39Z",
+          "updatedAt": "2025-11-10T16:35:39Z"
         }
       ]
     },
@@ -811,7 +818,7 @@
       "labels": [],
       "body": "We're having a small discussion on how to interpret the document over in the [mls-combiner repo](https://github.com/mlswg/mls-combiner/issues/6) on how to interpret this draft.\n\nThe question is on what the level of granularity is with which the `app_data_dictionary` can be updated. More concretely, what is the content of an AppDataUpdate proposal? Is it some information that the application/component then uses to update the state of the component in the `app_data_dictionary`? Or must it be the complete new content of the components entry in the `app_data_dictionary`, which then just replaces the old content?\n\n@bitbltr please chime in here if I didn't present your side of the argument correctly.",
       "createdAt": "2025-10-08T06:17:15Z",
-      "updatedAt": "2025-10-24T03:11:47Z",
+      "updatedAt": "2025-11-10T16:48:01Z",
       "closedAt": null,
       "comments": [
         {
@@ -953,6 +960,13 @@
           "body": "\n>What if the app_data_dictionary in the GroupContext were allowed to contain\ncomponents that were not \"required\", provided the update was always a full\nstate replacement? Would that mitigate your concern on the MLS side?\n\nThat's exactly what I proposed in https://github.com/mlswg/mls-extensions/issues/74#issuecomment-3434557224\n\n> I think a better mechanism would be components listed as required by the GC will support opaque and patch updates. Optional components outside of the required components can be used, but they must be opaque updates. That way all clients can at least join the group and maintain the GC state.\n\nI see what you're saying about vendor ranges being an application concern. I believe that implementing something like the above addresses most of my concerns, but I think it might be prudent for MIMI to be more restrictive. Perhaps I'll bring it up there. Thanks!",
           "createdAt": "2025-10-24T03:09:31Z",
           "updatedAt": "2025-10-24T03:11:47Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> Hmm,\n> What if the app_data_dictionary in the GroupContext were allowed to contain\n> components that were not \"required\", provided the update was always a full\n> state replacement? Would that mitigate your concern on the MLS side?\n> \n> As for the distinction between vendor-range and non-vendor range, I think\n> that is an application-level concern. Imagine I used MLS to connect a\n> network of low earth orbit weather satellites and created a vendor\n> component to keep a rather large corpus of orbit locations with which to\n> calculate orbit locations. That application has no interop requirements\n> with an MLS messaging app or video conferencing app.\n> \n> You could say in MIMI protocol for example that required components in GC\n> must not be vendor extensions. I'm not sure you'd get consensus there, but\n> it would be a more appropriate place to raise that concern.\n> [\u2026](#)\n\nI've thought about this a bit more, and I think more harm would come from having two different types of components.\nHow about we either close this issue and open a more specific one, or modify the title of this issue to something like \"Should unknown components be allowed in GroupContext?\"\n",
+          "createdAt": "2025-11-10T16:48:01Z",
+          "updatedAt": "2025-11-10T16:48:01Z"
         }
       ]
     },
@@ -968,7 +982,7 @@
       "labels": [],
       "body": "Unless I misunderstand something here, the text and proposal struct don't work together here.\n\nThe text first says\n\nhttps://github.com/mlswg/mls-extensions/blob/099b42ea5df3ebd2bd936278efdd2eea81ba27e3/draft-ietf-mls-extensions.md?plain=1#L549-L550\n\nbut then defines the proposal as\n\n\nhttps://github.com/mlswg/mls-extensions/blob/099b42ea5df3ebd2bd936278efdd2eea81ba27e3/draft-ietf-mls-extensions.md?plain=1#L553-L556\n\nIt then goes on to talk about `ComponentData` and `app_data_dictionary`.\n\nhttps://github.com/mlswg/mls-extensions/blob/099b42ea5df3ebd2bd936278efdd2eea81ba27e3/draft-ietf-mls-extensions.md?plain=1#L559-L562\n\nIs the intention that\n1. the proposal really is equivalent to the `AppDataDictionary` struct? Then the `AppEphemeral` struct needs to be changed to this.\n2. or is the `AppEphemeral` struct correct, and the text should get updated?\n\nEither would be fine, but option 2 makes more sense to me.",
       "createdAt": "2025-11-04T11:37:02Z",
-      "updatedAt": "2025-11-04T18:35:19Z",
+      "updatedAt": "2025-11-10T16:30:47Z",
       "closedAt": null,
       "comments": [
         {
@@ -977,6 +991,13 @@
           "body": "Can you please file a PR for this?",
           "createdAt": "2025-11-04T18:35:19Z",
           "updatedAt": "2025-11-04T18:35:19Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "As I recall, it made more sense to have multiple AppEphemeral Proposals, one per component, since this isn't keeping state like GC, GI, KP, or LN \"extensions\". I'll take this one and write a short PR to update the text.",
+          "createdAt": "2025-11-10T16:30:46Z",
+          "updatedAt": "2025-11-10T16:30:46Z"
         }
       ]
     }
