@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-11-13T00:47:47.435892+00:00",
+  "timestamp": "2025-11-16T00:51:55.964995+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -1014,6 +1014,22 @@
           "updatedAt": "2025-11-11T11:51:34Z"
         }
       ]
+    },
+    {
+      "number": 77,
+      "id": "I_kwDOHZoI5M7Xx88J",
+      "title": "Update Sec 7.5 after #75",
+      "url": "https://github.com/mlswg/mls-extensions/issues/77",
+      "state": "OPEN",
+      "author": "franziskuskiefer",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "The component IDs are u16 since #75. The Sec 7.5. (MLS Component Types) needs to be updated accordingly.\n\nI'd note that this makes the private space pretty small and it may be worthwhile keep using u32 for component ID (and reword the `SafeExportSecret` to only use the lower 16 bits of the component ID, or something like that).",
+      "createdAt": "2025-11-13T08:53:45Z",
+      "updatedAt": "2025-11-13T08:53:45Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
