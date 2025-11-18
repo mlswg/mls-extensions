@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-11-16T00:51:55.964995+00:00",
+  "timestamp": "2025-11-18T00:47:28.628657+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -4933,6 +4933,32 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 78,
+      "id": "PR_kwDOHZoI5M6z0tZX",
+      "title": "Change recommendation on large app_data_dictionary",
+      "url": "https://github.com/mlswg/mls-extensions/pull/78",
+      "state": "OPEN",
+      "author": "franziskuskiefer",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "This is an attempt at clarifying recommendations around data in the `app_data_dictionary` GCE.\r\n\r\nThe processing could be changed as well. But this would make the hash based version a full citizen (storing in the dictionary if the value is opaque or a digest). I don't know if we want to do that. This would leave all of this up to the MLS implementation and application.\r\n\r\nCloses #71",
+      "createdAt": "2025-11-17T10:26:53Z",
+      "updatedAt": "2025-11-17T10:26:54Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "099b42ea5df3ebd2bd936278efdd2eea81ba27e3",
+      "headRepository": "franziskuskiefer/mls-extensions",
+      "headRefName": "franziskus/gce-hash",
+      "headRefOid": "6d20236bd41315e4449c70cf37e16ea2513bf56e",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
