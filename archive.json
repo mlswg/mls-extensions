@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-11-27T00:46:41.314414+00:00",
+  "timestamp": "2025-12-07T00:54:48.206509+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -825,7 +825,7 @@
       "labels": [],
       "body": "We're having a small discussion on how to interpret the document over in the [mls-combiner repo](https://github.com/mlswg/mls-combiner/issues/6) on how to interpret this draft.\n\nThe question is on what the level of granularity is with which the `app_data_dictionary` can be updated. More concretely, what is the content of an AppDataUpdate proposal? Is it some information that the application/component then uses to update the state of the component in the `app_data_dictionary`? Or must it be the complete new content of the components entry in the `app_data_dictionary`, which then just replaces the old content?\n\n@bitbltr please chime in here if I didn't present your side of the argument correctly.",
       "createdAt": "2025-10-08T06:17:15Z",
-      "updatedAt": "2025-11-10T16:48:01Z",
+      "updatedAt": "2025-12-05T09:56:45Z",
       "closedAt": null,
       "comments": [
         {
@@ -974,6 +974,27 @@
           "body": "> Hmm,\n> What if the app_data_dictionary in the GroupContext were allowed to contain\n> components that were not \"required\", provided the update was always a full\n> state replacement? Would that mitigate your concern on the MLS side?\n> \n> As for the distinction between vendor-range and non-vendor range, I think\n> that is an application-level concern. Imagine I used MLS to connect a\n> network of low earth orbit weather satellites and created a vendor\n> component to keep a rather large corpus of orbit locations with which to\n> calculate orbit locations. That application has no interop requirements\n> with an MLS messaging app or video conferencing app.\n> \n> You could say in MIMI protocol for example that required components in GC\n> must not be vendor extensions. I'm not sure you'd get consensus there, but\n> it would be a more appropriate place to raise that concern.\n> [\u2026](#)\n\nI've thought about this a bit more, and I think more harm would come from having two different types of components.\nHow about we either close this issue and open a more specific one, or modify the title of this issue to something like \"Should unknown components be allowed in GroupContext?\"\n",
           "createdAt": "2025-11-10T16:48:01Z",
           "updatedAt": "2025-11-10T16:48:01Z"
+        },
+        {
+          "author": "bitbltr",
+          "authorAssociation": "NONE",
+          "body": "@rohanmahy Sorry, I just saw this. I'm not sure what you mean by \"unknown components\". I don't think you mean components in the private use range as specified in [draft-ietf-mls-extensions](https://datatracker.ietf.org/doc/draft-ietf-mls-extensions/)? Please clarify and I would be happy to start a clean thread. I did start a MIMI-specific thread here (https://github.com/ietf-wg-mimi/mimi-protocol/issues/135)",
+          "createdAt": "2025-12-04T05:51:34Z",
+          "updatedAt": "2025-12-04T05:53:55Z"
+        },
+        {
+          "author": "bitbltr",
+          "authorAssociation": "NONE",
+          "body": "@rohanmahy By \"unknown\", do you mean components that are not listed in either the safe_aad or app_components lists?",
+          "createdAt": "2025-12-04T07:10:06Z",
+          "updatedAt": "2025-12-04T07:10:06Z"
+        },
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I think Rohan means components that are used in a group, but where not all members are required to support each individual component. In that case you're right and updates need to be opaque. Generally sounds like a good idea to me.",
+          "createdAt": "2025-12-05T09:56:45Z",
+          "updatedAt": "2025-12-05T09:56:45Z"
         }
       ]
     },
@@ -1025,11 +1046,19 @@
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
-      "body": "The component IDs are u16 since #75. The Sec 7.5. (MLS Component Types) needs to be updated accordingly.\n\nI'd note that this makes the private space pretty small and it may be worthwhile keep using u32 for component ID (and reword the `SafeExportSecret` to only use the lower 16 bits of the component ID, or something like that).",
+      "body": "The component IDs are u16 since #75. The Sec 7.5. (MLS Component Types) needs to be updated accordingly.\n\nI'd note that this makes the private space pretty small and it may be worthwhile keep using u32 for component ID (and reword the `SafeExportSecret` to only use the lower 16 bits of the component ID, or something like that).\n\nAlso the text in Sec 4.1 still says 4 bytes.",
       "createdAt": "2025-11-13T08:53:45Z",
-      "updatedAt": "2025-11-13T08:53:45Z",
+      "updatedAt": "2025-12-04T17:18:45Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "keks",
+          "authorAssociation": "NONE",
+          "body": "I also think that 16 bits is a bit short here. This makes namespace management quite tricky. I think adoption will be a lot quicker if we don't artificially congest the private namespace to 15 bits, and instead allow it to be a lot sparser to make management easier (cf. IPv6; I know many people don't like it, but I think this is one of the less contested benefits it provides). That way apps could share ids from the private block without too much fear of ID collisions.\n\nMaybe we can find a way to decouple the size of the ID from the size of the secret tree? Ideally we'd have something like 48 or 64 bits here, I think.",
+          "createdAt": "2025-12-04T17:18:45Z",
+          "updatedAt": "2025-12-04T17:18:45Z"
+        }
+      ]
     },
     {
       "number": 79,
