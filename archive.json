@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-12-07T00:54:48.206509+00:00",
+  "timestamp": "2025-12-16T00:51:51.925464+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -1048,7 +1048,7 @@
       "labels": [],
       "body": "The component IDs are u16 since #75. The Sec 7.5. (MLS Component Types) needs to be updated accordingly.\n\nI'd note that this makes the private space pretty small and it may be worthwhile keep using u32 for component ID (and reword the `SafeExportSecret` to only use the lower 16 bits of the component ID, or something like that).\n\nAlso the text in Sec 4.1 still says 4 bytes.",
       "createdAt": "2025-11-13T08:53:45Z",
-      "updatedAt": "2025-12-04T17:18:45Z",
+      "updatedAt": "2025-12-15T16:15:59Z",
       "closedAt": null,
       "comments": [
         {
@@ -1057,6 +1057,13 @@
           "body": "I also think that 16 bits is a bit short here. This makes namespace management quite tricky. I think adoption will be a lot quicker if we don't artificially congest the private namespace to 15 bits, and instead allow it to be a lot sparser to make management easier (cf. IPv6; I know many people don't like it, but I think this is one of the less contested benefits it provides). That way apps could share ids from the private block without too much fear of ID collisions.\n\nMaybe we can find a way to decouple the size of the ID from the size of the secret tree? Ideally we'd have something like 48 or 64 bits here, I think.",
           "createdAt": "2025-12-04T17:18:45Z",
           "updatedAt": "2025-12-04T17:18:45Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Fixed in #80 ",
+          "createdAt": "2025-12-15T16:15:59Z",
+          "updatedAt": "2025-12-15T16:15:59Z"
         }
       ]
     },
@@ -1072,9 +1079,17 @@
       "labels": [],
       "body": "The encoding of labels for `EncryptWithLabel` and `SignWithLabel` (as well as decrypt and verify) is not well defined. These functions take string `Label` arguments in RFC 9420, i.e. `label = \"MLS 1.0 \" + Label`. This document defines `Label` as structs, i.e. the `ComponentOperationLabel` struct. This raises the question how the string concatenation should work between the string and the struct.\n\nThe obvious way is to encode the `ComponentOperationLabel` struct and prefix it with the bytes of `\"MLS 1.0 \"`. But this makes the result invalid in the TLS presentation language. Which may be fine since we never need to decode this.\n\nBut one may also interpret this as encoding the `ComponentOperationLabel` struct into a string to satisfy RFC 9420.",
       "createdAt": "2025-11-25T10:22:30Z",
-      "updatedAt": "2025-11-25T10:22:30Z",
+      "updatedAt": "2025-12-15T16:14:37Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I don't see any practical reason it needs to be a string.",
+          "createdAt": "2025-12-15T16:14:37Z",
+          "updatedAt": "2025-12-15T16:14:37Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -5004,6 +5019,61 @@
       "mergeCommit": null,
       "comments": [],
       "reviews": []
+    },
+    {
+      "number": 80,
+      "id": "PR_kwDOHZoI5M648wUE",
+      "title": "fix IANA considerations table for Components",
+      "url": "https://github.com/mlswg/mls-extensions/pull/80",
+      "state": "OPEN",
+      "author": "rohanmahy",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-12-15T15:14:49Z",
+      "updatedAt": "2025-12-15T16:00:06Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "099b42ea5df3ebd2bd936278efdd2eea81ba27e3",
+      "headRepository": "rohanmahy/mls-extensions",
+      "headRefName": "iana-components",
+      "headRefOid": "e52bf69cc696715c3ae2c39cb2bc11e0a5213055",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@seanturner FYI",
+          "createdAt": "2025-12-15T15:15:49Z",
+          "updatedAt": "2025-12-15T15:15:49Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@raphaelrobert  feel free to merge",
+          "createdAt": "2025-12-15T16:00:06Z",
+          "updatedAt": "2025-12-15T16:00:06Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M7VT7AC",
+          "commit": {
+            "abbreviatedOid": "e52bf69"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-12-15T15:20:28Z",
+          "updatedAt": "2025-12-15T15:20:28Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
