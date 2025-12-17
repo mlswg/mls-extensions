@@ -1253,9 +1253,9 @@ receipt of application messages.
 
 This document requests the creation of a new IANA "MLS Component Types" registry
 under the "Messaging Layer Security" group registry heading. Assignments to this
-registry in the range 0x0000 0000 to 0x7FFF FFFF are via Specification Required
+registry in the range 0x0000 to 0x7FFF are via Specification Required
 policy {{!RFC8126}} using the MLS Designated Experts. Assignments in the range
-0x8000 0000 to 0xFFFF FFFF are for private use.
+0x8000 to 0xFFFF are for private use.
 
 Template:
 
@@ -1283,31 +1283,24 @@ application.
 
 Initial Contents:
 
-| Value         | Name                     | Where | R | Ref     |
-|---------------+--------------------------+-------+---+---------|
-| 0x0000 0000   | RESERVED                 | N/A   | - | RFCXXXX |
-| 0x0000 0001   | app_components           | LN,GC | Y | RFCXXXX |
-| 0x0000 0002   | safe_aad                 | LN,GC | Y | RFCXXXX |
-| 0x0000 0003   | content_media_types      | LN,GC | Y | RFCXXXX |
-| 0x0000 0004   | last_resort_key_package  | KP    | Y | RFCXXXX |
-| 0x0000 0005   | app_ack                  | AE    | Y | RFCXXXX |
-| 0x0000 0a0a   | GREASE                   | Note1 | Y | RFCXXXX |
-| 0x0000 1a1a   | GREASE                   | Note1 | Y | RFCXXXX |
-| 0x0000 2a2a   | GREASE                   | Note1 | Y | RFCXXXX |
-| 0x0000 3a3a   | GREASE                   | Note1 | Y | RFCXXXX |
-| 0x0000 4a4a   | GREASE                   | Note1 | Y | RFCXXXX |
-| 0x0000 5a5a   | GREASE                   | Note1 | Y | RFCXXXX |
-| 0x0000 6a6a   | GREASE                   | Note1 | Y | RFCXXXX |
-| 0x0000 7a7a   | GREASE                   | Note1 | Y | RFCXXXX |
-| 0x0000 8a8a   | GREASE                   | Note1 | Y | RFCXXXX |
-| 0x0000 9a9a   | GREASE                   | Note1 | Y | RFCXXXX |
-| 0x0000 aaaa   | GREASE                   | Note1 | Y | RFCXXXX |
-| 0x0000 baba   | GREASE                   | Note1 | Y | RFCXXXX |
-| 0x0000 caca   | GREASE                   | Note1 | Y | RFCXXXX |
-| 0x0000 dada   | GREASE                   | Note1 | Y | RFCXXXX |
-| 0x0000 eaea   | GREASE                   | Note1 | Y | RFCXXXX |
-| 0x8000 0000 -
-  0xFFFF FFFF   | Reserved for Private Use | N/A   | N | RFCXXXX |
+| Value    | Name                     | Where | R | Ref     |
+|----------+--------------------------+-------+---+---------|
+| 0x0000   | RESERVED                 | N/A   | - | RFCXXXX |
+| 0x0001   | app_components           | LN,GC | Y | RFCXXXX |
+| 0x0002   | safe_aad                 | LN,GC | Y | RFCXXXX |
+| 0x0003   | content_media_types      | LN,GC | Y | RFCXXXX |
+| 0x0004   | last_resort_key_package  | KP    | Y | RFCXXXX |
+| 0x0005   | app_ack                  | AE    | Y | RFCXXXX |
+| 0x0A0A   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x1A1A   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x2A2A   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x3A3A   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x4A4A   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x5A5A   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x6A6A   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x7A7A   | GREASE                   | Note1 | Y | RFCXXXX |
+| 0x8000 -
+  0xFFFF   | Reserved for Private Use | N/A   | N | RFCXXXX |
 
 >Note1: GREASE values for components MAY be present in AD, AE, GI, KP, and LN
 >objects.
