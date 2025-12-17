@@ -274,7 +274,7 @@ Table of Contents
 
 4.1.  Component IDs
 
-   A component ID is a four-byte value that uniquely identifies a
+   A component ID is a two-byte value that uniquely identifies a
    component within the scope of an application.
 
    uint16 ComponentID;
