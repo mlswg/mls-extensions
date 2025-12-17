@@ -197,7 +197,7 @@ the appropriate calculations in the protocol to achieve the required separation.
 
 ## Component IDs
 
-A component ID is a four-byte value that uniquely identifies a component within
+A component ID is a two-byte value that uniquely identifies a component within
 the scope of an application.
 
 ~~~
