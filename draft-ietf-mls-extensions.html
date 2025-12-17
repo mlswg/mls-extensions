@@ -1900,16 +1900,8 @@ The new entry is inserted at the proper point to keep the
         </ul>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="section-4.7-10.1">
-            <p id="section-4.7-10.1.1">NOTE: An alternative design here would be to have the <code>update</code> operation
-simply set the new value for the <code>app_data_dictionary</code> GCE, instead of sending a
-diff. This would be simpler in that the MLS stack wouldn't have to ask the
-application for the new state value, and would discourage applications from
-storing large state in the GroupContext directly (which bloats Welcome
-messages). It would effectively require the state in the GroupContext to be a
-hash of the real state, to avoid large AppDataUpdate proposals. This
-pushes some complexity onto the application, since the application has to
-define a hashing algorithm, and define its own scheme for initializing new
-joiners.<a href="#section-4.7-10.1.1" class="pilcrow">¶</a></p>
+            <p id="section-4.7-10.1.1">NOTE: Putting large amounts of data into the <code>app_data_dictionary</code> GCE may have
+a performance impact.<a href="#section-4.7-10.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <p id="section-4.7-11">AppDataUpdate proposals do not require an UpdatePath. An AppDataUpdate proposal
@@ -1918,6 +1910,8 @@ included in an external commit. Applications can make more restrictive validity
 rules for the update of their components, such that some components would not be
 valid at the application when sent in an external commit or via an external
 proposer.<a href="#section-4.7-11" class="pilcrow">¶</a></p>
+<p id="section-4.7-12">To avoid storing large amounts of data in the <code>app_data_dictionary</code> GCE,
+implementations <span class="bcp14">MAY</span> offer storing only a hash of the actual data in the GCE.<a href="#section-4.7-12" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="app-ephemeral">

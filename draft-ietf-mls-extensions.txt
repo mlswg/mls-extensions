@@ -604,17 +604,8 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
 
    *  Otherwise, the proposal list is invalid.
 
-      NOTE: An alternative design here would be to have the update
-      operation simply set the new value for the app_data_dictionary
-      GCE, instead of sending a diff.  This would be simpler in that the
-      MLS stack wouldn't have to ask the application for the new state
-      value, and would discourage applications from storing large state
-      in the GroupContext directly (which bloats Welcome messages).  It
-      would effectively require the state in the GroupContext to be a
-      hash of the real state, to avoid large AppDataUpdate proposals.
-      This pushes some complexity onto the application, since the
-      application has to define a hashing algorithm, and define its own
-      scheme for initializing new joiners.
+      NOTE: Putting large amounts of data into the app_data_dictionary
+      GCE may have a performance impact.
 
    AppDataUpdate proposals do not require an UpdatePath.  An
    AppDataUpdate proposal can be sent by an external sender.  Likewise,
@@ -623,6 +614,10 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    of their components, such that some components would not be valid at
    the application when sent in an external commit or via an external
    proposer.
+
+   To avoid storing large amounts of data in the app_data_dictionary
+   GCE, implementations MAY offer storing only a hash of the actual data
+   in the GCE.
 
 4.8.  Attaching Application Data to a Commit
 
