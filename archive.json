@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-12-16T00:51:51.925464+00:00",
+  "timestamp": "2025-12-18T00:46:38.667668+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -766,15 +766,15 @@
       "id": "I_kwDOHZoI5M7KzSrF",
       "title": "App data dictionary in GroupContext",
       "url": "https://github.com/mlswg/mls-extensions/issues/71",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "franziskuskiefer",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Putting a lot of data into an app data dictionary in the group context, in order to ensure everyone agrees on it, has a negative impact on performance. Not only on the size of the `Welcome` message, but on the performance of computing messages and commits. The group context is part of the `FramedContentTBS`, key schedule, and the path secret encryption.\n\nThe text on Sec 4.7 currently [suggests](https://datatracker.ietf.org/doc/html/draft-ietf-mls-extensions#section-4.7-10.1.1) that requiring the application to handle the application state is not what we want in the draft. But I think it needs more guidance on how this should be used. This is primarily an issue for the group context extension. Putting a lot of data into the extension in other cases does not hurt MLS performance as much.\n\n**Suggestion**\n\nProvide some more guidance on usage of app data dictionary such as\n- Only small app data dictionaries should be put into the group context.\n- Large amounts of app data should be stored outside of the group context and linked back only with a commitment (hash).\n\nDefine an additional way of storing app data in the group context that performs the hashing with the hash from the ciphersuite, to avoid putting this burden onto the application.",
       "createdAt": "2025-09-10T13:12:51Z",
-      "updatedAt": "2025-11-11T11:52:50Z",
-      "closedAt": null,
+      "updatedAt": "2025-12-17T13:05:11Z",
+      "closedAt": "2025-12-17T13:05:11Z",
       "comments": [
         {
           "author": "rohanmahy",
@@ -785,7 +785,7 @@
         },
         {
           "author": "franziskuskiefer",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "body": "> The GroupContext is only included on signatures of external commits right?\n\nNo, it's members and external commits (select cases fall through).\n\nFor OpenMLS the numbers look as follows. OpenMLS currently doesn't optimise anything here. So this could be better if some values would be cached. But not all values can be cached.\n\nbytes | ms\n-- | --\n128 | 0.492167\n512 | 0.447209\n1024 | 0.454916\n10240 | 1.526167\n102400 | 7.1805\n\n> In terms of concrete action\n\nYes, I think in this document we should at least add text about the negative impact and advice to using hashes for larger blobs.\n\nI'm not sure what this document should say about storing of the values outside of the group context and linking it into the group only with a digest. I agree with the text in the document right now that this adds significant complexity onto the application.\n\nBut I think we could integrate the option of storing only the hashed app data dictionary in the group context into this document with very little text. Right now the `AppDataUpdate` proposal is interpreted by the application already. The [processing step](https://messaginglayersecurity.rocks/mls-extensions/draft-ietf-mls-extensions.html#section-4.7-9.2.2.2.1) (\"The application logic returns either an opaque value new_data that will be stored as the new application data for this component, or else an indication that it considers this update invalid.\") could be updated to allow setting a flag to hash the value instead of storing it.",
           "createdAt": "2025-10-06T08:57:14Z",
           "updatedAt": "2025-10-06T08:57:14Z"
@@ -806,7 +806,7 @@
         },
         {
           "author": "franziskuskiefer",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "body": "I'll suggest some wording here that I think could work.",
           "createdAt": "2025-11-11T11:52:50Z",
           "updatedAt": "2025-11-11T11:52:50Z"
@@ -4999,50 +4999,96 @@
       "id": "PR_kwDOHZoI5M6z0tZX",
       "title": "Change recommendation on large app_data_dictionary",
       "url": "https://github.com/mlswg/mls-extensions/pull/78",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "franziskuskiefer",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "This is an attempt at clarifying recommendations around data in the `app_data_dictionary` GCE.\r\n\r\nThe processing could be changed as well. But this would make the hash based version a full citizen (storing in the dictionary if the value is opaque or a digest). I don't know if we want to do that. This would leave all of this up to the MLS implementation and application.\r\n\r\nCloses #71",
       "createdAt": "2025-11-17T10:26:53Z",
-      "updatedAt": "2025-11-17T10:26:54Z",
+      "updatedAt": "2025-12-17T13:05:10Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "099b42ea5df3ebd2bd936278efdd2eea81ba27e3",
       "headRepository": "franziskuskiefer/mls-extensions",
       "headRefName": "franziskus/gce-hash",
       "headRefOid": "6d20236bd41315e4449c70cf37e16ea2513bf56e",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
-      "reviews": []
+      "closedAt": "2025-12-17T13:05:10Z",
+      "mergedAt": "2025-12-17T13:05:10Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "cccc35a3f6669f20a9e41422bce2b82f01cf953d"
+      },
+      "comments": [
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "@rohanmahy do you have any objections to this PR?",
+          "createdAt": "2025-12-17T11:09:01Z",
+          "updatedAt": "2025-12-17T11:09:01Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> @rohanmahy do you have any objections to this PR?\r\n\r\nI like it. I'd be happy to see this PR merged.",
+          "createdAt": "2025-12-17T12:08:40Z",
+          "updatedAt": "2025-12-17T12:09:18Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M7V0KkO",
+          "commit": {
+            "abbreviatedOid": "6d20236"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-12-17T11:08:36Z",
+          "updatedAt": "2025-12-17T11:08:36Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOHZoI5M7V09le",
+          "commit": {
+            "abbreviatedOid": "6d20236"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-12-17T12:08:51Z",
+          "updatedAt": "2025-12-17T12:08:51Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 80,
       "id": "PR_kwDOHZoI5M648wUE",
       "title": "fix IANA considerations table for Components",
       "url": "https://github.com/mlswg/mls-extensions/pull/80",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "rohanmahy",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2025-12-15T15:14:49Z",
-      "updatedAt": "2025-12-15T16:00:06Z",
+      "updatedAt": "2025-12-17T11:06:21Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "099b42ea5df3ebd2bd936278efdd2eea81ba27e3",
       "headRepository": "rohanmahy/mls-extensions",
       "headRefName": "iana-components",
       "headRefOid": "e52bf69cc696715c3ae2c39cb2bc11e0a5213055",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-12-17T11:06:21Z",
+      "mergedAt": "2025-12-17T11:06:21Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "2dda1c4a8831361d1d084ae19d505e784ca3cdaf"
+      },
       "comments": [
         {
           "author": "rohanmahy",
@@ -5071,6 +5117,48 @@
           "body": "",
           "createdAt": "2025-12-15T15:20:28Z",
           "updatedAt": "2025-12-15T15:20:28Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 81,
+      "id": "PR_kwDOHZoI5M65WGr2",
+      "title": "fix size of component ID in prose",
+      "url": "https://github.com/mlswg/mls-extensions/pull/81",
+      "state": "MERGED",
+      "author": "rohanmahy",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "four-byte --> two-byte",
+      "createdAt": "2025-12-17T11:04:32Z",
+      "updatedAt": "2025-12-17T11:06:35Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "099b42ea5df3ebd2bd936278efdd2eea81ba27e3",
+      "headRepository": "rohanmahy/mls-extensions",
+      "headRefName": "component-size",
+      "headRefOid": "223acbf4845deb8f646220993e2a4688f50740ce",
+      "closedAt": "2025-12-17T11:06:34Z",
+      "mergedAt": "2025-12-17T11:06:34Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "e426a1626ad69fc368e0326a011c05ccbc27d19f"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M7V0IZT",
+          "commit": {
+            "abbreviatedOid": "223acbf"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-12-17T11:06:06Z",
+          "updatedAt": "2025-12-17T11:06:06Z",
           "comments": []
         }
       ]
