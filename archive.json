@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-12-18T00:46:38.667668+00:00",
+  "timestamp": "2025-12-21T00:54:57.728400+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -1039,16 +1039,16 @@
     {
       "number": 77,
       "id": "I_kwDOHZoI5M7Xx88J",
-      "title": "Update Sec 7.5 after #75",
+      "title": "Use u32 or u16 for component IDs? (was Update Sec 7.5 after #75)",
       "url": "https://github.com/mlswg/mls-extensions/issues/77",
       "state": "OPEN",
       "author": "franziskuskiefer",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "The component IDs are u16 since #75. The Sec 7.5. (MLS Component Types) needs to be updated accordingly.\n\nI'd note that this makes the private space pretty small and it may be worthwhile keep using u32 for component ID (and reword the `SafeExportSecret` to only use the lower 16 bits of the component ID, or something like that).\n\nAlso the text in Sec 4.1 still says 4 bytes.",
       "createdAt": "2025-11-13T08:53:45Z",
-      "updatedAt": "2025-12-15T16:15:59Z",
+      "updatedAt": "2025-12-19T12:18:40Z",
       "closedAt": null,
       "comments": [
         {
@@ -1074,12 +1074,12 @@
       "url": "https://github.com/mlswg/mls-extensions/issues/79",
       "state": "OPEN",
       "author": "franziskuskiefer",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "The encoding of labels for `EncryptWithLabel` and `SignWithLabel` (as well as decrypt and verify) is not well defined. These functions take string `Label` arguments in RFC 9420, i.e. `label = \"MLS 1.0 \" + Label`. This document defines `Label` as structs, i.e. the `ComponentOperationLabel` struct. This raises the question how the string concatenation should work between the string and the struct.\n\nThe obvious way is to encode the `ComponentOperationLabel` struct and prefix it with the bytes of `\"MLS 1.0 \"`. But this makes the result invalid in the TLS presentation language. Which may be fine since we never need to decode this.\n\nBut one may also interpret this as encoding the `ComponentOperationLabel` struct into a string to satisfy RFC 9420.",
       "createdAt": "2025-11-25T10:22:30Z",
-      "updatedAt": "2025-12-15T16:14:37Z",
+      "updatedAt": "2025-12-19T12:18:04Z",
       "closedAt": null,
       "comments": [
         {
@@ -1088,6 +1088,13 @@
           "body": "I don't see any practical reason it needs to be a string.",
           "createdAt": "2025-12-15T16:14:37Z",
           "updatedAt": "2025-12-15T16:14:37Z"
+        },
+        {
+          "author": "franziskuskiefer",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "It doesn't need to be a struct, but then the `+` operation needs to be defined for that case.",
+          "createdAt": "2025-12-19T12:18:04Z",
+          "updatedAt": "2025-12-19T12:18:04Z"
         }
       ]
     }
