@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-12-21T00:54:57.728400+00:00",
+  "timestamp": "2026-01-01T00:58:07.431312+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -825,7 +825,7 @@
       "labels": [],
       "body": "We're having a small discussion on how to interpret the document over in the [mls-combiner repo](https://github.com/mlswg/mls-combiner/issues/6) on how to interpret this draft.\n\nThe question is on what the level of granularity is with which the `app_data_dictionary` can be updated. More concretely, what is the content of an AppDataUpdate proposal? Is it some information that the application/component then uses to update the state of the component in the `app_data_dictionary`? Or must it be the complete new content of the components entry in the `app_data_dictionary`, which then just replaces the old content?\n\n@bitbltr please chime in here if I didn't present your side of the argument correctly.",
       "createdAt": "2025-10-08T06:17:15Z",
-      "updatedAt": "2025-12-05T09:56:45Z",
+      "updatedAt": "2025-12-31T14:28:07Z",
       "closedAt": null,
       "comments": [
         {
@@ -995,6 +995,13 @@
           "body": "I think Rohan means components that are used in a group, but where not all members are required to support each individual component. In that case you're right and updates need to be opaque. Generally sounds like a good idea to me.",
           "createdAt": "2025-12-05T09:56:45Z",
           "updatedAt": "2025-12-05T09:56:45Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> I think Rohan means components that are used in a group, but where not all members are required to support each individual component. In that case you're right and updates need to be opaque. Generally sounds like a good idea to me.\n\nYes, that's what I meant. I still like the idea of a separate `opaque_dictionary` extension for the GC that has only components that have \"full replacement\" semantics, and whose contents are not required to be understood in the GC.",
+          "createdAt": "2025-12-31T14:28:07Z",
+          "updatedAt": "2025-12-31T14:28:07Z"
         }
       ]
     },
@@ -1005,12 +1012,12 @@
       "url": "https://github.com/mlswg/mls-extensions/issues/76",
       "state": "OPEN",
       "author": "franziskuskiefer",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Unless I misunderstand something here, the text and proposal struct don't work together here.\n\nThe text first says\n\nhttps://github.com/mlswg/mls-extensions/blob/099b42ea5df3ebd2bd936278efdd2eea81ba27e3/draft-ietf-mls-extensions.md?plain=1#L549-L550\n\nbut then defines the proposal as\n\n\nhttps://github.com/mlswg/mls-extensions/blob/099b42ea5df3ebd2bd936278efdd2eea81ba27e3/draft-ietf-mls-extensions.md?plain=1#L553-L556\n\nIt then goes on to talk about `ComponentData` and `app_data_dictionary`.\n\nhttps://github.com/mlswg/mls-extensions/blob/099b42ea5df3ebd2bd936278efdd2eea81ba27e3/draft-ietf-mls-extensions.md?plain=1#L559-L562\n\nIs the intention that\n1. the proposal really is equivalent to the `AppDataDictionary` struct? Then the `AppEphemeral` struct needs to be changed to this.\n2. or is the `AppEphemeral` struct correct, and the text should get updated?\n\nEither would be fine, but option 2 makes more sense to me.",
       "createdAt": "2025-11-04T11:37:02Z",
-      "updatedAt": "2025-11-11T11:51:34Z",
+      "updatedAt": "2025-12-31T15:00:52Z",
       "closedAt": null,
       "comments": [
         {
@@ -1029,10 +1036,17 @@
         },
         {
           "author": "franziskuskiefer",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "body": "Thanks (sorry I didn't get around to it yet). Happy to review.",
           "createdAt": "2025-11-11T11:51:34Z",
           "updatedAt": "2025-11-11T11:51:34Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "OK, I submitted PR #82 just now.\n\nThe text in the draft still requires that every client understands any component present in AppEphemeral (not a change). If not you could send total garbage and clients that understand wouldn't be able to reject it.",
+          "createdAt": "2025-12-31T15:00:32Z",
+          "updatedAt": "2025-12-31T15:00:52Z"
         }
       ]
     },
@@ -5169,6 +5183,32 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 82,
+      "id": "PR_kwDOHZoI5M67HU9R",
+      "title": "Make AppEphemeral text consistent with the struct in the draft",
+      "url": "https://github.com/mlswg/mls-extensions/pull/82",
+      "state": "OPEN",
+      "author": "rohanmahy",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Each AppEphemeral proposal contains data for a single component only.\r\n\r\nAddresses Issue #76",
+      "createdAt": "2025-12-31T14:58:39Z",
+      "updatedAt": "2025-12-31T14:58:40Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "cccc35a3f6669f20a9e41422bce2b82f01cf953d",
+      "headRepository": "rohanmahy/mls-extensions",
+      "headRefName": "issue76",
+      "headRefOid": "8fea7bec44265ecdbaf7833b33d35e5fb5e078cc",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
