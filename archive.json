@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-01-01T00:58:07.431312+00:00",
+  "timestamp": "2026-02-12T01:05:56.619200+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -5196,7 +5196,7 @@
       "labels": [],
       "body": "Each AppEphemeral proposal contains data for a single component only.\r\n\r\nAddresses Issue #76",
       "createdAt": "2025-12-31T14:58:39Z",
-      "updatedAt": "2025-12-31T14:58:40Z",
+      "updatedAt": "2026-02-11T16:18:18Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "cccc35a3f6669f20a9e41422bce2b82f01cf953d",
@@ -5208,7 +5208,21 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M7hpyxZ",
+          "commit": {
+            "abbreviatedOid": "8fea7be"
+          },
+          "author": "franziskuskiefer",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "lgtm",
+          "createdAt": "2026-02-11T16:18:18Z",
+          "updatedAt": "2026-02-11T16:18:18Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
