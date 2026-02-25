@@ -4,8 +4,8 @@
 
 Messaging Layer Security                                       R. Robert
 Internet-Draft                                               Phoenix R&D
-Intended status: Standards Track                        17 December 2025
-Expires: 20 June 2026
+Intended status: Standards Track                        25 February 2026
+Expires: 29 August 2026
 
 
              The Messaging Layer Security (MLS) Extensions
@@ -53,11 +53,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 20 June 2026.
+   This Internet-Draft will expire on 29 August 2026.
 
 Copyright Notice
 
-   Copyright (c) 2025 IETF Trust and the persons identified as the
+   Copyright (c) 2026 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -628,9 +628,8 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    they do not change any persistent state related to MLS, aside from
    their appearance in the transcript hash.
 
-   The content of an AppEphemeral proposal is the same as an
-   app_data_dictionary extension.  The proposal type is set in
-   Section 7.
+   The content of an AppEphemeral proposal is a single component_id and
+   the data for that component.  The proposal type is set in Section 7.
 
    struct {
        ComponentID component_id;
@@ -638,20 +637,19 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    } AppEphemeral;
 
    An AppEphemeral proposal is invalid if it contains a component_id
-   that is unknown to the application, or if the app_data_dictionary
-   field contains any ComponentData entry whose data field is considered
-   invalid by the application logic registered to the indicated
-   component_id.
+   that is unknown to the application, or if the data field is
+   considered invalid by the application logic registered to the
+   indicated component_id.
 
    AppEphemeral proposals MUST be processed after any default proposals
    (i.e., those defined in [RFC9420]), but before any AppDataUpdate
    proposals.
 
-   A client applies an AppEphemeral proposal by providing the contents
-   of the app_data_dictionary field to the component identified by the
-   component_id.  If a Commit references more than one AppEphemeral
-   proposal for the same component_id value, then they MUST be processed
-   in the order in which they are specified in the Commit.
+   A client applies an AppEphemeral proposal by providing the data field
+   to the component identified by the component_id.  If a Commit
+   references more than one AppEphemeral proposal for the same
+   component_id value, then they MUST be processed in the order in which
+   they are specified in the Commit.
 
    AppEphemeral proposals do not require an UpdatePath.  An AppEphemeral
    proposal can be sent by an external sender.  Likewise, AppEphemeral
