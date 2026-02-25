@@ -540,8 +540,8 @@ that all other group members will be processing the same data. AppEphemeral
 proposals are ephemeral in the sense that they do not change any persistent
 state related to MLS, aside from their appearance in the transcript hash.
 
-The content of an AppEphemeral proposal is the same as an `app_data_dictionary`
-extension. The proposal type is set in {{iana-considerations}}.
+The content of an AppEphemeral proposal is a single `component_id` and the
+`data` for that component. The proposal type is set in {{iana-considerations}}.
 
 ~~~ tls-presentation
 struct {
@@ -551,15 +551,14 @@ struct {
 ~~~
 
 An AppEphemeral proposal is invalid if it contains a `component_id` that is
-unknown to the application, or if the `app_data_dictionary` field contains any
-`ComponentData` entry whose `data` field is considered invalid by the
+unknown to the application, or if the `data` field is considered invalid by the
 application logic registered to the indicated `component_id`.
 
 AppEphemeral proposals MUST be processed after any default proposals (i.e.,
 those defined in {{RFC9420}}), but before any AppDataUpdate proposals.
 
-A client applies an AppEphemeral proposal by providing the contents of the
-`app_data_dictionary` field to the component identified by the `component_id`.
+A client applies an AppEphemeral proposal by providing the `data` field to the
+component identified by the `component_id`.
 If a Commit references more than one AppEphemeral proposal for the same
 `component_id` value, then they MUST be processed in the order in which they are
 specified in the Commit.
