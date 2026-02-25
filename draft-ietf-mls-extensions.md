@@ -126,7 +126,8 @@ terms:
 Application:
 : The system that instantiates, manages, and uses an MLS group. Each MLS group
 is used by exactly one application, but an application may maintain multiple
-groups.
+groups. An application for the purposes of this document may refer to 
+non-application layer systems. Specifically, this refers to the OSI definition of applications that categorizes them according to their specific function within the communications stack. 
 
 Application component:
 : A subsystem of an application that has access to an MLS group.
@@ -171,7 +172,7 @@ from each other:
 
 Similarly, the content of application messages (`application_data`) can be
 distinguished and routed to different parts of an application according to
-the media type of that content using the content negotiation mechanism defined
+the type of that content using the content negotiation mechanism defined
 in {{content-advertisement}}.
 
 We also define new general mechanisms that allow applications to take advantage
@@ -205,13 +206,21 @@ uint16 ComponentID;
 ~~~
 
 When a label is required for an operation, the following data structure is used.
-The `base_label` field is always the fixed string "Application".  The
+The `base_label` field takes the unique value of the application's associated protocol layer: Application, Transport, Internet, or Network Access Layer. The
 `component_id` field identifies the component performing the operation. The
 `label` field identifies the operation being performed.
 
 ~~~ tls
+enum {
+  application(0),
+  transport(1),
+  internet(2),
+  network_access(3),
+  (255)
+} base_layer;
+
 struct {
-  opaque base_label<V>; /* = "Application" */
+  opaque base_layer;
   ComponentID component_id;
   opaque label<V>;
 } ComponentOperationLabel;
@@ -757,6 +766,24 @@ the Delivery Service drops all messages after a certain point, so that a later
 generation is never observed. Obviously, there is a risk that AppAck messages
 could be suppressed as well, but their inclusion in the transcript means that if
 they are suppressed then the group cannot advance at all.
+
+## Cross-Layer Support
+The `ComponentData` within the `app_data_dictionary` and the use of `SafeAAD` within messages can be used to provide cross-layer support for applications that use MLS but also influence one or more other protocol layers. Application components can store group configurations within the `ComponentData` struct and use the `SafeAAD` struct to communicate between one another. Furthermore, additional capabilities and attributes outside the group-agreed configuration can also be conveyed through the `app_data_dictionary` extension in the `LeafNode` or `KeyPackage`. This section provides some examples of cross-layer support functionalities that may be achieved through the `app_data_dictionary` usage.
+
+**[TODO:] Consider moving these to the appendix.**
+### Example 1: Application-Layer Protocol Agreement (ALPA)
+
+Application-Layer Protocol Agreement (ALPA) allows for the selection of one or more application-layer protocols in an MLS group via the `app_data_dictionary` in the `GroupContext` object. This is analogous to Application-Layer Protocol Negotiation (ALPN) from TLS, which is a negotiation process as opposed to ALPA's selection process. ALPA is useful when an MLS application uses multiple application-layer protocols and needs to reach group consensus.
+
+An ALPA component could be implemented as follows: A group's required application-layer protocols are listed in the `data` vector of the `ComponentData` struct within the `app_data_dictionary` in the `GroupContext`. When a new member is being added to the group, their `KeyPackage` must contain at least the required application protocols of the group. This list is either equal to or a superset of the aforementioned list in the `GroupContext`. A member's full list of supported application protocols is recorded in that member's `app_data_dictionary` in their `LeafNode` `Capabilities` struct.
+
+In the Welcome-based flow for adding a new member, when the member receives their Welcome message, they are prescribed the application-layer protocol(s) to use. In the External Join flow (described in {{?RFC9420}}), the joining client downloads the `GroupInfo` object, which advertises the required application protocols of the group to the joiner.
+
+### Example 2: Transport Layer Parameters Advertisement
+Rather than establishing transport layer parameters out-of-band, some protocols require them to be authenticated by the cryptographic handshake. To support applications with this requirement, MLS can provide Transport Layer Parameter Advertisement (TLPA) as part of the `SafeAAD` as an `aad_item`. When included, this allows for group channel transport parameter agreement as well as individualized member transport parameter advertisement. In one-to-many and many-to-many communications, consistency provided by authenticated group channel transport parameter agreement can allow participants to pick optimal group-wide defaults (which may evolve) instead of relying on trial and error. In one-to-one or many-to-one communications, individual transport parameter advertisement allows participants to choose a more tailored setting appropriate for the recipient.
+
+### Example 3: Server Name Indication
+Server Name Indication (SNI) can be accomplished in MLS by defining a dedicated component ID for SNI and including it as a ComponentData entry within the app_data_dictionary extension. The SNI value, represented as an opaque byte string, is stored in the data field of the corresponding ComponentData struct. When a group member or client needs to advertise or negotiate a server name, it adds or updates the SNI component in its KeyPackage, LeafNode, or GroupContext. This approach allows SNI information to be securely distributed, agreed upon, and referenced by all group members, leveraging the domain separation and extensibility provided by the app_data_dictionary mechanism.
 
 ## Content Advertisement
 
