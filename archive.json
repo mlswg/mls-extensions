@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-02-12T01:05:56.619200+00:00",
+  "timestamp": "2026-02-26T01:02:28.804727+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -825,7 +825,7 @@
       "labels": [],
       "body": "We're having a small discussion on how to interpret the document over in the [mls-combiner repo](https://github.com/mlswg/mls-combiner/issues/6) on how to interpret this draft.\n\nThe question is on what the level of granularity is with which the `app_data_dictionary` can be updated. More concretely, what is the content of an AppDataUpdate proposal? Is it some information that the application/component then uses to update the state of the component in the `app_data_dictionary`? Or must it be the complete new content of the components entry in the `app_data_dictionary`, which then just replaces the old content?\n\n@bitbltr please chime in here if I didn't present your side of the argument correctly.",
       "createdAt": "2025-10-08T06:17:15Z",
-      "updatedAt": "2025-12-31T14:28:07Z",
+      "updatedAt": "2026-02-25T13:50:44Z",
       "closedAt": null,
       "comments": [
         {
@@ -1002,6 +1002,13 @@
           "body": "> I think Rohan means components that are used in a group, but where not all members are required to support each individual component. In that case you're right and updates need to be opaque. Generally sounds like a good idea to me.\n\nYes, that's what I meant. I still like the idea of a separate `opaque_dictionary` extension for the GC that has only components that have \"full replacement\" semantics, and whose contents are not required to be understood in the GC.",
           "createdAt": "2025-12-31T14:28:07Z",
           "updatedAt": "2025-12-31T14:28:07Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "There seems to be disagreement on this topic, and no clear way forward after almost half a year. If changes to the draft are desired, please file a PR and take the discussion to the MLS mailing list.",
+          "createdAt": "2026-02-25T13:50:44Z",
+          "updatedAt": "2026-02-25T13:50:44Z"
         }
       ]
     },
@@ -1010,15 +1017,15 @@
       "id": "I_kwDOHZoI5M7VwNlO",
       "title": "AppEphemeral struct and description is inconsistent",
       "url": "https://github.com/mlswg/mls-extensions/issues/76",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "franziskuskiefer",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Unless I misunderstand something here, the text and proposal struct don't work together here.\n\nThe text first says\n\nhttps://github.com/mlswg/mls-extensions/blob/099b42ea5df3ebd2bd936278efdd2eea81ba27e3/draft-ietf-mls-extensions.md?plain=1#L549-L550\n\nbut then defines the proposal as\n\n\nhttps://github.com/mlswg/mls-extensions/blob/099b42ea5df3ebd2bd936278efdd2eea81ba27e3/draft-ietf-mls-extensions.md?plain=1#L553-L556\n\nIt then goes on to talk about `ComponentData` and `app_data_dictionary`.\n\nhttps://github.com/mlswg/mls-extensions/blob/099b42ea5df3ebd2bd936278efdd2eea81ba27e3/draft-ietf-mls-extensions.md?plain=1#L559-L562\n\nIs the intention that\n1. the proposal really is equivalent to the `AppDataDictionary` struct? Then the `AppEphemeral` struct needs to be changed to this.\n2. or is the `AppEphemeral` struct correct, and the text should get updated?\n\nEither would be fine, but option 2 makes more sense to me.",
       "createdAt": "2025-11-04T11:37:02Z",
-      "updatedAt": "2025-12-31T15:00:52Z",
-      "closedAt": null,
+      "updatedAt": "2026-02-25T10:46:46Z",
+      "closedAt": "2026-02-25T10:46:46Z",
       "comments": [
         {
           "author": "raphaelrobert",
@@ -1047,6 +1054,13 @@
           "body": "OK, I submitted PR #82 just now.\n\nThe text in the draft still requires that every client understands any component present in AppEphemeral (not a change). If not you could send total garbage and clients that understand wouldn't be able to reject it.",
           "createdAt": "2025-12-31T15:00:32Z",
           "updatedAt": "2025-12-31T15:00:52Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "Closed via #82.",
+          "createdAt": "2026-02-25T10:46:46Z",
+          "updatedAt": "2026-02-25T10:46:46Z"
         }
       ]
     },
@@ -1055,15 +1069,15 @@
       "id": "I_kwDOHZoI5M7Xx88J",
       "title": "Use u32 or u16 for component IDs? (was Update Sec 7.5 after #75)",
       "url": "https://github.com/mlswg/mls-extensions/issues/77",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "franziskuskiefer",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "The component IDs are u16 since #75. The Sec 7.5. (MLS Component Types) needs to be updated accordingly.\n\nI'd note that this makes the private space pretty small and it may be worthwhile keep using u32 for component ID (and reword the `SafeExportSecret` to only use the lower 16 bits of the component ID, or something like that).\n\nAlso the text in Sec 4.1 still says 4 bytes.",
       "createdAt": "2025-11-13T08:53:45Z",
-      "updatedAt": "2025-12-19T12:18:40Z",
-      "closedAt": null,
+      "updatedAt": "2026-02-25T10:50:29Z",
+      "closedAt": "2026-02-25T10:50:29Z",
       "comments": [
         {
           "author": "keks",
@@ -1093,7 +1107,7 @@
       "labels": [],
       "body": "The encoding of labels for `EncryptWithLabel` and `SignWithLabel` (as well as decrypt and verify) is not well defined. These functions take string `Label` arguments in RFC 9420, i.e. `label = \"MLS 1.0 \" + Label`. This document defines `Label` as structs, i.e. the `ComponentOperationLabel` struct. This raises the question how the string concatenation should work between the string and the struct.\n\nThe obvious way is to encode the `ComponentOperationLabel` struct and prefix it with the bytes of `\"MLS 1.0 \"`. But this makes the result invalid in the TLS presentation language. Which may be fine since we never need to decode this.\n\nBut one may also interpret this as encoding the `ComponentOperationLabel` struct into a string to satisfy RFC 9420.",
       "createdAt": "2025-11-25T10:22:30Z",
-      "updatedAt": "2025-12-19T12:18:04Z",
+      "updatedAt": "2026-02-25T10:49:27Z",
       "closedAt": null,
       "comments": [
         {
@@ -1109,6 +1123,13 @@
           "body": "It doesn't need to be a struct, but then the `+` operation needs to be defined for that case.",
           "createdAt": "2025-12-19T12:18:04Z",
           "updatedAt": "2025-12-19T12:18:04Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "@franziskuskiefer @rohanmahy Can you propose a fix? If we get the PR in before Mar 2, it'll be part of the new draft.",
+          "createdAt": "2026-02-25T10:49:27Z",
+          "updatedAt": "2026-02-25T10:49:27Z"
         }
       ]
     }
@@ -4808,7 +4829,7 @@
       "labels": [],
       "body": "RE: Cross Layer Support Issue #70 ",
       "createdAt": "2025-09-10T19:10:46Z",
-      "updatedAt": "2025-10-23T21:15:47Z",
+      "updatedAt": "2026-02-25T10:51:58Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "bfd258ac3b3af2338c4c335803eb44e4ccd54834",
@@ -4911,6 +4932,26 @@
               "body": "I find this sentence confuses more than it clarifies.",
               "createdAt": "2025-10-23T21:15:47Z",
               "updatedAt": "2025-10-23T21:15:47Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M7lrtzn",
+          "commit": {
+            "abbreviatedOid": "f513796"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-02-25T10:51:58Z",
+          "updatedAt": "2026-02-25T10:51:58Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "@xisentian Can you address this comment, please?",
+              "createdAt": "2026-02-25T10:51:58Z",
+              "updatedAt": "2026-02-25T10:51:58Z"
             }
           ]
         }
@@ -5189,24 +5230,26 @@
       "id": "PR_kwDOHZoI5M67HU9R",
       "title": "Make AppEphemeral text consistent with the struct in the draft",
       "url": "https://github.com/mlswg/mls-extensions/pull/82",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "rohanmahy",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Each AppEphemeral proposal contains data for a single component only.\r\n\r\nAddresses Issue #76",
       "createdAt": "2025-12-31T14:58:39Z",
-      "updatedAt": "2026-02-11T16:18:18Z",
+      "updatedAt": "2026-02-25T10:46:21Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "cccc35a3f6669f20a9e41422bce2b82f01cf953d",
       "headRepository": "rohanmahy/mls-extensions",
       "headRefName": "issue76",
       "headRefOid": "8fea7bec44265ecdbaf7833b33d35e5fb5e078cc",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2026-02-25T10:46:21Z",
+      "mergedAt": "2026-02-25T10:46:21Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "49294ee5068f2064fc1cf84c852a3f8377499d40"
+      },
       "comments": [],
       "reviews": [
         {
