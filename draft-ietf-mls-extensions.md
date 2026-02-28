@@ -126,7 +126,8 @@ terms:
 Application:
 : The system that instantiates, manages, and uses an MLS group. Each MLS group
 is used by exactly one application, but an application may maintain multiple
-groups.
+groups. This does not imply that it need be part of the Application Layer of
+the networking stack.
 
 Application component:
 : A subsystem of an application that has access to an MLS group.
@@ -204,14 +205,15 @@ the scope of an application.
 uint16 ComponentID;
 ~~~
 
-When a label is required for an operation, the following data structure is used.
-The `base_label` field is always the fixed string "Application".  The
-`component_id` field identifies the component performing the operation. The
-`label` field identifies the operation being performed.
+When a label is required for an operation, the byte string resulting from the
+TLS Presentation Language encoding of the following data structure is used. The
+`base_label` field is always the fixed string "MLS Component". The`component_id`
+field identifies the component performing the operation. The `label` field
+identifies the operation being performed.
 
 ~~~ tls
 struct {
-  opaque base_label<V>; /* = "Application" */
+  opaque base_label<V>; /* = "MLS Component" */
   ComponentID component_id;
   opaque label<V>;
 } ComponentOperationLabel;
@@ -1389,6 +1391,9 @@ security of the least secure of its credential bindings.
 # Change Log
 
 RFC EDITOR PLEASE DELETE THIS SECTION.
+
+draft-08
+- rename the component base label from "Application" to "MLS Component"
 
 draft-07
 - add AppAck to IANA considerations
