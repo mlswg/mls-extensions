@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-02-26T01:02:28.804727+00:00",
+  "timestamp": "2026-03-01T01:11:01.015818+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -825,7 +825,7 @@
       "labels": [],
       "body": "We're having a small discussion on how to interpret the document over in the [mls-combiner repo](https://github.com/mlswg/mls-combiner/issues/6) on how to interpret this draft.\n\nThe question is on what the level of granularity is with which the `app_data_dictionary` can be updated. More concretely, what is the content of an AppDataUpdate proposal? Is it some information that the application/component then uses to update the state of the component in the `app_data_dictionary`? Or must it be the complete new content of the components entry in the `app_data_dictionary`, which then just replaces the old content?\n\n@bitbltr please chime in here if I didn't present your side of the argument correctly.",
       "createdAt": "2025-10-08T06:17:15Z",
-      "updatedAt": "2026-02-25T13:50:44Z",
+      "updatedAt": "2026-02-28T09:05:10Z",
       "closedAt": null,
       "comments": [
         {
@@ -1009,6 +1009,13 @@
           "body": "There seems to be disagreement on this topic, and no clear way forward after almost half a year. If changes to the draft are desired, please file a PR and take the discussion to the MLS mailing list.",
           "createdAt": "2026-02-25T13:50:44Z",
           "updatedAt": "2026-02-25T13:50:44Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I think we need to have an example of a component that would be useful to be in the GroupContext but that not all the members understand. If we have this we could create an `opaque_dictionary` with only full replacement semantics, using the example as justifications.\n\n^^ @bitbltr ",
+          "createdAt": "2026-02-28T09:05:10Z",
+          "updatedAt": "2026-02-28T09:05:10Z"
         }
       ]
     },
@@ -1107,7 +1114,7 @@
       "labels": [],
       "body": "The encoding of labels for `EncryptWithLabel` and `SignWithLabel` (as well as decrypt and verify) is not well defined. These functions take string `Label` arguments in RFC 9420, i.e. `label = \"MLS 1.0 \" + Label`. This document defines `Label` as structs, i.e. the `ComponentOperationLabel` struct. This raises the question how the string concatenation should work between the string and the struct.\n\nThe obvious way is to encode the `ComponentOperationLabel` struct and prefix it with the bytes of `\"MLS 1.0 \"`. But this makes the result invalid in the TLS presentation language. Which may be fine since we never need to decode this.\n\nBut one may also interpret this as encoding the `ComponentOperationLabel` struct into a string to satisfy RFC 9420.",
       "createdAt": "2025-11-25T10:22:30Z",
-      "updatedAt": "2026-02-25T10:49:27Z",
+      "updatedAt": "2026-02-28T09:16:19Z",
       "closedAt": null,
       "comments": [
         {
@@ -1130,6 +1137,13 @@
           "body": "@franziskuskiefer @rohanmahy Can you propose a fix? If we get the PR in before Mar 2, it'll be part of the new draft.",
           "createdAt": "2026-02-25T10:49:27Z",
           "updatedAt": "2026-02-25T10:49:27Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@franziskuskiefer would it be sufficient to say that `component__op_label` is the opaque string of the TLS Presentation Language encoding of the `ComponentOperationLabel` struct?\n\nTechnically TLS PL does not have text-only strings. It has opaque sequences of octets. I think it is really the concatenation of text strings which was never formerly defined, because everyone thinks they understand how to concatenate an ASCII string.",
+          "createdAt": "2026-02-28T09:16:19Z",
+          "updatedAt": "2026-02-28T09:16:19Z"
         }
       ]
     }
@@ -4829,7 +4843,7 @@
       "labels": [],
       "body": "RE: Cross Layer Support Issue #70 ",
       "createdAt": "2025-09-10T19:10:46Z",
-      "updatedAt": "2026-02-25T10:51:58Z",
+      "updatedAt": "2026-02-28T08:40:40Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "bfd258ac3b3af2338c4c335803eb44e4ccd54834",
@@ -4847,6 +4861,20 @@
           "body": "@bifurcation @raphaelrobert PTAL.",
           "createdAt": "2025-10-23T14:25:45Z",
           "updatedAt": "2025-10-23T14:25:45Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I oppose merging this PR. I think it is entirely unnecessary and actually sets a harmful precedent for labels that could easily start to conflict. I suggest that @xisentian simply write a draft to register the 3 example components (all of which are indeed useful). I am happy to help with that.\r\n\r\nIf people feel that the fixed label \"Application\" plus the component ID is too \"application-layer centric\" then we can trivially rename the fixed part of the label to something else, like \"Component\".\r\n",
+          "createdAt": "2026-02-28T08:39:30Z",
+          "updatedAt": "2026-02-28T08:39:30Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I oppose merging this PR. I think it is entirely unnecessary and actually sets a harmful precedent for labels that could easily start to conflict. I suggest that @xisentian simply write a draft to register the 3 example components (all of which are indeed useful). I am happy to help with that.\r\n\r\nIf people feel that the fixed label \"Application\" plus the component ID is too \"application-layer centric\" then we can trivially rename the fixed part of the label to something else, like \"Component\" or \"MLS Component\".\r\n",
+          "createdAt": "2026-02-28T08:40:40Z",
+          "updatedAt": "2026-02-28T08:40:40Z"
         }
       ],
       "reviews": [
@@ -4952,6 +4980,46 @@
               "body": "@xisentian Can you address this comment, please?",
               "createdAt": "2026-02-25T10:51:58Z",
               "updatedAt": "2026-02-25T10:51:58Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M7ml10B",
+          "commit": {
+            "abbreviatedOid": "f513796"
+          },
+          "author": "xisentian",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-02-27T19:26:09Z",
+          "updatedAt": "2026-02-27T19:26:09Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "This is meant to convey that the word 'Application' may refer to software programs that provide non-application layer specific functionalities. For example, layer 3 routing software   that enable SDWAN or VPNs. Does this make sense? ",
+              "createdAt": "2026-02-27T19:26:09Z",
+              "updatedAt": "2026-02-27T19:26:09Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M7ml2h0",
+          "commit": {
+            "abbreviatedOid": "f513796"
+          },
+          "author": "xisentian",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-02-27T19:26:55Z",
+          "updatedAt": "2026-02-27T19:26:55Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "Happy to take other suggestions but I think this is the phrasing that @kkohbrok and I agreed upon.  ",
+              "createdAt": "2026-02-27T19:26:55Z",
+              "updatedAt": "2026-02-27T19:26:56Z"
             }
           ]
         }
@@ -5266,6 +5334,32 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 83,
+      "id": "PR_kwDOHZoI5M7G_eN2",
+      "title": "Rename component base label; clarify encoding of ComponentOperationLabel",
+      "url": "https://github.com/mlswg/mls-extensions/pull/83",
+      "state": "OPEN",
+      "author": "rohanmahy",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "\r\n- Perhaps sufficient to address #79   @franziskuskiefer \r\n- Alternative to PR #72  @xisentian",
+      "createdAt": "2026-02-28T09:44:21Z",
+      "updatedAt": "2026-02-28T09:44:22Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "49294ee5068f2064fc1cf84c852a3f8377499d40",
+      "headRepository": "rohanmahy/mls-extensions",
+      "headRefName": "component-label",
+      "headRefOid": "842470e2caf8704e83d3ce4c48ffe11664d8aac3",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
