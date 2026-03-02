@@ -1392,8 +1392,11 @@ security of the least secure of its credential bindings.
 
 RFC EDITOR PLEASE DELETE THIS SECTION.
 
-draft-08
+draft-09
 - rename the component base label from "Application" to "MLS Component"
+
+draft-08
+- clarify that SelfRemove is a proposal type, not an extension
 
 draft-07
 - add AppAck to IANA considerations
