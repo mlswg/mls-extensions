@@ -4,8 +4,8 @@
 
 Messaging Layer Security                                       R. Robert
 Internet-Draft                                               Phoenix R&D
-Intended status: Standards Track                        25 February 2026
-Expires: 29 August 2026
+Intended status: Standards Track                            2 March 2026
+Expires: 3 September 2026
 
 
              The Messaging Layer Security (MLS) Extensions
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 29 August 2026.
+   This Internet-Draft will expire on 3 September 2026.
 
 Copyright Notice
 
@@ -200,7 +200,9 @@ Table of Contents
 
    Application:  The system that instantiates, manages, and uses an MLS
       group.  Each MLS group is used by exactly one application, but an
-      application may maintain multiple groups.
+      application may maintain multiple groups.  This does not imply
+      that it need be part of the Application Layer of the networking
+      stack.
 
    Application component:  A subsystem of an application that has access
       to an MLS group.
@@ -279,14 +281,15 @@ Table of Contents
 
    uint16 ComponentID;
 
-   When a label is required for an operation, the following data
+   When a label is required for an operation, the byte string resulting
+   from the TLS Presentation Language encoding of the following data
    structure is used.  The base_label field is always the fixed string
-   "Application".  The component_id field identifies the component
+   "MLS Component".  Thecomponent_id field identifies the component
    performing the operation.  The label field identifies the operation
    being performed.
 
    struct {
-     opaque base_label<V>; /* = "Application" */
+     opaque base_label<V>; /* = "MLS Component" */
      ComponentID component_id;
      opaque label<V>;
    } ComponentOperationLabel;
@@ -1626,6 +1629,9 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
 Appendix A.  Change Log
 
    RFC EDITOR PLEASE DELETE THIS SECTION.
+
+   draft-08 - rename the component base label from "Application" to "MLS
+   Component"
 
    draft-07 - add AppAck to IANA considerations - adapt Safe AAD scope -
    remove targeted messages altogether with intention to publish it as a
