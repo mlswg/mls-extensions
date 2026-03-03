@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-03-01T01:11:01.015818+00:00",
+  "timestamp": "2026-03-03T01:05:31.825755+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -735,15 +735,15 @@
       "id": "I_kwDOHZoI5M7KqLNJ",
       "title": "Cross-layer support",
       "url": "https://github.com/mlswg/mls-extensions/issues/70",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xisentian",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "The current scoping of the extensions document restricts content advertisement to support only the application layer - specifically particular media types. The MLS Application is defined within this document as \"the system that instantiates, manages, and uses an MLS group\" which implies if other protocol layers used MLS, then they should be able to utilize the Safe Application Interface to agree on layer-specific content. Thus, components within Safe API should be generalized further to support protocol layers other than application. ",
       "createdAt": "2025-09-09T21:38:37Z",
-      "updatedAt": "2025-10-02T16:08:13Z",
-      "closedAt": null,
+      "updatedAt": "2026-03-02T19:18:36Z",
+      "closedAt": "2026-03-02T19:18:36Z",
       "comments": [
         {
           "author": "rohanmahy",
@@ -1083,7 +1083,7 @@
       "labels": [],
       "body": "The component IDs are u16 since #75. The Sec 7.5. (MLS Component Types) needs to be updated accordingly.\n\nI'd note that this makes the private space pretty small and it may be worthwhile keep using u32 for component ID (and reword the `SafeExportSecret` to only use the lower 16 bits of the component ID, or something like that).\n\nAlso the text in Sec 4.1 still says 4 bytes.",
       "createdAt": "2025-11-13T08:53:45Z",
-      "updatedAt": "2026-02-25T10:50:29Z",
+      "updatedAt": "2026-03-02T17:53:14Z",
       "closedAt": "2026-02-25T10:50:29Z",
       "comments": [
         {
@@ -1099,6 +1099,20 @@
           "body": "Fixed in #80 ",
           "createdAt": "2025-12-15T16:15:59Z",
           "updatedAt": "2025-12-15T16:15:59Z"
+        },
+        {
+          "author": "franziskuskiefer",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@raphaelrobert #80 makes the document consistent again, but the question of 16 vs 32 bit is still open. Unless everyone else thinks that 16 bits are enough.",
+          "createdAt": "2026-03-02T16:00:03Z",
+          "updatedAt": "2026-03-02T16:00:03Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "We had some discussion regarding 16 vs 32 bits. The issue with 32 bits was that the exporter tree would become huge for everyone using it, all the time. The concerns about 16 bits seem more theoretical to me and don't constitute an immediate blocker. The argument that apps can share IDs from the private block goes against the idea of standardization, I don't see why that should be a goal. If several apps agree on a component ID, it's exactly the prerequisite for taking ot to IANA.",
+          "createdAt": "2026-03-02T17:53:14Z",
+          "updatedAt": "2026-03-02T17:53:14Z"
         }
       ]
     },
@@ -1107,15 +1121,15 @@
       "id": "I_kwDOHZoI5M7aTAl5",
       "title": "Make component label encoding more precise",
       "url": "https://github.com/mlswg/mls-extensions/issues/79",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "franziskuskiefer",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "The encoding of labels for `EncryptWithLabel` and `SignWithLabel` (as well as decrypt and verify) is not well defined. These functions take string `Label` arguments in RFC 9420, i.e. `label = \"MLS 1.0 \" + Label`. This document defines `Label` as structs, i.e. the `ComponentOperationLabel` struct. This raises the question how the string concatenation should work between the string and the struct.\n\nThe obvious way is to encode the `ComponentOperationLabel` struct and prefix it with the bytes of `\"MLS 1.0 \"`. But this makes the result invalid in the TLS presentation language. Which may be fine since we never need to decode this.\n\nBut one may also interpret this as encoding the `ComponentOperationLabel` struct into a string to satisfy RFC 9420.",
       "createdAt": "2025-11-25T10:22:30Z",
-      "updatedAt": "2026-02-28T09:16:19Z",
-      "closedAt": null,
+      "updatedAt": "2026-03-02T19:19:04Z",
+      "closedAt": "2026-03-02T19:19:04Z",
       "comments": [
         {
           "author": "rohanmahy",
@@ -1144,6 +1158,13 @@
           "body": "@franziskuskiefer would it be sufficient to say that `component__op_label` is the opaque string of the TLS Presentation Language encoding of the `ComponentOperationLabel` struct?\n\nTechnically TLS PL does not have text-only strings. It has opaque sequences of octets. I think it is really the concatenation of text strings which was never formerly defined, because everyone thinks they understand how to concatenate an ASCII string.",
           "createdAt": "2026-02-28T09:16:19Z",
           "updatedAt": "2026-02-28T09:16:19Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Addressed in PR #83 ",
+          "createdAt": "2026-03-02T18:02:17Z",
+          "updatedAt": "2026-03-02T18:02:17Z"
         }
       ]
     }
@@ -4836,21 +4857,21 @@
       "id": "PR_kwDOHZoI5M6n4VF8",
       "title": "Cross layer support ",
       "url": "https://github.com/mlswg/mls-extensions/pull/72",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xisentian",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "RE: Cross Layer Support Issue #70 ",
       "createdAt": "2025-09-10T19:10:46Z",
-      "updatedAt": "2026-02-28T08:40:40Z",
+      "updatedAt": "2026-03-02T19:19:31Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "bfd258ac3b3af2338c4c335803eb44e4ccd54834",
       "headRepository": "xisentian/mls-extensions-cross-layer-support",
       "headRefName": "pr-draft",
       "headRefOid": "f5137967f4690c74e44b51d00022879738502c00",
-      "closedAt": null,
+      "closedAt": "2026-03-02T19:19:30Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
@@ -4875,6 +4896,13 @@
           "body": "I oppose merging this PR. I think it is entirely unnecessary and actually sets a harmful precedent for labels that could easily start to conflict. I suggest that @xisentian simply write a draft to register the 3 example components (all of which are indeed useful). I am happy to help with that.\r\n\r\nIf people feel that the fixed label \"Application\" plus the component ID is too \"application-layer centric\" then we can trivially rename the fixed part of the label to something else, like \"Component\" or \"MLS Component\".\r\n",
           "createdAt": "2026-02-28T08:40:40Z",
           "updatedAt": "2026-02-28T08:40:40Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "Closing in favor of #83.",
+          "createdAt": "2026-03-02T19:19:30Z",
+          "updatedAt": "2026-03-02T19:19:30Z"
         }
       ],
       "reviews": [
@@ -5340,24 +5368,150 @@
       "id": "PR_kwDOHZoI5M7G_eN2",
       "title": "Rename component base label; clarify encoding of ComponentOperationLabel",
       "url": "https://github.com/mlswg/mls-extensions/pull/83",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "rohanmahy",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
-      "body": "\r\n- Perhaps sufficient to address #79   @franziskuskiefer \r\n- Alternative to PR #72  @xisentian",
+      "body": "\r\n- Perhaps sufficient to address #79   @franziskuskiefer \r\n- Alternative to PR #72  @xisentian\r\n\r\nCloses #70 and #79.",
       "createdAt": "2026-02-28T09:44:21Z",
-      "updatedAt": "2026-02-28T09:44:22Z",
+      "updatedAt": "2026-03-02T19:18:35Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "49294ee5068f2064fc1cf84c852a3f8377499d40",
       "headRepository": "rohanmahy/mls-extensions",
       "headRefName": "component-label",
       "headRefOid": "842470e2caf8704e83d3ce4c48ffe11664d8aac3",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2026-03-02T19:18:35Z",
+      "mergedAt": "2026-03-02T19:18:35Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "61638c7a4ff8a914af3c670bd653b35aa43d3987"
+      },
+      "comments": [
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I think you could just explain if there is a particular layer that applies\r\nwhen registering any new component. Perhaps you could reserve a range with\r\nIANA even?\r\n\r\nthanks,\r\n-rohan\r\n\r\nOn Mon, 2 Mar 2026, 16:48 Xisen Tian, ***@***.***> wrote:\r\n\r\n> ***@***.**** commented on this pull request.\r\n> ------------------------------\r\n>\r\n> In draft-ietf-mls-extensions.md\r\n> <https://github.com/mlswg/mls-extensions/pull/83#discussion_r2873183752>:\r\n>\r\n> >\r\n>  ~~~ tls\r\n>  struct {\r\n> -  opaque base_label<V>; /* = \"Application\" */\r\n> +  opaque base_label<V>; /* = \"MLS Component\" */\r\n>\r\n> We would lose some granularity of specifying the particular layer that the\r\n> component is belongs to by just using a fixed string. Commit a223db7\r\n> <https://github.com/mlswg/mls-extensions/commit/a223db737c380eecf79b5bebc2274cccb34d72ed>\r\n> has a uint8 here called 'base_layer' to specify this. But maybe this can be\r\n> achieved by representing those layers as part of the componentID value\r\n> (e.g. in the 2 left most significant bits). Thoughts?\r\n>\r\n> \u2014\r\n> Reply to this email directly, view it on GitHub\r\n> <https://github.com/mlswg/mls-extensions/pull/83#pullrequestreview-3877033794>,\r\n> or unsubscribe\r\n> <https://github.com/notifications/unsubscribe-auth/AADSQPVJXOYV7QIHZ3RMNIL4OWUNDAVCNFSM6AAAAACWCQXDKOVHI2DSMVQWIX3LMV43YUDVNRWFEZLROVSXG5CSMV3GSZLXHMZTQNZXGAZTGNZZGQ>\r\n> .\r\n> You are receiving this because you authored the thread.Message ID:\r\n> ***@***.***>\r\n>\r\n",
+          "createdAt": "2026-03-02T16:27:52Z",
+          "updatedAt": "2026-03-02T16:27:52Z"
+        },
+        {
+          "author": "xisentian",
+          "authorAssociation": "NONE",
+          "body": "Per Rohan's chat with me offline, I agree with this alternative approach as opposed to my previous PR. Thanks for the help! ",
+          "createdAt": "2026-03-02T19:05:42Z",
+          "updatedAt": "2026-03-02T19:05:42Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M7nFtdC",
+          "commit": {
+            "abbreviatedOid": "842470e"
+          },
+          "author": "xisentian",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-02T15:48:11Z",
+          "updatedAt": "2026-03-02T15:48:11Z",
+          "comments": [
+            {
+              "originalPosition": 27,
+              "body": "We would lose some granularity of specifying the particular layer that the component is belongs to by just using a fixed string. Commit a223db737c380eecf79b5bebc2274cccb34d72ed has a uint8 here called 'base_layer' to specify this. But maybe this can be achieved by representing those layers as part of the componentID value (e.g. in the 2 left most significant bits). Thoughts? ",
+              "createdAt": "2026-03-02T15:48:11Z",
+              "updatedAt": "2026-03-02T15:48:11Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M7nFviw",
+          "commit": {
+            "abbreviatedOid": "842470e"
+          },
+          "author": "xisentian",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-02T15:49:44Z",
+          "updatedAt": "2026-03-02T15:49:44Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "I concur with this phrasing.",
+              "createdAt": "2026-03-02T15:49:44Z",
+              "updatedAt": "2026-03-02T15:49:44Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M7nF1dL",
+          "commit": {
+            "abbreviatedOid": "842470e"
+          },
+          "author": "franziskuskiefer",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-02T15:54:14Z",
+          "updatedAt": "2026-03-02T15:57:21Z",
+          "comments": [
+            {
+              "originalPosition": 18,
+              "body": "Thanks, I think this makes it clear that this is encoded before the concatenation",
+              "createdAt": "2026-03-02T15:54:14Z",
+              "updatedAt": "2026-03-02T15:57:21Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M7nIqKa",
+          "commit": {
+            "abbreviatedOid": "842470e"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-02T18:00:48Z",
+          "updatedAt": "2026-03-02T18:00:49Z",
+          "comments": [
+            {
+              "originalPosition": 27,
+              "body": "@xisentian \r\nYes, I think we have two choices. Either individual components can specify that they apply to a specific layer if this is relevant, or you can ask IANA to reserve a range or ranges of components that are all for transport layer concerns.\r\n\r\nDoes that satisfy your needs?",
+              "createdAt": "2026-03-02T18:00:48Z",
+              "updatedAt": "2026-03-02T18:00:49Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 84,
+      "id": "PR_kwDOHZoI5M7HarkQ",
+      "title": "draft-09",
+      "url": "https://github.com/mlswg/mls-extensions/pull/84",
+      "state": "MERGED",
+      "author": "raphaelrobert",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-03-02T19:30:26Z",
+      "updatedAt": "2026-03-02T19:32:21Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "61638c7a4ff8a914af3c670bd653b35aa43d3987",
+      "headRepository": "mlswg/mls-extensions",
+      "headRefName": "draft-09",
+      "headRefOid": "d606536116e2d5ef92b7e61be2c46348f7ad5642",
+      "closedAt": "2026-03-02T19:32:21Z",
+      "mergedAt": "2026-03-02T19:32:20Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "7ca5469a01b73353e36b9b1751c5c8848aa3d99f"
+      },
       "comments": [],
       "reviews": []
     }
