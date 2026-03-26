@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-03-03T01:05:31.825755+00:00",
+  "timestamp": "2026-03-26T01:12:48.088305+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -825,7 +825,7 @@
       "labels": [],
       "body": "We're having a small discussion on how to interpret the document over in the [mls-combiner repo](https://github.com/mlswg/mls-combiner/issues/6) on how to interpret this draft.\n\nThe question is on what the level of granularity is with which the `app_data_dictionary` can be updated. More concretely, what is the content of an AppDataUpdate proposal? Is it some information that the application/component then uses to update the state of the component in the `app_data_dictionary`? Or must it be the complete new content of the components entry in the `app_data_dictionary`, which then just replaces the old content?\n\n@bitbltr please chime in here if I didn't present your side of the argument correctly.",
       "createdAt": "2025-10-08T06:17:15Z",
-      "updatedAt": "2026-02-28T09:05:10Z",
+      "updatedAt": "2026-03-24T08:53:38Z",
       "closedAt": null,
       "comments": [
         {
@@ -1016,6 +1016,34 @@
           "body": "I think we need to have an example of a component that would be useful to be in the GroupContext but that not all the members understand. If we have this we could create an `opaque_dictionary` with only full replacement semantics, using the example as justifications.\n\n^^ @bitbltr ",
           "createdAt": "2026-02-28T09:05:10Z",
           "updatedAt": "2026-02-28T09:05:10Z"
+        },
+        {
+          "author": "bitbltr",
+          "authorAssociation": "NONE",
+          "body": "Last week, Signal introduced a feature in their app called Group Member Labels. Each member of a group can optionally create a label for themselves that is visible to the other members. In this feature, the label is group-specific.\n\nImagine that to support this in MLS, a vendor created a GroupContext component to hold these labels and allowed patch semantics to update said labels. Then they never publish the spec. Now we have a situation where other vendor clients cannot implement the semantics to keep the GroupContext in sync.\n\nLet me know if you would like me to expand on this and/or move it to the MLS group.",
+          "createdAt": "2026-03-24T05:06:54Z",
+          "updatedAt": "2026-03-24T05:06:54Z"
+        },
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "As I mentioned in the related [issue](https://github.com/ietf-wg-mimi/mimi-protocol/issues/135#issuecomment-3616306153) over in the MIMI working group: I don't think the \"malicious interop-blocking vendor\" threat model makes much sense.\n\nI think an additional `opaque_dictionary` is a good idea, but more due to the potential for better backwards compatibility and easier interoperability between vendors.",
+          "createdAt": "2026-03-24T06:42:10Z",
+          "updatedAt": "2026-03-24T06:42:10Z"
+        },
+        {
+          "author": "bitbltr",
+          "authorAssociation": "NONE",
+          "body": "It's not necessarily about malice. As the proposal stands, you are forcing every client app to immediately adopt every patch semantic for every component from any vendor that comes out in the future, or risk being the app that cannot converge on the group context state.\n\nMy original proposal was that all vendor components must use opaque semantics to maintain backward compatibility. If that aligns with having a separate opaque-only dictionary,  then I'm all for it.",
+          "createdAt": "2026-03-24T07:10:43Z",
+          "updatedAt": "2026-03-24T07:25:02Z"
+        },
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "The opaque-only dictionary allows vendors (or other standards like MIMI) to require that only that dictionary may be used. Vendors can still decide to use the original dictionary, though.\n\nBut even if we got rid of the original dictionary with patch semantics, there's no guarantee that a client implementer can stay compatible in the face of even non-malicious vendor behaviour. The vendor can still introduce any number of custom proposals, extensions or credentials that requires the client to implement additional semantics.",
+          "createdAt": "2026-03-24T08:53:38Z",
+          "updatedAt": "2026-03-24T08:53:38Z"
         }
       ]
     },
@@ -1167,6 +1195,22 @@
           "updatedAt": "2026-03-02T18:02:17Z"
         }
       ]
+    },
+    {
+      "number": 85,
+      "id": "I_kwDOHZoI5M72EzYU",
+      "title": "remove AppAck proposal from IANA considerations",
+      "url": "https://github.com/mlswg/mls-extensions/issues/85",
+      "state": "OPEN",
+      "author": "rohanmahy",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "AppAck is a component inside AppEphemeral now. ",
+      "createdAt": "2026-03-24T14:42:34Z",
+      "updatedAt": "2026-03-24T14:42:34Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -5512,6 +5556,32 @@
       "mergeCommit": {
         "oid": "7ca5469a01b73353e36b9b1751c5c8848aa3d99f"
       },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 86,
+      "id": "PR_kwDOHZoI5M7NCfGp",
+      "title": "Add `opaque_data_dictionary` extension and OpaqueDataUpdate proposal",
+      "url": "https://github.com/mlswg/mls-extensions/pull/86",
+      "state": "OPEN",
+      "author": "rohanmahy",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This is a pretty heavy response to Issue #74 .\r\n\r\nIt creates both a separate `opaque_data_dictionary` extension AND a new OpaqueDataDictionary Proposal.\r\n\r\nIt actually touches quite a lot of text.\r\n\r\nRather than creating a separate proposal, we could use a new op code for opaque_update. I can writeup a separate PR for that option.\r\n\r\nIncidentally this also fixes #85 \r\n",
+      "createdAt": "2026-03-24T14:59:35Z",
+      "updatedAt": "2026-03-24T15:00:11Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "7ca5469a01b73353e36b9b1751c5c8848aa3d99f",
+      "headRepository": "rohanmahy/mls-extensions",
+      "headRefName": "opaque-dict",
+      "headRefOid": "d84367915342d1671de2b329ec70ea94fbfae567",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
       "comments": [],
       "reviews": []
     }
