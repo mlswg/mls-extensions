@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-03-26T01:12:48.088305+00:00",
+  "timestamp": "2026-04-02T01:10:42.992082+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -825,7 +825,7 @@
       "labels": [],
       "body": "We're having a small discussion on how to interpret the document over in the [mls-combiner repo](https://github.com/mlswg/mls-combiner/issues/6) on how to interpret this draft.\n\nThe question is on what the level of granularity is with which the `app_data_dictionary` can be updated. More concretely, what is the content of an AppDataUpdate proposal? Is it some information that the application/component then uses to update the state of the component in the `app_data_dictionary`? Or must it be the complete new content of the components entry in the `app_data_dictionary`, which then just replaces the old content?\n\n@bitbltr please chime in here if I didn't present your side of the argument correctly.",
       "createdAt": "2025-10-08T06:17:15Z",
-      "updatedAt": "2026-03-24T08:53:38Z",
+      "updatedAt": "2026-04-01T06:12:23Z",
       "closedAt": null,
       "comments": [
         {
@@ -1044,6 +1044,97 @@
           "body": "The opaque-only dictionary allows vendors (or other standards like MIMI) to require that only that dictionary may be used. Vendors can still decide to use the original dictionary, though.\n\nBut even if we got rid of the original dictionary with patch semantics, there's no guarantee that a client implementer can stay compatible in the face of even non-malicious vendor behaviour. The vendor can still introduce any number of custom proposals, extensions or credentials that requires the client to implement additional semantics.",
           "createdAt": "2026-03-24T08:53:38Z",
           "updatedAt": "2026-03-24T08:53:38Z"
+        },
+        {
+          "author": "keks",
+          "authorAssociation": "NONE",
+          "body": "What concerns me about the opaque table is that using that over patches might become best practice to ensure that things are backwards compatible, and nobody uses the (arguably more sensible) patch mechanism.\n\nI am not sure if this would have support or not, but another way to somewhat mitigate the backwards compatibility issue would be to have a lightweight formalization of patch semantics. The things that I have been reaching for components (or considering to reach for)  were always either sets or key-value stores. We could just define a patch update mechanism for these (while still allowing vendors to do custom patches).\n\nThis way the vast majority of use cases can use the patch mechanism, all members agree on the semantics of the updates, even though they may not agree on the semantics of the data that is being written. But this is the same as in the opaque table proposal. Another nice side effect would be that vendors won't all reinvent the wheel for the most basic use cases (hopefully).\n\n***feel free to stop reading here if you don't care about the specifics***\n\nConcrete proposals for the structs (in Rust syntax, can be trivially translated to TLS struct-with-selects-in-it) :\n\n```rust\nenum SetUpdate {\n  /// Add an opaque item to the set\n  Add(Vec<u8>),\n  /// Remove an opaque item from the set\n  Remove(Vec<u8>),\n  /// optional: remove by hash, to allow removing large blobs by hash, so we don't have to resend the whole thing\n  RemoveByHash(Vec<u8>),\n}\n```\n\n```rust\nenum KeyValueUpdate {\n  /// Set a value at a key\n  Set{ key: Vec<u8>, value: Vec<u8> },\n  /// Remove the value at the given key\n  Remove(Vec<u8>),\n}\n```\n\nI think these are reasonably simple. There still is the question how to tell clients that a component should use a standard mechanism. One approach here could be to reserve blocks in the ComponentId space:\n\n- `0bx10...` -> SetUpdate\n- `0bx11...` -> KeyValueUpdate\n\nThe first bit is `x` because it already signals whether it is private or not. The other combinations can just mean \"custom system\", or we add another type for opaque, in case that is really all that is needed. No opinions there.",
+          "createdAt": "2026-03-31T07:47:06Z",
+          "updatedAt": "2026-03-31T07:47:06Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "As an implementor, I can assure you that we like the patch format for big\r\nlists of things. And when you are going to need to understand the list\r\nanyway, there is no benefit to making it opaque.\r\n\r\nOn Tue, 31 Mar 2026, 09:47 Jan Winkelmann, ***@***.***> wrote:\r\n\r\n> *keks* left a comment (mlswg/mls-extensions#74)\r\n> <https://github.com/mlswg/mls-extensions/issues/74#issuecomment-4160608936>\r\n>\r\n> What concerns me about the opaque table is that using that over patches\r\n> might become best practice to ensure that things are backwards compatible,\r\n> and nobody uses the (arguably more sensible) patch mechanism.\r\n>\r\n> I am not sure if this would have support or not, but another way to\r\n> somewhat mitigate the backwards compatibility issue would be to have a\r\n> lightweight formalization of patch semantics. The things that I have been\r\n> reaching for components (or considering to reach for) were always either\r\n> sets or key-value stores. We could just define a patch update mechanism for\r\n> these (while still allowing vendors to do custom patches).\r\n>\r\n> This way the vast majority of use cases can use the patch mechanism, all\r\n> members agree on the semantics of the updates, even though they may not\r\n> agree on the semantics of the data that is being written. But this is the\r\n> same as in the opaque table proposal. Another nice side effect would be\r\n> that vendors won't all reinvent the wheel for the most basic use cases\r\n> (hopefully).\r\n>\r\n> *feel free to stop reading here if you don't care about the specifics*\r\n>\r\n> Concrete proposals for the structs (in Rust syntax, can be trivially\r\n> translated to TLS struct-with-selects-in-it) :\r\n>\r\n> enum SetUpdate {\r\n>   /// Add an opaque item to the set  Add(Vec<u8>),\r\n>   /// Remove an opaque item from the set  Remove(Vec<u8>),\r\n>   /// optional: remove by hash, to allow removing large blobs by hash, so we don't have to resend the whole thing  RemoveByHash(Vec<u8>),}\r\n>\r\n> enum KeyValueUpdate {\r\n>   /// Set a value at a key  Set{ key: Vec<u8>, value: Vec<u8> },\r\n>   /// Remove the value at the given key  Remove(Vec<u8>),}\r\n>\r\n> I think these are reasonably simple. There still is the question how to\r\n> tell clients that a component should use a standard mechanism. One approach\r\n> here could be to reserve blocks in the ComponentId space:\r\n>\r\n>    - 0bx10... -> SetUpdate\r\n>    - 0bx11... -> KeyValueUpdate\r\n>\r\n> The first bit is x because it already signals whether it is private or\r\n> not. The other combinations can just mean \"custom system\", or we add\r\n> another type for opaque, in case that is really all that is needed. No\r\n> opinions there.\r\n>\r\n> \u2014\r\n> Reply to this email directly, view it on GitHub\r\n> <https://github.com/mlswg/mls-extensions/issues/74?email_source=notifications&email_token=AADSQPXBYHKD7URF5YJS5634TNZZBA5CNFSNUABFM5UWIORPF5TWS5BNNB2WEL2JONZXKZKDN5WW2ZLOOQXTIMJWGA3DAOBZGM3KM4TFMFZW63VHNVSW45DJN5XKKZLWMVXHJLDGN5XXIZLSL5RWY2LDNM#issuecomment-4160608936>,\r\n> or unsubscribe\r\n> <https://github.com/notifications/unsubscribe-auth/AADSQPR5LC65IXXSCLVGQXT4TNZZBAVCNFSM6AAAAACISZS2NWVHI2DSMVQWIX3LMV43OSLTON2WKQ3PNVWWK3TUHM2DCNRQGYYDQOJTGY>\r\n> .\r\n> You are receiving this because you were mentioned.Message ID:\r\n> ***@***.***>\r\n>\r\n",
+          "createdAt": "2026-03-31T07:49:55Z",
+          "updatedAt": "2026-03-31T07:49:55Z"
+        },
+        {
+          "author": "keks",
+          "authorAssociation": "NONE",
+          "body": "> And when you are going to need to understand the list anyway, there is no benefit to making it opaque.\n\nI think I mostly agree, but if that were universal consensus, we wouldn't have had this discussions over the last few months",
+          "createdAt": "2026-03-31T08:01:14Z",
+          "updatedAt": "2026-03-31T08:01:14Z"
+        },
+        {
+          "author": "keks",
+          "authorAssociation": "NONE",
+          "body": "Taking a step back, if this is really supposed to be mirroring the behaviour of group context extensions, I think members should advertise the components they support in their leaves.\n\nFor extensions, if we want to require that all members need to support all extensions, then we can't add a new extension before all parties signal support for it. (The RFC currently isn't explicit on that topic and I just sent a [mail to the list] about that.)\n\nIf the way component negotiation works really should resemble extension negotiation, I think leaves should advertise what they support (e.g. through a new leaf node extension) and then a new component may only be added once all members support it.\n\n[mail to the list]: https://mailarchive.ietf.org/arch/msg/mls/Ef3FPirjZQRWqQCwfZ1ApchioUw/",
+          "createdAt": "2026-03-31T10:33:25Z",
+          "updatedAt": "2026-03-31T10:33:25Z"
+        },
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Don't leaves already advertise their component support via the `ComponentsList` specified [here](https://messaginglayersecurity.rocks/mls-extensions/draft-ietf-mls-extensions.html#name-negotiating-extensions-and-)?",
+          "createdAt": "2026-03-31T12:23:32Z",
+          "updatedAt": "2026-03-31T12:23:32Z"
+        },
+        {
+          "author": "keks",
+          "authorAssociation": "NONE",
+          "body": "Ah, good point! I missed that. In that case we wouldn't have a backwards compatibility problem if all leaves have to indicate support before a component could be used.",
+          "createdAt": "2026-03-31T13:37:59Z",
+          "updatedAt": "2026-03-31T13:37:59Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> Taking a step back, if this is really supposed to be mirroring the behaviour of group context extensions, I think members should advertise the components they support in their leaves.\n\nAgreed, assuming you mean \"LeafNodes\" (\"leaves\" is ambiguous). I believe the draft says that already. Feel free to point out specifically places where that is not clear.\n\n> For extensions, if we want to require that all members need to support all extensions, then we can't add a new extension before all parties signal support for it. (The RFC currently isn't explicit on that topic and I just sent a [mail to the list](https://mailarchive.ietf.org/arch/msg/mls/Ef3FPirjZQRWqQCwfZ1ApchioUw/) about that.)\n\nDo you mean an extension or a component?  Because `opaque_data_dictionary` (see PR #86 ) would be an extension (every client in the group would have to support it). Its contents would be components that not every client in the group would need to support. \n \n> If the way component negotiation works really should resemble extension negotiation, I think leaves should advertise what they support (e.g. through a new leaf node extension) and then a new component may only be added once all members support it.\n\nThere is already defined in this document an extension that lists supported components in LeafNodes.\n\n>and then a new component may only be added once all members support it.\n\nThat's what is in the document now: the components in the `app_data_dictionary` in a GC all need to be supported. PR #86, doesn't change the behavior of `app_data_dictionary`, but the components in the `opaque_data_dictionary` (which can only be in the GC) do not need to all be supported.",
+          "createdAt": "2026-03-31T13:52:15Z",
+          "updatedAt": "2026-03-31T13:52:15Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> Ah, good point! I missed that. In that case we wouldn't have a backwards compatibility problem if all leaves have to indicate support before a component could be used.\n\nI think the draft says exactly what you are asking. Please see Section 5 in the draft:\nhttps://messaginglayersecurity.rocks/mls-extensions/draft-ietf-mls-extensions.html#name-negotiating-extensions-and-",
+          "createdAt": "2026-03-31T13:54:38Z",
+          "updatedAt": "2026-03-31T13:54:38Z"
+        },
+        {
+          "author": "bitbltr",
+          "authorAssociation": "NONE",
+          "body": "I still believe this construction allows a nefarious app builder to lock out other clients by requiring components with patch semantics that only they support, but at this point I am willing to leave that determination up to the experts.",
+          "createdAt": "2026-03-31T16:17:27Z",
+          "updatedAt": "2026-03-31T16:17:51Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Yes, but they would not be able to pretend that they were not doing so.\r\n\r\nOn Tue, 31 Mar 2026, 18:17 bitbltr, ***@***.***> wrote:\r\n\r\n> *bitbltr* left a comment (mlswg/mls-extensions#74)\r\n> <https://github.com/mlswg/mls-extensions/issues/74#issuecomment-4163822190>\r\n>\r\n> I still believe this construction allows a nefarious app builder to lock\r\n> out other clients by requiring components that only they support, but I am\r\n> willing to leave that determination up to the experts.\r\n>\r\n> \u2014\r\n> Reply to this email directly, view it on GitHub\r\n> <https://github.com/mlswg/mls-extensions/issues/74?email_source=notifications&email_token=AADSQPXIPQAIGYBB7LZJKH34TPVS3A5CNFSNUABFM5UWIORPF5TWS5BNNB2WEL2JONZXKZKDN5WW2ZLOOQXTIMJWGM4DEMRRHEYKM4TFMFZW63VHNVSW45DJN5XKKZLWMVXHJLDGN5XXIZLSL5RWY2LDNM#issuecomment-4163822190>,\r\n> or unsubscribe\r\n> <https://github.com/notifications/unsubscribe-auth/AADSQPTEF4ZWRJXJ4OBE4D34TPVS3AVCNFSM6AAAAACISZS2NWVHI2DSMVQWIX3LMV43OSLTON2WKQ3PNVWWK3TUHM2DCNRTHAZDEMJZGA>\r\n> .\r\n> You are receiving this because you were mentioned.Message ID:\r\n> ***@***.***>\r\n>\r\n",
+          "createdAt": "2026-03-31T16:23:22Z",
+          "updatedAt": "2026-03-31T16:23:22Z"
+        },
+        {
+          "author": "bitbltr",
+          "authorAssociation": "NONE",
+          "body": "@rohanmahy Fair enough",
+          "createdAt": "2026-03-31T16:56:54Z",
+          "updatedAt": "2026-03-31T16:56:54Z"
+        },
+        {
+          "author": "keks",
+          "authorAssociation": "NONE",
+          "body": "> I think the draft says exactly what you are asking. Please see Section 5 in the draft\n\nI don't see it in there. The draft talks about the app_components component in the app_data_dictionary (what a mouthful - the equivalent of required capabilities), but\n1. it doesn't say that having a component in the group context makes it required implicitly required (but [it does in 4.7](https://messaginglayersecurity.rocks/mls-extensions/draft-ietf-mls-extensions.html#section-4.7-4)), and\n2. it never says that in order to make a component required (either by adding it to the app_components list or by just using it as a component in the GroupContext app_data_dictionary), all members already need to support it.",
+          "createdAt": "2026-04-01T05:27:49Z",
+          "updatedAt": "2026-04-01T05:28:36Z"
+        },
+        {
+          "author": "keks",
+          "authorAssociation": "NONE",
+          "body": "> I still believe this construction allows a nefarious app builder to lock out other clients by requiring components with patch semantics that only they support, but at this point I am willing to leave that determination up to the experts.\n\nA malicious app builder can\n\n1. hide the ui to add users that use a different app\n2. use different color chat bubbles for different clients\n3. show a warning in chats with users of other apps that the chat is insecure\n4. randomly drop message by users in other apps and claim it's because the other app is bad\n5. If they run a large hub, they can defederate\n6. use an opaque component that contains a remote attestation report that the app is correct, and treat updates with forged reports as invalid\n\nI do see the issue (I was pissed when I couldn't use Jabber to talk to my GMail friends anymore when google dropped/defederated Google Talk 20? years ago), but there are many ways to pull off this attack, and opaque dictionary does not solve the problem. I am not even convinced the problem is solvable using cryptography.",
+          "createdAt": "2026-04-01T06:10:46Z",
+          "updatedAt": "2026-04-01T06:12:23Z"
         }
       ]
     },
@@ -1209,6 +1300,54 @@
       "body": "AppAck is a component inside AppEphemeral now. ",
       "createdAt": "2026-03-24T14:42:34Z",
       "updatedAt": "2026-03-24T14:42:34Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 87,
+      "id": "I_kwDOHZoI5M75AJcA",
+      "title": "\"is in required_capabilities\" != \"all members support it\"",
+      "url": "https://github.com/mlswg/mls-extensions/issues/87",
+      "state": "OPEN",
+      "author": "keks",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "The proposal sais:\n\n> When an MLS group contains the AppDataUpdate proposal type in the proposal_types list in the group's required_capabilities extension, [...]. In other words, when every member of the group supports the AppDataUpdate proposal, [...].\n\nEvery member supporting a proposal type is a strict requirement for the proposal type being in the required capabilities, but it is not equivalent.",
+      "createdAt": "2026-03-31T09:28:21Z",
+      "updatedAt": "2026-03-31T09:28:21Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 88,
+      "id": "I_kwDOHZoI5M75F9RW",
+      "title": "Signalling Support for `app_components` Component?",
+      "url": "https://github.com/mlswg/mls-extensions/issues/88",
+      "state": "OPEN",
+      "author": "keks",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "The spec says:\n\n> The list of required and supported components follows the same model with the new component app_components. When present in a LeafNode, the semantic is the list of supported components. When present in the GroupContext, the semantic is the list of required components.\n\nIn RFC 9420 there is some blurb about which extensions/proposals/... are default and hence are always supported, and that the IDs should not be listed in the capabilities. I would have expected something similar for the app_components component. Should it be listed in itself? How do I know other members support that component?",
+      "createdAt": "2026-03-31T13:10:46Z",
+      "updatedAt": "2026-03-31T13:10:46Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 89,
+      "id": "I_kwDOHZoI5M75GFaZ",
+      "title": "List of GREASE values in Negotiation looks wrong",
+      "url": "https://github.com/mlswg/mls-extensions/issues/89",
+      "state": "OPEN",
+      "author": "keks",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Currently 5.1 says \n\n> This specification adds the following locations where GREASE values for components can be included:\n> -  **LeafNode.capabilities.app_data_dictionary.safe_aad**\n> -  **LeafNode.capabilities.app_data_dictionary.app_components**\n> -  [...]\n\nMy understanding is that the app_data_dictionary lives in extensions, not capabilities. The capabilities struct is non-extensible as per 9420. Is that correct?",
+      "createdAt": "2026-03-31T13:14:52Z",
+      "updatedAt": "2026-03-31T13:14:52Z",
       "closedAt": null,
       "comments": []
     }
