@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-04-02T01:10:42.992082+00:00",
+  "timestamp": "2026-04-05T01:16:39.038764+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -825,7 +825,7 @@
       "labels": [],
       "body": "We're having a small discussion on how to interpret the document over in the [mls-combiner repo](https://github.com/mlswg/mls-combiner/issues/6) on how to interpret this draft.\n\nThe question is on what the level of granularity is with which the `app_data_dictionary` can be updated. More concretely, what is the content of an AppDataUpdate proposal? Is it some information that the application/component then uses to update the state of the component in the `app_data_dictionary`? Or must it be the complete new content of the components entry in the `app_data_dictionary`, which then just replaces the old content?\n\n@bitbltr please chime in here if I didn't present your side of the argument correctly.",
       "createdAt": "2025-10-08T06:17:15Z",
-      "updatedAt": "2026-04-01T06:12:23Z",
+      "updatedAt": "2026-04-04T20:42:28Z",
       "closedAt": null,
       "comments": [
         {
@@ -1135,6 +1135,13 @@
           "body": "> I still believe this construction allows a nefarious app builder to lock out other clients by requiring components with patch semantics that only they support, but at this point I am willing to leave that determination up to the experts.\n\nA malicious app builder can\n\n1. hide the ui to add users that use a different app\n2. use different color chat bubbles for different clients\n3. show a warning in chats with users of other apps that the chat is insecure\n4. randomly drop message by users in other apps and claim it's because the other app is bad\n5. If they run a large hub, they can defederate\n6. use an opaque component that contains a remote attestation report that the app is correct, and treat updates with forged reports as invalid\n\nI do see the issue (I was pissed when I couldn't use Jabber to talk to my GMail friends anymore when google dropped/defederated Google Talk 20? years ago), but there are many ways to pull off this attack, and opaque dictionary does not solve the problem. I am not even convinced the problem is solvable using cryptography.",
           "createdAt": "2026-04-01T06:10:46Z",
           "updatedAt": "2026-04-01T06:12:23Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "OK, I have now written two PRs with different options for how to support an `opaque_data_dictionary`. In PR #86 I create a new Proposal type to modify the opaque_data_dictionary. In PR#90 I add `opaque_update` and `opaque_remove` operations to the existing AppDataUpdate proposal type. \n\nIf I had to chose one of these, I think I prefer #90 , however I am now convinced that an `opaque_data_dictionary` is a bad idea, for two reasons. \n\nConsider the following situation.  Alice, Bob, Cathy, Doug, and Elizabeth are members of a MLS group. Alice, Bob, and Cathy are running MegaCorp, Inc's new fancy MLS client that has a new shiny component. It isn't really required, but they would like to be able to use it among the three of them even if Doug and Elizabeth don't support it. They put it in the opaque_data_dictionary. \n\nFirst, even though the GroupContext is the same for everyone, the interpretation of data in the GroupContext and possibly the behavior in the group is going to be different. In a messaging context, this could result in two members interpreting the same message differently. I think this is a slippery slope or at least a red flag for possible attacks. Imagine a proliferation of these opaque components. Even with a small number of opaque components, it would be almost impossible to predict the combination of behaviors when heterogenous clients support different subsets of them.\n\nSecond, and more concretely, if Doug is malicious, he can simply update the new fancy component in the opaque_data_dictionary to be useless garbage. Alice, Bob, and Cathy can't reject the new garbage component, because Elizabeth will notice nothing wrong with the change. To her is is completely opaque. But the experience of Alice, Bob, and Charles may actually be worse than if they didn't have access to the component.\n\nSo, I propose that we accept the negotiation mechanism that we have and close this issue and both PR #86 and #90. \nThanks!\n",
+          "createdAt": "2026-04-04T20:42:28Z",
+          "updatedAt": "2026-04-04T20:42:28Z"
         }
       ]
     },
@@ -1315,9 +1322,17 @@
       "labels": [],
       "body": "The proposal sais:\n\n> When an MLS group contains the AppDataUpdate proposal type in the proposal_types list in the group's required_capabilities extension, [...]. In other words, when every member of the group supports the AppDataUpdate proposal, [...].\n\nEvery member supporting a proposal type is a strict requirement for the proposal type being in the required capabilities, but it is not equivalent.",
       "createdAt": "2026-03-31T09:28:21Z",
-      "updatedAt": "2026-03-31T09:28:21Z",
+      "updatedAt": "2026-04-04T18:32:45Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "From Section 11.1 of RFC 9420:\n\n>The configuration of a group imposes certain requirements on clients in the group. At a minimum, all members of the group need to support the cipher suite and protocol version in use. Additional requirements can be imposed by including a required_capabilities extension in the GroupContext.\n>\n>```\n>struct {\n>    ExtensionType extension_types<V>;\n>    ProposalType proposal_types<V>;\n>    CredentialType credential_types<V>;\n>} RequiredCapabilities;\n>```\n>This extension lists the extensions, proposals, and credential types that must be supported by all members of the group. The \"default\" proposal and extension types defined in this document are assumed to be implemented by all clients, and need not be listed in RequiredCapabilities in order to be safely used. Note that this is not true for credential types.\n\n\nFrom Section 13.2 of RFC 9420:\n\n>As discussed in [Section 12.4](https://www.rfc-editor.org/rfc/rfc9420.html#commit), Proposals with a non-default proposal type MUST NOT be included in a commit unless the proposal type is supported by all the members of the group that will process the Commit.\n\nFrom Section 13.4 of RFC 9420:\n\n> A client adding a new member to a group MUST verify that the LeafNode for the new member is compatible with the group's extensions. The capabilities field MUST indicate support for each extension in the GroupContext.\nA client joining a group MUST verify that it supports every extension in the GroupContext for the group. Otherwise, it MUST treat the enclosing GroupInfo message as invalid and not join the group.\nNote that the latter two requirements mean that all MLS GroupContext extensions are mandatory, in the sense that an extension in use by the group MUST be supported by all members of the group.\n\nI think the spirit and intent of these sentences is crystal clear. The wording in Section 11.1 could certainly be improved, but the intention is obvious.\n\nThe title of this issue is simply wrong. If a proposal is present in the `GroupContext.required_capabilities.proposal_types` it MUST be supported by every current member. I propose closing this Issue.",
+          "createdAt": "2026-04-04T18:32:24Z",
+          "updatedAt": "2026-04-04T18:32:45Z"
+        }
+      ]
     },
     {
       "number": 88,
@@ -1331,9 +1346,17 @@
       "labels": [],
       "body": "The spec says:\n\n> The list of required and supported components follows the same model with the new component app_components. When present in a LeafNode, the semantic is the list of supported components. When present in the GroupContext, the semantic is the list of required components.\n\nIn RFC 9420 there is some blurb about which extensions/proposals/... are default and hence are always supported, and that the IDs should not be listed in the capabilities. I would have expected something similar for the app_components component. Should it be listed in itself? How do I know other members support that component?",
       "createdAt": "2026-03-31T13:10:46Z",
-      "updatedAt": "2026-03-31T13:10:46Z",
+      "updatedAt": "2026-04-04T18:52:38Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I can add a statement that every implementation that supports the `app_data_dictionary` extension MUST support the `app_components` component. I could go further and also require the `safe_aad` and `content_media_types` components. ",
+          "createdAt": "2026-04-04T18:52:38Z",
+          "updatedAt": "2026-04-04T18:52:38Z"
+        }
+      ]
     },
     {
       "number": 89,
@@ -1347,9 +1370,17 @@
       "labels": [],
       "body": "Currently 5.1 says \n\n> This specification adds the following locations where GREASE values for components can be included:\n> -  **LeafNode.capabilities.app_data_dictionary.safe_aad**\n> -  **LeafNode.capabilities.app_data_dictionary.app_components**\n> -  [...]\n\nMy understanding is that the app_data_dictionary lives in extensions, not capabilities. The capabilities struct is non-extensible as per 9420. Is that correct?",
       "createdAt": "2026-03-31T13:14:52Z",
-      "updatedAt": "2026-03-31T13:14:52Z",
+      "updatedAt": "2026-04-04T18:49:11Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Nice catch.\n\nThe Capabilities struct contains a list of the identifiers, but doesn't contain any extensions.\n\n>```\n>struct {\n>    ProtocolVersion versions<V>;\n>    CipherSuite cipher_suites<V>;\n>    ExtensionType extensions<V>;\n>    ProposalType proposals<V>;\n>    CredentialType credentials<V>;\n>} Capabilities;\n>```\n\nThis needs to be `LeafNodes.extensions.app_data_dictionary.safe_aad` and `LeafNodes.extensions.app_data_dictionary.app_components` respectively.\n",
+          "createdAt": "2026-04-04T18:49:11Z",
+          "updatedAt": "2026-04-04T18:49:11Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -5717,6 +5748,32 @@
       "headRepository": "rohanmahy/mls-extensions",
       "headRefName": "opaque-dict",
       "headRefOid": "d84367915342d1671de2b329ec70ea94fbfae567",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 90,
+      "id": "PR_kwDOHZoI5M7P_L1u",
+      "title": "Make AppDataUpdate proposal work with app_data_dictionary and opaque_data_dictionary",
+      "url": "https://github.com/mlswg/mls-extensions/pull/90",
+      "state": "OPEN",
+      "author": "rohanmahy",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This is an alternate to PR # 86 and also addresses issue #74 ",
+      "createdAt": "2026-04-04T20:26:40Z",
+      "updatedAt": "2026-04-04T20:28:56Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "7ca5469a01b73353e36b9b1751c5c8848aa3d99f",
+      "headRepository": "rohanmahy/mls-extensions",
+      "headRefName": "opaque-op",
+      "headRefOid": "4aca4d305c6b795e90716173486ec3bba30ed34f",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
