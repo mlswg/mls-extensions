@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-04-05T01:16:39.038764+00:00",
+  "timestamp": "2026-04-09T01:05:23.280347+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -1322,7 +1322,7 @@
       "labels": [],
       "body": "The proposal sais:\n\n> When an MLS group contains the AppDataUpdate proposal type in the proposal_types list in the group's required_capabilities extension, [...]. In other words, when every member of the group supports the AppDataUpdate proposal, [...].\n\nEvery member supporting a proposal type is a strict requirement for the proposal type being in the required capabilities, but it is not equivalent.",
       "createdAt": "2026-03-31T09:28:21Z",
-      "updatedAt": "2026-04-04T18:32:45Z",
+      "updatedAt": "2026-04-07T06:28:16Z",
       "closedAt": null,
       "comments": [
         {
@@ -1331,6 +1331,13 @@
           "body": "From Section 11.1 of RFC 9420:\n\n>The configuration of a group imposes certain requirements on clients in the group. At a minimum, all members of the group need to support the cipher suite and protocol version in use. Additional requirements can be imposed by including a required_capabilities extension in the GroupContext.\n>\n>```\n>struct {\n>    ExtensionType extension_types<V>;\n>    ProposalType proposal_types<V>;\n>    CredentialType credential_types<V>;\n>} RequiredCapabilities;\n>```\n>This extension lists the extensions, proposals, and credential types that must be supported by all members of the group. The \"default\" proposal and extension types defined in this document are assumed to be implemented by all clients, and need not be listed in RequiredCapabilities in order to be safely used. Note that this is not true for credential types.\n\n\nFrom Section 13.2 of RFC 9420:\n\n>As discussed in [Section 12.4](https://www.rfc-editor.org/rfc/rfc9420.html#commit), Proposals with a non-default proposal type MUST NOT be included in a commit unless the proposal type is supported by all the members of the group that will process the Commit.\n\nFrom Section 13.4 of RFC 9420:\n\n> A client adding a new member to a group MUST verify that the LeafNode for the new member is compatible with the group's extensions. The capabilities field MUST indicate support for each extension in the GroupContext.\nA client joining a group MUST verify that it supports every extension in the GroupContext for the group. Otherwise, it MUST treat the enclosing GroupInfo message as invalid and not join the group.\nNote that the latter two requirements mean that all MLS GroupContext extensions are mandatory, in the sense that an extension in use by the group MUST be supported by all members of the group.\n\nI think the spirit and intent of these sentences is crystal clear. The wording in Section 11.1 could certainly be improved, but the intention is obvious.\n\nThe title of this issue is simply wrong. If a proposal is present in the `GroupContext.required_capabilities.proposal_types` it MUST be supported by every current member. I propose closing this Issue.",
           "createdAt": "2026-04-04T18:32:24Z",
           "updatedAt": "2026-04-04T18:32:45Z"
+        },
+        {
+          "author": "keks",
+          "authorAssociation": "NONE",
+          "body": "Sorry, I should have been more explicit.\n\nIt is true that \"is in required capabilities\" IMPLIES \"all members support\". However, it is very possible that all members support something, but it is not marked as required in the group context. Therefore, these two phrases can not be used interchangeably, and these are not the same statement \"In other words\".",
+          "createdAt": "2026-04-07T06:28:16Z",
+          "updatedAt": "2026-04-07T06:28:16Z"
         }
       ]
     },
@@ -1346,7 +1353,7 @@
       "labels": [],
       "body": "The spec says:\n\n> The list of required and supported components follows the same model with the new component app_components. When present in a LeafNode, the semantic is the list of supported components. When present in the GroupContext, the semantic is the list of required components.\n\nIn RFC 9420 there is some blurb about which extensions/proposals/... are default and hence are always supported, and that the IDs should not be listed in the capabilities. I would have expected something similar for the app_components component. Should it be listed in itself? How do I know other members support that component?",
       "createdAt": "2026-03-31T13:10:46Z",
-      "updatedAt": "2026-04-04T18:52:38Z",
+      "updatedAt": "2026-04-07T06:29:13Z",
       "closedAt": null,
       "comments": [
         {
@@ -1355,6 +1362,13 @@
           "body": "I can add a statement that every implementation that supports the `app_data_dictionary` extension MUST support the `app_components` component. I could go further and also require the `safe_aad` and `content_media_types` components. ",
           "createdAt": "2026-04-04T18:52:38Z",
           "updatedAt": "2026-04-04T18:52:38Z"
+        },
+        {
+          "author": "keks",
+          "authorAssociation": "NONE",
+          "body": "I think that would make sense, thanks!",
+          "createdAt": "2026-04-07T06:29:13Z",
+          "updatedAt": "2026-04-07T06:29:13Z"
         }
       ]
     },
