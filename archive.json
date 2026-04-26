@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-04-09T01:05:23.280347+00:00",
+  "timestamp": "2026-04-26T01:26:12.744321+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -5755,7 +5755,7 @@
       "labels": [],
       "body": "This is a pretty heavy response to Issue #74 .\r\n\r\nIt creates both a separate `opaque_data_dictionary` extension AND a new OpaqueDataDictionary Proposal.\r\n\r\nIt actually touches quite a lot of text.\r\n\r\nRather than creating a separate proposal, we could use a new op code for opaque_update. I can writeup a separate PR for that option.\r\n\r\nIncidentally this also fixes #85 \r\n",
       "createdAt": "2026-03-24T14:59:35Z",
-      "updatedAt": "2026-03-24T15:00:11Z",
+      "updatedAt": "2026-04-24T15:29:01Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "7ca5469a01b73353e36b9b1751c5c8848aa3d99f",
@@ -5766,7 +5766,15 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "As mentioned in Issue #74  (https://github.com/mlswg/mls-extensions/issues/74#issuecomment-4187718237) I think both this PR and PR #90 are a bad idea. I propose closing both PRs and closing Issue #74 with a wontfix",
+          "createdAt": "2026-04-24T15:29:01Z",
+          "updatedAt": "2026-04-24T15:29:01Z"
+        }
+      ],
       "reviews": []
     },
     {
@@ -5781,7 +5789,7 @@
       "labels": [],
       "body": "This is an alternate to PR # 86 and also addresses issue #74 ",
       "createdAt": "2026-04-04T20:26:40Z",
-      "updatedAt": "2026-04-04T20:28:56Z",
+      "updatedAt": "2026-04-24T15:28:25Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "7ca5469a01b73353e36b9b1751c5c8848aa3d99f",
@@ -5792,7 +5800,15 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "As mentioned in Issue #74  (https://github.com/mlswg/mls-extensions/issues/74#issuecomment-4187718237) I think both this PR and PR #86 are a bad idea. I suggest we close both of these and close Issue #74 as wontfix.",
+          "createdAt": "2026-04-24T15:28:25Z",
+          "updatedAt": "2026-04-24T15:28:25Z"
+        }
+      ],
       "reviews": []
     }
   ]
