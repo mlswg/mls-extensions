@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-04-26T01:26:12.744321+00:00",
+  "timestamp": "2026-05-03T01:44:00.973044+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -825,7 +825,7 @@
       "labels": [],
       "body": "We're having a small discussion on how to interpret the document over in the [mls-combiner repo](https://github.com/mlswg/mls-combiner/issues/6) on how to interpret this draft.\n\nThe question is on what the level of granularity is with which the `app_data_dictionary` can be updated. More concretely, what is the content of an AppDataUpdate proposal? Is it some information that the application/component then uses to update the state of the component in the `app_data_dictionary`? Or must it be the complete new content of the components entry in the `app_data_dictionary`, which then just replaces the old content?\n\n@bitbltr please chime in here if I didn't present your side of the argument correctly.",
       "createdAt": "2025-10-08T06:17:15Z",
-      "updatedAt": "2026-04-04T20:42:28Z",
+      "updatedAt": "2026-04-30T12:46:01Z",
       "closedAt": null,
       "comments": [
         {
@@ -1142,6 +1142,13 @@
           "body": "OK, I have now written two PRs with different options for how to support an `opaque_data_dictionary`. In PR #86 I create a new Proposal type to modify the opaque_data_dictionary. In PR#90 I add `opaque_update` and `opaque_remove` operations to the existing AppDataUpdate proposal type. \n\nIf I had to chose one of these, I think I prefer #90 , however I am now convinced that an `opaque_data_dictionary` is a bad idea, for two reasons. \n\nConsider the following situation.  Alice, Bob, Cathy, Doug, and Elizabeth are members of a MLS group. Alice, Bob, and Cathy are running MegaCorp, Inc's new fancy MLS client that has a new shiny component. It isn't really required, but they would like to be able to use it among the three of them even if Doug and Elizabeth don't support it. They put it in the opaque_data_dictionary. \n\nFirst, even though the GroupContext is the same for everyone, the interpretation of data in the GroupContext and possibly the behavior in the group is going to be different. In a messaging context, this could result in two members interpreting the same message differently. I think this is a slippery slope or at least a red flag for possible attacks. Imagine a proliferation of these opaque components. Even with a small number of opaque components, it would be almost impossible to predict the combination of behaviors when heterogenous clients support different subsets of them.\n\nSecond, and more concretely, if Doug is malicious, he can simply update the new fancy component in the opaque_data_dictionary to be useless garbage. Alice, Bob, and Cathy can't reject the new garbage component, because Elizabeth will notice nothing wrong with the change. To her is is completely opaque. But the experience of Alice, Bob, and Charles may actually be worse than if they didn't have access to the component.\n\nSo, I propose that we accept the negotiation mechanism that we have and close this issue and both PR #86 and #90. \nThanks!\n",
           "createdAt": "2026-04-04T20:42:28Z",
           "updatedAt": "2026-04-04T20:42:28Z"
+        },
+        {
+          "author": "seanturner",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@bitbltr @keks PTAL - If we can close this out and the two related PRs the remaining issues look pretty straightforward to fix - and then we can move do a WGLC!",
+          "createdAt": "2026-04-30T12:46:01Z",
+          "updatedAt": "2026-04-30T12:46:01Z"
         }
       ]
     },
