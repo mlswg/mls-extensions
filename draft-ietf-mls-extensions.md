@@ -714,8 +714,8 @@ says that:
 This specification adds the following locations where GREASE values for
 components can be included:
 
-* LeafNode.capabilities.app_data_dictionary.safe_aad
-* LeafNode.capabilities.app_data_dictionary.app_components
+* LeafNodes.extensions.app_data_dictionary.safe_aad
+* LeafNodes.extensions.app_data_dictionary.app_components
 * LeafNode.extensions.app_data_dictionary
 * KeyPackage.extensions.app_data_dictionary
 * GroupInfo.extensions.app_data_dictionary
