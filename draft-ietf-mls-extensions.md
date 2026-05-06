@@ -468,10 +468,11 @@ defined in {{RFC9420}}), and any AppEphemeral proposals (defined in
 When an MLS group contains the AppDataUpdate proposal type in the
 `proposal_types` list in the group's `required_capabilities` extension, a
 GroupContextExtensions proposal MUST NOT add, remove, or modify the
-`app_data_dictionary` GroupContext extension. In other words, when every member
-of the group supports the AppDataUpdate proposal, a GroupContextExtensions
-proposal could be sent to update some other extension(s), but the
-`app_data_dictionary` GroupContext extension, if it exists, is left as it was.
+`app_data_dictionary` GroupContext extension. In other words, when AppDataUpdate
+is in `proposal_type`, every member of the group supports the AppDataUpdate
+proposal, and a GroupContextExtensions proposal could be sent to update some
+other extension(s), but the `app_data_dictionary` GroupContext extension, if it
+exists, is left as it was.
 
 A commit can contain a GroupContextExtensions proposal which modifies
 GroupContext extensions other than `app_data_dictionary`, and can be followed by
