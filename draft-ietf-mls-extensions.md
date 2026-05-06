@@ -419,6 +419,8 @@ GroupContext extensions. The creator of the group can set extensions
 unilaterally. Thereafter, the AppDataUpdate proposal described in the next
 section is used to update the `app_data_dictionary` extension.
 
+Every implementation that supports the `app_data_dictionary` extension MUST support the `app_components` component defined in {{negotiation}}.
+
 ## Updating Application Data in the GroupContext {#appdataupdate}
 
 Updating the `app_data_dictionary` with a GroupContextExtensions proposal is
