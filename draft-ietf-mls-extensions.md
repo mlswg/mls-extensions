@@ -1211,17 +1211,6 @@ type is permitted in External Commits.
 * External: N
 * Path Required: Y
 
-### AppAck Proposal
-
-The `app_ack` MLS Proposal Type can be used by group members to acknowledge the
-receipt of application messages.
-
-* Value: 0x000b (suggested)
-* Name: app_ack
-* Recommended: Y
-* External: N
-* Path Required: N
-
 ## MLS Credential Types {#iana-creds}
 
 ### Multi Credential
@@ -1391,6 +1380,9 @@ security of the least secure of its credential bindings.
 # Change Log
 
 RFC EDITOR PLEASE DELETE THIS SECTION.
+
+draft-10
+- remove AppAck ProposalType as it is now a Component conveyed in AppEphemeral Proposals
 
 draft-09
 - rename the component base label from "Application" to "MLS Component"
