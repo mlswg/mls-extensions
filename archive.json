@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-05-03T01:44:00.973044+00:00",
+  "timestamp": "2026-05-07T01:47:34.744925+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -1402,6 +1402,22 @@
           "updatedAt": "2026-04-04T18:49:11Z"
         }
       ]
+    },
+    {
+      "number": 92,
+      "id": "I_kwDOHZoI5M8AAAABBebZVw",
+      "title": "Should support for app_data_dictionary also require support for the safe_aad and content_media_types components?",
+      "url": "https://github.com/mlswg/mls-extensions/issues/92",
+      "state": "OPEN",
+      "author": "rohanmahy",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "See my comment in #88 ",
+      "createdAt": "2026-05-06T19:49:29Z",
+      "updatedAt": "2026-05-06T19:49:29Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -5816,6 +5832,58 @@
           "updatedAt": "2026-04-24T15:28:25Z"
         }
       ],
+      "reviews": []
+    },
+    {
+      "number": 91,
+      "id": "PR_kwDOHZoI5M7Y5Ryu",
+      "title": "Remove AppAck ProposalType",
+      "url": "https://github.com/mlswg/mls-extensions/pull/91",
+      "state": "OPEN",
+      "author": "rohanmahy",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "AppAck is now a safe Component that is conveyed inside AppEphemeral Proposals\r\n\r\nCloses #85 ",
+      "createdAt": "2026-05-06T19:32:46Z",
+      "updatedAt": "2026-05-06T19:33:35Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "7ca5469a01b73353e36b9b1751c5c8848aa3d99f",
+      "headRepository": "rohanmahy/mls-extensions",
+      "headRefName": "remove-appack-proposaltype",
+      "headRefOid": "9751dd55540a453ea97647fef648a23a01b1ac19",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 93,
+      "id": "PR_kwDOHZoI5M7Y5xW2",
+      "title": "Address Issues #87, #88, #89",
+      "url": "https://github.com/mlswg/mls-extensions/pull/93",
+      "state": "OPEN",
+      "author": "rohanmahy",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #87 , #88 , #89 \r\n\r\n- be more pedantic when discussing that a proposal in required_capabilities implies all clients support it but not vice versa.\r\n- make `app_components` mandatory to implement if `app_data_dictionary` is supported\r\n- correct locations where GREASE component values can go",
+      "createdAt": "2026-05-06T19:57:38Z",
+      "updatedAt": "2026-05-06T19:57:39Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "7ca5469a01b73353e36b9b1751c5c8848aa3d99f",
+      "headRepository": "rohanmahy/mls-extensions",
+      "headRefName": "inotherwords",
+      "headRefOid": "c4cfcd9fb51e19cb109d077a69893381dbce499d",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
       "reviews": []
     }
   ]
