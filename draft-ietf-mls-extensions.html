@@ -14,7 +14,7 @@ document provides a consolidated application API, guidance for how the
 protocol's extension points should be used, and a few concrete examples of both
 core protocol extensions and uses of the application API. 
     " name="description">
-<meta content="xml2rfc 3.31.0" name="generator">
+<meta content="xml2rfc 3.33.0" name="generator">
 <meta content="messaging layer security" name="keyword">
 <meta content="end-to-end encryption" name="keyword">
 <meta content="application api" name="keyword">
@@ -22,18 +22,18 @@ core protocol extensions and uses of the application API.
 <meta content="extensibility" name="keyword">
 <meta content="draft-ietf-mls-extensions-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.31.0
-    Python 3.12.12
+  xml2rfc 3.33.0
+    Python 3.12.13
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.6
     lxml 6.0.2
-    platformdirs 4.5.1
+    platformdirs 4.9.6
     pycountry 24.6.1
     PyYAML 6.0.3
-    requests 2.32.5
-    wcwidth 0.3.0
+    requests 2.33.1
+    wcwidth 0.7.0
 -->
 <link href="draft-ietf-mls-extensions.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1054,11 +1054,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">MLS</td>
-<td class="right">March 2026</td>
+<td class="right">May 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Robert</td>
-<td class="center">Expires 3 September 2026</td>
+<td class="center">Expires 8 November 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1071,12 +1071,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-mls-extensions-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-03-02" class="published">2 March 2026</time>
+<time datetime="2026-05-07" class="published">7 May 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-09-03">3 September 2026</time></dd>
+<dd class="expires"><time datetime="2026-11-08">8 November 2026</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1131,7 +1131,7 @@ core protocol extensions and uses of the application API.<a href="#section-abstr
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 3 September 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 8 November 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1295,9 +1295,6 @@ core protocol extensions and uses of the application API.<a href="#section-abstr
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.3.2.3">
                     <p id="section-toc.1-1.7.2.3.2.3.1"><a href="#section-7.3.3" class="auto internal xref">7.3.3</a>.  <a href="#name-selfremove-proposal-2" class="internal xref">SelfRemove Proposal</a></p>
-</li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.3.2.4">
-                    <p id="section-toc.1-1.7.2.3.2.4.1"><a href="#section-7.3.4" class="auto internal xref">7.3.4</a>.  <a href="#name-appack-proposal" class="internal xref">AppAck Proposal</a></p>
 </li>
                 </ul>
 </li>
@@ -2790,32 +2787,6 @@ type is permitted in External Commits.<a href="#section-7.3.3-1" class="pilcrow"
           </ul>
 </section>
 </div>
-<div id="appack-proposal">
-<section id="section-7.3.4">
-          <h4 id="name-appack-proposal">
-<a href="#section-7.3.4" class="section-number selfRef">7.3.4. </a><a href="#name-appack-proposal" class="section-name selfRef">AppAck Proposal</a>
-          </h4>
-<p id="section-7.3.4-1">The <code>app_ack</code> MLS Proposal Type can be used by group members to acknowledge the
-receipt of application messages.<a href="#section-7.3.4-1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-7.3.4-2.1">
-              <p id="section-7.3.4-2.1.1">Value: 0x000b (suggested)<a href="#section-7.3.4-2.1.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-7.3.4-2.2">
-              <p id="section-7.3.4-2.2.1">Name: app_ack<a href="#section-7.3.4-2.2.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-7.3.4-2.3">
-              <p id="section-7.3.4-2.3.1">Recommended: Y<a href="#section-7.3.4-2.3.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-7.3.4-2.4">
-              <p id="section-7.3.4-2.4.1">External: N<a href="#section-7.3.4-2.4.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-7.3.4-2.5">
-              <p id="section-7.3.4-2.5.1">Path Required: N<a href="#section-7.3.4-2.5.1" class="pilcrow">¶</a></p>
-</li>
-          </ul>
-</section>
-</div>
 </section>
 </div>
 <div id="iana-creds">
@@ -3276,11 +3247,13 @@ security of the least secure of its credential bindings.<a href="#section-8.5-1"
 <a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-change-log" class="section-name selfRef">Change Log</a>
       </h2>
 <p id="appendix-A-1">RFC EDITOR PLEASE DELETE THIS SECTION.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
-<p id="appendix-A-2">draft-09
-- rename the component base label from "Application" to "MLS Component"<a href="#appendix-A-2" class="pilcrow">¶</a></p>
-<p id="appendix-A-3">draft-08
-- clarify that SelfRemove is a proposal type, not an extension<a href="#appendix-A-3" class="pilcrow">¶</a></p>
-<p id="appendix-A-4">draft-07
+<p id="appendix-A-2">draft-10
+- remove AppAck ProposalType as it is now a Component conveyed in AppEphemeral Proposals<a href="#appendix-A-2" class="pilcrow">¶</a></p>
+<p id="appendix-A-3">draft-09
+- rename the component base label from "Application" to "MLS Component"<a href="#appendix-A-3" class="pilcrow">¶</a></p>
+<p id="appendix-A-4">draft-08
+- clarify that SelfRemove is a proposal type, not an extension<a href="#appendix-A-4" class="pilcrow">¶</a></p>
+<p id="appendix-A-5">draft-07
 - add AppAck to IANA considerations
 - adapt Safe AAD scope
 - remove targeted messages altogether with intention to publish it as a
@@ -3295,62 +3268,62 @@ was a "safe extension"
 - add GREASE values for components
 - fix safe exporter definition
 - resolve TODOs from -06
-- fix numerous typos<a href="#appendix-A-4" class="pilcrow">¶</a></p>
-<p id="appendix-A-5">draft-06<a href="#appendix-A-5" class="pilcrow">¶</a></p>
+- fix numerous typos<a href="#appendix-A-5" class="pilcrow">¶</a></p>
+<p id="appendix-A-6">draft-06<a href="#appendix-A-6" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="appendix-A-6.1">
-          <p id="appendix-A-6.1.1">Integrate notion of Application API from draft-barnes-mls-appsync<a href="#appendix-A-6.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-A-7.1">
+          <p id="appendix-A-7.1.1">Integrate notion of Application API from draft-barnes-mls-appsync<a href="#appendix-A-7.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="appendix-A-7">draft-05<a href="#appendix-A-7" class="pilcrow">¶</a></p>
+<p id="appendix-A-8">draft-05<a href="#appendix-A-8" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="appendix-A-8.1">
-          <p id="appendix-A-8.1.1">Include definition of ExtensionState extension<a href="#appendix-A-8.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-A-9.1">
+          <p id="appendix-A-9.1.1">Include definition of ExtensionState extension<a href="#appendix-A-9.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-A-8.2">
-          <p id="appendix-A-8.2.1">Add safe use of AAD to Safe Extensions framework<a href="#appendix-A-8.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="appendix-A-9.2">
+          <p id="appendix-A-9.2.1">Add safe use of AAD to Safe Extensions framework<a href="#appendix-A-9.2.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-A-8.3">
-          <p id="appendix-A-8.3.1">Clarify how capabilities negotiation works in Safe Extensions framework<a href="#appendix-A-8.3.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="appendix-A-9.3">
+          <p id="appendix-A-9.3.1">Clarify how capabilities negotiation works in Safe Extensions framework<a href="#appendix-A-9.3.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="appendix-A-9">draft-04<a href="#appendix-A-9" class="pilcrow">¶</a></p>
+<p id="appendix-A-10">draft-04<a href="#appendix-A-10" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="appendix-A-10.1">
-          <p id="appendix-A-10.1.1">No changes (prevent expiration)<a href="#appendix-A-10.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-A-11.1">
+          <p id="appendix-A-11.1.1">No changes (prevent expiration)<a href="#appendix-A-11.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="appendix-A-11">draft-03<a href="#appendix-A-11" class="pilcrow">¶</a></p>
+<p id="appendix-A-12">draft-03<a href="#appendix-A-12" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="appendix-A-12.1">
-          <p id="appendix-A-12.1.1">Add Last Resort KeyPackage extension<a href="#appendix-A-12.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-A-13.1">
+          <p id="appendix-A-13.1.1">Add Last Resort KeyPackage extension<a href="#appendix-A-13.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-A-12.2">
-          <p id="appendix-A-12.2.1">Add Safe Extensions framework<a href="#appendix-A-12.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="appendix-A-13.2">
+          <p id="appendix-A-13.2.1">Add Safe Extensions framework<a href="#appendix-A-13.2.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-A-12.3">
-          <p id="appendix-A-12.3.1">Add SelfRemove Proposal<a href="#appendix-A-12.3.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="appendix-A-13.3">
+          <p id="appendix-A-13.3.1">Add SelfRemove Proposal<a href="#appendix-A-13.3.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="appendix-A-13">draft-02<a href="#appendix-A-13" class="pilcrow">¶</a></p>
+<p id="appendix-A-14">draft-02<a href="#appendix-A-14" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="appendix-A-14.1">
-          <p id="appendix-A-14.1.1">No changes (prevent expiration)<a href="#appendix-A-14.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-A-15.1">
+          <p id="appendix-A-15.1.1">No changes (prevent expiration)<a href="#appendix-A-15.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="appendix-A-15">draft-01<a href="#appendix-A-15" class="pilcrow">¶</a></p>
+<p id="appendix-A-16">draft-01<a href="#appendix-A-16" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="appendix-A-16.1">
-          <p id="appendix-A-16.1.1">Add Content Advertisement extensions<a href="#appendix-A-16.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-A-17.1">
+          <p id="appendix-A-17.1.1">Add Content Advertisement extensions<a href="#appendix-A-17.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="appendix-A-17">draft-00<a href="#appendix-A-17" class="pilcrow">¶</a></p>
+<p id="appendix-A-18">draft-00<a href="#appendix-A-18" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="appendix-A-18.1">
-          <p id="appendix-A-18.1.1">Initial adoption of draft-robert-mls-protocol-00 as a WG item.<a href="#appendix-A-18.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-A-19.1">
+          <p id="appendix-A-19.1.1">Initial adoption of draft-robert-mls-protocol-00 as a WG item.<a href="#appendix-A-19.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-A-18.2">
-          <p id="appendix-A-18.2.1">Add Targeted Messages extension (*)<a href="#appendix-A-18.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="appendix-A-19.2">
+          <p id="appendix-A-19.2.1">Add Targeted Messages extension (*)<a href="#appendix-A-19.2.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 </section>
