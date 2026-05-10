@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-05-07T01:47:34.744925+00:00",
+  "timestamp": "2026-05-10T01:47:06.056624+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -1306,15 +1306,15 @@
       "id": "I_kwDOHZoI5M72EzYU",
       "title": "remove AppAck proposal from IANA considerations",
       "url": "https://github.com/mlswg/mls-extensions/issues/85",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "rohanmahy",
-      "authorAssociation": "CONTRIBUTOR",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "AppAck is a component inside AppEphemeral now. ",
       "createdAt": "2026-03-24T14:42:34Z",
-      "updatedAt": "2026-03-24T14:42:34Z",
-      "closedAt": null,
+      "updatedAt": "2026-05-07T20:31:27Z",
+      "closedAt": "2026-05-07T20:31:27Z",
       "comments": []
     },
     {
@@ -5839,26 +5839,42 @@
       "id": "PR_kwDOHZoI5M7Y5Ryu",
       "title": "Remove AppAck ProposalType",
       "url": "https://github.com/mlswg/mls-extensions/pull/91",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "rohanmahy",
-      "authorAssociation": "CONTRIBUTOR",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "AppAck is now a safe Component that is conveyed inside AppEphemeral Proposals\r\n\r\nCloses #85 ",
       "createdAt": "2026-05-06T19:32:46Z",
-      "updatedAt": "2026-05-06T19:33:35Z",
+      "updatedAt": "2026-05-07T20:31:26Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "7ca5469a01b73353e36b9b1751c5c8848aa3d99f",
       "headRepository": "rohanmahy/mls-extensions",
       "headRefName": "remove-appack-proposaltype",
       "headRefOid": "9751dd55540a453ea97647fef648a23a01b1ac19",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2026-05-07T20:31:26Z",
+      "mergedAt": "2026-05-07T20:31:26Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "b8ba6015c7090ce75cf7d242b531c994929a0dea"
+      },
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M79K8aU",
+          "commit": {
+            "abbreviatedOid": "9751dd5"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-05-07T20:31:18Z",
+          "updatedAt": "2026-05-07T20:31:18Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 93,
