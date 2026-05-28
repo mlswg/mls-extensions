@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-05-12T01:50:26.179679+00:00",
+  "timestamp": "2026-05-28T01:49:58.942275+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -1439,6 +1439,22 @@
       "body": "Section 6.2.4 says\n\n> The media_type MAY be zero length, in which case, the media type of the inner_application_content is interpreted as the first MediaType specified in the content_media_types component in the GroupContext.\n\nMediaType is a struct. How would an application check whether it's zero length? Is a struct of type MediaType zero length if `media_type` and `parameters` (within the MediaType struct) are zero length?",
       "createdAt": "2026-05-11T14:42:32Z",
       "updatedAt": "2026-05-11T15:01:47Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 95,
+      "id": "I_kwDOHZoI5M8AAAABDkW6qg",
+      "title": "Disable \"unsafe\" aad entirely when SafeAAD is supported",
+      "url": "https://github.com/mlswg/mls-extensions/issues/95",
+      "state": "OPEN",
+      "author": "kkohbrok",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Appending regular AAD behind a SafeAAD struct seems somewhat ad-hoc. If all clients in a group support SafeAAD, the application can just define a proprietary component and use that. I'd say we should forbid \"unsafe\" AAD in the presence of SafeAAD.",
+      "createdAt": "2026-05-27T17:35:17Z",
+      "updatedAt": "2026-05-27T17:35:17Z",
       "closedAt": null,
       "comments": []
     }
