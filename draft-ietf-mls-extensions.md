@@ -419,6 +419,8 @@ GroupContext extensions. The creator of the group can set extensions
 unilaterally. Thereafter, the AppDataUpdate proposal described in the next
 section is used to update the `app_data_dictionary` extension.
 
+Every implementation that supports the `app_data_dictionary` extension MUST support the `app_components` component defined in {{negotiation}}.
+
 ## Updating Application Data in the GroupContext {#appdataupdate}
 
 Updating the `app_data_dictionary` with a GroupContextExtensions proposal is
@@ -468,10 +470,11 @@ defined in {{RFC9420}}), and any AppEphemeral proposals (defined in
 When an MLS group contains the AppDataUpdate proposal type in the
 `proposal_types` list in the group's `required_capabilities` extension, a
 GroupContextExtensions proposal MUST NOT add, remove, or modify the
-`app_data_dictionary` GroupContext extension. In other words, when every member
-of the group supports the AppDataUpdate proposal, a GroupContextExtensions
-proposal could be sent to update some other extension(s), but the
-`app_data_dictionary` GroupContext extension, if it exists, is left as it was.
+`app_data_dictionary` GroupContext extension. In other words, when AppDataUpdate
+is in `proposal_type`, every member of the group supports the AppDataUpdate
+proposal, and a GroupContextExtensions proposal could be sent to update some
+other extension(s), but the `app_data_dictionary` GroupContext extension, if it
+exists, is left as it was.
 
 A commit can contain a GroupContextExtensions proposal which modifies
 GroupContext extensions other than `app_data_dictionary`, and can be followed by
@@ -711,8 +714,8 @@ says that:
 This specification adds the following locations where GREASE values for
 components can be included:
 
-* LeafNode.capabilities.app_data_dictionary.safe_aad
-* LeafNode.capabilities.app_data_dictionary.app_components
+* LeafNodes.extensions.app_data_dictionary.safe_aad
+* LeafNodes.extensions.app_data_dictionary.app_components
 * LeafNode.extensions.app_data_dictionary
 * KeyPackage.extensions.app_data_dictionary
 * GroupInfo.extensions.app_data_dictionary
