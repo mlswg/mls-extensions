@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-05-28T01:49:58.942275+00:00",
+  "timestamp": "2026-06-04T02:31:07.717586+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -818,15 +818,15 @@
       "id": "I_kwDOHZoI5M7QQnLv",
       "title": "AppDataUpdate granularity",
       "url": "https://github.com/mlswg/mls-extensions/issues/74",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "kkohbrok",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "We're having a small discussion on how to interpret the document over in the [mls-combiner repo](https://github.com/mlswg/mls-combiner/issues/6) on how to interpret this draft.\n\nThe question is on what the level of granularity is with which the `app_data_dictionary` can be updated. More concretely, what is the content of an AppDataUpdate proposal? Is it some information that the application/component then uses to update the state of the component in the `app_data_dictionary`? Or must it be the complete new content of the components entry in the `app_data_dictionary`, which then just replaces the old content?\n\n@bitbltr please chime in here if I didn't present your side of the argument correctly.",
       "createdAt": "2025-10-08T06:17:15Z",
-      "updatedAt": "2026-05-11T14:24:19Z",
-      "closedAt": null,
+      "updatedAt": "2026-06-02T17:01:54Z",
+      "closedAt": "2026-06-02T17:01:54Z",
       "comments": [
         {
           "author": "bitbltr",
@@ -1156,6 +1156,13 @@
           "body": "I don't have a strong opinion either way. I'd be fine with closing this.",
           "createdAt": "2026-05-11T14:24:18Z",
           "updatedAt": "2026-05-11T14:24:18Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "COLLABORATOR",
+          "body": "It's been about 6 weeks since I proposed this issue . Hearing no objections, so Closing now.",
+          "createdAt": "2026-06-02T17:01:54Z",
+          "updatedAt": "2026-06-02T17:01:54Z"
         }
       ]
     },
@@ -1329,19 +1336,19 @@
       "id": "I_kwDOHZoI5M75AJcA",
       "title": "\"is in required_capabilities\" != \"all members support it\"",
       "url": "https://github.com/mlswg/mls-extensions/issues/87",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "keks",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "The proposal sais:\n\n> When an MLS group contains the AppDataUpdate proposal type in the proposal_types list in the group's required_capabilities extension, [...]. In other words, when every member of the group supports the AppDataUpdate proposal, [...].\n\nEvery member supporting a proposal type is a strict requirement for the proposal type being in the required capabilities, but it is not equivalent.",
       "createdAt": "2026-03-31T09:28:21Z",
-      "updatedAt": "2026-04-07T06:28:16Z",
-      "closedAt": null,
+      "updatedAt": "2026-06-02T16:59:27Z",
+      "closedAt": "2026-06-02T16:59:27Z",
       "comments": [
         {
           "author": "rohanmahy",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "body": "From Section 11.1 of RFC 9420:\n\n>The configuration of a group imposes certain requirements on clients in the group. At a minimum, all members of the group need to support the cipher suite and protocol version in use. Additional requirements can be imposed by including a required_capabilities extension in the GroupContext.\n>\n>```\n>struct {\n>    ExtensionType extension_types<V>;\n>    ProposalType proposal_types<V>;\n>    CredentialType credential_types<V>;\n>} RequiredCapabilities;\n>```\n>This extension lists the extensions, proposals, and credential types that must be supported by all members of the group. The \"default\" proposal and extension types defined in this document are assumed to be implemented by all clients, and need not be listed in RequiredCapabilities in order to be safely used. Note that this is not true for credential types.\n\n\nFrom Section 13.2 of RFC 9420:\n\n>As discussed in [Section 12.4](https://www.rfc-editor.org/rfc/rfc9420.html#commit), Proposals with a non-default proposal type MUST NOT be included in a commit unless the proposal type is supported by all the members of the group that will process the Commit.\n\nFrom Section 13.4 of RFC 9420:\n\n> A client adding a new member to a group MUST verify that the LeafNode for the new member is compatible with the group's extensions. The capabilities field MUST indicate support for each extension in the GroupContext.\nA client joining a group MUST verify that it supports every extension in the GroupContext for the group. Otherwise, it MUST treat the enclosing GroupInfo message as invalid and not join the group.\nNote that the latter two requirements mean that all MLS GroupContext extensions are mandatory, in the sense that an extension in use by the group MUST be supported by all members of the group.\n\nI think the spirit and intent of these sentences is crystal clear. The wording in Section 11.1 could certainly be improved, but the intention is obvious.\n\nThe title of this issue is simply wrong. If a proposal is present in the `GroupContext.required_capabilities.proposal_types` it MUST be supported by every current member. I propose closing this Issue.",
           "createdAt": "2026-04-04T18:32:24Z",
           "updatedAt": "2026-04-04T18:32:45Z"
@@ -1360,19 +1367,19 @@
       "id": "I_kwDOHZoI5M75F9RW",
       "title": "Signalling Support for `app_components` Component?",
       "url": "https://github.com/mlswg/mls-extensions/issues/88",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "keks",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "The spec says:\n\n> The list of required and supported components follows the same model with the new component app_components. When present in a LeafNode, the semantic is the list of supported components. When present in the GroupContext, the semantic is the list of required components.\n\nIn RFC 9420 there is some blurb about which extensions/proposals/... are default and hence are always supported, and that the IDs should not be listed in the capabilities. I would have expected something similar for the app_components component. Should it be listed in itself? How do I know other members support that component?",
       "createdAt": "2026-03-31T13:10:46Z",
-      "updatedAt": "2026-04-07T06:29:13Z",
-      "closedAt": null,
+      "updatedAt": "2026-06-02T16:59:28Z",
+      "closedAt": "2026-06-02T16:59:28Z",
       "comments": [
         {
           "author": "rohanmahy",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "body": "I can add a statement that every implementation that supports the `app_data_dictionary` extension MUST support the `app_components` component. I could go further and also require the `safe_aad` and `content_media_types` components. ",
           "createdAt": "2026-04-04T18:52:38Z",
           "updatedAt": "2026-04-04T18:52:38Z"
@@ -1391,19 +1398,19 @@
       "id": "I_kwDOHZoI5M75GFaZ",
       "title": "List of GREASE values in Negotiation looks wrong",
       "url": "https://github.com/mlswg/mls-extensions/issues/89",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "keks",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "Currently 5.1 says \n\n> This specification adds the following locations where GREASE values for components can be included:\n> -  **LeafNode.capabilities.app_data_dictionary.safe_aad**\n> -  **LeafNode.capabilities.app_data_dictionary.app_components**\n> -  [...]\n\nMy understanding is that the app_data_dictionary lives in extensions, not capabilities. The capabilities struct is non-extensible as per 9420. Is that correct?",
       "createdAt": "2026-03-31T13:14:52Z",
-      "updatedAt": "2026-04-04T18:49:11Z",
-      "closedAt": null,
+      "updatedAt": "2026-06-02T16:59:28Z",
+      "closedAt": "2026-06-02T16:59:28Z",
       "comments": [
         {
           "author": "rohanmahy",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "body": "Nice catch.\n\nThe Capabilities struct contains a list of the identifiers, but doesn't contain any extensions.\n\n>```\n>struct {\n>    ProtocolVersion versions<V>;\n>    CipherSuite cipher_suites<V>;\n>    ExtensionType extensions<V>;\n>    ProposalType proposals<V>;\n>    CredentialType credentials<V>;\n>} Capabilities;\n>```\n\nThis needs to be `LeafNodes.extensions.app_data_dictionary.safe_aad` and `LeafNodes.extensions.app_data_dictionary.app_components` respectively.\n",
           "createdAt": "2026-04-04T18:49:11Z",
           "updatedAt": "2026-04-04T18:49:11Z"
@@ -1438,9 +1445,17 @@
       "labels": [],
       "body": "Section 6.2.4 says\n\n> The media_type MAY be zero length, in which case, the media type of the inner_application_content is interpreted as the first MediaType specified in the content_media_types component in the GroupContext.\n\nMediaType is a struct. How would an application check whether it's zero length? Is a struct of type MediaType zero length if `media_type` and `parameters` (within the MediaType struct) are zero length?",
       "createdAt": "2026-05-11T14:42:32Z",
-      "updatedAt": "2026-05-11T15:01:47Z",
+      "updatedAt": "2026-06-02T17:14:28Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "COLLABORATOR",
+          "body": "```\nstruct {\n    /* media_type is an IANA top-level media type, a \"/\" character,\n     * and the IANA media subtype */\n    opaque media_type<V>;\n\n    /* a list of zero or more parameters defined for the subtype */\n    Parameter parameters<V>;\n} MediaType;\n```\n\n`MediaType` contains two vectors of bytes. When the length of the media_type vector is 0, it is zero length. If the length of the parameters Vec is not zero, that's an error. So something like this with more error checking:\n\n```\nif ApplicationFraming.media_type.media_type.len() == 0 {\n    if ApplicationFrame.media_type.parameters.len() != 0 {\n        // return some reasonable error type or ignore\n    }\n    else {\n        Ok(group.GroupContext.app_data_dictionary.content_media_types[0]) // use this media type\n    }\n}\nelse {\n    Ok(ApplicationFraming.media_type)\n}\n```\n\n",
+          "createdAt": "2026-06-02T17:14:28Z",
+          "updatedAt": "2026-06-02T17:14:28Z"
+        }
+      ]
     },
     {
       "number": 95,
@@ -1454,9 +1469,17 @@
       "labels": [],
       "body": "Appending regular AAD behind a SafeAAD struct seems somewhat ad-hoc. If all clients in a group support SafeAAD, the application can just define a proprietary component and use that. I'd say we should forbid \"unsafe\" AAD in the presence of SafeAAD.",
       "createdAt": "2026-05-27T17:35:17Z",
-      "updatedAt": "2026-05-27T17:35:17Z",
+      "updatedAt": "2026-06-02T17:20:54Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I think the correct thing here is that if all the clients in a group **USE** SafeAAD by having a `media_content_types` component with at least one media type in the list, then we could deprecate unsafe AAD. \n\nIf we combine this with the suggestion in #88 that support for app_data_dictionary implies support for safe_aad. We end up in a catch 22 where perhaps the group chooses not to use SafeAAD in order to save the 2 bytes.",
+          "createdAt": "2026-06-02T17:20:53Z",
+          "updatedAt": "2026-06-02T17:20:53Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -5810,31 +5833,38 @@
       "id": "PR_kwDOHZoI5M7NCfGp",
       "title": "Add `opaque_data_dictionary` extension and OpaqueDataUpdate proposal",
       "url": "https://github.com/mlswg/mls-extensions/pull/86",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "rohanmahy",
-      "authorAssociation": "CONTRIBUTOR",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "This is a pretty heavy response to Issue #74 .\r\n\r\nIt creates both a separate `opaque_data_dictionary` extension AND a new OpaqueDataDictionary Proposal.\r\n\r\nIt actually touches quite a lot of text.\r\n\r\nRather than creating a separate proposal, we could use a new op code for opaque_update. I can writeup a separate PR for that option.\r\n\r\nIncidentally this also fixes #85 \r\n",
       "createdAt": "2026-03-24T14:59:35Z",
-      "updatedAt": "2026-04-24T15:29:01Z",
+      "updatedAt": "2026-06-02T17:00:49Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "7ca5469a01b73353e36b9b1751c5c8848aa3d99f",
       "headRepository": "rohanmahy/mls-extensions",
       "headRefName": "opaque-dict",
       "headRefOid": "d84367915342d1671de2b329ec70ea94fbfae567",
-      "closedAt": null,
+      "closedAt": "2026-06-02T17:00:48Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [
         {
           "author": "rohanmahy",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "body": "As mentioned in Issue #74  (https://github.com/mlswg/mls-extensions/issues/74#issuecomment-4187718237) I think both this PR and PR #90 are a bad idea. I propose closing both PRs and closing Issue #74 with a wontfix",
           "createdAt": "2026-04-24T15:29:01Z",
           "updatedAt": "2026-04-24T15:29:01Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "COLLABORATOR",
+          "body": "It's been about 6 weeks since I proposed closing these PRs and Issue #74 . Hearing no objections, so Closing now.",
+          "createdAt": "2026-06-02T17:00:48Z",
+          "updatedAt": "2026-06-02T17:00:48Z"
         }
       ],
       "reviews": []
@@ -5844,31 +5874,38 @@
       "id": "PR_kwDOHZoI5M7P_L1u",
       "title": "Make AppDataUpdate proposal work with app_data_dictionary and opaque_data_dictionary",
       "url": "https://github.com/mlswg/mls-extensions/pull/90",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "rohanmahy",
-      "authorAssociation": "CONTRIBUTOR",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "This is an alternate to PR # 86 and also addresses issue #74 ",
       "createdAt": "2026-04-04T20:26:40Z",
-      "updatedAt": "2026-04-24T15:28:25Z",
+      "updatedAt": "2026-06-02T17:00:34Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "7ca5469a01b73353e36b9b1751c5c8848aa3d99f",
       "headRepository": "rohanmahy/mls-extensions",
       "headRefName": "opaque-op",
       "headRefOid": "4aca4d305c6b795e90716173486ec3bba30ed34f",
-      "closedAt": null,
+      "closedAt": "2026-06-02T17:00:33Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [
         {
           "author": "rohanmahy",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "body": "As mentioned in Issue #74  (https://github.com/mlswg/mls-extensions/issues/74#issuecomment-4187718237) I think both this PR and PR #86 are a bad idea. I suggest we close both of these and close Issue #74 as wontfix.",
           "createdAt": "2026-04-24T15:28:25Z",
           "updatedAt": "2026-04-24T15:28:25Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "COLLABORATOR",
+          "body": "It's been about 6 weeks since I proposed closing these PRs and Issue #74 . Hearing no objections, so Closing now.",
+          "createdAt": "2026-06-02T17:00:33Z",
+          "updatedAt": "2026-06-02T17:00:33Z"
         }
       ],
       "reviews": []
@@ -5920,24 +5957,26 @@
       "id": "PR_kwDOHZoI5M7Y5xW2",
       "title": "Address Issues #87, #88, #89",
       "url": "https://github.com/mlswg/mls-extensions/pull/93",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "rohanmahy",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Closes #87 , #88 , #89 \r\n\r\n- be more pedantic when discussing that a proposal in required_capabilities implies all clients support it but not vice versa.\r\n- make `app_components` mandatory to implement if `app_data_dictionary` is supported\r\n- correct locations where GREASE component values can go",
       "createdAt": "2026-05-06T19:57:38Z",
-      "updatedAt": "2026-05-11T14:59:42Z",
+      "updatedAt": "2026-06-02T16:59:26Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "7ca5469a01b73353e36b9b1751c5c8848aa3d99f",
       "headRepository": "rohanmahy/mls-extensions",
       "headRefName": "inotherwords",
       "headRefOid": "c4cfcd9fb51e19cb109d077a69893381dbce499d",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2026-06-02T16:59:26Z",
+      "mergedAt": "2026-06-02T16:59:26Z",
+      "mergedBy": "rohanmahy",
+      "mergeCommit": {
+        "oid": "892b0701b17bf18bbf8314eaf3925827a7d79d64"
+      },
       "comments": [],
       "reviews": [
         {
