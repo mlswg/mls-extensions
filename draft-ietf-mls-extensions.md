@@ -824,9 +824,9 @@ struct {
 } Parameter;
 
 struct {
-    /* media_type is an IANA top-level media type, a "/" character,
+    /* type is an IANA top-level media type, a "/" character,
      * and the IANA media subtype */
-    opaque media_type<V>;
+    opaque type<V>;
 
     /* a list of zero or more parameters defined for the subtype */
     Parameter parameters<V>;
@@ -834,7 +834,7 @@ struct {
 
 struct {
     /* must contain at least one item */
-    MediaType media_types<V>;
+    MediaType media_type_list<V>;
 } MediaTypeList;
 
 MediaTypeList content_media_types;
@@ -849,19 +849,19 @@ Example IANA media types with optional parameters:
   application/vnd.example.msgbus+cbor
 ~~~
 
-For the example media type for `text/plain`, the `media_type` field would be
-`text/plain`, `parameters` would contain a single Parameter with a
+For the example media type for `text/plain`, the `media_type.type` field would
+be `text/plain`, `media_type.parameters` would contain a single Parameter with a
 `parameter_name` of `charset` and a `parameter_value` of `UTF-8`.
 
 ### Expected Behavior
 
 An MLS client which implements this section SHOULD include the
 `content_media_types` component (in the `app_data_dictionary` extension) in its
-LeafNodes, listing all the media types it can receive. As usual, the client also
-includes `content_media_types` in the `app_components` list (in the
-`app_data_dictionary` extension) and support for the `app_data_dictionary`
-extension in its `capabilities.extensions` field in its LeafNodes (including in
-LeafNodes inside its KeyPackages).
+LeafNodes, with a `media_type_list` vector listing all the media types it can
+receive. As usual, the client also includes `content_media_types` in the
+`app_components` list (in the `app_data_dictionary` extension), and support for
+the `app_data_dictionary` extension in its `capabilities.extensions` field in
+its LeafNodes (including in LeafNodes inside its KeyPackages).
 
 When creating a new MLS group for an application using this specification, the
 group MAY include a `content_media_types` component (in the
@@ -870,8 +870,9 @@ includes its `content_media_types` component in its own LeafNode as described in
 the previous paragraph.)
 
 MLS clients SHOULD NOT add an MLS client to an MLS group with
-`content_media_types` in its GroupContext unless the MLS client advertises it
-can support all the required MediaTypes. As an exception, a client could be
+`content_media_types` in its GroupContext unless all the members (after taking
+into account any membership changes in the valid pending Proposals) advertise
+support for all the required MediaTypes. As an exception, a client could be
 preconfigured to know that certain clients support the required types. Likewise,
 an MLS client is already forbidden from issuing or committing a
 GroupContextExtensions Proposal which introduces required extensions which are
@@ -890,7 +891,7 @@ sent in that group is interpreted as `ApplicationFraming` as defined below:
   } ApplicationFraming;
 ~~~
 
-The `media_type` MAY be zero length, in which case, the media type of the
+The `media_type.type` MAY be zero length, in which case, the media type of the
 `inner_application_content` is interpreted as the first MediaType specified in
 the `content_media_types` component in the GroupContext.
 
