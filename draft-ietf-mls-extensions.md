@@ -595,9 +595,9 @@ the AAD input to the `PrivateMessage.ciphertext`.
 The Safe AAD API defines a framing used to allow multiple application components
 to add AAD safely to the `authenticated_data` without conflicts or ambiguity.
 
-When any AAD safe extension is included in the `authenticated_data` field, the
-"safe" AAD items MUST come before any non-safe data in the `authenticated_data`
-field. Safe AAD items are framed using the `SafeAAD` struct and are sorted in
+If the `safe_aad` component in the `app_data_dictionary` extension is present in
+the GroupContext (see {{negotiation}}), the entire `authenticated_data` field is
+framed as a `SafeAAD` struct such that the elements of `aad_items` are sorted in
 increasing numerical order of the `component_id`. The struct is described below:
 
 ~~~ tls-presentation
@@ -611,11 +611,8 @@ struct {
 } SafeAAD;
 ~~~
 
-If the `SafeAAD` is present or not in the `authenticated_data` is determined by
-the presence of the `safe_aad` component in the `app_data_dictionary` extension
-in the GroupContext (see {{negotiation}}). If `safe_aad` is present, but none of
-the "safe" AAD components have data to send in a particular message, the
-`aad_items` is a zero-length vector.
+If `safe_aad` is present, but none of the "safe" AAD components have data to
+send in a particular message, the `aad_items` is a zero-length vector.
 
 
 # Negotiating Extensions and Components {#negotiation}
