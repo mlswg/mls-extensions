@@ -1386,15 +1386,26 @@ security of the least secure of its credential bindings.
 RFC EDITOR PLEASE DELETE THIS SECTION.
 
 draft-10
+
 - remove AppAck ProposalType as it is now a Component conveyed in AppEphemeral Proposals
+- be more pedantic when discussing that a proposal in required_capabilities implies all clients support it but not vice versa.
+- correct location of GREASE values for advertising `safe_add` and `app_components` in LeafNodes
+- the `app_components` component is now mandatory to implement if `app_data_dictionary` is supported.
+- the `safe_add` component is now mandatory to understand if `app_data_dictionary` is supported.
+- rename `MediaType.media_type` to `MediaType.type`, and `MediaTypeList.media_types` to `MediaTypeList.media_type_list`
+- clarify the behavior of an "empty" media type in application framing: if `media_type.type` is zero length.
+- unsafe AAD is no longer allowed when the `safe_aad` component is present in the GroupContext
 
 draft-09
+
 - rename the component base label from "Application" to "MLS Component"
 
 draft-08
+
 - clarify that SelfRemove is a proposal type, not an extension
 
 draft-07
+
 - add AppAck to IANA considerations
 - adapt Safe AAD scope
 - remove targeted messages altogether with intention to publish it as a
