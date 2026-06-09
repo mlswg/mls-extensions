@@ -419,7 +419,10 @@ GroupContext extensions. The creator of the group can set extensions
 unilaterally. Thereafter, the AppDataUpdate proposal described in the next
 section is used to update the `app_data_dictionary` extension.
 
-Every implementation that supports the `app_data_dictionary` extension MUST support the `app_components` component defined in {{negotiation}}.
+Every implementation that advertises support for the `app_data_dictionary`
+extension MUST understand and advertise the `app_components` component defined
+in {{negotiation}}, and it MUST understand the `safe_aad` component defined in
+{{safe-aad}}.
 
 ## Updating Application Data in the GroupContext {#appdataupdate}
 
@@ -592,9 +595,9 @@ the AAD input to the `PrivateMessage.ciphertext`.
 The Safe AAD API defines a framing used to allow multiple application components
 to add AAD safely to the `authenticated_data` without conflicts or ambiguity.
 
-When any AAD safe extension is included in the `authenticated_data` field, the
-"safe" AAD items MUST come before any non-safe data in the `authenticated_data`
-field. Safe AAD items are framed using the `SafeAAD` struct and are sorted in
+If the `safe_aad` component in the `app_data_dictionary` extension is present in
+the GroupContext (see {{negotiation}}), the entire `authenticated_data` field is
+framed as a `SafeAAD` struct such that the elements of `aad_items` are sorted in
 increasing numerical order of the `component_id`. The struct is described below:
 
 ~~~ tls-presentation
@@ -608,11 +611,8 @@ struct {
 } SafeAAD;
 ~~~
 
-If the `SafeAAD` is present or not in the `authenticated_data` is determined by
-the presence of the `safe_aad` component in the `app_data_dictionary` extension
-in the GroupContext (see {{negotiation}}). If `safe_aad` is present, but none of
-the "safe" AAD components have data to send in a particular message, the
-`aad_items` is a zero-length vector.
+If `safe_aad` is present, but none of the "safe" AAD components have data to
+send in a particular message, the `aad_items` is a zero-length vector.
 
 
 # Negotiating Extensions and Components {#negotiation}
@@ -821,9 +821,9 @@ struct {
 } Parameter;
 
 struct {
-    /* media_type is an IANA top-level media type, a "/" character,
+    /* type is an IANA top-level media type, a "/" character,
      * and the IANA media subtype */
-    opaque media_type<V>;
+    opaque type<V>;
 
     /* a list of zero or more parameters defined for the subtype */
     Parameter parameters<V>;
@@ -831,7 +831,7 @@ struct {
 
 struct {
     /* must contain at least one item */
-    MediaType media_types<V>;
+    MediaType media_type_list<V>;
 } MediaTypeList;
 
 MediaTypeList content_media_types;
@@ -846,19 +846,19 @@ Example IANA media types with optional parameters:
   application/vnd.example.msgbus+cbor
 ~~~
 
-For the example media type for `text/plain`, the `media_type` field would be
-`text/plain`, `parameters` would contain a single Parameter with a
+For the example media type for `text/plain`, the `media_type.type` field would
+be `text/plain`, `media_type.parameters` would contain a single Parameter with a
 `parameter_name` of `charset` and a `parameter_value` of `UTF-8`.
 
 ### Expected Behavior
 
 An MLS client which implements this section SHOULD include the
 `content_media_types` component (in the `app_data_dictionary` extension) in its
-LeafNodes, listing all the media types it can receive. As usual, the client also
-includes `content_media_types` in the `app_components` list (in the
-`app_data_dictionary` extension) and support for the `app_data_dictionary`
-extension in its `capabilities.extensions` field in its LeafNodes (including in
-LeafNodes inside its KeyPackages).
+LeafNodes, with a `media_type_list` vector listing all the media types it can
+receive. As usual, the client also includes `content_media_types` in the
+`app_components` list (in the `app_data_dictionary` extension), and support for
+the `app_data_dictionary` extension in its `capabilities.extensions` field in
+its LeafNodes (including in LeafNodes inside its KeyPackages).
 
 When creating a new MLS group for an application using this specification, the
 group MAY include a `content_media_types` component (in the
@@ -867,8 +867,9 @@ includes its `content_media_types` component in its own LeafNode as described in
 the previous paragraph.)
 
 MLS clients SHOULD NOT add an MLS client to an MLS group with
-`content_media_types` in its GroupContext unless the MLS client advertises it
-can support all the required MediaTypes. As an exception, a client could be
+`content_media_types` in its GroupContext unless all the members (after taking
+into account any membership changes in the valid pending Proposals) advertise
+support for all the required MediaTypes. As an exception, a client could be
 preconfigured to know that certain clients support the required types. Likewise,
 an MLS client is already forbidden from issuing or committing a
 GroupContextExtensions Proposal which introduces required extensions which are
@@ -887,7 +888,7 @@ sent in that group is interpreted as `ApplicationFraming` as defined below:
   } ApplicationFraming;
 ~~~
 
-The `media_type` MAY be zero length, in which case, the media type of the
+The `media_type.type` MAY be zero length, in which case, the media type of the
 `inner_application_content` is interpreted as the first MediaType specified in
 the `content_media_types` component in the GroupContext.
 
@@ -1385,15 +1386,26 @@ security of the least secure of its credential bindings.
 RFC EDITOR PLEASE DELETE THIS SECTION.
 
 draft-10
+
 - remove AppAck ProposalType as it is now a Component conveyed in AppEphemeral Proposals
+- be more pedantic when discussing that a proposal in required_capabilities implies all clients support it but not vice versa.
+- correct location of GREASE values for advertising `safe_add` and `app_components` in LeafNodes
+- the `app_components` component is now mandatory to implement if `app_data_dictionary` is supported.
+- the `safe_add` component is now mandatory to understand if `app_data_dictionary` is supported.
+- rename `MediaType.media_type` to `MediaType.type`, and `MediaTypeList.media_types` to `MediaTypeList.media_type_list`
+- clarify the behavior of an "empty" media type in application framing: if `media_type.type` is zero length.
+- unsafe AAD is no longer allowed when the `safe_aad` component is present in the GroupContext
 
 draft-09
+
 - rename the component base label from "Application" to "MLS Component"
 
 draft-08
+
 - clarify that SelfRemove is a proposal type, not an extension
 
 draft-07
+
 - add AppAck to IANA considerations
 - adapt Safe AAD scope
 - remove targeted messages altogether with intention to publish it as a
