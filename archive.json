@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-06-09T01:54:06.328656+00:00",
+  "timestamp": "2026-06-11T02:29:33.425917+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -1427,7 +1427,7 @@
       "id": "I_kwDOHZoI5M8AAAABBebZVw",
       "title": "Should support for app_data_dictionary also require support for the safe_aad and content_media_types components?",
       "url": "https://github.com/mlswg/mls-extensions/issues/92",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "rohanmahy",
       "authorAssociation": "COLLABORATOR",
       "assignees": [
@@ -1438,8 +1438,8 @@
       ],
       "body": "See my comment in #88 ",
       "createdAt": "2026-05-06T19:49:29Z",
-      "updatedAt": "2026-06-08T13:45:23Z",
-      "closedAt": null,
+      "updatedAt": "2026-06-09T06:12:55Z",
+      "closedAt": "2026-06-09T06:12:55Z",
       "comments": [
         {
           "author": "rohanmahy",
@@ -1455,7 +1455,7 @@
       "id": "I_kwDOHZoI5M8AAAABB451MQ",
       "title": "How to detect zero-length media type",
       "url": "https://github.com/mlswg/mls-extensions/issues/94",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "kkohbrok",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -1466,8 +1466,8 @@
       ],
       "body": "Section 6.2.4 says\n\n> The media_type MAY be zero length, in which case, the media type of the inner_application_content is interpreted as the first MediaType specified in the content_media_types component in the GroupContext.\n\nMediaType is a struct. How would an application check whether it's zero length? Is a struct of type MediaType zero length if `media_type` and `parameters` (within the MediaType struct) are zero length?",
       "createdAt": "2026-05-11T14:42:32Z",
-      "updatedAt": "2026-06-08T13:45:10Z",
-      "closedAt": null,
+      "updatedAt": "2026-06-09T06:55:31Z",
+      "closedAt": "2026-06-09T06:55:31Z",
       "comments": [
         {
           "author": "rohanmahy",
@@ -1475,6 +1475,13 @@
           "body": "```\nstruct {\n    /* media_type is an IANA top-level media type, a \"/\" character,\n     * and the IANA media subtype */\n    opaque media_type<V>;\n\n    /* a list of zero or more parameters defined for the subtype */\n    Parameter parameters<V>;\n} MediaType;\n```\n\n`MediaType` contains two vectors of bytes. When the length of the media_type vector is 0, it is zero length. If the length of the parameters Vec is not zero, that's an error. So something like this with more error checking:\n\n```\nif ApplicationFraming.media_type.media_type.len() == 0 {\n    if ApplicationFrame.media_type.parameters.len() != 0 {\n        // return some reasonable error type or ignore\n    }\n    else {\n        Ok(group.GroupContext.app_data_dictionary.content_media_types[0]) // use this media type\n    }\n}\nelse {\n    Ok(ApplicationFraming.media_type)\n}\n```\n\n",
           "createdAt": "2026-06-02T17:14:28Z",
           "updatedAt": "2026-06-02T17:14:28Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Closed via #96 ",
+          "createdAt": "2026-06-09T06:55:31Z",
+          "updatedAt": "2026-06-09T06:55:31Z"
         }
       ]
     },
@@ -1483,7 +1490,7 @@
       "id": "I_kwDOHZoI5M8AAAABDkW6qg",
       "title": "Disable \"unsafe\" aad entirely when SafeAAD is supported",
       "url": "https://github.com/mlswg/mls-extensions/issues/95",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "kkohbrok",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -1494,8 +1501,8 @@
       ],
       "body": "Appending regular AAD behind a SafeAAD struct seems somewhat ad-hoc. If all clients in a group support SafeAAD, the application can just define a proprietary component and use that. I'd say we should forbid \"unsafe\" AAD in the presence of SafeAAD.",
       "createdAt": "2026-05-27T17:35:17Z",
-      "updatedAt": "2026-06-08T13:44:57Z",
-      "closedAt": null,
+      "updatedAt": "2026-06-09T06:55:19Z",
+      "closedAt": "2026-06-09T06:55:19Z",
       "comments": [
         {
           "author": "rohanmahy",
@@ -1503,6 +1510,13 @@
           "body": "I think the correct thing here is that if all the clients in a group **USE** SafeAAD by having a `media_content_types` component with at least one media type in the list, then we could deprecate unsafe AAD. \n\nIf we combine this with the suggestion in #88 that support for app_data_dictionary implies support for safe_aad. We end up in a catch 22 where perhaps the group chooses not to use SafeAAD in order to save the 2 bytes.",
           "createdAt": "2026-06-02T17:20:53Z",
           "updatedAt": "2026-06-02T17:20:53Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Closed via #96 ",
+          "createdAt": "2026-06-09T06:55:19Z",
+          "updatedAt": "2026-06-09T06:55:19Z"
         }
       ]
     }
@@ -6024,26 +6038,382 @@
       "id": "PR_kwDOHZoI5M7j7a2c",
       "title": "Address Issues 92, 94, 95",
       "url": "https://github.com/mlswg/mls-extensions/pull/96",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "rohanmahy",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "\r\n- the `safe_add` component is now mandatory to understand if `app_data_dictionary` is supported.\r\n- rename `MediaType.media_type` to `MediaType.type`, and `MediaTypeList.media_types` to `MediaTypeList.media_type_list`\r\n- clarify the behavior of an \"empty\" media type in application framing: if `media_type.type` is zero length.\r\n- unsafe AAD is no longer allowed when the `safe_aad` component is present in the GroupContext\r\n\r\nCloses #92 ,  #94 , #95 \r\n\r\n@kkohbrok ",
       "createdAt": "2026-06-08T13:42:47Z",
-      "updatedAt": "2026-06-08T13:43:20Z",
+      "updatedAt": "2026-06-09T06:12:54Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "892b0701b17bf18bbf8314eaf3925827a7d79d64",
       "headRepository": "rohanmahy/mls-extensions",
       "headRefName": "issues92-94-95",
       "headRefOid": "322ee87b00e4cc84b914af129af143eb343f7645",
+      "closedAt": "2026-06-09T06:12:54Z",
+      "mergedAt": "2026-06-09T06:12:53Z",
+      "mergedBy": "rohanmahy",
+      "mergeCommit": {
+        "oid": "bdac8a615da7fc95fe916eb09af584f10395c56b"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M8AAAABCZU9Ag",
+          "commit": {
+            "abbreviatedOid": "322ee87"
+          },
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "Looks good to me. Thanks @rohanmahy!",
+          "createdAt": "2026-06-09T06:09:34Z",
+          "updatedAt": "2026-06-09T06:09:34Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 97,
+      "id": "PR_kwDOHZoI5M7kh5qp",
+      "title": "Inconsistencies and typos",
+      "url": "https://github.com/mlswg/mls-extensions/pull/97",
+      "state": "OPEN",
+      "author": "raphaelrobert",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-06-09T19:33:16Z",
+      "updatedAt": "2026-06-10T09:09:11Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "bdac8a615da7fc95fe916eb09af584f10395c56b",
+      "headRepository": "mlswg/mls-extensions",
+      "headRefName": "raphael/inconsistencies",
+      "headRefOid": "594ab32785540f276f0cacc2f13d3a0050e51259",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M8AAAABCjJnqQ",
+          "commit": {
+            "abbreviatedOid": "594ab32"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-06-10T08:42:34Z",
+          "updatedAt": "2026-06-10T08:42:34Z",
+          "comments": [
+            {
+              "originalPosition": 45,
+              "body": "This is technically not necessary (but not harmful). You only need the ! on first use, or the reference pre-listed in the references metadata list.",
+              "createdAt": "2026-06-10T08:42:34Z",
+              "updatedAt": "2026-06-10T08:42:34Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M8AAAABCjKTKw",
+          "commit": {
+            "abbreviatedOid": "594ab32"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-06-10T08:44:03Z",
+          "updatedAt": "2026-06-10T08:44:04Z",
+          "comments": [
+            {
+              "originalPosition": 9,
+              "body": "why is this change necessary? old line 210 is exactly 80 characters.",
+              "createdAt": "2026-06-10T08:44:04Z",
+              "updatedAt": "2026-06-10T08:44:04Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M8AAAABCjLjag",
+          "commit": {
+            "abbreviatedOid": "594ab32"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-06-10T08:46:43Z",
+          "updatedAt": "2026-06-10T08:46:43Z",
+          "comments": [
+            {
+              "originalPosition": 96,
+              "body": "nice catch!",
+              "createdAt": "2026-06-10T08:46:43Z",
+              "updatedAt": "2026-06-10T08:46:43Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M8AAAABCjL-Kw",
+          "commit": {
+            "abbreviatedOid": "594ab32"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-06-10T08:47:47Z",
+          "updatedAt": "2026-06-10T08:47:47Z",
+          "comments": [
+            {
+              "originalPosition": 121,
+              "body": "capitalization used in RFC9420 is \"external Commit\"\n\n```suggestion\nincluded in an external Commit. Applications can make more restrictive validity\n```",
+              "createdAt": "2026-06-10T08:47:47Z",
+              "updatedAt": "2026-06-10T08:48:13Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M8AAAABCjMNDg",
+          "commit": {
+            "abbreviatedOid": "594ab32"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-06-10T08:48:22Z",
+          "updatedAt": "2026-06-10T08:48:22Z",
+          "comments": [
+            {
+              "originalPosition": 124,
+              "body": "```suggestion\nvalid at the application when sent in an external Commit or via an external\n```",
+              "createdAt": "2026-06-10T08:48:22Z",
+              "updatedAt": "2026-06-10T08:48:22Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M8AAAABCjMVhg",
+          "commit": {
+            "abbreviatedOid": "594ab32"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-06-10T08:48:42Z",
+          "updatedAt": "2026-06-10T08:48:43Z",
+          "comments": [
+            {
+              "originalPosition": 149,
+              "body": "```suggestion\nincluded in an external Commit. Applications can make more restrictive validity\n```",
+              "createdAt": "2026-06-10T08:48:42Z",
+              "updatedAt": "2026-06-10T08:48:43Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M8AAAABCjMapQ",
+          "commit": {
+            "abbreviatedOid": "594ab32"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-06-10T08:48:53Z",
+          "updatedAt": "2026-06-10T08:48:53Z",
+          "comments": [
+            {
+              "originalPosition": 152,
+              "body": "```suggestion\nnot be valid at the application when sent in an external Commit or via an\n```",
+              "createdAt": "2026-06-10T08:48:53Z",
+              "updatedAt": "2026-06-10T08:48:53Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M8AAAABCjOyjw",
+          "commit": {
+            "abbreviatedOid": "594ab32"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-06-10T08:54:35Z",
+          "updatedAt": "2026-06-10T08:54:35Z",
+          "comments": [
+            {
+              "originalPosition": 243,
+              "body": "Do we actually want Proposals that only contain a GREASE component? Maybe we should just delete this from the list.\n\n```suggestion\n```",
+              "createdAt": "2026-06-10T08:54:35Z",
+              "updatedAt": "2026-06-10T08:54:35Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M8AAAABCjPOhQ",
+          "commit": {
+            "abbreviatedOid": "594ab32"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-06-10T08:55:35Z",
+          "updatedAt": "2026-06-10T08:55:35Z",
+          "comments": [
+            {
+              "originalPosition": 260,
+              "body": "blast from the past!",
+              "createdAt": "2026-06-10T08:55:35Z",
+              "updatedAt": "2026-06-10T08:55:35Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M8AAAABCjP4bQ",
+          "commit": {
+            "abbreviatedOid": "594ab32"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-06-10T08:57:15Z",
+          "updatedAt": "2026-06-10T08:57:16Z",
+          "comments": [
+            {
+              "originalPosition": 320,
+              "body": "```suggestion\nexternal Commit by reference. (An external Commit can contain zero or more\n```",
+              "createdAt": "2026-06-10T08:57:15Z",
+              "updatedAt": "2026-06-10T08:57:16Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M8AAAABCjQCGA",
+          "commit": {
+            "abbreviatedOid": "594ab32"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-06-10T08:57:34Z",
+          "updatedAt": "2026-06-10T08:57:34Z",
+          "comments": [
+            {
+              "originalPosition": 317,
+              "body": "```suggestion\nexternal Commit, the new joiner MUST fetch any pending SelfRemove Proposals\n```",
+              "createdAt": "2026-06-10T08:57:34Z",
+              "updatedAt": "2026-06-10T08:57:34Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M8AAAABCjQPoQ",
+          "commit": {
+            "abbreviatedOid": "594ab32"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-06-10T08:58:04Z",
+          "updatedAt": "2026-06-10T08:58:04Z",
+          "comments": [
+            {
+              "originalPosition": 351,
+              "body": "```suggestion\nAs a result, a `last_resort_key_package` component contains the `component_id`\n```",
+              "createdAt": "2026-06-10T08:58:04Z",
+              "updatedAt": "2026-06-10T08:58:04Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M8AAAABCjRFhA",
+          "commit": {
+            "abbreviatedOid": "594ab32"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-06-10T09:00:08Z",
+          "updatedAt": "2026-06-10T09:00:08Z",
+          "comments": [
+            {
+              "originalPosition": 483,
+              "body": "```suggestion\n>Note1: GREASE values for components MAY be present in AD, GI, KP, and LN\n```\n\non further reflection, I don't think we want Proposals that only contain GREASE",
+              "createdAt": "2026-06-10T09:00:08Z",
+              "updatedAt": "2026-06-10T09:00:08Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M8AAAABCjUUbQ",
+          "commit": {
+            "abbreviatedOid": "594ab32"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-06-10T09:06:55Z",
+          "updatedAt": "2026-06-10T09:06:56Z",
+          "comments": [
+            {
+              "originalPosition": 1,
+              "body": "```suggestion\nincluded in external Commits.\n```",
+              "createdAt": "2026-06-10T09:06:56Z",
+              "updatedAt": "2026-06-10T09:06:56Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M8AAAABCjUgHg",
+          "commit": {
+            "abbreviatedOid": "594ab32"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-06-10T09:07:24Z",
+          "updatedAt": "2026-06-10T09:07:24Z",
+          "comments": [
+            {
+              "originalPosition": 317,
+              "body": "```suggestion\nexternal Commit, the new joiner MUST fetch any pending SelfRemove Proposals\n```",
+              "createdAt": "2026-06-10T09:07:24Z",
+              "updatedAt": "2026-06-10T09:07:24Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHZoI5M8AAAABCjVRNQ",
+          "commit": {
+            "abbreviatedOid": "594ab32"
+          },
+          "author": "rohanmahy",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "I think we do need to decide if Proposals containing only GREASE are a good idea or not.",
+          "createdAt": "2026-06-10T09:09:11Z",
+          "updatedAt": "2026-06-10T09:09:11Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
