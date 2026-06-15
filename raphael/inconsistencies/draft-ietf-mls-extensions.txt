@@ -4,8 +4,8 @@
 
 Messaging Layer Security                                       R. Robert
 Internet-Draft                                               Phoenix R&D
-Intended status: Standards Track                             9 June 2026
-Expires: 11 December 2026
+Intended status: Standards Track                            15 June 2026
+Expires: 17 December 2026
 
 
              The Messaging Layer Security (MLS) Extensions
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 11 December 2026.
+   This Internet-Draft will expire on 17 December 2026.
 
 Copyright Notice
 
@@ -283,7 +283,7 @@ Table of Contents
    When a label is required for an operation, the byte string resulting
    from the TLS Presentation Language encoding of the following data
    structure is used.  The base_label field is always the fixed string
-   "MLS Component".  The component_id field identifies the component
+   "MLS Component".  Thecomponent_id field identifies the component
    performing the operation.  The label field identifies the operation
    being performed.
 
@@ -617,10 +617,10 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
 
    AppDataUpdate proposals do not require an UpdatePath.  An
    AppDataUpdate proposal can be sent by an external sender.  Likewise,
-   AppDataUpdate proposals can be included in an External Commit.
+   AppDataUpdate proposals can be included in an external Commit.
    Applications can make more restrictive validity rules for the update
    of their components, such that some components would not be valid at
-   the application when sent in an External Commit or via an external
+   the application when sent in an external Commit or via an external
    proposer.
 
    To avoid storing large amounts of data in the app_data_dictionary
@@ -661,10 +661,10 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
 
    AppEphemeral proposals do not require an UpdatePath.  An AppEphemeral
    proposal can be sent by an external sender.  Likewise, AppEphemeral
-   proposals can be included in an External Commit.  Applications can
+   proposals can be included in an external Commit.  Applications can
    make more restrictive validity rules for ephemeral updates of their
    components, such that some components would not be valid at the
-   application when sent in an External Commit or via an external
+   application when sent in an external Commit or via an external
    proposer.
 
 4.9.  Safe Additional Authenticated Data (AAD)
@@ -994,7 +994,7 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    member wishing to remove itself can send a Remove Proposal and wait
    for another member to Commit its Proposal.
 
-   Unfortunately, MLS clients that join via an External Commit ignore
+   Unfortunately, MLS clients that join via an external Commit ignore
    pending, but otherwise valid, Remove Proposals.  The member trying to
    remove itself has to monitor the group and send a new Remove Proposal
    in every new epoch until the member is removed.  In a group with a
@@ -1006,13 +1006,13 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    hour).
 
    This section describes a new SelfRemove proposal type.  It is
-   designed to be included in External Commits.
+   designed to be included in external Commits.
 
 6.3.1.  Proposal Description
 
    This document specifies a new MLS Proposal type called SelfRemove.
    Its syntax is described using the TLS Presentation Language [RFC8446]
-   below (its content is an empty struct).  It is allowed in External
+   below (its content is an empty struct).  It is allowed in external
    Commits and requires an UpdatePath.  SelfRemove proposals are only
    allowed in a Commit by reference.  SelfRemove cannot be sent as an
    external proposal.
@@ -1060,10 +1060,10 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    Sender was a member.
 
    Whenever a new joiner is about to join a self-remove-capable group
-   with an External Commit, the new joiner MUST fetch any pending
+   with an external Commit, the new joiner MUST fetch any pending
    SelfRemove Proposals along with the GroupInfo object, and include the
-   SelfRemove Proposals in its External Commit by reference.  (An
-   External Commit can contain zero or more SelfRemove proposals).  The
+   SelfRemove Proposals in its external Commit by reference.  (An
+   external Commit can contain zero or more SelfRemove proposals).  The
    new joiner MUST validate the SelfRemove Proposal before including it
    by reference, except that it skips the validation of the
    membership_tag because a non-member cannot verify membership.
@@ -1336,7 +1336,7 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
 
    The self_remove MLS Proposal Type is used for a member to remove
    itself from a group more efficiently than using a remove proposal
-   type, as the self_remove type is permitted in External Commits.
+   type, as the self_remove type is permitted in external Commits.
 
    *  Value: 0x000a (suggested)
 
@@ -1504,7 +1504,7 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
       (including AppEphemeral proposals).  Clients that send an AppAck
       component in an AppEphemeral proposal will need to send a new
       AppAck component in an AppEphemeral proposal (in the new epoch)
-      after receiving an External Commit until it has been incorporated
+      after receiving an external Commit until it has been incorporated
       into an accepted Commit.
 
    The schedule on which AppAck objects are sent in AppEphemeral
