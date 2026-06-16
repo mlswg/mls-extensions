@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-06-11T02:29:33.425917+00:00",
+  "timestamp": "2026-06-16T02:35:07.322061+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -1519,6 +1519,22 @@
           "updatedAt": "2026-06-09T06:55:19Z"
         }
       ]
+    },
+    {
+      "number": 98,
+      "id": "I_kwDOHZoI5M8AAAABFh_M6w",
+      "title": "Required processing order seems to be unnecessarily restrictive",
+      "url": "https://github.com/mlswg/mls-extensions/issues/98",
+      "state": "OPEN",
+      "author": "keks",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "The draft says\n\nhttps://github.com/mlswg/mls-extensions/blob/bdac8a615da7fc95fe916eb09af584f10395c56b/draft-ietf-mls-extensions.md?plain=1#L469-L471\n\nand\n\nhttps://github.com/mlswg/mls-extensions/blob/bdac8a615da7fc95fe916eb09af584f10395c56b/draft-ietf-mls-extensions.md?plain=1#L565-L566\n\nBut why?\n\nFor context: We are exploring a scenario where Add and Update proposals have to be accompanied with an encrypted certificate that attests to the LeafNode in the proposals. The encryption key is derived from the next epoch's exporter. This means we tentatively process the commit, export, decrypt, and only then decide whether the Add and Update proposals are really valid. The idea here is that the credentials are anonymous/pseudonymous, and the certificates establish a binding to the user identity. We do not want to disclose that binding to members being removed in the same epoch. \n\nWe think this is a valid approach, but recently noticed that it does not work with the proposed processing order. However, we were not able to find a good reason for why that order is required. Is there one? If not, can we remove the requirement?",
+      "createdAt": "2026-06-15T14:46:40Z",
+      "updatedAt": "2026-06-15T14:46:40Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -6080,24 +6096,26 @@
       "id": "PR_kwDOHZoI5M7kh5qp",
       "title": "Inconsistencies and typos",
       "url": "https://github.com/mlswg/mls-extensions/pull/97",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "raphaelrobert",
       "authorAssociation": "MEMBER",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2026-06-09T19:33:16Z",
-      "updatedAt": "2026-06-10T09:09:11Z",
+      "updatedAt": "2026-06-15T16:41:54Z",
       "baseRepository": "mlswg/mls-extensions",
       "baseRefName": "main",
       "baseRefOid": "bdac8a615da7fc95fe916eb09af584f10395c56b",
       "headRepository": "mlswg/mls-extensions",
       "headRefName": "raphael/inconsistencies",
-      "headRefOid": "594ab32785540f276f0cacc2f13d3a0050e51259",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "b385d9acb3c955116a49e043c768f3a1806289d3",
+      "closedAt": "2026-06-15T16:41:54Z",
+      "mergedAt": "2026-06-15T16:41:54Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "8607ea33e9c0eaffdbce4a6c213248a30feaaaff"
+      },
       "comments": [],
       "reviews": [
         {
