@@ -720,8 +720,6 @@ components can be included:
 * LeafNode.extensions.app_data_dictionary
 * KeyPackage.extensions.app_data_dictionary
 * GroupInfo.extensions.app_data_dictionary
-* app_ephemeral.component_id
-* authenticated_data.aad_items
 
 Unknown values (including GREASE values) in any of these fields MUST be ignored
 by receivers. A random selection of GREASE values SHOULD be included in any of
@@ -1295,7 +1293,7 @@ Initial Contents:
 | 0x7A7A   | GREASE                   | Note1 | Y | RFC XXXX |
 | 0x8000 - 0xFFFF | Reserved for Private Use | N/A | N | RFC XXXX |
 
->Note1: GREASE values for components MAY be present in AD, AE, GI, KP, and LN
+>Note1: GREASE values for components MAY be present in GI, KP, and LN
 >objects.
 
 
@@ -1397,7 +1395,7 @@ draft-10
 - be more pedantic when discussing that a proposal in required_capabilities
   implies all clients support it but not vice versa.
 - correct location of GREASE values for advertising `safe_add` and
-  `app_components` in LeafNodes
+  `app_components` in LeafNodes; only allow GREASE in GI, LN, and KP.
 - the `app_components` component is now mandatory to implement if
   `app_data_dictionary` is supported.
 - the `safe_add` component is now mandatory to understand if
