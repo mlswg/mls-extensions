@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-06-16T02:35:07.322061+00:00",
+  "timestamp": "2026-07-02T02:02:01.116935+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -1532,9 +1532,24 @@
       "labels": [],
       "body": "The draft says\n\nhttps://github.com/mlswg/mls-extensions/blob/bdac8a615da7fc95fe916eb09af584f10395c56b/draft-ietf-mls-extensions.md?plain=1#L469-L471\n\nand\n\nhttps://github.com/mlswg/mls-extensions/blob/bdac8a615da7fc95fe916eb09af584f10395c56b/draft-ietf-mls-extensions.md?plain=1#L565-L566\n\nBut why?\n\nFor context: We are exploring a scenario where Add and Update proposals have to be accompanied with an encrypted certificate that attests to the LeafNode in the proposals. The encryption key is derived from the next epoch's exporter. This means we tentatively process the commit, export, decrypt, and only then decide whether the Add and Update proposals are really valid. The idea here is that the credentials are anonymous/pseudonymous, and the certificates establish a binding to the user identity. We do not want to disclose that binding to members being removed in the same epoch. \n\nWe think this is a valid approach, but recently noticed that it does not work with the proposed processing order. However, we were not able to find a good reason for why that order is required. Is there one? If not, can we remove the requirement?",
       "createdAt": "2026-06-15T14:46:40Z",
-      "updatedAt": "2026-06-15T14:46:40Z",
+      "updatedAt": "2026-07-01T14:41:52Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> For context: We are exploring a scenario where Add and Update proposals have to be accompanied with an encrypted certificate that attests to the LeafNode in the proposals.\n\nThat sounds an awful lot like a credential, or possibly a LeafNode extension component. Are you sure you are using the right tool for the job?\n\n...\n\nAs for the default order, MLS needed to pick something in the core spec. We didn't want to completely change the proposal validation order rules in mls-extensions. Imagine group 1  supports the RFC9420 proposal types and custom proposal type 1, and group 2 supports the RFC9420 proposal types and another new proposal type 2, but the proposal validation order is different when these two proposals are enabled. That's a recipe for a mess. Hence AppEphemeral and AppUpdate have a specific order that conforms to the one in RFC9420.\n\nNext we have the application validity. Once you have processed all the proposals, your application logic gets to chime in and decide if the ensemble of proposals in the request make sense and whether there is authorization to make the changes for this particular commit.\n\nIn the case of MIMI, we will often need to have a ADU proposal adding a participant and one or more Add proposals for participants clients. We have to authorize the ensemble of proposals to make sure adds are authorized based on the presence of a corresponding participant in the participant list. It's largely the same problem.\n\nIn your specific example, the Add proposal is **VALID** it just isn't authorized yet. When the AppEphemeral proposal is processed, you can validate whatever information you have available at that point. (I'll note that if you are verifying anything from the Add proposal, you wouldn't even have access the new LeafNode if you handled the AppEphemeral earlier, so the opposite order also doesn't work if that is all you do.) Finally once you have a stack of valid proposals, you can check that the ensemble is valid, that the proposers are authorized to have these changes committed, and that the committer is authorized to commit them.\n\nDoes that help?",
+          "createdAt": "2026-07-01T13:37:17Z",
+          "updatedAt": "2026-07-01T13:37:17Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "I understand the problem you are trying to solve, but I think that using key material from the next epoch to encrypt something in the current epoch is generally not a good idea. We also don't do that for Private Messages. The epoch change is what signals the validity and applicability of epoch-specific key material.\nAs Rohan noted, you can either decompose the validation into two different steps. Or you can issue two consecutive Commits in case you want to both add and remove members at the same time (something that might be a rare occurrence depending on the application).",
+          "createdAt": "2026-07-01T14:41:52Z",
+          "updatedAt": "2026-07-01T14:41:52Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -6429,6 +6444,48 @@
           "body": "I think we do need to decide if Proposals containing only GREASE are a good idea or not.",
           "createdAt": "2026-06-10T09:09:11Z",
           "updatedAt": "2026-06-10T09:09:11Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 99,
+      "id": "PR_kwDOHZoI5M7stnDy",
+      "title": "Limit GREASE values to be only in GroupInfo, KeyPackage, and LeafNode.",
+      "url": "https://github.com/mlswg/mls-extensions/pull/99",
+      "state": "MERGED",
+      "author": "rohanmahy",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "We had an inconsistency where \"unknown\" component values in AppEphemeral are prohibited but we were encouraging implementers to include GREASE values in fields not originally consistent with the contexts GREASE go in RFC9420.  In RFC9420, GREASE values are only valid in GroupInfo, KeyPackage, and LeafNode extensions. Made document consistent with that. \r\n\r\n\r\n",
+      "createdAt": "2026-07-01T14:11:45Z",
+      "updatedAt": "2026-07-01T14:43:42Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "8607ea33e9c0eaffdbce4a6c213248a30feaaaff",
+      "headRepository": "mlswg/mls-extensions",
+      "headRefName": "grease2",
+      "headRefOid": "f169902f5d3ae18438e9c2e9f2bc8c4273d43662",
+      "closedAt": "2026-07-01T14:43:42Z",
+      "mergedAt": "2026-07-01T14:43:42Z",
+      "mergedBy": "rohanmahy",
+      "mergeCommit": {
+        "oid": "589d7f97c34c8e03b93060a29228aa87be349f18"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHZoI5M8AAAABEsgO7Q",
+          "commit": {
+            "abbreviatedOid": "f169902"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-07-01T14:37:08Z",
+          "updatedAt": "2026-07-01T14:37:08Z",
           "comments": []
         }
       ]
