@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-07-02T02:02:01.116935+00:00",
+  "timestamp": "2026-07-05T01:50:05.030606+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -1532,7 +1532,7 @@
       "labels": [],
       "body": "The draft says\n\nhttps://github.com/mlswg/mls-extensions/blob/bdac8a615da7fc95fe916eb09af584f10395c56b/draft-ietf-mls-extensions.md?plain=1#L469-L471\n\nand\n\nhttps://github.com/mlswg/mls-extensions/blob/bdac8a615da7fc95fe916eb09af584f10395c56b/draft-ietf-mls-extensions.md?plain=1#L565-L566\n\nBut why?\n\nFor context: We are exploring a scenario where Add and Update proposals have to be accompanied with an encrypted certificate that attests to the LeafNode in the proposals. The encryption key is derived from the next epoch's exporter. This means we tentatively process the commit, export, decrypt, and only then decide whether the Add and Update proposals are really valid. The idea here is that the credentials are anonymous/pseudonymous, and the certificates establish a binding to the user identity. We do not want to disclose that binding to members being removed in the same epoch. \n\nWe think this is a valid approach, but recently noticed that it does not work with the proposed processing order. However, we were not able to find a good reason for why that order is required. Is there one? If not, can we remove the requirement?",
       "createdAt": "2026-06-15T14:46:40Z",
-      "updatedAt": "2026-07-01T14:41:52Z",
+      "updatedAt": "2026-07-04T08:14:41Z",
       "closedAt": null,
       "comments": [
         {
@@ -1548,6 +1548,41 @@
           "body": "I understand the problem you are trying to solve, but I think that using key material from the next epoch to encrypt something in the current epoch is generally not a good idea. We also don't do that for Private Messages. The epoch change is what signals the validity and applicability of epoch-specific key material.\nAs Rohan noted, you can either decompose the validation into two different steps. Or you can issue two consecutive Commits in case you want to both add and remove members at the same time (something that might be a rare occurrence depending on the application).",
           "createdAt": "2026-07-01T14:41:52Z",
           "updatedAt": "2026-07-01T14:41:52Z"
+        },
+        {
+          "author": "franziskuskiefer",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I'm not sure if I agree with the reasoning. But I think it's an ok restriction to put on the ordering.\n\nHowever, the spec should make clear then what the implications are. In particular does this mean that AppEphemeral can not be used for sensitive information that leaves that are removed in the carrying commit should not receive.",
+          "createdAt": "2026-07-02T08:23:15Z",
+          "updatedAt": "2026-07-02T08:23:15Z"
+        },
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I don't think what you're trying to do here is actually possible. When you try to create a commit with an AppEphemeral proposal in the way you describe you run into a circular dependency: To export the keys from the next epoch, you must have merged the commit and fed it into the transcript. But then you can't change proposals anymore. Am I missing something?",
+          "createdAt": "2026-07-02T12:15:38Z",
+          "updatedAt": "2026-07-02T12:15:38Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "That is a good point, I don't think you are missing anything. This is a proper circular dependency.\n\nWith that out of the way, I think this draft does not introduce anything new and therefore no particular clarification is needed. It's simply true for any MLS group that whoever is part of an epoch can decrypt anything that was encrypted using keys from that specific epoch. In other words, there is no intra-epoch PCS. You need a Commit for that.\n\nNow, if you really want some specific clarifications, please file a PR. It would be good to have agreement on the PR before the I-D cutoff next Monday so that we can advance the draft.",
+          "createdAt": "2026-07-03T15:05:22Z",
+          "updatedAt": "2026-07-03T15:05:22Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I'm not convinced this is a necessarily a circular dependency. As a\r\npotential committer, I calculate the new tentative future epoch's epoch\r\nsecret from the init_secret and commit_secret, then derive whatever I\r\nsecret I need to sign or encrypt the new data in the AppEphemeral\r\nProposals. If my commit is not accepted I transition to using the new\r\nepoch's secrets. If not, I rollback and delete the tentative commit I was\r\nbuilding.\r\n\r\nIt is very deep inside the MLS stack and its secrets, but I don't think it\r\nis impossible.\r\nthanks,\r\n-rohan\r\n\r\nOn Fri, 3 Jul 2026, 17:05 raphaelrobert, ***@***.***> wrote:\r\n\r\n> *raphaelrobert* left a comment (mlswg/mls-extensions#98)\r\n> <https://github.com/mlswg/mls-extensions/issues/98#issuecomment-4877516372>\r\n>\r\n> That is a good point, I don't think you are missing anything. This is a\r\n> proper circular dependency.\r\n>\r\n> With that out of the way, I think this draft does not introduce anything\r\n> new and therefore no particular clarification is needed. It's simply true\r\n> for any MLS group that whoever is part of an epoch can decrypt anything\r\n> that was encrypted using keys from that specific epoch. In other words,\r\n> there is no intra-epoch PCS. You need a Commit for that.\r\n>\r\n> Now, if you really want some specific clarifications, please file a PR. It\r\n> would be good to have agreement on the PR before the I-D cutoff next Monday\r\n> so that we can advance the draft.\r\n>\r\n> \u2014\r\n> Reply to this email directly, view it on GitHub\r\n> <https://github.com/mlswg/mls-extensions/issues/98?email_source=notifications&email_token=AADSQPWVNJ6M7U7VR2UM4K35C7DUVA5CNFSNUABFM5UWIORPF5TWS5BNNB2WEL2JONZXKZKDN5WW2ZLOOQXTIOBXG42TCNRTG4ZKM4TFMFZW63VHMNXW23LFNZ2KKZLWMVXHJLDGN5XXIZLSL5RWY2LDNM#issuecomment-4877516372>,\r\n> or unsubscribe\r\n> <https://github.com/notifications/unsubscribe-auth/AADSQPXGOUQJTUMEFENH6GL5C7DUVAVCNFSNUABFKJSXA33TNF2G64TZHM2DSNRWGM2DAOBUHNEXG43VMU5TINRWGYYTKMBRGIZ2C5QC>\r\n> .\r\n> Triage notifications, keep track of coding agent tasks and review pull\r\n> requests on the go with GitHub Mobile for iOS\r\n> <https://github.com/notifications/mobile/ios/AADSQPRNWMZJPV5N3MAOVE35C7DUVA5CNFSNUABFM5UWIORPF5TWS5BNNB2WEL2JONZXKZKDN5WW2ZLOOQXTIOBXG42TCNRTG4ZKM4TFMFZW63VHMNXW23LFNZ2KKZLWMVXHJKTGN5XXIZLSL5UW64Y>\r\n> and Android\r\n> <https://github.com/notifications/mobile/android/AADSQPRIKXJ3LSZBJXXYOZ35C7DUVA5CNFSNUABFM5UWIORPF5TWS5BNNB2WEL2JONZXKZKDN5WW2ZLOOQXTIOBXG42TCNRTG4ZKM4TFMFZW63VHMNXW23LFNZ2KKZLWMVXHJLTGN5XXIZLSL5QW4ZDSN5UWI>.\r\n> Download it today!\r\n> You are receiving this because you commented.Message ID:\r\n> ***@***.***>\r\n>\r\n",
+          "createdAt": "2026-07-03T16:59:42Z",
+          "updatedAt": "2026-07-03T16:59:42Z"
+        },
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "It's a circular dependency if you want to use any of the existing exporter mechanisms. But I agree, if you're willing to introduce a custom export mechanism from commit + init secret it's possible. That key won't cover the extensions, tree or transcript hash of the new epoch, though.",
+          "createdAt": "2026-07-04T08:14:41Z",
+          "updatedAt": "2026-07-04T08:14:41Z"
         }
       ]
     }
