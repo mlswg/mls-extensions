@@ -1406,6 +1406,13 @@ draft-10
   `media_type.type` is zero length.
 - unsafe AAD is no longer allowed when the `safe_aad` component is present in
   the GroupContext
+- rename "Safe Application API" to "Safe Application Interface"
+- fix IANA registry names ("MLS Component Types", "MLS Extension Types") and
+  restore missing registry section headers
+- correct stale field and struct names in prose (`component_data`,
+  `app_data_dictionary`, `authenticated_data`, `required_wire_formats`)
+- reclassify last-resort KeyPackages as a KeyPackage component and fix various
+  inconsistencies and typos
 
 draft-09
 
