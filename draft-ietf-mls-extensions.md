@@ -1394,23 +1394,23 @@ draft-10
   Proposals
 - be more pedantic when discussing that a proposal in required_capabilities
   implies all clients support it but not vice versa.
-- correct location of GREASE values for advertising `safe_add` and
-  `app_components` in LeafNodes; only allow GREASE in GI, LN, and KP.
-- the `app_components` component is now mandatory to implement if
-  `app_data_dictionary` is supported.
-- the `safe_add` component is now mandatory to understand if
-  `app_data_dictionary` is supported.
-- rename `MediaType.media_type` to `MediaType.type`, and
-  `MediaTypeList.media_types` to `MediaTypeList.media_type_list`
+- correct location of GREASE values for advertising safe_add and
+  app_components in LeafNodes; only allow GREASE in GI, LN, and KP.
+- the app_components component is now mandatory to implement if
+  app_data_dictionary is supported.
+- the safe_add component is now mandatory to understand if
+  app_data_dictionary is supported.
+- rename MediaType.media_type to MediaType.type, and
+  MediaTypeList.media_types to MediaTypeList.media_type_list
 - clarify the behavior of an "empty" media type in application framing: if
-  `media_type.type` is zero length.
-- unsafe AAD is no longer allowed when the `safe_aad` component is present in
+  media_type.type is zero length.
+- unsafe AAD is no longer allowed when the safe_aad component is present in
   the GroupContext
 - rename "Safe Application API" to "Safe Application Interface"
 - fix IANA registry names ("MLS Component Types", "MLS Extension Types") and
   restore missing registry section headers
-- correct stale field and struct names in prose (`component_data`,
-  `app_data_dictionary`, `authenticated_data`, `required_wire_formats`)
+- correct stale field and struct names in prose (component_data,
+  app_data_dictionary, authenticated_data, required_wire_formats)
 - reclassify last-resort KeyPackages as a KeyPackage component and fix various
   inconsistencies and typos
 
