@@ -1,4 +1,4 @@
 # License
 
 See the
-[guidelines for contributions](https://github.com/mlswg/mls-extensions/CONTRIBUTING.md).
+[guidelines for contributions](https://github.com/mlswg/mls-extensions/blob/main/CONTRIBUTING.md).
