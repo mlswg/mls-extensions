@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-07-05T01:50:05.030606+00:00",
+  "timestamp": "2026-07-07T01:52:38.318209+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -1525,15 +1525,15 @@
       "id": "I_kwDOHZoI5M8AAAABFh_M6w",
       "title": "Required processing order seems to be unnecessarily restrictive",
       "url": "https://github.com/mlswg/mls-extensions/issues/98",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "keks",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "The draft says\n\nhttps://github.com/mlswg/mls-extensions/blob/bdac8a615da7fc95fe916eb09af584f10395c56b/draft-ietf-mls-extensions.md?plain=1#L469-L471\n\nand\n\nhttps://github.com/mlswg/mls-extensions/blob/bdac8a615da7fc95fe916eb09af584f10395c56b/draft-ietf-mls-extensions.md?plain=1#L565-L566\n\nBut why?\n\nFor context: We are exploring a scenario where Add and Update proposals have to be accompanied with an encrypted certificate that attests to the LeafNode in the proposals. The encryption key is derived from the next epoch's exporter. This means we tentatively process the commit, export, decrypt, and only then decide whether the Add and Update proposals are really valid. The idea here is that the credentials are anonymous/pseudonymous, and the certificates establish a binding to the user identity. We do not want to disclose that binding to members being removed in the same epoch. \n\nWe think this is a valid approach, but recently noticed that it does not work with the proposed processing order. However, we were not able to find a good reason for why that order is required. Is there one? If not, can we remove the requirement?",
       "createdAt": "2026-06-15T14:46:40Z",
-      "updatedAt": "2026-07-04T08:14:41Z",
-      "closedAt": null,
+      "updatedAt": "2026-07-06T14:01:04Z",
+      "closedAt": "2026-07-06T14:01:04Z",
       "comments": [
         {
           "author": "rohanmahy",
@@ -1583,6 +1583,27 @@
           "body": "It's a circular dependency if you want to use any of the existing exporter mechanisms. But I agree, if you're willing to introduce a custom export mechanism from commit + init secret it's possible. That key won't cover the extensions, tree or transcript hash of the new epoch, though.",
           "createdAt": "2026-07-04T08:14:41Z",
           "updatedAt": "2026-07-04T08:14:41Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "Sure, if you are willing to use an entirely new construction, this becomes possible. So far, however, we discussed encrypting proposals with key material from the next epoch, and that includes using existing mechanisms. Moreover, MLS guarantees agreement on the transcript per epoch, so this new key material would not be from the new epoch, it would be something from in between epochs with weaker security guarantees.\n\nSince introducing such a new mechanism is out of scope during the last call, and using existing mechanisms leads to a circular dependency, there is no good reason to relax the ordering requirements.",
+          "createdAt": "2026-07-06T09:39:38Z",
+          "updatedAt": "2026-07-06T09:39:38Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "COLLABORATOR",
+          "body": "yeah, agreed we should not change the ordering. my objection was just about\r\nsaying something is \"impossible\", but that doesn't mean we need to address\r\nit in this draft.\r\n\r\nOn Mon, 6 Jul 2026, 11:40 raphaelrobert, ***@***.***> wrote:\r\n\r\n> *raphaelrobert* left a comment (mlswg/mls-extensions#98)\r\n> <https://github.com/mlswg/mls-extensions/issues/98#issuecomment-4891304037>\r\n>\r\n> Sure, if you are willing to use an entirely new construction, this becomes\r\n> possible. So far, however, we discussed encrypting proposals with key\r\n> material from the next epoch, and that includes using existing mechanisms.\r\n> Moreover, MLS guarantees agreement on the transcript per epoch, so this new\r\n> key material would not be from the new epoch, it would be something from in\r\n> between epochs with weaker security guarantees.\r\n>\r\n> Since introducing such a new mechanism is out of scope during the last\r\n> call, and using existing mechanisms leads to a circular dependency, there\r\n> is no good reason to relax the ordering requirements.\r\n>\r\n> \u2014\r\n> Reply to this email directly, view it on GitHub\r\n> <https://github.com/mlswg/mls-extensions/issues/98?email_source=notifications&email_token=AADSQPQNVC2I67DBPZ3BPL35DNXXBA5CNFSNUABFM5UWIORPF5TWS5BNNB2WEL2JONZXKZKDN5WW2ZLOOQXTIOBZGEZTANBQGM32M4TFMFZW63VHMNXW23LFNZ2KKZLWMVXHJLDGN5XXIZLSL5RWY2LDNM#issuecomment-4891304037>,\r\n> or unsubscribe\r\n> <https://github.com/notifications/unsubscribe-auth/AADSQPX664MBDGZ76BV6KT35DNXXBAVCNFSNUABFKJSXA33TNF2G64TZHM2DSNRWGM2DAOBUHNEXG43VMU5TINRWGYYTKMBRGIZ2C5QC>\r\n> .\r\n> Triage notifications, keep track of coding agent tasks and review pull\r\n> requests on the go with GitHub Mobile for iOS\r\n> <https://github.com/notifications/mobile/ios/AADSQPS7R7ZZA5GJWIUJTQD5DNXXBA5CNFSNUABFM5UWIORPF5TWS5BNNB2WEL2JONZXKZKDN5WW2ZLOOQXTIOBZGEZTANBQGM32M4TFMFZW63VHMNXW23LFNZ2KKZLWMVXHJKTGN5XXIZLSL5UW64Y>\r\n> and Android\r\n> <https://github.com/notifications/mobile/android/AADSQPRIDCP6AK2IKCZUUZL5DNXXBA5CNFSNUABFM5UWIORPF5TWS5BNNB2WEL2JONZXKZKDN5WW2ZLOOQXTIOBZGEZTANBQGM32M4TFMFZW63VHMNXW23LFNZ2KKZLWMVXHJLTGN5XXIZLSL5QW4ZDSN5UWI>.\r\n> Download it today!\r\n> You are receiving this because you commented.Message ID:\r\n> ***@***.***>\r\n>\r\n",
+          "createdAt": "2026-07-06T09:54:27Z",
+          "updatedAt": "2026-07-06T09:54:27Z"
+        },
+        {
+          "author": "keks",
+          "authorAssociation": "NONE",
+          "body": "Thank you all for the discussion. I don't think there is a true circular dependency here. The idea of having a \"lookahead\" into the next epoch that merging a commit would lead to does not seem outlandish to me, but I do see that the sequencing in [Section 12.4.2] do forbid doing that as part of proposal validation. That sequencing also explains the order in this draft.\n\n[Section 12.4.2]: https://www.rfc-editor.org/rfc/rfc9420.html#section-12.4.2",
+          "createdAt": "2026-07-06T14:01:04Z",
+          "updatedAt": "2026-07-06T14:01:04Z"
         }
       ]
     }
@@ -6524,6 +6545,62 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 100,
+      "id": "PR_kwDOHZoI5M7uZs4p",
+      "title": "extend changelog with latest changes",
+      "url": "https://github.com/mlswg/mls-extensions/pull/100",
+      "state": "MERGED",
+      "author": "raphaelrobert",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-07-06T14:49:20Z",
+      "updatedAt": "2026-07-06T14:52:02Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "589d7f97c34c8e03b93060a29228aa87be349f18",
+      "headRepository": "mlswg/mls-extensions",
+      "headRefName": "amend-changelego",
+      "headRefOid": "08d6764887f9d2f5c60262af41d7dbb2a87892ee",
+      "closedAt": "2026-07-06T14:52:02Z",
+      "mergedAt": "2026-07-06T14:52:02Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "1348221780ce43cae6d1a42828b7cd09a9b90065"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 101,
+      "id": "PR_kwDOHZoI5M7uaXPp",
+      "title": "remove circleci",
+      "url": "https://github.com/mlswg/mls-extensions/pull/101",
+      "state": "MERGED",
+      "author": "raphaelrobert",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-07-06T15:12:49Z",
+      "updatedAt": "2026-07-06T15:13:39Z",
+      "baseRepository": "mlswg/mls-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "66123a53e9321f7d7c6eec101d4add59e20babd9",
+      "headRepository": "mlswg/mls-extensions",
+      "headRefName": "remove-circleci",
+      "headRefOid": "5f3f9e411df873b19b33fbe50ff8e9c09ec710b8",
+      "closedAt": "2026-07-06T15:13:39Z",
+      "mergedAt": "2026-07-06T15:13:39Z",
+      "mergedBy": "raphaelrobert",
+      "mergeCommit": {
+        "oid": "d982f51e97daefe7648f4692cf690b06e7953100"
+      },
+      "comments": [],
+      "reviews": []
     }
   ]
 }
