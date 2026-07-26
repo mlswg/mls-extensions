@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-07-07T01:52:38.318209+00:00",
+  "timestamp": "2026-07-26T01:28:21.121765+00:00",
   "repo": "mlswg/mls-extensions",
   "labels": [
     {
@@ -1606,6 +1606,54 @@
           "updatedAt": "2026-07-06T14:01:04Z"
         }
       ]
+    },
+    {
+      "number": 102,
+      "id": "I_kwDOHZoI5M8AAAABKClfWA",
+      "title": "Component negotiation via app_components is neither enforced nor tied to component state in the group",
+      "url": "https://github.com/mlswg/mls-extensions/issues/102",
+      "state": "OPEN",
+      "author": "kkohbrok",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Section 5 defines the negotiation semantics for components in a single\nsentence:\n\n> When present in a LeafNode, the semantics are the list of supported\n> components. When present in the GroupContext, the semantics are the\n> list of required components.\n\nUnlike `required_capabilities`, which RFC 9420 backs with validation\nrules, nothing connects these lists to group membership or to the\ncomponent state the group actually carries.\n\n**No enforcement of support.** There is no rule that:\n\n- a commit is invalid if it introduces a LeafNode (via Add, Update, or\n  the committer's UpdatePath) whose `app_components` does not cover the\n  GroupContext's `app_components`. RFC 9420 enforces the analogous\n  property for required_capabilities through leaf validation, which\n  applies to every LeafNode regardless of how it enters the tree, so an\n  existing member also cannot update its leaf to drop support for a\n  required capability. Components have no equivalent.\n- a client checks the GroupContext's `app_components` before joining.\n- an update to the GroupContext's `app_components` is invalid if it\n  requires a component that current members do not support. RFC 9420\n  again has the analogous rule (Section 11.1): \"a GroupContextExtensions\n  proposal is deemed invalid if it contains a required_capabilities\n  extension that requires non-default capabilities not supported by all\n  current members.\"\n\n**No link between the required list and component state.** Any member\ncan send an AppDataUpdate proposal for a component_id that is not listed\nin the GroupContext's `app_components`, so the group can carry state for\ncomponents the required list does not mention. Because of the two\nproperties above, every component with an entry in the GroupContext's\n`app_data_dictionary` is effectively required, whether listed or not:\nthe first AppDataUpdate touching it forks any member that does not\nsupport it. The required list is also the only artifact a joining or\nadded client could consult to determine whether it can participate, and\nit is not guaranteed to be accurate.\n\nSuggested resolution:\n\n- Extend leaf validation: a LeafNode is invalid in a group whose\n  GroupContext `app_components` (see next point) is not covered by the\n  LeafNode's advertised `app_components`, applied wherever RFC 9420\n  applies leaf validation. Correspondingly, a client MUST NOT join a\n  group that requires a component it does not support, and an\n  AppDataUpdate that adds a component_id to the GroupContext's\n  `app_components` is invalid if a current member does not advertise\n  support for it.\n- Tie state to the list: a commit is invalid if, in the group state\n  resulting from it, the `app_data_dictionary` contains an entry for a\n  component_id (other than the built-in components of this document)\n  that is not listed in `app_components`. Judging against the resulting\n  state allows activating and using a component in one commit without an\n  ordering rule.",
+      "createdAt": "2026-07-24T13:15:00Z",
+      "updatedAt": "2026-07-24T13:15:00Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 103,
+      "id": "I_kwDOHZoI5M8AAAABKCnBjA",
+      "title": "Update semantics of app_components (and the other built-in components) are undefined",
+      "url": "https://github.com/mlswg/mls-extensions/issues/103",
+      "state": "OPEN",
+      "author": "kkohbrok",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "`app_components`, `safe_aad`, and `content_media_types` are defined as\ncomponents, so their GroupContext data is presumably updated via\nAppDataUpdate proposals targeting their component IDs. The document\nnever says so, and it defines no update payload format or validity\nrules for them. Open questions for `app_components` in particular:\n\n- What does the `update` field contain: a full replacement\n  ComponentsList, or a delta (add/remove component IDs)?\n- Who may require or un-require a component, and is removing a\n  component ID from the required list valid while state for that\n  component exists in the app_data_dictionary?\n- What happens to existing members when a newly required component is\n  added (see also the missing enforcement rules, filed separately)?\n\nSuggested resolution: define the update payload and processing rules for\nthe built-in components in Section 5, the same way Section 4.7 defines\nthe generic processing model.",
+      "createdAt": "2026-07-24T13:17:49Z",
+      "updatedAt": "2026-07-24T13:17:49Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 104,
+      "id": "I_kwDOHZoI5M8AAAABKCo2tA",
+      "title": "GroupContextExtensions protection for app_data_dictionary is conditional and the fallback interaction is undefined",
+      "url": "https://github.com/mlswg/mls-extensions/issues/104",
+      "state": "OPEN",
+      "author": "kkohbrok",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Section 4.7 protects component state only conditionally:\n\n> When an MLS group contains the AppDataUpdate proposal type in the\n> proposal_types list in the group's required_capabilities extension, a\n> GroupContextExtensions proposal MUST NOT add, remove, or modify the\n> app_data_dictionary GroupContext extension.\n\nIn a group that does not list `app_data_update` in\n`required_capabilities`, both mechanisms can modify the extension, and\ntheir interaction is undefined. A GroupContextExtensions proposal\nreplaces the extension wholesale, so it can rewrite or drop the state of\ncomponents whose logic never sees the change. Members that maintain\nlocal state derived from component data (which is the normal case, since\ncomponent data is computed by application logic) have no defined way to\nprocess such a rewrite, and it is unclear whether component-specific\nvalidity rules apply to it.\n\nSuggested resolution: either make the restriction unconditional for any\ngroup that contains an app_data_dictionary extension in its\nGroupContext.",
+      "createdAt": "2026-07-24T13:21:35Z",
+      "updatedAt": "2026-07-24T13:21:35Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
