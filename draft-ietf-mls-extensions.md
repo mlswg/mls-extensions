@@ -413,11 +413,10 @@ The entries in the `component_data` MUST be sorted by `component_id`, and there
 MUST be at most one entry for each `component_id`.
 
 An `app_data_dictionary` extension in a LeafNode, KeyPackage, or GroupInfo can
-be set when the object is created. An `app_data_dictionary` extension in the
-GroupContext needs to be managed using the tools available to update
-GroupContext extensions. The creator of the group can set extensions
-unilaterally. Thereafter, the AppDataUpdate proposal described in the next
-section is used to update the `app_data_dictionary` extension.
+be set when the object is created. The creator of the group can set an
+`app_data_dictionary` extension in the GroupContext unilaterally. Thereafter,
+the AppDataUpdate proposal described in the next section is the only way to
+change it. A GroupContextExtensions proposal leaves it as it is.
 
 Every implementation that advertises support for the `app_data_dictionary`
 extension MUST understand and advertise the `app_components` component defined
@@ -470,14 +469,21 @@ AppDataUpdate proposals are processed after any default proposals (i.e., those
 defined in {{RFC9420}}), and any AppEphemeral proposals (defined in
 {{app-ephemeral}}).
 
-When an MLS group contains the AppDataUpdate proposal type in the
-`proposal_types` list in the group's `required_capabilities` extension, a
-GroupContextExtensions proposal MUST NOT add, remove, or modify the
-`app_data_dictionary` GroupContext extension. In other words, when AppDataUpdate
-is in `proposal_types`, every member of the group supports the AppDataUpdate
-proposal, and a GroupContextExtensions proposal could be sent to update some
-other extension(s), but the `app_data_dictionary` GroupContext extension, if it
-exists, is left as it was.
+A GroupContextExtensions proposal MUST NOT add, remove, or modify the
+`app_data_dictionary` GroupContext extension, whether or not the AppDataUpdate
+proposal type is listed in the `proposal_types` list of the group's
+`required_capabilities` extension. A GroupContextExtensions proposal replaces
+the whole `extensions` list of the GroupContext
+({{Section 12.1.7 of RFC9420}}), so it carries the `app_data_dictionary`
+extension of the GroupContext of the current epoch unchanged, or omits it if
+that GroupContext has none. A GroupContextExtensions proposal is invalid if its
+`app_data_dictionary` extension is not identical to the one in the GroupContext
+of the current epoch, or if only one of the two has such an extension. This
+way, every change to the state of a component goes through the AppDataUpdate
+processing described below. Changing the `app_data_dictionary` extension after
+creation therefore requires that every member that processes the Commit
+supports the AppDataUpdate proposal, except members added or removed by that
+Commit ({{Section 12.2 of RFC9420}}).
 
 A commit can contain a GroupContextExtensions proposal which modifies
 GroupContext extensions other than `app_data_dictionary`, and can be followed by
