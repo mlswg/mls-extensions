@@ -483,9 +483,7 @@ A commit can contain a GroupContextExtensions proposal which modifies
 GroupContext extensions other than `app_data_dictionary`, and
 zero or more AppDataUpdate proposals. This allows modifications to both the
 `app_data_dictionary` extension (via AppDataUpdate) and other extensions (via
-GroupContextExtensions) in the same Commit. The position of these proposals in
-the Commit does not matter, except for the relative order of AppDataUpdate
-proposals with the same `component_id`, described below.
+GroupContextExtensions) in the same Commit.
 
 A client applies AppDataUpdate proposals by component ID. For each
 `component_id` field that appears in an AppDataUpdate proposal in the Commit,
