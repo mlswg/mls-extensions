@@ -14,7 +14,7 @@ document provides a consolidated application API, guidance for how the
 protocol's extension points should be used, and a few concrete examples of both
 core protocol extensions and uses of the application API. 
     " name="description">
-<meta content="xml2rfc 3.34.0" name="generator">
+<meta content="xml2rfc 3.34.1" name="generator">
 <meta content="messaging layer security" name="keyword">
 <meta content="end-to-end encryption" name="keyword">
 <meta content="application api" name="keyword">
@@ -22,19 +22,19 @@ core protocol extensions and uses of the application API.
 <meta content="extensibility" name="keyword">
 <meta content="draft-ietf-mls-extensions-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.34.0
-    Python 3.14.5
-    ConfigArgParse 1.7.5
+  xml2rfc 3.34.1
+    Python 3.14.8
+    ConfigArgParse 1.8.0
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.6
     lxml 6.1.1
     natsort 8.4.0
-    platformdirs 4.10.0
+    platformdirs 4.13.4
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.33.1
-    wcwidth 0.8.2
+    wcwidth 0.9.2
 -->
 <link href="draft-ietf-mls-extensions.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -70,7 +70,6 @@ core protocol extensions and uses of the application API.
   src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin-ext.woff2') format('woff2');
   unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
-
 @font-face {
   font-family: 'Lora';
   font-style: italic;
@@ -119,7 +118,6 @@ core protocol extensions and uses of the application API.
   src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
-
 @font-face {
   font-family: 'Lora';
   font-style: normal;
@@ -184,7 +182,6 @@ core protocol extensions and uses of the application API.
   font-display: swap;
   src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
 }
 
 @font-face {
@@ -1053,11 +1050,11 @@ svg {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">MLS</td>
-<td class="right">July 2026</td>
+<td class="right">October 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Robert</td>
-<td class="center">Expires 7 January 2027</td>
+<td class="center">Expires 4 May 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1070,12 +1067,12 @@ svg {
 <dd class="internet-draft">draft-ietf-mls-extensions-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-07-06" class="published">6 July 2026</time>
+<time datetime="2026-10-31" class="published">31 October 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-01-07">7 January 2027</time></dd>
+<dd class="expires"><time datetime="2027-05-04">4 May 2027</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1130,7 +1127,7 @@ core protocol extensions and uses of the application API.<a href="#section-abstr
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 7 January 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 4 May 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -2064,7 +2061,7 @@ supported components that use Safe AAD. When present (in an
 of required Safe AAD components (those that must be understood by the entire
 group). If the <code>safe_aad</code> component is present, even with an empty list, (in the
 <code>app_data_dictionary</code> extension) in the GroupContext, then the
-<code>authenticated_data</code> field always starts with the SafeAAD struct defined in
+<code>authenticated_data</code> field is a SafeAAD struct as defined in
 <a href="#safe-aad" class="auto internal xref">Section 4.9</a>.<a href="#section-5-10" class="pilcrow">¶</a></p>
 <div class="lang-tls-presentation sourcecode" id="section-5-11">
 <pre>
@@ -2228,7 +2225,7 @@ type and subtype) and any of its parameters. Even if the <code>parameter_value</
 have required formatting as a <code>quoted-string</code> in a text encoding, only the
 contents inside the <code>quoted-string</code> are included in <code>parameter_value</code>. Likewise,
 only the second character of a <code>quoted-pair</code> is included in <code>parameter_value</code>;
-the first escaping backslash ("") is omitted. MediaTypeList is an ordered list
+the first escaping backslash (<code>\</code>) is omitted. MediaTypeList is an ordered list
 of MediaType objects.<a href="#section-6.2.2-1" class="pilcrow">¶</a></p>
 <div class="lang-tls sourcecode" id="section-6.2.2-2">
 <pre>
