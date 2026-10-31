@@ -678,7 +678,7 @@ supported components that use Safe AAD. When present (in an
 of required Safe AAD components (those that must be understood by the entire
 group). If the `safe_aad` component is present, even with an empty list, (in the
 `app_data_dictionary` extension) in the GroupContext, then the
-`authenticated_data` field always starts with the SafeAAD struct defined in
+`authenticated_data` field is a SafeAAD struct as defined in
 {{safe-aad}}.
 
 ~~~ tls-presentation
@@ -808,7 +808,7 @@ type and subtype) and any of its parameters. Even if the `parameter_value` would
 have required formatting as a `quoted-string` in a text encoding, only the
 contents inside the `quoted-string` are included in `parameter_value`. Likewise,
 only the second character of a `quoted-pair` is included in `parameter_value`;
-the first escaping backslash ("\") is omitted. MediaTypeList is an ordered list
+the first escaping backslash (`\`) is omitted. MediaTypeList is an ordered list
 of MediaType objects.
 
 ~~~ tls
