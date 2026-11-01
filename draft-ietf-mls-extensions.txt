@@ -4,8 +4,8 @@
 
 Messaging Layer Security                                       R. Robert
 Internet-Draft                                               Phoenix R&D
-Intended status: Standards Track                         31 October 2026
-Expires: 4 May 2027
+Intended status: Standards Track                         1 November 2026
+Expires: 5 May 2027
 
 
              The Messaging Layer Security (MLS) Extensions
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 4 May 2027.
+   This Internet-Draft will expire on 5 May 2027.
 
 Copyright Notice
 
@@ -561,11 +561,10 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    it was.
 
    A commit can contain a GroupContextExtensions proposal which modifies
-   GroupContext extensions other than app_data_dictionary, and can be
-   followed by zero or more AppDataUpdate proposals.  This allows
-   modifications to both the app_data_dictionary extension (via
-   AppDataUpdate) and other extensions (via GroupContextExtensions) in
-   the same Commit.
+   GroupContext extensions other than app_data_dictionary, and zero or
+   more AppDataUpdate proposals.  This allows modifications to both the
+   app_data_dictionary extension (via AppDataUpdate) and other
+   extensions (via GroupContextExtensions) in the same Commit.
 
    A client applies AppDataUpdate proposals by component ID.  For each
    component_id field that appears in an AppDataUpdate proposal in the
