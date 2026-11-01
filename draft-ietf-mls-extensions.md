@@ -707,6 +707,14 @@ the `app_data_dictionary` extension (see {{app-data}}), so they are not listed,
 and an entry for either of them in a list is ignored. A component that uses
 Safe AAD is listed in both `app_components` and `safe_aad`.
 
+A LeafNode is invalid if its `app_data_dictionary` extension contains an entry
+for a component other than `app_components` and `safe_aad` that is not listed
+in its `app_components` component, just as it is invalid if it contains a
+non-default extension that its `capabilities` field does not list
+({{Section 7.3 of RFC9420}}). This check is part of LeafNode validation, so it
+applies wherever a LeafNode is validated, including the LeafNode in a
+KeyPackage.
+
 The required components in the GroupContext are enforced in the same way as the
 `required_capabilities` extension ({{Section 11.1 of RFC9420}}):
 
@@ -758,7 +766,10 @@ components can be included:
 
 Unknown values (including GREASE values) in any of these fields MUST be ignored
 by receivers. A random selection of GREASE values SHOULD be included in any of
-these fields that would otherwise be present.
+these fields that would otherwise be present. Ignoring an unknown component
+does not skip the LeafNode check in {{negotiation}}. A GREASE entry in a
+LeafNode's `app_data_dictionary` extension is therefore listed in the
+LeafNode's `app_components` as well.
 
 
 # Extensions
@@ -889,8 +900,9 @@ be `text/plain`, `media_type.parameters` would contain a single Parameter with a
 An MLS client which implements this section SHOULD include the
 `content_media_types` component (in the `app_data_dictionary` extension) in its
 LeafNodes, with a `media_type_list` vector listing all the media types it can
-receive. As usual, the client also includes `content_media_types` in the
-`app_components` list (in the `app_data_dictionary` extension), and support for
+receive. As {{negotiation}} requires, the client also includes
+`content_media_types` in the `app_components` list (in the `app_data_dictionary`
+extension), and support for
 the `app_data_dictionary` extension in its `capabilities.extensions` field in
 its LeafNodes (including in LeafNodes inside its KeyPackages).
 
