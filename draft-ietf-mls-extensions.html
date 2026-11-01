@@ -1733,7 +1733,7 @@ struct {
 </div>
 </section>
 </div>
-<div id="attaching-application-data-to-mls-messages">
+<div id="app-data">
 <section id="section-4.6">
         <h3 id="name-attaching-application-data-">
 <a href="#section-4.6" class="section-number selfRef">4.6. </a><a href="#name-attaching-application-data-" class="section-name selfRef">Attaching Application Data to MLS Messages</a>
@@ -1780,9 +1780,8 @@ GroupContext extensions. The creator of the group can set extensions
 unilaterally. Thereafter, the AppDataUpdate proposal described in the next
 section is used to update the <code>app_data_dictionary</code> extension.<a href="#section-4.6-6" class="pilcrow">¶</a></p>
 <p id="section-4.6-7">Every implementation that advertises support for the <code>app_data_dictionary</code>
-extension <span class="bcp14">MUST</span> understand and advertise the <code>app_components</code> component defined
-in <a href="#negotiation" class="auto internal xref">Section 5</a>, and it <span class="bcp14">MUST</span> understand the <code>safe_aad</code> component defined in
-<a href="#safe-aad" class="auto internal xref">Section 4.9</a>.<a href="#section-4.6-7" class="pilcrow">¶</a></p>
+extension <span class="bcp14">MUST</span> understand the <code>app_components</code> component defined in
+<a href="#negotiation" class="auto internal xref">Section 5</a> and the <code>safe_aad</code> component defined in <a href="#safe-aad" class="auto internal xref">Section 4.9</a>.<a href="#section-4.6-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="appdataupdate">
@@ -1827,7 +1826,9 @@ invalid if it includes multiple AppDataUpdate proposals that <code>remove</code>
 the same <code>component_id</code>, or proposals that both <code>update</code> and <code>remove</code> state for
 the same <code>component_id</code>. In other words, for a given <code>component_id</code>, a proposal
 list is valid only if it contains (a) a single <code>remove</code> operation or (b) one or
-more <code>update</code> operations.<a href="#section-4.7-4" class="pilcrow">¶</a></p>
+more <code>update</code> operations. The rules in <a href="#negotiation" class="auto internal xref">Section 5</a> further restrict which
+components the <code>app_data_dictionary</code> extension in the GroupContext can carry
+state for, and which components it can require.<a href="#section-4.7-4" class="pilcrow">¶</a></p>
 <p id="section-4.7-5">AppDataUpdate proposals are processed after any default proposals (i.e., those
 defined in <span>[<a href="#RFC9420" class="cite xref">RFC9420</a>]</span>), and any AppEphemeral proposals (defined in
 <a href="#app-ephemeral" class="auto internal xref">Section 4.8</a>).<a href="#section-4.7-5" class="pilcrow">¶</a></p>
@@ -2081,9 +2082,47 @@ semantics are the list of required components.<a href="#section-5-12" class="pil
 ComponentsList app_components;
 </pre><a href="#section-5-13" class="pilcrow">¶</a>
 </div>
-<p id="section-5-14">Finally, the supported and required media types (formerly called MIME types) are
+<p id="section-5-14">A LeafNode that does not list a component in <code>app_components</code> is treated as not
+supporting it. A <code>safe_aad</code> or <code>app_components</code> component that is absent from a
+LeafNode is equivalent to one with an empty list. Support for the
+<code>app_components</code> and <code>safe_aad</code> components themselves is implied by support for
+the <code>app_data_dictionary</code> extension (see <a href="#app-data" class="auto internal xref">Section 4.6</a>), so they are not listed,
+and an entry for either of them in a list is ignored. A component that uses
+Safe AAD is listed in both <code>app_components</code> and <code>safe_aad</code>.<a href="#section-5-14" class="pilcrow">¶</a></p>
+<p id="section-5-15">The required components in the GroupContext are enforced in the same way as the
+<code>required_capabilities</code> extension (<span><a href="https://rfc-editor.org/rfc/rfc9420#section-11.1" class="relref">Section 11.1</a> of [<a href="#RFC9420" class="cite xref">RFC9420</a>]</span>):<a href="#section-5-15" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5-16.1">
+          <p id="section-5-16.1.1">A LeafNode in a group is invalid if the <code>app_components</code> or <code>safe_aad</code>
+component in the GroupContext lists a component that the corresponding
+component in the LeafNode does not list. This check is part of LeafNode
+validation (<span><a href="https://rfc-editor.org/rfc/rfc9420#section-7.3" class="relref">Section 7.3</a> of [<a href="#RFC9420" class="cite xref">RFC9420</a>]</span>), so it applies wherever a LeafNode is
+validated, against the GroupContext of the epoch in which the validation takes
+place. A LeafNode in a proposal or in the UpdatePath of a Commit is therefore
+checked against the GroupContext before the Commit.<a href="#section-5-16.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-5-16.2">
+          <p id="section-5-16.2.1">A client <span class="bcp14">MUST NOT</span> join a group whose GroupContext requires a component that
+the client does not support.<a href="#section-5-16.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-5-16.3">
+          <p id="section-5-16.3.1">A Commit is invalid if the GroupContext of the resulting epoch requires a
+component that a member of the resulting epoch does not list in the
+corresponding component of its LeafNode.<a href="#section-5-16.3.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-5-16.4">
+          <p id="section-5-16.4.1">A GroupContext is invalid if its <code>app_data_dictionary</code> extension contains an
+entry for a component other than <code>app_components</code> and <code>safe_aad</code> that is not
+listed in <code>app_components</code>. This applies when a group is created, to the
+GroupContext of the epoch resulting from a Commit, and to the GroupContext a
+new member receives. Because a Commit is judged by its resulting epoch, a
+single Commit can both require a component and set its state, in any order of
+proposals.<a href="#section-5-16.4.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="section-5-17">Finally, the supported and required media types (formerly called MIME types) are
 communicated in the <code>content_media_types</code> component (see
-<a href="#content-advertisement" class="auto internal xref">Section 6.2</a>).<a href="#section-5-14" class="pilcrow">¶</a></p>
+<a href="#content-advertisement" class="auto internal xref">Section 6.2</a>).<a href="#section-5-17" class="pilcrow">¶</a></p>
 <div id="grease">
 <section id="section-5.1">
         <h3 id="name-grease">
@@ -2281,7 +2320,9 @@ the <code>app_data_dictionary</code> extension in its <code>capabilities.extensi
 its LeafNodes (including in LeafNodes inside its KeyPackages).<a href="#section-6.2.3-1" class="pilcrow">¶</a></p>
 <p id="section-6.2.3-2">When creating a new MLS group for an application using this specification, the
 group <span class="bcp14">MAY</span> include a <code>content_media_types</code> component (in the
-<code>app_data_dictionary</code> extension) in the GroupContext. (The creating client also
+<code>app_data_dictionary</code> extension) in the GroupContext. In that case the
+GroupContext also lists <code>content_media_types</code> in its <code>app_components</code> component,
+as <a href="#negotiation" class="auto internal xref">Section 5</a> requires. (The creating client also
 includes its <code>content_media_types</code> component in its own LeafNode as described in
 the previous paragraph.)<a href="#section-6.2.3-2" class="pilcrow">¶</a></p>
 <p id="section-6.2.3-3">MLS clients <span class="bcp14">SHOULD NOT</span> add an MLS client to an MLS group with
