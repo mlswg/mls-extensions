@@ -710,13 +710,13 @@ Safe AAD is listed in both `app_components` and `safe_aad`.
 The required components in the GroupContext are enforced in the same way as the
 `required_capabilities` extension ({{Section 11.1 of RFC9420}}):
 
-* A LeafNode is invalid if the `app_components` or `safe_aad` component in the
-  GroupContext lists a component that the corresponding component in the
-  LeafNode does not list. This check is part of LeafNode validation
-  ({{Section 7.3 of RFC9420}}), so it applies wherever a LeafNode is validated,
-  against the GroupContext of the epoch in which the validation takes place. A
-  LeafNode in a proposal or in the UpdatePath of a Commit is therefore checked
-  against the GroupContext before the Commit.
+* A LeafNode in a group is invalid if the `app_components` or `safe_aad`
+  component in the GroupContext lists a component that the corresponding
+  component in the LeafNode does not list. This check is part of LeafNode
+  validation ({{Section 7.3 of RFC9420}}), so it applies wherever a LeafNode is
+  validated, against the GroupContext of the epoch in which the validation takes
+  place. A LeafNode in a proposal or in the UpdatePath of a Commit is therefore
+  checked against the GroupContext before the Commit.
 
 * A client MUST NOT join a group whose GroupContext requires a component that
   the client does not support.
