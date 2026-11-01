@@ -482,7 +482,7 @@ of the current epoch, or if only one of the two has such an extension. This
 way, every change to the state of a component goes through the AppDataUpdate
 processing described below. Changing the `app_data_dictionary` extension after
 creation therefore requires that every member that processes the Commit
-supports the AppDataUpdate proposal, except members added or removed by that
+supports the AppDataUpdate proposal, except members removed by that
 Commit ({{Section 12.2 of RFC9420}}).
 
 A commit can contain a GroupContextExtensions proposal which modifies
