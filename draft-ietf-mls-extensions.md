@@ -378,7 +378,7 @@ struct {
 } PreSharedKeyID;
 ~~~
 
-## Attaching Application Data to MLS Messages
+## Attaching Application Data to MLS Messages {#app-data}
 
 The MLS GroupContext, LeafNode, KeyPackage, and GroupInfo objects each have an
 `extensions` field that can carry additional data not defined by the MLS
@@ -420,9 +420,8 @@ unilaterally. Thereafter, the AppDataUpdate proposal described in the next
 section is used to update the `app_data_dictionary` extension.
 
 Every implementation that advertises support for the `app_data_dictionary`
-extension MUST understand and advertise the `app_components` component defined
-in {{negotiation}}, and it MUST understand the `safe_aad` component defined in
-{{safe-aad}}.
+extension MUST understand the `app_components` component defined in
+{{negotiation}} and the `safe_aad` component defined in {{safe-aad}}.
 
 ## Updating Application Data in the GroupContext {#appdataupdate}
 
@@ -464,7 +463,10 @@ invalid if it includes multiple AppDataUpdate proposals that `remove` state for
 the same `component_id`, or proposals that both `update` and `remove` state for
 the same `component_id`. In other words, for a given `component_id`, a proposal
 list is valid only if it contains (a) a single `remove` operation or (b) one or
-more `update` operations.
+more `update` operations. The rules in {{negotiation}} further restrict which
+components the `app_data_dictionary` extension in the GroupContext can carry
+state for, and which components it can require. The components defined in this
+document are updated as described in {{builtin-updates}}.
 
 AppDataUpdate proposals are processed after any default proposals (i.e., those
 defined in {{RFC9420}}), and any AppEphemeral proposals (defined in
@@ -698,9 +700,78 @@ semantics are the list of required components.
 ComponentsList app_components;
 ~~~
 
+A LeafNode that does not list a component in `app_components` is treated as not
+supporting it. A `safe_aad` or `app_components` component that is absent from a
+LeafNode is equivalent to one with an empty list. Support for the
+`app_components` and `safe_aad` components themselves is implied by support for
+the `app_data_dictionary` extension (see {{app-data}}), so they are not listed,
+and an entry for either of them in a list is ignored. A component that uses
+Safe AAD is listed in both `app_components` and `safe_aad`.
+
+The required components in the GroupContext are enforced in the same way as the
+`required_capabilities` extension ({{Section 11.1 of RFC9420}}):
+
+* A LeafNode is invalid if the `app_components` or `safe_aad` component in the
+  GroupContext lists a component that the corresponding component in the
+  LeafNode does not list. This check is part of LeafNode validation
+  ({{Section 7.3 of RFC9420}}), so it applies wherever a LeafNode is validated,
+  against the GroupContext of the epoch in which the validation takes place. A
+  LeafNode in a proposal or in the UpdatePath of a Commit is therefore checked
+  against the GroupContext before the Commit.
+
+* A client MUST NOT join a group whose GroupContext requires a component that
+  the client does not support.
+
+* A Commit is invalid if the GroupContext of the resulting epoch requires a
+  component that a member of the resulting epoch does not list in the
+  corresponding component of its LeafNode.
+
+* A GroupContext is invalid if its `app_data_dictionary` extension contains an
+  entry for a component other than `app_components` and `safe_aad` that is not
+  listed in `app_components`. This applies when a group is created, to the
+  GroupContext of the epoch resulting from a Commit, and to the GroupContext a
+  new member receives. Because a Commit is judged by its resulting epoch, a
+  single Commit can both require a component and set its state, in any order of
+  proposals.
+
 Finally, the supported and required media types (formerly called MIME types) are
 communicated in the `content_media_types` component (see
 {{content-advertisement}}).
+
+## Updating the Components Defined in This Document {#builtin-updates}
+
+The `app_components`, `safe_aad`, and `content_media_types` entries in the
+GroupContext are updated with AppDataUpdate proposals, following the rules in
+{{appdataupdate}}. For these components, the MLS implementation takes the place
+of the application logic:
+
+* The `update` field of an `update` proposal contains the complete new value of
+  the entry, encoded as the entry itself is: a ComponentsList for
+  `app_components` and `safe_aad`, and a MediaTypeList for
+  `content_media_types`. The proposal is invalid if the field does not decode as
+  such.
+
+* If a Commit contains several `update` proposals for one of these components,
+  the value of the last one in the Commit becomes the new entry.
+
+* A `remove` proposal deletes the entry. Once `app_components` is removed, no
+  component is required, so the GroupContext can hold no entry other than
+  `safe_aad`. Whether the `authenticated_data` field of a message is framed as
+  a SafeAAD struct ({{safe-aad}}) follows the GroupContext of the message's
+  epoch. Removing `safe_aad` therefore ends the framing for messages in the
+  resulting epoch, while the Commit that removes it is still framed. Updating
+  `safe_aad` to an empty list keeps the framing.
+
+The Commit rule and the GroupContext invariant in {{negotiation}} are judged on
+the resulting epoch, while LeafNodes in the Commit are still validated against
+the GroupContext before it. A Commit that adds a component to `app_components`
+is therefore valid only if every member of the resulting epoch supports it. If
+the resulting `app_components` no longer lists a component that has an entry in
+the `app_data_dictionary` extension, the Commit is invalid unless it also
+removes that entry. Dropping a component from `safe_aad` alone does not require
+removing its entry. The sender rules of {{appdataupdate}} apply unchanged,
+including the option for an application to restrict which senders may update a
+component.
 
 ## GREASE
 
@@ -861,7 +932,10 @@ its LeafNodes (including in LeafNodes inside its KeyPackages).
 
 When creating a new MLS group for an application using this specification, the
 group MAY include a `content_media_types` component (in the
-`app_data_dictionary` extension) in the GroupContext. (The creating client also
+`app_data_dictionary` extension) in the GroupContext. In that case the
+GroupContext also lists `content_media_types` in its `app_components` component,
+as {{negotiation}} requires. Later changes to the component use AppDataUpdate
+proposals as described in {{builtin-updates}}. (The creating client also
 includes its `content_media_types` component in its own LeafNode as described in
 the previous paragraph.)
 
