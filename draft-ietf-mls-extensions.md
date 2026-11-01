@@ -480,7 +480,7 @@ other extension(s), but the `app_data_dictionary` GroupContext extension, if it
 exists, is left as it was.
 
 A commit can contain a GroupContextExtensions proposal which modifies
-GroupContext extensions other than `app_data_dictionary`, and can be followed by
+GroupContext extensions other than `app_data_dictionary`, and
 zero or more AppDataUpdate proposals. This allows modifications to both the
 `app_data_dictionary` extension (via AppDataUpdate) and other extensions (via
 GroupContextExtensions) in the same Commit.
