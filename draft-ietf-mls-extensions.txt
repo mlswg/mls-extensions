@@ -4,8 +4,8 @@
 
 Messaging Layer Security                                       R. Robert
 Internet-Draft                                               Phoenix R&D
-Intended status: Standards Track                         1 November 2026
-Expires: 5 May 2027
+Intended status: Standards Track                         2 November 2026
+Expires: 6 May 2027
 
 
              The Messaging Layer Security (MLS) Extensions
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 5 May 2027.
+   This Internet-Draft will expire on 6 May 2027.
 
 Copyright Notice
 
@@ -796,6 +796,14 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    either of them in a list is ignored.  A component that uses Safe AAD
    is listed in both app_components and safe_aad.
 
+   A LeafNode is invalid if its app_data_dictionary extension contains
+   an entry for a component other than app_components and safe_aad that
+   is not listed in its app_components component, just as it is invalid
+   if it contains a non-default extension that its capabilities field
+   does not list (Section 7.3 of [RFC9420]).  This check is part of
+   LeafNode validation, so it applies wherever a LeafNode is validated,
+   including the LeafNode in a KeyPackage.
+
    The required components in the GroupContext are enforced in the same
    way as the required_capabilities extension (Section 11.1 of
    [RFC9420]):
@@ -856,6 +864,10 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    Unknown values (including GREASE values) in any of these fields MUST
    be ignored by receivers.  A random selection of GREASE values SHOULD
    be included in any of these fields that would otherwise be present.
+   Ignoring an unknown component does not skip the LeafNode check in
+   Section 5.  A GREASE entry in a LeafNode's app_data_dictionary
+   extension is therefore listed in the LeafNode's app_components as
+   well.
 
 6.  Extensions
 
@@ -987,8 +999,8 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    An MLS client which implements this section SHOULD include the
    content_media_types component (in the app_data_dictionary extension)
    in its LeafNodes, with a media_type_list vector listing all the media
-   types it can receive.  As usual, the client also includes
-   content_media_types in the app_components list (in the
+   types it can receive.  As Section 5 requires, the client also
+   includes content_media_types in the app_components list (in the
    app_data_dictionary extension), and support for the
    app_data_dictionary extension in its capabilities.extensions field in
    its LeafNodes (including in LeafNodes inside its KeyPackages).
