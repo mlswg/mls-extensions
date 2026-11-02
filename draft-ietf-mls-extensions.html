@@ -2276,12 +2276,12 @@ Language syntax <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span>)
 <a href="#section-6.2.2" class="section-number selfRef">6.2.2. </a><a href="#name-syntax" class="section-name selfRef">Syntax</a>
           </h4>
 <p id="section-6.2.2-1">MediaType is a TLS encoding of a single IANA media type (including top-level
-type and subtype) and any of its parameters. Even if the <code>parameter_value</code> would
-have required formatting as a <code>quoted-string</code> in a text encoding, only the
-contents inside the <code>quoted-string</code> are included in <code>parameter_value</code>. Likewise,
-only the second character of a <code>quoted-pair</code> is included in <code>parameter_value</code>;
-the first escaping backslash (<code>\</code>) is omitted. MediaTypeList is an ordered list
-of MediaType objects.<a href="#section-6.2.2-1" class="pilcrow">¶</a></p>
+type and subtype) and any of its parameters. A <code>parameter_value</code> consists of
+US-ASCII visible characters (hex 0x21 to 0x7E), space (0x20), and horizontal tab
+(0x09). Even if the <code>parameter_value</code> would have required formatting as a
+<code>quoted-string</code> or <code>quoted-pair</code> in a text encoding, only the unescaped,
+unquoted contents are included in <code>parameter_value</code>.  MediaTypeList is an
+ordered list of MediaType objects.<a href="#section-6.2.2-1" class="pilcrow">¶</a></p>
 <div class="lang-tls sourcecode" id="section-6.2.2-2">
 <pre>
 struct {
