@@ -762,17 +762,6 @@ of the application logic:
   resulting epoch, while the Commit that removes it is still framed. Updating
   `safe_aad` to an empty list keeps the framing.
 
-The Commit rule and the GroupContext invariant in {{negotiation}} are judged on
-the resulting epoch, while LeafNodes in the Commit are still validated against
-the GroupContext before it. A Commit that adds a component to `app_components`
-is therefore valid only if every member of the resulting epoch supports it. If
-the resulting `app_components` no longer lists a component that has an entry in
-the `app_data_dictionary` extension, the Commit is invalid unless it also
-removes that entry. Dropping a component from `safe_aad` alone does not require
-removing its entry. The sender rules of {{appdataupdate}} apply unchanged,
-including the option for an application to restrict which senders may update a
-component.
-
 ## GREASE
 
 The "Generate Random Extensions And Sustain Extensibility" (GREASE) approach is
