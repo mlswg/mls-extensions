@@ -463,8 +463,8 @@ the same `component_id`, or proposals that both `update` and `remove` state for
 the same `component_id`. In other words, for a given `component_id`, a proposal
 list is valid only if it contains (a) a single `remove` operation or (b) one or
 more `update` operations. The rules in {{negotiation}} further restrict which
-components the `app_data_dictionary` extension in the GroupContext can carry
-state for, and which components it can require.
+components can be included in the `app_data_dictionary` extension in the
+GroupContext.
 
 AppDataUpdate proposals are processed after any default proposals (i.e., those
 defined in {{RFC9420}}), and any AppEphemeral proposals (defined in
@@ -683,10 +683,9 @@ The `safe_aad` component contains a list of component IDs. When present (in an
 supported components that use Safe AAD. When present (in an
 `app_data_dictionary` extension) in the GroupContext, the semantics are the list
 of required Safe AAD components (those that must be understood by the entire
-group). If the `safe_aad` component is present, even with an empty list, (in the
-`app_data_dictionary` extension) in the GroupContext, then the
-`authenticated_data` field is a SafeAAD struct as defined in
-{{safe-aad}}.
+group). If the `safe_aad` component is present in the `app_data_dictionary`
+extension in the GroupContext, even with an empty list, then the
+`authenticated_data` field is a SafeAAD struct as defined in {{safe-aad}}.
 
 ~~~ tls-presentation
 struct {
@@ -705,39 +704,30 @@ semantics are the list of required components.
 ComponentsList app_components;
 ~~~
 
-A LeafNode that does not list a component in `app_components` is treated as not
-supporting it. A `safe_aad` or `app_components` component that is absent from a
-LeafNode is equivalent to one with an empty list. Support for the
-`app_components` and `safe_aad` components themselves is implied by support for
-the `app_data_dictionary` extension (see {{app-data}}), so they are not listed,
-and an entry for either of them in a list is ignored. A component that uses
-Safe AAD is listed in both `app_components` and `safe_aad`.
+Support for the default components: `app_components` and `safe_aad`, is implied
+by support for the `app_data_dictionary` extension (see {{app-data}}).
+Consequently they are not listed, and an entry for either of them in a list is
+ignored. The absence of a `safe_aad` or `app_components` component is equivalent
+to the absent component with an empty list. A LeafNode MUST list all non-default
+components in `app_components` that it supports. A Safe AAD component is present
+in the both `app_components` and `safe_aad` components of the client's LeafNode.
 
-A LeafNode is invalid if its `app_data_dictionary` extension contains an entry
-for a component other than `app_components` and `safe_aad` that is not listed
-in its `app_components` component, just as it is invalid if it contains a
-non-default extension that its `capabilities` field does not list
-({{Section 7.3 of RFC9420}}). This check is part of LeafNode validation, so it
-applies wherever a LeafNode is validated, including the LeafNode in a
+A LeafNode is invalid if its `app_data_dictionary` extension contains a
+non-default entry for a component missing from its `app_components` component.
+This check applies wherever a LeafNode is validated, including inside a
 KeyPackage.
 
 The required components in the GroupContext are enforced in the same way as the
 `required_capabilities` extension ({{Section 11.1 of RFC9420}}):
 
-* A LeafNode in a group is invalid if the `app_components` or `safe_aad`
-  component in the GroupContext lists a component that the corresponding
-  component in the LeafNode does not list. This check is part of LeafNode
-  validation ({{Section 7.3 of RFC9420}}), so it applies wherever a LeafNode is
-  validated, against the GroupContext of the epoch in which the validation takes
-  place. A LeafNode in a proposal or in the UpdatePath of a Commit is therefore
-  checked against the GroupContext before the Commit.
-
 * A client MUST NOT join a group whose GroupContext requires a component that
   the client does not support.
 
-* A Commit is invalid if the GroupContext of the resulting epoch requires a
-  component that a member of the resulting epoch does not list in the
-  corresponding component of its LeafNode.
+* A Commit or GroupInfo is invalid if the GroupContext of the resulting epoch
+  requires a component that a member of the resulting group does not list in the
+  corresponding component of its LeafNode. This includes if an `app_components`
+  or `safe_aad` component in the GroupContext lists a non-default component that
+  the corresponding component in the LeafNode does not list.
 
 * A GroupContext is invalid if its `app_data_dictionary` extension contains an
   entry for a component other than `app_components` and `safe_aad` that is not
