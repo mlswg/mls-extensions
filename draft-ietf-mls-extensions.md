@@ -1463,6 +1463,25 @@ security of the least secure of its credential bindings.
 
 RFC EDITOR PLEASE DELETE THIS SECTION.
 
+draft-11
+
+- enforce the required components in the GroupContext in the same way as the
+  `required_capabilities` extension
+- support for the `app_components` and `safe_aad` components is implied by
+  support for the `app_data_dictionary` extension, and they are no longer
+  listed in either component
+- the `app_data_dictionary` extension in a GroupContext or LeafNode can only
+  contain entries for components listed in its `app_components` component,
+  including GREASE entries
+- a GroupContextExtensions proposal can no longer change the
+  `app_data_dictionary` extension, whether or not AppDataUpdate is a required
+  proposal type
+- define how AppDataUpdate proposals update the `app_components`, `safe_aad`,
+  and `content_media_types` components
+- clarify that proposal order does not matter for GroupContextExtensions and
+  AppDataUpdate proposals in the same Commit
+- restrict the characters allowed in a media type `parameter_value`
+
 draft-10
 
 - remove AppAck ProposalType as it is now a Component conveyed in AppEphemeral
