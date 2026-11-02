@@ -856,12 +856,12 @@ Language syntax {{!RFC8446}}).
 ### Syntax
 
 MediaType is a TLS encoding of a single IANA media type (including top-level
-type and subtype) and any of its parameters. Even if the `parameter_value` would
-have required formatting as a `quoted-string` in a text encoding, only the
-contents inside the `quoted-string` are included in `parameter_value`. Likewise,
-only the second character of a `quoted-pair` is included in `parameter_value`;
-the first escaping backslash (`\`) is omitted. MediaTypeList is an ordered list
-of MediaType objects.
+type and subtype) and any of its parameters. A `parameter_value` consists of
+US-ASCII visible characters (hex 0x21 to 0x7E), space (0x20), and horizontal tab
+(0x09). Even if the `parameter_value` would have required formatting as a
+`quoted-string` or `quoted-pair` in a text encoding, only the unescaped,
+unquoted contents are included in `parameter_value`.  MediaTypeList is an
+ordered list of MediaType objects.
 
 ~~~ tls
 struct {
