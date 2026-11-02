@@ -3330,163 +3330,196 @@ security of the least secure of its credential bindings.<a href="#section-8.5-1"
 <a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-change-log" class="section-name selfRef">Change Log</a>
       </h2>
 <p id="appendix-A-1">RFC EDITOR PLEASE DELETE THIS SECTION.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
-<p id="appendix-A-2">draft-10<a href="#appendix-A-2" class="pilcrow">¶</a></p>
+<p id="appendix-A-2">draft-11<a href="#appendix-A-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="appendix-A-3.1">
-          <p id="appendix-A-3.1.1">remove AppAck ProposalType as it is now a Component conveyed in AppEphemeral
-Proposals<a href="#appendix-A-3.1.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-3.1.1">enforce the required components in the GroupContext in the same way as the
+<code>required_capabilities</code> extension<a href="#appendix-A-3.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-3.2">
-          <p id="appendix-A-3.2.1">be more pedantic when discussing that a proposal in required_capabilities
-implies all clients support it but not vice versa.<a href="#appendix-A-3.2.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-3.2.1">support for the <code>app_components</code> and <code>safe_aad</code> components is implied by
+support for the <code>app_data_dictionary</code> extension, and they are no longer
+listed in either component<a href="#appendix-A-3.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-3.3">
-          <p id="appendix-A-3.3.1">correct location of GREASE values for advertising safe_add and
-app_components in LeafNodes; only allow GREASE in GI, LN, and KP.<a href="#appendix-A-3.3.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-3.3.1">the <code>app_data_dictionary</code> extension in a GroupContext or LeafNode can only
+contain entries for components listed in its <code>app_components</code> component,
+including GREASE entries<a href="#appendix-A-3.3.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-3.4">
-          <p id="appendix-A-3.4.1">the app_components component is now mandatory to implement if
-app_data_dictionary is supported.<a href="#appendix-A-3.4.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-3.4.1">a GroupContextExtensions proposal can no longer change the
+<code>app_data_dictionary</code> extension, whether or not AppDataUpdate is a required
+proposal type<a href="#appendix-A-3.4.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-3.5">
-          <p id="appendix-A-3.5.1">the safe_add component is now mandatory to understand if
-app_data_dictionary is supported.<a href="#appendix-A-3.5.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-3.5.1">define how AppDataUpdate proposals update the <code>app_components</code>, <code>safe_aad</code>,
+and <code>content_media_types</code> components<a href="#appendix-A-3.5.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-3.6">
-          <p id="appendix-A-3.6.1">rename MediaType.media_type to MediaType.type, and
-MediaTypeList.media_types to MediaTypeList.media_type_list<a href="#appendix-A-3.6.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-3.6.1">clarify that proposal order does not matter for GroupContextExtensions and
+AppDataUpdate proposals in the same Commit<a href="#appendix-A-3.6.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-3.7">
-          <p id="appendix-A-3.7.1">clarify the behavior of an "empty" media type in application framing: if
-media_type.type is zero length.<a href="#appendix-A-3.7.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="appendix-A-3.8">
-          <p id="appendix-A-3.8.1">unsafe AAD is no longer allowed when the safe_aad component is present in
-the GroupContext<a href="#appendix-A-3.8.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="appendix-A-3.9">
-          <p id="appendix-A-3.9.1">rename "Safe Application API" to "Safe Application Interface"<a href="#appendix-A-3.9.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="appendix-A-3.10">
-          <p id="appendix-A-3.10.1">fix IANA registry names ("MLS Component Types", "MLS Extension Types") and
-restore missing registry section headers<a href="#appendix-A-3.10.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="appendix-A-3.11">
-          <p id="appendix-A-3.11.1">correct stale field and struct names in prose (component_data,
-app_data_dictionary, authenticated_data, required_wire_formats)<a href="#appendix-A-3.11.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="appendix-A-3.12">
-          <p id="appendix-A-3.12.1">reclassify last-resort KeyPackages as a KeyPackage component and fix various
-inconsistencies and typos<a href="#appendix-A-3.12.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-3.7.1">restrict the characters allowed in a media type <code>parameter_value</code><a href="#appendix-A-3.7.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="appendix-A-4">draft-09<a href="#appendix-A-4" class="pilcrow">¶</a></p>
+<p id="appendix-A-4">draft-10<a href="#appendix-A-4" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="appendix-A-5.1">
-          <p id="appendix-A-5.1.1">rename the component base label from "Application" to "MLS Component"<a href="#appendix-A-5.1.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-5.1.1">remove AppAck ProposalType as it is now a Component conveyed in AppEphemeral
+Proposals<a href="#appendix-A-5.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-5.2">
+          <p id="appendix-A-5.2.1">be more pedantic when discussing that a proposal in required_capabilities
+implies all clients support it but not vice versa.<a href="#appendix-A-5.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-5.3">
+          <p id="appendix-A-5.3.1">correct location of GREASE values for advertising safe_add and
+app_components in LeafNodes; only allow GREASE in GI, LN, and KP.<a href="#appendix-A-5.3.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-5.4">
+          <p id="appendix-A-5.4.1">the app_components component is now mandatory to implement if
+app_data_dictionary is supported.<a href="#appendix-A-5.4.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-5.5">
+          <p id="appendix-A-5.5.1">the safe_add component is now mandatory to understand if
+app_data_dictionary is supported.<a href="#appendix-A-5.5.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-5.6">
+          <p id="appendix-A-5.6.1">rename MediaType.media_type to MediaType.type, and
+MediaTypeList.media_types to MediaTypeList.media_type_list<a href="#appendix-A-5.6.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-5.7">
+          <p id="appendix-A-5.7.1">clarify the behavior of an "empty" media type in application framing: if
+media_type.type is zero length.<a href="#appendix-A-5.7.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-5.8">
+          <p id="appendix-A-5.8.1">unsafe AAD is no longer allowed when the safe_aad component is present in
+the GroupContext<a href="#appendix-A-5.8.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-5.9">
+          <p id="appendix-A-5.9.1">rename "Safe Application API" to "Safe Application Interface"<a href="#appendix-A-5.9.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-5.10">
+          <p id="appendix-A-5.10.1">fix IANA registry names ("MLS Component Types", "MLS Extension Types") and
+restore missing registry section headers<a href="#appendix-A-5.10.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-5.11">
+          <p id="appendix-A-5.11.1">correct stale field and struct names in prose (component_data,
+app_data_dictionary, authenticated_data, required_wire_formats)<a href="#appendix-A-5.11.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-5.12">
+          <p id="appendix-A-5.12.1">reclassify last-resort KeyPackages as a KeyPackage component and fix various
+inconsistencies and typos<a href="#appendix-A-5.12.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="appendix-A-6">draft-08<a href="#appendix-A-6" class="pilcrow">¶</a></p>
+<p id="appendix-A-6">draft-09<a href="#appendix-A-6" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="appendix-A-7.1">
-          <p id="appendix-A-7.1.1">clarify that SelfRemove is a proposal type, not an extension<a href="#appendix-A-7.1.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-7.1.1">rename the component base label from "Application" to "MLS Component"<a href="#appendix-A-7.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="appendix-A-8">draft-07<a href="#appendix-A-8" class="pilcrow">¶</a></p>
+<p id="appendix-A-8">draft-08<a href="#appendix-A-8" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="appendix-A-9.1">
-          <p id="appendix-A-9.1.1">add AppAck to IANA considerations<a href="#appendix-A-9.1.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="appendix-A-9.2">
-          <p id="appendix-A-9.2.1">adapt Safe AAD scope<a href="#appendix-A-9.2.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="appendix-A-9.3">
-          <p id="appendix-A-9.3.1">remove targeted messages altogether with intention to publish it as a
-separate document<a href="#appendix-A-9.3.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="appendix-A-9.4">
-          <p id="appendix-A-9.4.1">assign self_remove proposal to a non duplicate number (0x000a)<a href="#appendix-A-9.4.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="appendix-A-9.5">
-          <p id="appendix-A-9.5.1">refactor TargetedMessage to no longer use structs removed from when it
-was a "safe extension"<a href="#appendix-A-9.5.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="appendix-A-9.6">
-          <p id="appendix-A-9.6.1">remove the no-longer needed targeted_messages_capability (now signaled using
-support_wire_formats and required_wire_formats)<a href="#appendix-A-9.6.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="appendix-A-9.7">
-          <p id="appendix-A-9.7.1">add TargetedMessageTBS and CredentialBundleTBS to MLS Signature Labels IANA
-registry<a href="#appendix-A-9.7.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="appendix-A-9.8">
-          <p id="appendix-A-9.8.1">add GREASE values for components<a href="#appendix-A-9.8.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="appendix-A-9.9">
-          <p id="appendix-A-9.9.1">fix safe exporter definition<a href="#appendix-A-9.9.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="appendix-A-9.10">
-          <p id="appendix-A-9.10.1">resolve TODOs from -06<a href="#appendix-A-9.10.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="appendix-A-9.11">
-          <p id="appendix-A-9.11.1">fix numerous typos<a href="#appendix-A-9.11.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-9.1.1">clarify that SelfRemove is a proposal type, not an extension<a href="#appendix-A-9.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="appendix-A-10">draft-06<a href="#appendix-A-10" class="pilcrow">¶</a></p>
+<p id="appendix-A-10">draft-07<a href="#appendix-A-10" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="appendix-A-11.1">
-          <p id="appendix-A-11.1.1">Integrate notion of Application API from draft-barnes-mls-appsync<a href="#appendix-A-11.1.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-11.1.1">add AppAck to IANA considerations<a href="#appendix-A-11.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-11.2">
+          <p id="appendix-A-11.2.1">adapt Safe AAD scope<a href="#appendix-A-11.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-11.3">
+          <p id="appendix-A-11.3.1">remove targeted messages altogether with intention to publish it as a
+separate document<a href="#appendix-A-11.3.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-11.4">
+          <p id="appendix-A-11.4.1">assign self_remove proposal to a non duplicate number (0x000a)<a href="#appendix-A-11.4.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-11.5">
+          <p id="appendix-A-11.5.1">refactor TargetedMessage to no longer use structs removed from when it
+was a "safe extension"<a href="#appendix-A-11.5.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-11.6">
+          <p id="appendix-A-11.6.1">remove the no-longer needed targeted_messages_capability (now signaled using
+support_wire_formats and required_wire_formats)<a href="#appendix-A-11.6.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-11.7">
+          <p id="appendix-A-11.7.1">add TargetedMessageTBS and CredentialBundleTBS to MLS Signature Labels IANA
+registry<a href="#appendix-A-11.7.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-11.8">
+          <p id="appendix-A-11.8.1">add GREASE values for components<a href="#appendix-A-11.8.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-11.9">
+          <p id="appendix-A-11.9.1">fix safe exporter definition<a href="#appendix-A-11.9.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-11.10">
+          <p id="appendix-A-11.10.1">resolve TODOs from -06<a href="#appendix-A-11.10.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-11.11">
+          <p id="appendix-A-11.11.1">fix numerous typos<a href="#appendix-A-11.11.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="appendix-A-12">draft-05<a href="#appendix-A-12" class="pilcrow">¶</a></p>
+<p id="appendix-A-12">draft-06<a href="#appendix-A-12" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="appendix-A-13.1">
-          <p id="appendix-A-13.1.1">Include definition of ExtensionState extension<a href="#appendix-A-13.1.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="appendix-A-13.2">
-          <p id="appendix-A-13.2.1">Add safe use of AAD to Safe Extensions framework<a href="#appendix-A-13.2.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="appendix-A-13.3">
-          <p id="appendix-A-13.3.1">Clarify how capabilities negotiation works in Safe Extensions framework<a href="#appendix-A-13.3.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-13.1.1">Integrate notion of Application API from draft-barnes-mls-appsync<a href="#appendix-A-13.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="appendix-A-14">draft-04<a href="#appendix-A-14" class="pilcrow">¶</a></p>
+<p id="appendix-A-14">draft-05<a href="#appendix-A-14" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="appendix-A-15.1">
-          <p id="appendix-A-15.1.1">No changes (prevent expiration)<a href="#appendix-A-15.1.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-15.1.1">Include definition of ExtensionState extension<a href="#appendix-A-15.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-15.2">
+          <p id="appendix-A-15.2.1">Add safe use of AAD to Safe Extensions framework<a href="#appendix-A-15.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-15.3">
+          <p id="appendix-A-15.3.1">Clarify how capabilities negotiation works in Safe Extensions framework<a href="#appendix-A-15.3.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="appendix-A-16">draft-03<a href="#appendix-A-16" class="pilcrow">¶</a></p>
+<p id="appendix-A-16">draft-04<a href="#appendix-A-16" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="appendix-A-17.1">
-          <p id="appendix-A-17.1.1">Add Last Resort KeyPackage extension<a href="#appendix-A-17.1.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="appendix-A-17.2">
-          <p id="appendix-A-17.2.1">Add Safe Extensions framework<a href="#appendix-A-17.2.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="appendix-A-17.3">
-          <p id="appendix-A-17.3.1">Add SelfRemove Proposal<a href="#appendix-A-17.3.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-17.1.1">No changes (prevent expiration)<a href="#appendix-A-17.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="appendix-A-18">draft-02<a href="#appendix-A-18" class="pilcrow">¶</a></p>
+<p id="appendix-A-18">draft-03<a href="#appendix-A-18" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="appendix-A-19.1">
-          <p id="appendix-A-19.1.1">No changes (prevent expiration)<a href="#appendix-A-19.1.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-19.1.1">Add Last Resort KeyPackage extension<a href="#appendix-A-19.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-19.2">
+          <p id="appendix-A-19.2.1">Add Safe Extensions framework<a href="#appendix-A-19.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-19.3">
+          <p id="appendix-A-19.3.1">Add SelfRemove Proposal<a href="#appendix-A-19.3.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="appendix-A-20">draft-01<a href="#appendix-A-20" class="pilcrow">¶</a></p>
+<p id="appendix-A-20">draft-02<a href="#appendix-A-20" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="appendix-A-21.1">
-          <p id="appendix-A-21.1.1">Add Content Advertisement extensions<a href="#appendix-A-21.1.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-21.1.1">No changes (prevent expiration)<a href="#appendix-A-21.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="appendix-A-22">draft-00<a href="#appendix-A-22" class="pilcrow">¶</a></p>
+<p id="appendix-A-22">draft-01<a href="#appendix-A-22" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="appendix-A-23.1">
-          <p id="appendix-A-23.1.1">Initial adoption of draft-robert-mls-protocol-00 as a WG item.<a href="#appendix-A-23.1.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-23.1.1">Add Content Advertisement extensions<a href="#appendix-A-23.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-A-23.2">
-          <p id="appendix-A-23.2.1">Add Targeted Messages extension (*)<a href="#appendix-A-23.2.1" class="pilcrow">¶</a></p>
+      </ul>
+<p id="appendix-A-24">draft-00<a href="#appendix-A-24" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-25.1">
+          <p id="appendix-A-25.1.1">Initial adoption of draft-robert-mls-protocol-00 as a WG item.<a href="#appendix-A-25.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-25.2">
+          <p id="appendix-A-25.2.1">Add Targeted Messages extension (*)<a href="#appendix-A-25.2.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 </section>
