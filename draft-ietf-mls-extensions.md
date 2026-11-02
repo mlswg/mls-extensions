@@ -464,7 +464,8 @@ the same `component_id`. In other words, for a given `component_id`, a proposal
 list is valid only if it contains (a) a single `remove` operation or (b) one or
 more `update` operations. The rules in {{negotiation}} further restrict which
 components can be included in the `app_data_dictionary` extension in the
-GroupContext.
+GroupContext. The components defined in this document are updated as described
+in {{builtin-updates}}.
 
 AppDataUpdate proposals are processed after any default proposals (i.e., those
 defined in {{RFC9420}}), and any AppEphemeral proposals (defined in
@@ -741,6 +742,24 @@ Finally, the supported and required media types (formerly called MIME types) are
 communicated in the `content_media_types` component (see
 {{content-advertisement}}).
 
+## Updating the Components Defined in This Document {#builtin-updates}
+
+The `app_components`, `safe_aad`, and `content_media_types` entries in the
+GroupContext are updated with AppDataUpdate proposals, following the rules in
+{{appdataupdate}}. For these components, the MLS implementation takes the place
+of the application logic:
+
+* The `update` field of an `update` proposal contains the complete new value of
+  the entry, encoded as the entry itself is: a ComponentsList for
+  `app_components` and `safe_aad`, and a MediaTypeList for
+  `content_media_types`. The proposal is invalid if the field does not decode as
+  such.
+
+* If a Commit contains several `update` proposals for one of these components,
+  the value of the last one in the Commit becomes the new entry.
+
+* A `remove` proposal deletes the entry.
+
 ## GREASE
 
 The "Generate Random Extensions And Sustain Extensibility" (GREASE) approach is
@@ -846,12 +865,12 @@ Language syntax {{!RFC8446}}).
 ### Syntax
 
 MediaType is a TLS encoding of a single IANA media type (including top-level
-type and subtype) and any of its parameters. Even if the `parameter_value` would
-have required formatting as a `quoted-string` in a text encoding, only the
-contents inside the `quoted-string` are included in `parameter_value`. Likewise,
-only the second character of a `quoted-pair` is included in `parameter_value`;
-the first escaping backslash (`\`) is omitted. MediaTypeList is an ordered list
-of MediaType objects.
+type and subtype) and any of its parameters. A `parameter_value` consists of
+US-ASCII visible characters (hex 0x21 to 0x7E), space (0x20), and horizontal tab
+(0x09). Even if the `parameter_value` would have required formatting as a
+`quoted-string` or `quoted-pair` in a text encoding, only the unescaped,
+unquoted contents are included in `parameter_value`.  MediaTypeList is an
+ordered list of MediaType objects.
 
 ~~~ tls
 struct {
@@ -906,7 +925,8 @@ When creating a new MLS group for an application using this specification, the
 group MAY include a `content_media_types` component (in the
 `app_data_dictionary` extension) in the GroupContext. In that case the
 GroupContext also lists `content_media_types` in its `app_components` component,
-as {{negotiation}} requires. (The creating client also
+as {{negotiation}} requires. Later changes to the component use AppDataUpdate
+proposals as described in {{builtin-updates}}. (The creating client also
 includes its `content_media_types` component in its own LeafNode as described in
 the previous paragraph.)
 
