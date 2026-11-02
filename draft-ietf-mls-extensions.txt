@@ -85,7 +85,8 @@ Table of Contents
      4.8.  Attaching Application Data to a Commit
      4.9.  Safe Additional Authenticated Data (AAD)
    5.  Negotiating Extensions and Components
-     5.1.  GREASE
+     5.1.  Updating the Components Defined in This Document
+     5.2.  GREASE
    6.  Extensions
      6.1.  AppAck
      6.2.  Content Advertisement
@@ -545,7 +546,8 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    if it contains (a) a single remove operation or (b) one or more
    update operations.  The rules in Section 5 further restrict which
    components the app_data_dictionary extension in the GroupContext can
-   carry state for, and which components it can require.
+   include.  The components defined in this document are updated as
+   described in Section 5.1.
 
    AppDataUpdate proposals are processed after any default proposals
    (i.e., those defined in [RFC9420]), and any AppEphemeral proposals
@@ -837,7 +839,26 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    types) are communicated in the content_media_types component (see
    Section 6.2).
 
-5.1.  GREASE
+5.1.  Updating the Components Defined in This Document
+
+   The app_components, safe_aad, and content_media_types entries in the
+   GroupContext are updated with AppDataUpdate proposals, following the
+   rules in Section 4.7.  For these components, the MLS implementation
+   takes the place of the application logic:
+
+   *  The update field of an update proposal contains the complete new
+      value of the entry, encoded as the entry itself is: a
+      ComponentsList for app_components and safe_aad, and a
+      MediaTypeList for content_media_types.  The proposal is invalid if
+      the field does not decode as such.
+
+   *  If a Commit contains several update proposals for one of these
+      components, the value of the last one in the Commit becomes the
+      new entry.
+
+   *  A remove proposal deletes the entry.
+
+5.2.  GREASE
 
    The "Generate Random Extensions And Sustain Extensibility" (GREASE)
    approach is described in Section 13.5 of [RFC9420].  Further,
@@ -1009,9 +1030,11 @@ SafeExportSecret(ComponentID) = tree_node_[LeafIndex(ComponentID)]_secret
    specification, the group MAY include a content_media_types component
    (in the app_data_dictionary extension) in the GroupContext.  In that
    case the GroupContext also lists content_media_types in its
-   app_components component, as Section 5 requires.  (The creating
-   client also includes its content_media_types component in its own
-   LeafNode as described in the previous paragraph.)
+   app_components component, as Section 5 requires.  Later changes to
+   the component use AppDataUpdate proposals as described in
+   Section 5.1.  (The creating client also includes its
+   content_media_types component in its own LeafNode as described in the
+   previous paragraph.)
 
    MLS clients SHOULD NOT add an MLS client to an MLS group with
    content_media_types in its GroupContext unless all the members (after
