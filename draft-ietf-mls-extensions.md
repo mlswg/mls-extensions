@@ -464,9 +464,9 @@ the same `component_id`, or proposals that both `update` and `remove` state for
 the same `component_id`. In other words, for a given `component_id`, a proposal
 list is valid only if it contains (a) a single `remove` operation or (b) one or
 more `update` operations. The rules in {{negotiation}} further restrict which
-components the `app_data_dictionary` extension in the GroupContext can carry
-state for, and which components it can require. The components defined in this
-document are updated as described in {{builtin-updates}}.
+components the `app_data_dictionary` extension in the GroupContext can include.
+The components defined in this document are updated as described in
+{{builtin-updates}}.
 
 AppDataUpdate proposals are processed after any default proposals (i.e., those
 defined in {{RFC9420}}), and any AppEphemeral proposals (defined in
