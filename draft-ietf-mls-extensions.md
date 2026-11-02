@@ -754,13 +754,7 @@ of the application logic:
 * If a Commit contains several `update` proposals for one of these components,
   the value of the last one in the Commit becomes the new entry.
 
-* A `remove` proposal deletes the entry. Once `app_components` is removed, no
-  component is required, so the GroupContext can hold no entry other than
-  `safe_aad`. Whether the `authenticated_data` field of a message is framed as
-  a SafeAAD struct ({{safe-aad}}) follows the GroupContext of the message's
-  epoch. Removing `safe_aad` therefore ends the framing for messages in the
-  resulting epoch, while the Commit that removes it is still framed. Updating
-  `safe_aad` to an empty list keeps the framing.
+* A `remove` proposal deletes the entry.
 
 ## GREASE
 
